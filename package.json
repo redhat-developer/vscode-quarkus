@@ -39,6 +39,13 @@
 		"configuration": {
 			"title": "Quarkus Tools",
 			"properties": {
+				"quarkus.tools.starter.defaults": {
+					"default": {},
+					"type": "object",
+					"scope": "window",
+					"description": "Default values for the project generation wizard."
+				},
+
 				"quarkus-starter.apiUrl": {
 					"default": "http://localhost:8080",
 					"type": "string",
