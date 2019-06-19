@@ -1,0 +1,121 @@
+{
+	"name": "vscode-quarkus",
+	"displayName": "Quarkus Tools",
+	"description": "Tools for Quarkus development",
+	"version": "0.1.0",
+	"author": "Red Hat",
+	"publisher": "redhat",
+	"icon": "resources/logo.png",
+	"license": "APACHE-2.0",
+	"homepage": "https://github.com/xorye/vscode-quarkus",
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:xorye/vscode-quarkus.git"
+	},
+	"engines": {
+		"vscode": "^1.33.0"
+	},
+	"categories": [
+		"Programming Languages",
+		"Other"
+	],
+	"keywords": [
+		"java",
+		"quarkus",
+		"maven",
+		"starter"
+	],
+	"activationEvents": [
+		"onCommand:quarkusTools.createMavenProject"
+	],
+	"main": "./dist/extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "quarkusTools.createMavenProject",
+				"title": "Quarkus: Generate a Maven Project"
+			}
+		],
+		"configuration": {
+			"title": "Quarkus Tools",
+			"properties": {
+				"quarkus-starter.apiUrl": {
+					"default": "http://localhost:8080",
+					"type": "string",
+					"pattern": "https?://.+",
+					"scope": "window",
+					"description": "Quarkus API base URL"
+				},
+				"quarkus-starter.defaultGroupId": {
+					"default": "pizza",
+					"type": "string",
+					"pattern": "^[A-Za-z0-9_\\-.]+$",
+					"scope": "window",
+					"description": "Default Group Id"
+				},
+				"quarkus-starter.defaultArtifactId": {
+					"default": "pizzapizzapizza",
+					"type": "string",
+					"pattern": "^[A-Za-z0-9_\\-.]+$",
+					"scope": "window",
+					"description": "Default Artifact Id"
+				},
+				"quarkus-starter.defaultPackageName": {
+					"default": "pizza",
+					"type": "string",
+					"pattern": "^[A-Za-z0-9_\\-.]+$",
+					"scope": "window",
+					"description": "Default package name"
+				},
+				"quarkus-starter.defaultResourceName": {
+					"default": "pizza",
+					"type": "string",
+					"pattern": "^[A-Za-z0-9_\\-.]+$",
+					"scope": "window",
+					"description": "Default resource name"
+				},
+				"quarkus-starter.prevExtensions": {
+					"default": null,
+					"type": "object",
+					"scope": "window",
+					"description": "Store previously selected Quarkus extensions"
+				},
+				"quarkus-starter.defaultProjectVersion": {
+					"default": "pizza1.0",
+					"type": "string",
+					"pattern": "^[A-Za-z0-9_\\-.]+$",
+					"scope": "window",
+					"description": "Default project version"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "webpack --mode production",
+		"compile": "webpack --mode none",
+		"watch": "webpack --mode none --watch",
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test-compile": "tsc -p ./",
+		"test": "npm run test-compile && node ./node_modules/vscode/bin/test",
+		"tslint": "tslint -t verbose src/*.ts"
+	},
+	"devDependencies": {
+		"@types/mocha": "^2.2.42",
+		"@types/node": "^10.12.21",
+		"ts-loader": "^6.0.1",
+		"tslint": "^5.12.1",
+		"typescript": "^3.3.1",
+		"typescript-tslint-plugin": "^0.3.1",
+		"vscode": "^1.1.28",
+		"webpack": "^4.32.2",
+		"webpack-cli": "^3.3.2"
+	},
+	"dependencies": {
+		"@types/request": "^2.48.1",
+		"@types/request-promise": "^4.1.43",
+		"@types/unzipper": "^0.9.2",
+		"request": "^2.88.0",
+		"request-promise": "^4.2.4",
+		"unzipper": "^0.9.11"
+	}
+}
