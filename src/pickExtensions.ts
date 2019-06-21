@@ -40,8 +40,7 @@ export async function pickExtensions(input: MultiStepInput, state: State) {
       totalSteps: 100,
       placeholder: 'Pick extensions (placeholder)',
       items: quickPickItems,
-      activeItem: quickPickItems[0],
-      shouldResume: shouldResume
+      activeItem: quickPickItems[0]
     });
 
     switch (pick.type) {
@@ -115,16 +114,4 @@ function addLastUsedOption(items: QuickPickItem[], prevExtensions: QExtension[])
     description: '',
     detail: extensionNames
   });
-}
-
-function shouldResume() {
-  // Could show a notification with the option to resume.
-  return new Promise<boolean>((resolve, reject) => {
-  });
-}
-
-async function validateNameIsUnique(name: string) {
-  // ...validate...
-  // await new Promise(resolve => setTimeout(resolve, 1000));
-  return name === 'vscode' ? 'Name not unique' : undefined;
 }

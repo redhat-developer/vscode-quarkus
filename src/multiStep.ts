@@ -10,8 +10,7 @@ import { window, Uri, commands } from 'vscode';
 
 import { INPUT_TITLE, TOTAL_STEPS } from './constants';
 import { MultiStepInput } from './multiStepUtils';
-import { getQExtensions, downloadProject } from './requestUtils';
-import { QExtension } from './interface/QExtension';
+import { downloadProject } from './requestUtils';
 import { State } from './class/State';
 import { pickExtensions } from './pickExtensions';
 
@@ -23,11 +22,12 @@ import { pickExtensions } from './pickExtensions';
 export async function multiStepInput() {
 
   let state: State = new State();
-  let extensions: QExtension[] = await getQExtensions(state);
-
+  
   async function collectInputs(state: State) {
     await MultiStepInput.run(input => inputGroupId(input, state));
   }
+
+
 
   async function inputGroupId(input: MultiStepInput, state: State) {
     state.groupId = await input.showInputBox({
@@ -36,8 +36,7 @@ export async function multiStepInput() {
       totalSteps: TOTAL_STEPS,
       value: state.groupId,
       prompt: 'Your project group id',
-      validate: validateNameIsUnique,
-      shouldResume: shouldResume
+      validate: validateInput('group id')
     });
     return (input: MultiStepInput) => inputArtifactId(input, state);
   }
@@ -49,8 +48,7 @@ export async function multiStepInput() {
       totalSteps: TOTAL_STEPS,
       value: state.artifactId,
       prompt: 'Your project artifact id',
-      validate: validateNameIsUnique,
-      shouldResume: shouldResume
+      validate: validateInput('artifact id')
     });
     return (input: MultiStepInput) => inputProjectVersion(input, state);
   }
@@ -62,8 +60,7 @@ export async function multiStepInput() {
       totalSteps: TOTAL_STEPS,
       value: state.projectVersion,
       prompt: 'Your project version',
-      validate: validateNameIsUnique,
-      shouldResume: shouldResume
+      validate: validateInput('project version')
     });
     return (input: MultiStepInput) => inputPackageName(input, state);
   }
@@ -75,8 +72,7 @@ export async function multiStepInput() {
       totalSteps: TOTAL_STEPS,
       value: state.packageName,
       prompt: 'Your package name',
-      validate: validateNameIsUnique,
-      shouldResume: shouldResume
+      validate: validateInput('package name')
     });
     return (input: MultiStepInput) => inputResourceName(input, state);
   }
@@ -88,25 +84,9 @@ export async function multiStepInput() {
       totalSteps: TOTAL_STEPS,
       value: state.resourceName,
       prompt: 'Your resource name',
-      validate: validateNameIsUnique,
-      shouldResume: shouldResume
+      validate: validateInput('resource name')
     });
-    return (input: MultiStepInput) => pickExtensions(input, state, extensions);
-  }
-
-  function shouldResume() {
-    // Could show a notification with the option to resume.
-    return new Promise<boolean>((resolve, reject) => {
-      window.showInformationMessage('Hello World!', 'happy', 'sad').then((answer) => {
-        resolve(true);
-      });
-    });
-  }
-
-  async function validateNameIsUnique(name: string) {
-    // ...validate...
-    // await new Promise(resolve => setTimeout(resolve, 1000));
-    return name === 'vscode' ? 'Name not unique' : undefined;
+    return (input: MultiStepInput) => pickExtensions(input, state);
   }
 
   await collectInputs(state);
@@ -129,4 +109,14 @@ export async function multiStepInput() {
   downloadProject(state).then(() => {
     return commands.executeCommand('vscode.openFolder', state.targetDir, true);
   });
+}
+
+function validateInput(name: string) {
+  return async function f(userInput : string) {
+    const re = new RegExp("^[A-Za-z0-9_\\-.]+$");
+    if (!re.test(userInput)) {
+      return `Invalid ${name}`;
+    }
+    return undefined;
+  };
 }
