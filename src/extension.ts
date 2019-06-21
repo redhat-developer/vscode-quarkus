@@ -3,7 +3,6 @@
 
 
 import * as vscode from 'vscode';
-import { createQuarkusProject } from './createQuarkusProject';
 import { multiStepInput } from './multiStep';
 
 export interface QuickPickItemWithValue extends vscode.QuickPickItem {
