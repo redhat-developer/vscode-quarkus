@@ -7,6 +7,8 @@ import { DEFAULT_API_URL,
 import { workspace, Uri } from 'vscode';
 import { QExtension } from '../interface/QExtension';
 
+const userHome = require('user-home');
+
 /**
  * Class representing data required to generate project
  */
@@ -18,7 +20,7 @@ export class State {
   packageName: string;
   resourceName: string;
   extensions: QExtension[];
-  targetDir: undefined|Uri;
+  targetDir: Uri;
 
   constructor() {
     this.apiUrl = DEFAULT_API_URL;
@@ -28,7 +30,7 @@ export class State {
     this.packageName = DEFAULT_PACKAGE_NAME;
     this.resourceName = DEFAULT_RESOURCE_NAME;
     this.extensions = [];
-    this.targetDir = undefined;
+    this.targetDir = Uri.parse(userHome);
 
     const settings = workspace.getConfiguration('').get<SettingsJson>('quarkus.tools.starter');
 
