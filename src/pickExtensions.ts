@@ -1,6 +1,6 @@
 import { MultiStepInput } from './multiStepUtils';
 import { QExtension } from './interface/QExtension';
-import { State } from './interface/State';
+import { State } from './class/State';
 
 enum Type {
   Extension,
