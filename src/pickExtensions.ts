@@ -16,25 +16,24 @@ interface QuickPickItem {
   artifactId?:string; // only for extensions
 }
 
+export async function pickExtensions(input: MultiStepInput, state: State, allExtensions: QExtension[]) {
 
-export async function pickExtensions(input: MultiStepInput, state: Partial<State>, allExtensions: QExtension[]) {
-
-  const defaultExtensions: QExtension[] = [];
+  const defaultExtensions: QExtension[] = state.extensions;
   let selectedExtensions: QExtension[] = [];
   let unselectedExtensions: QExtension[] = allExtensions;
   let pick: QuickPickItem;
 
   do {
 
-    const quickPickItems: QuickPickItem[] = getItems(selectedExtensions, unselectedExtensions);
+    const quickPickItems: QuickPickItem[] = getItems(selectedExtensions, unselectedExtensions, defaultExtensions);
 
     pick = await input.showQuickPick({
       title: 'Inside of multiQuickPick.ts',
       step: 4,
       totalSteps: 100,
-      value: 'Default resource name',
       placeholder: 'Pick extensions (placeholder)',
       items: quickPickItems,
+      activeItem: quickPickItems[0],
       shouldResume: shouldResume
     });
 
@@ -62,10 +61,11 @@ export async function pickExtensions(input: MultiStepInput, state: Partial<State
         break;
       }
       case Type.LastUsed: {
-        state.extensions = defaultExtensions;
+        return; // no need to set state.extensions
       }
       case Type.Stop: {
         state.extensions = selectedExtensions;
+        break;
       }
     }
 
@@ -73,7 +73,7 @@ export async function pickExtensions(input: MultiStepInput, state: Partial<State
 }
 
 
-function getItems(selected: QExtension[], unselected: QExtension[]): QuickPickItem[] {
+function getItems(selected: QExtension[], unselected: QExtension[], defaults: QExtension[]): QuickPickItem[] {
   const items: QuickPickItem[] = selected.concat(unselected).map((it) => {
     return {
       type: Type.Extension,
@@ -83,7 +83,7 @@ function getItems(selected: QExtension[], unselected: QExtension[]): QuickPickIt
     };
   });
 
-  //Push the dependencies selection stopper on top of the dependencies list
+  // Push the dependencies selection stopper on top of the dependencies list
   items.unshift({
     type: Type.Stop,
     label: `$(tasklist) ${selected.length} extensions selected`,
@@ -91,8 +91,8 @@ function getItems(selected: QExtension[], unselected: QExtension[]): QuickPickIt
     detail: 'Press <Enter>  to continue'
   });
 
-  if (selected.length === 0) { // TODO pass default extensions to this function. if exists, run addLastUsedOption
-    addLastUsedOption(items, []);
+  if (selected.length === 0 && defaults.length > 0) { // TODO pass default extensions to this function. if exists, run addLastUsedOption
+    addLastUsedOption(items, defaults);
   }
 
   return items;

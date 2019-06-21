@@ -4,7 +4,7 @@ import { QExtension } from './interface/QExtension';
 import { State } from './class/State';
 
 
-export async function getQExtensions(state: Partial<State>): Promise<QExtension[]> {
+export async function getQExtensions(state: State): Promise<QExtension[]> {
 
   return await request.get(`${state.apiUrl}/extension/list`)
     .then((body) => {

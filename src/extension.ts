@@ -12,7 +12,7 @@ export interface QuickPickItemWithValue extends vscode.QuickPickItem {
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand('quarkusTools.createMavenProject', () => {
     // createQuarkusProject();
-    multiStepInput(context);
+    multiStepInput();
   });
   context.subscriptions.push(disposable);
 }

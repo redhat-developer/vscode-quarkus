@@ -20,7 +20,7 @@ import { pickExtensions } from './pickExtensions';
  * 
  * This first part uses the helper class `MultiStepInput` that wraps the API for the multi-step case.
  */
-export async function multiStepInput(context: ExtensionContext) {
+export async function multiStepInput() {
 
   let state: State = new State();
   let extensions: QExtension[] = await getQExtensions(state);
