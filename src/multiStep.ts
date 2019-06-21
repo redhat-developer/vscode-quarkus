@@ -6,7 +6,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { window, ExtensionContext, Uri, commands } from 'vscode';
+import { window, Uri, commands } from 'vscode';
 
 import { INPUT_TITLE, TOTAL_STEPS } from './constants';
 import { MultiStepInput } from './multiStepUtils';

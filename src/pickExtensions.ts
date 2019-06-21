@@ -1,6 +1,7 @@
 import { MultiStepInput } from './multiStepUtils';
 import { QExtension } from './interface/QExtension';
 import { State } from './class/State';
+import { getQExtensions } from './requestUtils';
 
 enum Type {
   Extension,
@@ -16,9 +17,15 @@ interface QuickPickItem {
   artifactId?:string; // only for extensions
 }
 
-export async function pickExtensions(input: MultiStepInput, state: State, allExtensions: QExtension[]) {
+export async function pickExtensions(input: MultiStepInput, state: State) {
 
-  const defaultExtensions: QExtension[] = state.extensions;
+  const allExtensions: QExtension[] = await getQExtensions(state);
+
+  const defaultExtensions: QExtension[] = state.extensions.filter((defExtension) => {
+    return allExtensions.some((extension) => extension.artifactId === defExtension.artifactId);
+  });
+
+
   let selectedExtensions: QExtension[] = [];
   let unselectedExtensions: QExtension[] = allExtensions;
   let pick: QuickPickItem;
