@@ -4,17 +4,23 @@
 
 import * as vscode from 'vscode';
 import { multiStepInput } from './multiStep';
+import { add } from './addExtemsions/addExtensions';
 
 export interface QuickPickItemWithValue extends vscode.QuickPickItem {
   value: string;
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  let disposable = vscode.commands.registerCommand('quarkusTools.createMavenProject', () => {
-    // createQuarkusProject();
+  const createMavenProject = vscode.commands.registerCommand('quarkusTools.createMavenProject', () => {
     multiStepInput();
   });
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(createMavenProject);
+
+  const addQuarkusExtensions = vscode.commands.registerCommand('quarkusTools.addExtension', () => {
+    add();
+  });
+  context.subscriptions.push(addQuarkusExtensions);
+
 }
 
 export function deactivate() { }
