@@ -3,7 +3,7 @@
 
 
 import * as vscode from 'vscode';
-import { createQuarkusProject } from './createQuarkusProject';
+import { multiStepInput } from './multiStep';
 
 export interface QuickPickItemWithValue extends vscode.QuickPickItem {
   value: string;
@@ -11,7 +11,8 @@ export interface QuickPickItemWithValue extends vscode.QuickPickItem {
 
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand('quarkusTools.createMavenProject', () => {
-    createQuarkusProject();
+    // createQuarkusProject();
+    multiStepInput();
   });
   context.subscriptions.push(disposable);
 }
