@@ -7,3 +7,5 @@ export const DEFAULT_RESOURCE_NAME: string = 'ResourceName';
 
 export const INPUT_TITLE: string = 'Quarkus Tools';
 export const TOTAL_STEPS: number = 6;
+
+export const QUARKUS_CONFIG_NAME = 'quarkus.tools.starter';

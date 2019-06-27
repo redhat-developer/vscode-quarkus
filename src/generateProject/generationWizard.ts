@@ -8,26 +8,24 @@ import * as fs from 'fs';
 
 import { window, Uri, commands } from 'vscode';
 
-import { INPUT_TITLE, TOTAL_STEPS } from './constants';
-import { MultiStepInput } from './multiStepUtils';
-import { downloadProject } from './requestUtils';
-import { State } from './class/State';
-import { pickExtensions } from './pickExtensions';
+import { INPUT_TITLE, TOTAL_STEPS } from '../definitions/constants';
+import { MultiStepInput } from '../utils/multiStepUtils';
+import { downloadProject } from '../utils/requestUtils';
+import { State } from '../definitions/State';
+import { pickExtensionsWithLastUsed } from './pickExtensions';
 
 /**
  * A multi-step input using window.createQuickPick() and window.createInputBox().
  * 
  * This first part uses the helper class `MultiStepInput` that wraps the API for the multi-step case.
  */
-export async function multiStepInput() {
+export async function generateProject() {
 
   let state: State = new State();
   
   async function collectInputs(state: State) {
     await MultiStepInput.run(input => inputGroupId(input, state));
   }
-
-
 
   async function inputGroupId(input: MultiStepInput, state: State) {
     state.groupId = await input.showInputBox({
@@ -86,7 +84,7 @@ export async function multiStepInput() {
       prompt: 'Your resource name',
       validate: validateInput('resource name')
     });
-    return (input: MultiStepInput) => pickExtensions(input, state);
+    return (input: MultiStepInput) => pickExtensionsWithLastUsed(input, state);
   }
 
   await collectInputs(state);

@@ -3,9 +3,9 @@ import { DEFAULT_API_URL,
   DEFAULT_ARTIFACT_ID, 
   DEFAULT_PROJECT_VERSION, 
   DEFAULT_PACKAGE_NAME, 
-  DEFAULT_RESOURCE_NAME } from '../constants';
+  DEFAULT_RESOURCE_NAME } from './constants';
 import { workspace, Uri } from 'vscode';
-import { QExtension } from '../interface/QExtension';
+import { QExtension } from './QExtension';
 
 const userHome = require('user-home');
 

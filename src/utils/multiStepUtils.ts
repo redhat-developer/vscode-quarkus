@@ -1,5 +1,5 @@
 // -------------------------------------------------------
-// Helper code that wraps the API for the multi-step case.
+// Helper code that wraps the API for the multi-step generation wizard
 //
 // Reference:
 // https://github.com/microsoft/vscode-extension-samples/blob/master/quickinput-sample/src/multiStepInput.ts

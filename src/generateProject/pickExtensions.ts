@@ -1,7 +1,7 @@
-import { MultiStepInput } from './multiStepUtils';
-import { QExtension } from './interface/QExtension';
-import { State } from './class/State';
-import { getQExtensions } from './requestUtils';
+import { MultiStepInput } from '../utils/multiStepUtils';
+import { QExtension } from '../definitions/QExtension';
+import { State } from '../definitions/State';
+import { getQExtensions } from '../utils/requestUtils';
 
 enum Type {
   Extension,
@@ -17,7 +17,22 @@ interface QuickPickItem {
   artifactId?:string; // only for extensions
 }
 
-export async function pickExtensions(input: MultiStepInput, state: State) {
+/**
+ * Determines if the "Last Used" item should appear in the QuickPick menu
+ */
+let addLastUsed: boolean;
+
+export async function pickExtensionsWithoutLastUsed(input: MultiStepInput, state: State) {
+  addLastUsed = false;
+  await pickExtensions(input, state);
+}
+
+export async function pickExtensionsWithLastUsed(input: MultiStepInput, state: State) {
+  addLastUsed = true;
+  await pickExtensions(input, state);
+}
+
+async function pickExtensions(input: MultiStepInput, state: State) {
 
   const allExtensions: QExtension[] = await getQExtensions(state);
 
@@ -71,7 +86,7 @@ export async function pickExtensions(input: MultiStepInput, state: State) {
       }
       case Type.Stop: {
         state.extensions = selectedExtensions;
-        break;
+        return;
       }
     }
 
@@ -97,7 +112,7 @@ function getItems(selected: QExtension[], unselected: QExtension[], defaults: QE
     detail: 'Press <Enter>  to continue'
   });
 
-  if (selected.length === 0 && defaults.length > 0) { // TODO pass default extensions to this function. if exists, run addLastUsedOption
+  if (selected.length === 0 && defaults.length > 0 && addLastUsed) { // TODO pass default extensions to this function. if exists, run addLastUsedOption
     addLastUsedOption(items, defaults);
   }
 
