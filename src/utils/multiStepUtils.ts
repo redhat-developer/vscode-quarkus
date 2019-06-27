@@ -35,7 +35,7 @@ export interface InputBoxParameters {
 
 export class MultiStepInput {
 
-  static async run<T>(start: InputStep) {
+  static async run(start: InputStep) {
     const input = new MultiStepInput();
     return input.stepThrough(start);
   }
@@ -43,7 +43,7 @@ export class MultiStepInput {
   private current?: QuickInput;
   private steps: InputStep[] = [];
 
-  private async stepThrough<T>(start: InputStep) {
+  private async stepThrough(start: InputStep) {
     let step: InputStep | void = start;
     while (step) {
       this.steps.push(step);

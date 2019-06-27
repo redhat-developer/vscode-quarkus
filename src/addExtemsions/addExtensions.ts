@@ -1,16 +1,17 @@
 import { executeInTerminal } from "../terminal/quarkusterminalutils";
 import { State } from "../definitions/State";
+import { ConfigManager } from "../definitions/ConfigManager";
 import { MultiStepInput } from "../utils/multiStepUtils";
 import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions";
 import { QExtension } from "../createQuarkusProject";
 
-export async function add() {
-  let state: State = new State();
-  async function collectInputs(state: State) {
-    await MultiStepInput.run(input => pickExtensionsWithoutLastUsed(input, state));
+export async function add(configManager: ConfigManager) {
+  const state: Partial<State> = {};
+  async function collectInputs(state: Partial<State>) {
+    await MultiStepInput.run(input => pickExtensionsWithoutLastUsed(input, state, configManager.getSettingsJson()));
   }
   await collectInputs(state);
-  const artifactIds: String[] = getArtifactIds(state.extensions);
+  const artifactIds: String[] = getArtifactIds(state.extensions as QExtension[]);
   const command = `quarkus:add-extension -Dextensions="${artifactIds.join(',')}"`;
   await executeInTerminal(command, true);
 }

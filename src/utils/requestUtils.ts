@@ -4,20 +4,20 @@ import { QExtension } from '../definitions/QExtension';
 import { State } from '../definitions/State';
 
 
-export async function getQExtensions(state: State): Promise<QExtension[]> {
+export async function getQExtensions(apiUrl: string): Promise<QExtension[]> {
 
-  return await request.get(`${state.apiUrl}/extension/list`)
+  return await request.get(`${apiUrl}/extension/list`)
     .then((body) => {
       const qExtensions: QExtension[] = JSON.parse(body);
       return qExtensions.sort((a, b) => a.name.localeCompare(b.name));
     });
 }
 
-export async function downloadProject(state: State) {
+export async function downloadProject(state: State, apiUrl: string) {
   
   const chosenExtArtifactIds: string[] = state.extensions.map((it) => it.artifactId);
 
-  const qProjectUrl: string = `${state.apiUrl}/generator?` +
+  const qProjectUrl: string = `${apiUrl}/generator?` +
     `g=${state.groupId}&` +
     `a=${state.artifactId}&` +
     `pv=${state.projectVersion}&` +
