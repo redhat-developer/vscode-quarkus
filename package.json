@@ -5,7 +5,6 @@
 	"version": "0.1.0",
 	"author": "Red Hat",
 	"publisher": "redhat",
-	"icon": "resources/logo.png",
 	"license": "APACHE-2.0",
 	"homepage": "https://github.com/xorye/vscode-quarkus",
 	"repository": {
