@@ -43,8 +43,9 @@ export async function generateProject(configManager: ConfigManager) {
 
   async function inputGroupId(input: MultiStepInput, state: Partial<State>) {
     
-    const inputBoxValue = settings.defaults.groupId ? settings.defaults.groupId : DEFAULT_GROUP_ID;
-    
+    const defaultInputBoxValue = settings.defaults.groupId ? settings.defaults.groupId : DEFAULT_GROUP_ID;
+    const inputBoxValue = state.groupId ? state.groupId : defaultInputBoxValue;
+
     state.groupId = await input.showInputBox({
       title: INPUT_TITLE,
       step: input.getStepNumber(),
@@ -58,8 +59,9 @@ export async function generateProject(configManager: ConfigManager) {
 
   async function inputArtifactId(input: MultiStepInput, state: Partial<State>) {
     
-    const inputBoxValue = settings.defaults.artifactId ? settings.defaults.artifactId : DEFAULT_ARTIFACT_ID;
-    
+    const defaultInputBoxValue = settings.defaults.artifactId ? settings.defaults.artifactId : DEFAULT_ARTIFACT_ID;
+    const inputBoxValue = state.artifactId ? state.artifactId : defaultInputBoxValue;
+
     state.artifactId = await input.showInputBox({
       title: INPUT_TITLE,
       step: input.getStepNumber(),
@@ -73,8 +75,9 @@ export async function generateProject(configManager: ConfigManager) {
 
   async function inputProjectVersion(input: MultiStepInput, state: Partial<State>) {
     
-    const inputBoxValue = settings.defaults.projectVersion ? settings.defaults.projectVersion : DEFAULT_PROJECT_VERSION;
-    
+    const defaultInputBoxValue = settings.defaults.projectVersion ? settings.defaults.projectVersion : DEFAULT_PROJECT_VERSION;
+    const inputBoxValue = state.projectVersion ? state.projectVersion : defaultInputBoxValue;
+
     state.projectVersion = await input.showInputBox({
       title: INPUT_TITLE,
       step: input.getStepNumber(),
@@ -88,7 +91,8 @@ export async function generateProject(configManager: ConfigManager) {
 
   async function inputPackageName(input: MultiStepInput, state: Partial<State>) {
 
-    const inputBoxValue = settings.defaults.packageName ? settings.defaults.packageName : DEFAULT_PACKAGE_NAME;
+    const defaultInputBoxValue = settings.defaults.packageName ? settings.defaults.packageName : DEFAULT_PACKAGE_NAME;
+    const inputBoxValue = state.packageName ? state.packageName : defaultInputBoxValue;
 
     state.packageName = await input.showInputBox({
       title: INPUT_TITLE,
@@ -103,7 +107,8 @@ export async function generateProject(configManager: ConfigManager) {
 
   async function inputResourceName(input: MultiStepInput, state: Partial<State>) {
 
-    const inputBoxValue = settings.defaults.resourceName ? settings.defaults.resourceName : DEFAULT_RESOURCE_NAME;
+    const defaultInputBoxValue = settings.defaults.resourceName ? settings.defaults.resourceName : DEFAULT_RESOURCE_NAME;
+    const inputBoxValue = state.resourceName ? state.resourceName : defaultInputBoxValue;
 
     state.resourceName = await input.showInputBox({
       title: INPUT_TITLE,
