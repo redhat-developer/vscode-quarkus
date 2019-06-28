@@ -4,8 +4,8 @@
 
 import * as vscode from 'vscode';
 import { generateProject } from './generateProject/generationWizard';
-import { add } from './addExtemsions/addExtensions';
-import { ConfigManager } from './definitions/ConfigManager'
+import { add } from './addExtensions/addExtensions';
+import { ConfigManager } from './definitions/ConfigManager';
 
 export interface QuickPickItemWithValue extends vscode.QuickPickItem {
   value: string;

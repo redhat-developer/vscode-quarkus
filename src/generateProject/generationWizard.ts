@@ -8,7 +8,7 @@ import * as fs from 'fs';
 
 import { window, Uri, commands } from 'vscode';
 
-import { INPUT_TITLE, TOTAL_STEPS } from '../definitions/constants';
+import { INPUT_TITLE } from '../definitions/constants';
 import { ConfigManager } from '../definitions/ConfigManager';
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { downloadProject } from '../utils/requestUtils';
@@ -31,7 +31,9 @@ import {
  */
 export async function generateProject(configManager: ConfigManager) {
 
-  let state: Partial<State> = {};
+  let state: Partial<State> = {
+    totalSteps: 6
+  };
   // const configManager = new ConfigManager();
   const settings: SettingsJson = configManager.getSettingsJson();
   
@@ -45,8 +47,8 @@ export async function generateProject(configManager: ConfigManager) {
     
     state.groupId = await input.showInputBox({
       title: INPUT_TITLE,
-      step: 1,
-      totalSteps: TOTAL_STEPS,
+      step: input.getStepNumber(),
+      totalSteps: state.totalSteps!,
       value: inputBoxValue,
       prompt: 'Your project group id',
       validate: validateInput('group id')
@@ -60,8 +62,8 @@ export async function generateProject(configManager: ConfigManager) {
     
     state.artifactId = await input.showInputBox({
       title: INPUT_TITLE,
-      step: 2,
-      totalSteps: TOTAL_STEPS,
+      step: input.getStepNumber(),
+      totalSteps: state.totalSteps!,
       value: inputBoxValue,
       prompt: 'Your project artifact id',
       validate: validateInput('artifact id')
@@ -75,8 +77,8 @@ export async function generateProject(configManager: ConfigManager) {
     
     state.projectVersion = await input.showInputBox({
       title: INPUT_TITLE,
-      step: 3,
-      totalSteps: TOTAL_STEPS,
+      step: input.getStepNumber(),
+      totalSteps: state.totalSteps!,
       value: inputBoxValue,
       prompt: 'Your project version',
       validate: validateInput('project version')
@@ -84,14 +86,14 @@ export async function generateProject(configManager: ConfigManager) {
     return (input: MultiStepInput) => inputPackageName(input, state);
   }
 
-  async function inputPackageName(input: MultiStepInput, state: Partial<State>, ) {
+  async function inputPackageName(input: MultiStepInput, state: Partial<State>) {
 
     const inputBoxValue = settings.defaults.packageName ? settings.defaults.packageName : DEFAULT_PACKAGE_NAME;
 
     state.packageName = await input.showInputBox({
       title: INPUT_TITLE,
-      step: 4,
-      totalSteps: TOTAL_STEPS,
+      step: input.getStepNumber(),
+      totalSteps: state.totalSteps!,
       value: inputBoxValue,
       prompt: 'Your package name',
       validate: validateInput('package name')
@@ -105,8 +107,8 @@ export async function generateProject(configManager: ConfigManager) {
 
     state.resourceName = await input.showInputBox({
       title: INPUT_TITLE,
-      step: 5,
-      totalSteps: TOTAL_STEPS,
+      step: input.getStepNumber(),
+      totalSteps: state.totalSteps!,
       value: inputBoxValue,
       prompt: 'Your resource name',
       validate: validateInput('resource name')
@@ -115,7 +117,6 @@ export async function generateProject(configManager: ConfigManager) {
   }
 
   await collectInputs(state);
-  const fullState = state as State;
 
   let targetDir = await window.showOpenDialog(
     { canSelectFiles: false, canSelectFolders: true, canSelectMany: false, openLabel: 'Generate Here' }
@@ -124,11 +125,13 @@ export async function generateProject(configManager: ConfigManager) {
     window.showErrorMessage('Impossible to Create Quarkus Project: No directory provided.');
     return;
   }
-  fullState.targetDir = Uri.file(path.join(targetDir[0].fsPath, fullState.artifactId));
-  if (fs.existsSync(fullState.targetDir.fsPath)) {
+  state.targetDir = Uri.file(path.join(targetDir[0].fsPath, state.artifactId!));
+  if (fs.existsSync(state.targetDir.fsPath)) {
     window.showErrorMessage(`Impossible to Create Quarkus Project: Directory ${state.targetDir} already exists.`);
     return;
   }
+
+  const fullState = state as State;
 
   configManager.saveDefaultsToConfig({
     groupId: fullState.groupId,
@@ -138,13 +141,6 @@ export async function generateProject(configManager: ConfigManager) {
     resourceName: fullState.resourceName,
     extensions: fullState.extensions
   });
-
-
-
-  // config.set(state);\
-  // state.save();
-  // TODO SAVE
-
 
   downloadProject(fullState, settings.apiUrl).then(() => {
     return commands.executeCommand('vscode.openFolder', fullState.targetDir, true);

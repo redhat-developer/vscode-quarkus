@@ -43,6 +43,10 @@ export class MultiStepInput {
   private current?: QuickInput;
   private steps: InputStep[] = [];
 
+  public getStepNumber(): number {
+    return this.steps.length;
+  }
+
   private async stepThrough(start: InputStep) {
     let step: InputStep | void = start;
     while (step) {

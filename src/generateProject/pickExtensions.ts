@@ -59,8 +59,8 @@ async function pickExtensions(input: MultiStepInput, state: Partial<State>, sett
 
     pick = await input.showQuickPick({
       title: 'Quarkus Tools',
-      step: 6,
-      totalSteps: 6,
+      step: input.getStepNumber(),
+      totalSteps: state.totalSteps!,
       placeholder: 'Pick extensions (placeholder)',
       items: quickPickItems,
       activeItem: quickPickItems[0]

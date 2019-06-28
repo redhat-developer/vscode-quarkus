@@ -15,7 +15,7 @@ export async function getQExtensions(apiUrl: string): Promise<QExtension[]> {
 
 export async function downloadProject(state: State, apiUrl: string) {
   
-  const chosenExtArtifactIds: string[] = state.extensions.map((it) => it.artifactId);
+  const chosenExtArtifactIds: string[] = state.extensions!.map((it) => it.artifactId);
 
   const qProjectUrl: string = `${apiUrl}/generator?` +
     `g=${state.groupId}&` +
@@ -25,5 +25,5 @@ export async function downloadProject(state: State, apiUrl: string) {
     `e=${chosenExtArtifactIds.join('&e=')}`;
 
   return request(qProjectUrl)
-  .pipe(unzipper.Extract({ path: state.targetDir.fsPath })).promise();
+  .pipe(unzipper.Extract({ path: state.targetDir!.fsPath })).promise();
 }

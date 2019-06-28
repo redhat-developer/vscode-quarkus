@@ -13,6 +13,7 @@ import { QExtension } from './QExtension';
  * Class representing data required to generate project
  */
 export interface State {
+  totalSteps: number;
   groupId: string;
   artifactId: string;
   projectVersion: string;
