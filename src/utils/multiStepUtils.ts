@@ -1,5 +1,5 @@
 // -------------------------------------------------------
-// Helper code that wraps the API for the multi-step case.
+// Helper code that wraps the API for the multi-step generation wizard
 //
 // Reference:
 // https://github.com/microsoft/vscode-extension-samples/blob/master/quickinput-sample/src/multiStepInput.ts
@@ -35,7 +35,7 @@ export interface InputBoxParameters {
 
 export class MultiStepInput {
 
-  static async run<T>(start: InputStep) {
+  static async run(start: InputStep) {
     const input = new MultiStepInput();
     return input.stepThrough(start);
   }
@@ -43,7 +43,11 @@ export class MultiStepInput {
   private current?: QuickInput;
   private steps: InputStep[] = [];
 
-  private async stepThrough<T>(start: InputStep) {
+  public getStepNumber(): number {
+    return this.steps.length;
+  }
+
+  private async stepThrough(start: InputStep) {
     let step: InputStep | void = start;
     while (step) {
       this.steps.push(step);

@@ -1,7 +1,9 @@
-import { MultiStepInput } from './multiStepUtils';
-import { QExtension } from './interface/QExtension';
-import { State } from './class/State';
-import { getQExtensions } from './requestUtils';
+import { MultiStepInput } from '../utils/multiStepUtils';
+import { QExtension } from '../definitions/QExtension';
+import { State } from '../definitions/State';
+import { SettingsJson } from '../definitions/ConfigManager';
+import { getQExtensions } from '../utils/requestUtils';
+import { DEFAULT_API_URL } from '../definitions/constants';
 
 enum Type {
   Extension,
@@ -17,14 +19,35 @@ interface QuickPickItem {
   artifactId?:string; // only for extensions
 }
 
-export async function pickExtensions(input: MultiStepInput, state: State) {
+/**
+ * Determines if the "Last Used" item should appear in the QuickPick menu
+ */
+let addLastUsed: boolean;
 
-  const allExtensions: QExtension[] = await getQExtensions(state);
+export async function pickExtensionsWithoutLastUsed(input: MultiStepInput, state: Partial<State>, settings: SettingsJson) {
+  addLastUsed = false;
+  await pickExtensions(input, state, settings);
+}
 
-  const defaultExtensions: QExtension[] = state.extensions.filter((defExtension) => {
-    return allExtensions.some((extension) => extension.artifactId === defExtension.artifactId);
-  });
+export async function pickExtensionsWithLastUsed(input: MultiStepInput, state: Partial<State>, settings: SettingsJson) {
+  addLastUsed = true;
+  await pickExtensions(input, state, settings);
+}
 
+async function pickExtensions(input: MultiStepInput, state: Partial<State>, settings: SettingsJson) {
+
+  const apiUrl = settings.apiUrl ? settings.apiUrl : DEFAULT_API_URL;
+
+  const allExtensions: QExtension[] = await getQExtensions(apiUrl);
+
+  let defaultExtensions: QExtension[] = [];
+
+  if (settings.defaults.extensions) {
+    defaultExtensions = settings.defaults.extensions.filter((defExtension) => {
+      return allExtensions.some((extension) => extension.artifactId === defExtension.artifactId);
+    });
+  }
+  
 
   let selectedExtensions: QExtension[] = [];
   let unselectedExtensions: QExtension[] = allExtensions;
@@ -35,9 +58,9 @@ export async function pickExtensions(input: MultiStepInput, state: State) {
     const quickPickItems: QuickPickItem[] = getItems(selectedExtensions, unselectedExtensions, defaultExtensions);
 
     pick = await input.showQuickPick({
-      title: 'Inside of multiQuickPick.ts',
-      step: 4,
-      totalSteps: 100,
+      title: 'Quarkus Tools',
+      step: input.getStepNumber(),
+      totalSteps: state.totalSteps!,
       placeholder: 'Pick extensions (placeholder)',
       items: quickPickItems,
       activeItem: quickPickItems[0]
@@ -67,11 +90,12 @@ export async function pickExtensions(input: MultiStepInput, state: State) {
         break;
       }
       case Type.LastUsed: {
-        return; // no need to set state.extensions
+        state.extensions = defaultExtensions;
+        return;
       }
       case Type.Stop: {
         state.extensions = selectedExtensions;
-        break;
+        return;
       }
     }
 
@@ -97,7 +121,7 @@ function getItems(selected: QExtension[], unselected: QExtension[], defaults: QE
     detail: 'Press <Enter>  to continue'
   });
 
-  if (selected.length === 0 && defaults.length > 0) { // TODO pass default extensions to this function. if exists, run addLastUsedOption
+  if (selected.length === 0 && defaults.length > 0 && addLastUsed) { // TODO pass default extensions to this function. if exists, run addLastUsedOption
     addLastUsedOption(items, defaults);
   }
 

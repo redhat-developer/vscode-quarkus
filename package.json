@@ -5,7 +5,6 @@
 	"version": "0.1.0",
 	"author": "Red Hat",
 	"publisher": "redhat",
-	"icon": "resources/logo.png",
 	"license": "APACHE-2.0",
 	"homepage": "https://github.com/xorye/vscode-quarkus",
 	"repository": {
@@ -26,14 +25,19 @@
 		"starter"
 	],
 	"activationEvents": [
-		"onCommand:quarkusTools.createMavenProject"
+		"onCommand:quarkusTools.createMavenProject",
+		"onCommand:quarkusTools.addExtension"
 	],
 	"main": "./dist/extension",
 	"contributes": {
 		"commands": [
 			{
 				"command": "quarkusTools.createMavenProject",
-				"title": "Quarkus: Generate a Maven Project"
+				"title": "Quarkus: Generate a Maven project"
+			},
+			{
+				"command": "quarkusTools.addExtension",
+				"title": "Quarkus: Add extensions to current project"
 			}
 		],
 		"configuration": {
@@ -44,7 +48,6 @@
 					"properties": {
 						"apiUrl": {
 							"type": "string",
-							"default": "http://localhost:8080",
 							"pattern": "https?://.+",
 							"scope": "window",
 							"description": "Quarkus API base URL"
@@ -56,35 +59,30 @@
 							"scope": "window",
 							"properties": {
 								"groupId": {
-									"default": "pizza",
 									"type": "string",
 									"pattern": "^[A-Za-z0-9_\\-.]+$",
 									"scope": "window",
 									"description": "Default Group Id"
 								},
 								"artifactId": {
-									"default": "pizzapizzapizza",
 									"type": "string",
 									"pattern": "^[A-Za-z0-9_\\-.]+$",
 									"scope": "window",
 									"description": "Default Artifact Id"
 								},
 								"projectVersion": {
-									"default": "pizza1.0",
 									"type": "string",
 									"pattern": "^[A-Za-z0-9_\\-.]+$",
 									"scope": "window",
 									"description": "Default project version"
 								},
 								"packageName": {
-									"default": "pizza",
 									"type": "string",
 									"pattern": "^[A-Za-z0-9_\\-.]+$",
 									"scope": "window",
 									"description": "Default package name"
 								},
 								"resourceName": {
-									"default": "pizza",
 									"type": "string",
 									"pattern": "^[A-Za-z0-9_\\-.]+$",
 									"scope": "window",
@@ -113,8 +111,11 @@
 		"tslint": "tslint -t verbose src/*.ts"
 	},
 	"devDependencies": {
+		"@types/fs-extra": "^7.0.0",
+		"@types/md5": "^2.1.33",
 		"@types/mocha": "^2.2.42",
 		"@types/node": "^10.12.21",
+		"@types/xml2js": "^0.4.4",
 		"ts-loader": "^6.0.1",
 		"tslint": "^5.12.1",
 		"typescript": "^3.3.1",
@@ -124,12 +125,16 @@
 		"webpack-cli": "^3.3.2"
 	},
 	"dependencies": {
+		"@types/lodash": "^4.14.134",
 		"@types/request": "^2.48.1",
 		"@types/request-promise": "^4.1.43",
 		"@types/unzipper": "^0.9.2",
+		"fs-extra": "^8.0.1",
+		"md5": "^2.2.1",
 		"request": "^2.88.0",
 		"request-promise": "^4.2.4",
 		"unzipper": "^0.9.11",
-		"user-home": "^2.0.0"
+		"user-home": "^2.0.0",
+		"xml2js": "^0.4.19"
 	}
 }

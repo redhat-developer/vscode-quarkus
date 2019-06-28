@@ -3,18 +3,29 @@
 
 
 import * as vscode from 'vscode';
-import { multiStepInput } from './multiStep';
+import { generateProject } from './generateProject/generationWizard';
+import { add } from './addExtensions/addExtensions';
+import { ConfigManager } from './definitions/ConfigManager';
 
 export interface QuickPickItemWithValue extends vscode.QuickPickItem {
   value: string;
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  let disposable = vscode.commands.registerCommand('quarkusTools.createMavenProject', () => {
-    // createQuarkusProject();
-    multiStepInput();
+
+  const configManager = new ConfigManager();
+
+
+  const createMavenProject = vscode.commands.registerCommand('quarkusTools.createMavenProject', () => {
+    generateProject(configManager);
   });
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(createMavenProject);
+
+  const addQuarkusExtensions = vscode.commands.registerCommand('quarkusTools.addExtension', () => {
+    add(configManager);
+  });
+  context.subscriptions.push(addQuarkusExtensions);
+
 }
 
 export function deactivate() { }
