@@ -8,7 +8,10 @@ Based on https://github.com/tsurdilo/quarkus-vsc
   * "Last Used" option when selecting extensions
   * Back button works
   * No intermediate delay when going through the wizard
-* Adding Quarkus extensions to a Quarkus project
+  * Choose initial Quarkus extensions to add
+    * The list of Quarkus extensions comes from a REST endpoint
+    * The "last used extensions" are checked in the list of Quarkus extensions, to ensure that they still exist. If an extension does not exist in the list, the extension is removed.
+* Adding Quarkus extensions to a current Quarkus project
   * Able to run the terminal commands to add Quarkus extensions to current project
 * `settings.json` looks like the following:
 ```
