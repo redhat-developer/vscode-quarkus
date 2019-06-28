@@ -46,6 +46,7 @@ export class ConfigManager {
   }
 
   saveDefaultsToConfig(defaults: Defaults) {
+    this.defaults = defaults;
     workspace.getConfiguration().update('quarkus.tools.starter', {apiUrl: this.apiUrl, defaults: defaults}, true);
   }
 }

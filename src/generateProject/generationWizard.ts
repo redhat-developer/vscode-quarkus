@@ -34,7 +34,7 @@ export async function generateProject(configManager: ConfigManager) {
   let state: Partial<State> = {
     totalSteps: 6
   };
-  // const configManager = new ConfigManager();
+
   const settings: SettingsJson = configManager.getSettingsJson();
   
   async function collectInputs(state: Partial<State>) {
