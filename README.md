@@ -41,7 +41,7 @@ Based on https://github.com/tsurdilo/quarkus-vsc
 ```
 
 
-## What needs to be done?
+## What might be nice improvements?
 * Hide the `Quarkus: Add extensions to current project` command when the current project is not a Quarkus extension.
 * Handle the situation where the current project has `.mvnw` or not. Currently when the user adds Quarkus extensions after
 creating a starter project, the terminal command that runs is always prefixed with `mvn`.
