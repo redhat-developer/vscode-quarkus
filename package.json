@@ -2,15 +2,10 @@
 	"name": "vscode-quarkus",
 	"displayName": "Quarkus Tools",
 	"description": "Tools for Quarkus development",
-	"version": "0.1.0",
+	"version": "0.14.0",
 	"author": "Red Hat",
 	"publisher": "redhat",
 	"license": "APACHE-2.0",
-	"homepage": "https://github.com/xorye/vscode-quarkus",
-	"repository": {
-		"type": "git",
-		"url": "git@github.com:xorye/vscode-quarkus.git"
-	},
 	"engines": {
 		"vscode": "^1.33.0"
 	},
