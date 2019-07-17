@@ -2,7 +2,6 @@
 .gitignore
 .travis.yml
 .vscode-test/
-images/
 node_modules/
 src/
 out/

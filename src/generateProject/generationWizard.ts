@@ -9,12 +9,12 @@ import * as fs from 'fs';
 import { window, Uri, commands } from 'vscode';
 
 import { INPUT_TITLE } from '../definitions/constants';
-import { ConfigManager } from '../definitions/ConfigManager';
+import { ConfigManager } from '../definitions/configManager';
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { downloadProject } from '../utils/requestUtils';
-import { State } from '../definitions/State';
+import { State } from '../definitions/state';
 import { pickExtensionsWithLastUsed } from './pickExtensions';
-import { SettingsJson } from '../definitions/ConfigManager';
+import { SettingsJson } from '../definitions/configManager';
 
 
 import { 
