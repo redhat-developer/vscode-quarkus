@@ -16,9 +16,9 @@
 		"Other"
 	],
 	"repository": {
-    "type": "git",
-    "url": "https://github.com/redhat-developer/vscode-quarkus"
-  },
+		"type": "git",
+		"url": "https://github.com/redhat-developer/vscode-quarkus"
+	},
 	"keywords": [
 		"java",
 		"quarkus",
