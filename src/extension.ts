@@ -1,11 +1,9 @@
 'use strict';
 
-
-
 import * as vscode from 'vscode';
 import { generateProject } from './generateProject/generationWizard';
 import { add } from './addExtensions/addExtensions';
-import { ConfigManager } from './definitions/ConfigManager';
+import { ConfigManager } from './definitions/configManager';
 
 export interface QuickPickItemWithValue extends vscode.QuickPickItem {
   value: string;

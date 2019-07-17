@@ -1,9 +1,9 @@
-import { executeInTerminal } from "../terminal/quarkusterminalutils";
-import { State } from "../definitions/State";
-import { ConfigManager } from "../definitions/ConfigManager";
+import { executeInTerminal } from "../terminal/quarkusTerminalUtils";
+import { State } from "../definitions/state";
+import { ConfigManager } from "../definitions/configManager";
 import { MultiStepInput } from "../utils/multiStepUtils";
 import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions";
-import { QExtension } from "../createQuarkusProject";
+import { QExtension } from "../definitions/qExtension";
 
 export async function add(configManager: ConfigManager) {
   const state: Partial<State> = {

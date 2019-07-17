@@ -3,9 +3,11 @@
 	"displayName": "Quarkus Tools",
 	"description": "Tools for Quarkus development",
 	"version": "0.14.0",
+	"icon": "images/logo.png",
 	"author": "Red Hat",
 	"publisher": "redhat",
 	"license": "APACHE-2.0",
+	"bugs": "https://github.com/redhat-developer/vscode-quarkus/issues",
 	"engines": {
 		"vscode": "^1.33.0"
 	},
@@ -13,6 +15,10 @@
 		"Programming Languages",
 		"Other"
 	],
+	"repository": {
+    "type": "git",
+    "url": "https://github.com/redhat-developer/vscode-quarkus"
+  },
 	"keywords": [
 		"java",
 		"quarkus",

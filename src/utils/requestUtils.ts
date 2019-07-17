@@ -1,7 +1,7 @@
 import * as request from 'request-promise';
 import * as unzipper from 'unzipper';
-import { QExtension } from '../definitions/QExtension';
-import { State } from '../definitions/State';
+import { QExtension } from '../definitions/qExtension';
+import { State } from '../definitions/state';
 
 
 export async function getQExtensions(apiUrl: string): Promise<QExtension[]> {
