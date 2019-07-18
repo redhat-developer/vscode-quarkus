@@ -1,6 +1,9 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
 // -------------------------------------------------------
-// Helper code that wraps the API for the multi-step generation wizard
-//
 // Reference:
 // https://github.com/microsoft/vscode-extension-samples/blob/master/quickinput-sample/src/multiStepInput.ts
 // -------------------------------------------------------
