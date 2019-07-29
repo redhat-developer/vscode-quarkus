@@ -8,7 +8,7 @@ const glob = require('glob');
 declare var v8debug;
 
 const DEBUG = (typeof v8debug === 'object') || startedInDebugMode();
-const SERVER_NAME = 'expLsArtifact-uber.jar';
+const SERVER_NAME = 'lsp4quarkus-uber.jar';
 
 export function prepareExecutable(requirements: RequirementsData): Executable {
   let executable: Executable = Object.create(null);
