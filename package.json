@@ -27,10 +27,20 @@
 	],
 	"activationEvents": [
 		"onCommand:quarkusTools.createMavenProject",
-		"onCommand:quarkusTools.addExtension"
+		"onCommand:quarkusTools.addExtension",
+		"onCommand:quarkusTools.jdtls",
+		"*"
 	],
 	"main": "./dist/extension",
 	"contributes": {
+		"javaExtensions": [
+      "./jars/io.projectreactor.reactor-core.jar",
+      "./jars/org.reactivestreams.reactive-streams.jar",
+      "./jars/jdt-ls-commons.jar",
+			"./jars/jdt-ls-extension.jar",
+			"./jars/jdt.ls.quarkus.core-0.0.1-SNAPSHOT.jar",
+			"./jars/jdt.ls.quarkus.core-0.0.1-SNAPSHOT-sources.jar"
+    ],
 		"commands": [
 			{
 				"command": "quarkusTools.createMavenProject",
@@ -39,6 +49,10 @@
 			{
 				"command": "quarkusTools.addExtension",
 				"title": "Quarkus: Add extensions to current project"
+			},
+			{
+				"command": "quarkusTools.jdtls",
+				"title": "Quarkus: Invoke jdt.ls"
 			}
 		],
 		"configuration": {

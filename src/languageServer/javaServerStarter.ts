@@ -1,13 +1,11 @@
-import { workspace } from 'vscode'
+import { workspace } from 'vscode';
 import { Executable, ExecutableOptions } from 'vscode-languageclient';
 import { RequirementsData } from './requirements';
 import * as os from 'os';
 import * as path from 'path';
 const glob = require('glob');
 
-declare var v8debug;
-
-const DEBUG = (typeof v8debug === 'object') || startedInDebugMode();
+const DEBUG = startedInDebugMode();
 const SERVER_NAME = 'lsp4quarkus-uber.jar';
 
 export function prepareExecutable(requirements: RequirementsData): Executable {
@@ -17,11 +15,11 @@ export function prepareExecutable(requirements: RequirementsData): Executable {
   options.stdio = 'pipe';
   executable.options = options;
   executable.command = path.resolve(requirements.java_home + '/bin/java');
-  executable.args = prepareParams(requirements);
+  executable.args = prepareParams();
   return executable;
 }
 
-function prepareParams(requirements: RequirementsData): string[] {
+function prepareParams(): string[] {
   let params: string[] = [];
   if (DEBUG) {
     params.push('-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1054,quiet=y');
@@ -41,8 +39,6 @@ function prepareParams(requirements: RequirementsData): string[] {
   let launchersFound: Array<string> = glob.sync(`**/${SERVER_NAME}`, { cwd: serverHome });
   if (launchersFound.length) {
     params.push('-jar'); params.push(path.resolve(serverHome, launchersFound[0]));
-  } else {
-    return null;
   }
   return params;
 }
@@ -50,8 +46,8 @@ function prepareParams(requirements: RequirementsData): string[] {
 function startedInDebugMode(): boolean {
   let args = (process as any).execArgv;
   if (args) {
-    return args.some((arg) => /^--debug=?/.test(arg) || /^--debug-brk=?/.test(arg) || /^--inspect-brk=?/.test(arg));
-  };
+    return args.some((arg: any) => /^--debug=?/.test(arg) || /^--debug-brk=?/.test(arg) || /^--inspect-brk=?/.test(arg));
+  }
   return false;
 }
 
