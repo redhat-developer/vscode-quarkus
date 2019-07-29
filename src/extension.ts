@@ -49,7 +49,7 @@ function connectToLS() {
   }).then(requirements => {
     let clientOptions: LanguageClientOptions = {
       documentSelector: [
-        { scheme: 'file', language: 'plaintext' }
+        { scheme: 'file', pattern: '**/application.properties' }
       ]
     };
 
