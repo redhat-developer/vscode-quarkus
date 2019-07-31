@@ -4,7 +4,8 @@ export const DEFAULT_ARTIFACT_ID: string = 'MyQuarkusProject';
 export const DEFAULT_PROJECT_VERSION: string = '1.0-SNAPSHOT';
 export const DEFAULT_PACKAGE_NAME: string = 'PackageName';
 export const DEFAULT_RESOURCE_NAME: string = 'ResourceName';
-
 export const INPUT_TITLE: string = 'Quarkus Tools';
 
 export const QUARKUS_CONFIG_NAME = 'quarkus.tools.starter';
+
+export const PROJECT_INFO_COMMAND = 'quarkus.java.projectInfo';

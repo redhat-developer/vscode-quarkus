@@ -4,9 +4,10 @@ import { window, commands, ExtensionContext, QuickPickItem } from 'vscode';
 import { generateProject } from './generateProject/generationWizard';
 import { add } from './addExtensions/addExtensions';
 import { ConfigManager } from './definitions/configManager';
+import { PROJECT_INFO_COMMAND } from './definitions/constants';
 import * as requirements from './languageServer/requirements';
 import { prepareExecutable } from './languageServer/javaServerStarter';
-import { LanguageClientOptions, LanguageClient, ExecuteCommandParams } from 'vscode-languageclient';
+import { LanguageClientOptions, LanguageClient } from 'vscode-languageclient';
 
 let languageClient: LanguageClient;
 
@@ -16,7 +17,7 @@ export interface QuickPickItemWithValue extends QuickPickItem {
 
 export function activate(context: ExtensionContext) {
   connectToLS().then(() => {
-    languageClient.onRequest('quarkus/properties', (params: any) => commands.executeCommand('com.redhat.jdtls.quarkus.jdt.ls.quarkus.samplecommand', params));
+    languageClient.onRequest('quarkus/properties', (params: any) => commands.executeCommand(PROJECT_INFO_COMMAND, params));
   }).catch((error) => {
     window.showErrorMessage(error.message, error.label).then((selection) => {
       if (error.label && error.label === selection && error.openUrl) {
@@ -45,39 +46,6 @@ function registerVSCodeCommands(context: ExtensionContext) {
    */
   context.subscriptions.push(commands.registerCommand('quarkusTools.addExtension', () => {
     add(configManager);
-  }));
-
-  /**
-   * Temporary command to invoke jdt.ls extension command manually
-   */
-  context.subscriptions.push(commands.registerCommand('quarkusTools.jdtls', () => {
-
-    console.log('jdtls invoked via command palette');
-
-    const quarkusJtdlsCommand = "com.redhat.jdtls.quarkus.jdt.ls.quarkus.samplecommand";
-    const quarkusJtdlsParameter = "parameters here";
-
-    commands.executeCommand("java.execute.workspaceCommand", quarkusJtdlsCommand, quarkusJtdlsParameter).then((res) => {
-      console.log("Return value from jdtls");
-      console.log(res);
-    });
-  }));
-
-  /**
-   * Command that would be invoked when metadata received from Quarkus jdt.ls extension 
-   */
-  context.subscriptions.push(commands.registerCommand('quarkusTools.notifyQuarkusLS', (metadata) => {
-    console.log("Notify Quarkus Langauge Server here");
-
-    const params: ExecuteCommandParams = {
-      command: "sendMetadata",
-      arguments: [metadata]
-    };
-
-    commands.executeCommand("QuarkusLS", 'workspace/executeCommand', params).then((res) => {
-      console.log("Quarkus LS has responded back.");
-      console.log(res);
-    });
   }));
 }
 
