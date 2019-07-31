@@ -38,8 +38,8 @@
 			"./jars/org.reactivestreams.reactive-streams.jar",
 			"./jars/jdt-ls-commons.jar",
 			"./jars/jdt-ls-extension.jar",
-			"./jars/jdt.ls.quarkus.core-0.0.1-SNAPSHOT.jar",
-			"./jars/jdt.ls.quarkus.core-0.0.1-SNAPSHOT-sources.jar"
+			"./jars/com.redhat.quarkus.jdt.core-0.0.1-SNAPSHOT.jar",
+			"./jars/com.redhat.quarkus.jdt.core-0.0.1-SNAPSHOT-sources.jar"
 		],
 		"commands": [
 			{
