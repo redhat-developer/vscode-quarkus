@@ -1,4 +1,4 @@
-import { QUARKUS_CONFIG_NAME, DEFAULT_API_URL } from './constants';
+import { QUARKUS_CONFIG_NAME, DEFAULT_API_URL } from './projectGenerationConstants';
 import { workspace } from 'vscode';
 import { QExtension } from './qExtension';
 
