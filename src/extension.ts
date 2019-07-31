@@ -18,7 +18,7 @@ import { window, commands, ExtensionContext, QuickPickItem } from 'vscode';
 import { generateProject } from './generateProject/generationWizard';
 import { add } from './addExtensions/addExtensions';
 import { ConfigManager } from './definitions/configManager';
-import { PROJECT_INFO_COMMAND } from './definitions/constants';
+import { QUARKUS_PROPERTIES_REQUEST, JDTLS_PROJECT_INFO_COMMAND } from './definitions/commandConstants';
 import * as requirements from './languageServer/requirements';
 import { prepareExecutable } from './languageServer/javaServerStarter';
 import { LanguageClientOptions, LanguageClient } from 'vscode-languageclient';
@@ -31,7 +31,9 @@ export interface QuickPickItemWithValue extends QuickPickItem {
 
 export function activate(context: ExtensionContext) {
   connectToLS().then(() => {
-    languageClient.onRequest('quarkus/properties', (params: any) => commands.executeCommand(PROJECT_INFO_COMMAND, params));
+    languageClient.onRequest(QUARKUS_PROPERTIES_REQUEST, (uri: String) => {
+      commands.executeCommand(JDTLS_PROJECT_INFO_COMMAND, uri);
+    });
   }).catch((error) => {
     window.showErrorMessage(error.message, error.label).then((selection) => {
       if (error.label && error.label === selection && error.openUrl) {
