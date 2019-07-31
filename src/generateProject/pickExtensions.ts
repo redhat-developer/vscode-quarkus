@@ -19,7 +19,7 @@ import { QExtension } from '../definitions/qExtension';
 import { State } from '../definitions/state';
 import { SettingsJson } from '../definitions/configManager';
 import { getQExtensions } from '../utils/requestUtils';
-import { DEFAULT_API_URL } from '../definitions/constants';
+import { DEFAULT_API_URL } from '../definitions/projectGenerationConstants';
 
 enum Type {
   Extension,

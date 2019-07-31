@@ -8,7 +8,6 @@ import * as fs from 'fs';
 
 import { window, Uri, commands } from 'vscode';
 
-import { INPUT_TITLE } from '../definitions/constants';
 import { ConfigManager } from '../definitions/configManager';
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { downloadProject } from '../utils/requestUtils';
@@ -16,13 +15,13 @@ import { State } from '../definitions/state';
 import { pickExtensionsWithLastUsed } from './pickExtensions';
 import { SettingsJson } from '../definitions/configManager';
 
-
-import { 
+import {
+  INPUT_TITLE,
   DEFAULT_GROUP_ID, 
   DEFAULT_ARTIFACT_ID, 
   DEFAULT_PROJECT_VERSION, 
   DEFAULT_PACKAGE_NAME, 
-  DEFAULT_RESOURCE_NAME } from '../definitions/constants';
+  DEFAULT_RESOURCE_NAME } from '../definitions/projectGenerationConstants';
 
 /**
  * A multi-step input using window.createQuickPick() and window.createInputBox().
