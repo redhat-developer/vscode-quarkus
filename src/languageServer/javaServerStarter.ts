@@ -6,7 +6,7 @@ import * as path from 'path';
 const glob = require('glob');
 
 const DEBUG = startedInDebugMode();
-const SERVER_NAME = 'lsp4quarkus-uber.jar';
+const SERVER_NAME = 'com.redhat.quarkus.ls-uber.jar';
 
 export function prepareExecutable(requirements: RequirementsData): Executable {
   let executable: Executable = Object.create(null);
