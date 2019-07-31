@@ -1,3 +1,5 @@
+// Constants related to project generation
+
 export const DEFAULT_API_URL: string = 'http://quarkus-generator.6923.rh-us-east-1.openshiftapps.com';
 export const DEFAULT_GROUP_ID: string = 'org.my.group';
 export const DEFAULT_ARTIFACT_ID: string = 'MyQuarkusProject';
@@ -7,5 +9,3 @@ export const DEFAULT_RESOURCE_NAME: string = 'ResourceName';
 export const INPUT_TITLE: string = 'Quarkus Tools';
 
 export const QUARKUS_CONFIG_NAME = 'quarkus.tools.starter';
-
-export const PROJECT_INFO_COMMAND = 'quarkus.java.projectInfo';

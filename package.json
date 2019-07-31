@@ -34,13 +34,13 @@
 	"main": "./dist/extension",
 	"contributes": {
 		"javaExtensions": [
-      "./jars/io.projectreactor.reactor-core.jar",
-      "./jars/org.reactivestreams.reactive-streams.jar",
-      "./jars/jdt-ls-commons.jar",
+			"./jars/io.projectreactor.reactor-core.jar",
+			"./jars/org.reactivestreams.reactive-streams.jar",
+			"./jars/jdt-ls-commons.jar",
 			"./jars/jdt-ls-extension.jar",
 			"./jars/jdt.ls.quarkus.core-0.0.1-SNAPSHOT.jar",
 			"./jars/jdt.ls.quarkus.core-0.0.1-SNAPSHOT-sources.jar"
-    ],
+		],
 		"commands": [
 			{
 				"command": "quarkusTools.createMavenProject",
@@ -144,12 +144,15 @@
 		"@types/request": "^2.48.1",
 		"@types/request-promise": "^4.1.43",
 		"@types/unzipper": "^0.9.2",
+		"expand-home-dir": "0.0.3",
+		"find-java-home": "^1.0.0",
 		"fs-extra": "^8.0.1",
 		"md5": "^2.2.1",
 		"request": "^2.88.0",
 		"request-promise": "^4.2.4",
 		"unzipper": "^0.9.11",
 		"user-home": "^2.0.0",
+		"vscode-languageclient": "^5.2.1",
 		"xml2js": "^0.4.19"
 	}
 }
