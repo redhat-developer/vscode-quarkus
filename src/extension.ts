@@ -19,7 +19,7 @@ export function activate(context: ExtensionContext) {
   
   connectToLS().then(() => {
     languageClient.onRequest(QUARKUS_PROJECT_REQUEST, (uri: String) => {
-      commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROJECT_INFO_COMMAND, uri);
+      return commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROJECT_INFO_COMMAND, uri);
     });
   }).catch((error) => {
     window.showErrorMessage(error.message, error.label).then((selection) => {
@@ -50,21 +50,6 @@ function registerVSCodeCommands(context: ExtensionContext) {
    */
   context.subscriptions.push(commands.registerCommand('quarkusTools.addExtension', () => {
     add(configManager);
-  }));
-
-    /**
-   * Temporary command to invoke jdt.ls extension command manually
-   */
-  context.subscriptions.push(commands.registerCommand('quarkusTools.jdtls', () => {
-
-    console.log('jdtls invoked via command palette');
-
-    const quarkusJtdlsParameter = "parameters here";
-
-    commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROJECT_INFO_COMMAND, "hello").then((res) => {
-      console.log("Return value from jdtls");
-      console.log(res);
-    });
   }));
 }
 
