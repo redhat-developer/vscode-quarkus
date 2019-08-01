@@ -7,20 +7,22 @@ import { ConfigManager } from './definitions/configManager';
 import { QUARKUS_PROJECT_REQUEST, JDTLS_PROJECT_INFO_COMMAND } from './definitions/commandConstants';
 import * as requirements from './languageServer/requirements';
 import { prepareExecutable } from './languageServer/javaServerStarter';
-import { LanguageClientOptions, LanguageClient } from 'vscode-languageclient';
+import { LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
 
 let languageClient: LanguageClient;
 
-export interface QuickPickItemWithValue extends QuickPickItem {
-  value: string;
+interface QuarkusProjectInfoParams {
+  uri: string;
+  documentationFormat: string[];
 }
 
 export function activate(context: ExtensionContext) {
   
   connectToLS().then(() => {
-    languageClient.onRequest(QUARKUS_PROJECT_REQUEST, (uri: String) => {
-      return commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROJECT_INFO_COMMAND, uri);
-    });
+    const quarkusPojectInfoRequest = new RequestType<QuarkusProjectInfoParams, any, void, void>(QUARKUS_PROJECT_REQUEST);
+    languageClient.onRequest(quarkusPojectInfoRequest, async (params: QuarkusProjectInfoParams) =>
+       <any> await commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROJECT_INFO_COMMAND, params)
+    );
   }).catch((error) => {
     window.showErrorMessage(error.message, error.label).then((selection) => {
       if (error.label && error.label === selection && error.openUrl) {
