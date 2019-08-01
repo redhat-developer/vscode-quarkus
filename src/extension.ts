@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { window, commands, ExtensionContext, QuickPickItem } from 'vscode';
+import { window, commands, ExtensionContext } from 'vscode';
 import { generateProject } from './generateProject/generationWizard';
 import { add } from './addExtensions/addExtensions';
 import { ConfigManager } from './definitions/configManager';
