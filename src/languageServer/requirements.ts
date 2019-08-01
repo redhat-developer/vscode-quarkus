@@ -49,13 +49,13 @@ function checkJavaRuntime(): Promise<string> {
             javaHome = expandHomeDir(javaHome);
             if (!pathExists.sync(javaHome)) {
                 openJDKDownload(reject, source+' points to a missing folder');
-            } else if (!pathExists.sync(path.resolve(javaHome, 'bin', JAVA_FILENAME))){
+            } else if (!pathExists.sync(path.resolve(javaHome as string, 'bin', JAVA_FILENAME))){
                 openJDKDownload(reject, source+ ' does not point to a Java runtime.');
             }
             return resolve(javaHome);
         }
         //No settings, let's try to detect as last resort.
-        findJavaHome({ allowJre: true }, function (err, home) {
+        findJavaHome({ allowJre: true }, function (err: any, home: any) {
             if (err){
                 openJDKDownload(reject, 'Java runtime could not be located.');
             }
@@ -66,9 +66,9 @@ function checkJavaRuntime(): Promise<string> {
     });
 }
 
-function readJavaHomeConfig() : string {
+function readJavaHomeConfig() : string|undefined {
     const config = workspace.getConfiguration();
-    return config.get<string>('java.home', null);
+    return config.get<string>('java.home');
 }
  
 function checkJavaVersion(java_home: string): Promise<number> {
@@ -107,7 +107,7 @@ export function parseMajorVersion(content:string):number {
     return javaVersion;
 }
 
-function openJDKDownload(reject, cause : string) {
+function openJDKDownload(reject: any, cause : string) {
     let jdkUrl = 'https://developers.redhat.com/products/openjdk/download/?sc_cid=701f2000000RWTnAAO';
     if (process.platform === 'darwin') {
         jdkUrl = 'http://www.oracle.com/technetwork/java/javase/downloads/index.html';
