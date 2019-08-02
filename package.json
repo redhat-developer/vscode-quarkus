@@ -2,7 +2,7 @@
 	"name": "vscode-quarkus",
 	"displayName": "Quarkus Tools",
 	"description": "Tools for Quarkus development",
-	"version": "0.14.0",
+	"version": "0.15.0",
 	"icon": "images/logo.png",
 	"author": "Red Hat",
 	"publisher": "redhat",
@@ -38,8 +38,7 @@
 			"./jars/org.reactivestreams.reactive-streams.jar",
 			"./jars/jdt-ls-commons.jar",
 			"./jars/jdt-ls-extension.jar",
-			"./jars/com.redhat.quarkus.jdt.core-0.0.1-SNAPSHOT.jar",
-			"./jars/com.redhat.quarkus.jdt.core-0.0.1-SNAPSHOT-sources.jar"
+			"./jars/com.redhat.quarkus.jdt.core.jar"
 		],
 		"commands": [
 			{
@@ -123,7 +122,10 @@
 		"postinstall": "node ./node_modules/vscode/bin/install",
 		"test-compile": "tsc -p ./",
 		"test": "npm run test-compile && node ./node_modules/vscode/bin/test",
-		"tslint": "tslint -t verbose src/*.ts"
+		"tslint": "tslint -t verbose src/*.ts",
+		"build": "./node_modules/.bin/gulp build",
+		"build-server": "./node_modules/.bin/gulp buildServer",
+		"build-ext": "./node_modules/.bin/gulp buildExtension"
 	},
 	"devDependencies": {
 		"@types/fs-extra": "^7.0.0",
@@ -131,6 +133,8 @@
 		"@types/mocha": "^2.2.42",
 		"@types/node": "^10.12.21",
 		"@types/xml2js": "^0.4.4",
+		"gulp": "^4.0.2",
+		"gulp-rename": "^1.4.0",
 		"ts-loader": "^6.0.1",
 		"tslint": "^5.12.1",
 		"typescript": "^3.3.1",
