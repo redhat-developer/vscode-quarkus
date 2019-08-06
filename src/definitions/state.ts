@@ -1,5 +1,5 @@
 import { Uri } from 'vscode';
-import { QExtension } from './qExtension';
+import { QExtension } from './extension';
 
 /**
  * Copyright 2019 Red Hat, Inc. and others.
