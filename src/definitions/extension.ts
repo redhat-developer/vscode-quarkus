@@ -14,10 +14,26 @@
  * limitations under the License.
  */
 
+/**
+* Interface representing a Quarkus extension
+*/
 export interface QExtension {
   name: string;
   labels: string[];
   groupId: string;
   artifactId: string;
-  guide?: string;
+}
+
+/**
+ * Interface representing a Quarkus extension
+ * from the extensions endpoint
+ */
+export interface APIExtension {
+  id: string;
+  name: string;
+  labels: string[];
+  description: string;
+  shortName: string;
+  category?: string;
+  order: Number;
 }

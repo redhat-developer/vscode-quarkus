@@ -19,7 +19,7 @@ import { State } from "../definitions/state";
 import { ConfigManager } from "../definitions/configManager";
 import { MultiStepInput } from "../utils/multiStepUtils";
 import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions";
-import { QExtension } from "../definitions/qExtension";
+import { QExtension } from "../definitions/extension";
 
 export async function add(configManager: ConfigManager) {
   const state: Partial<State> = {

@@ -15,7 +15,7 @@
  */
 
 import { MultiStepInput } from '../utils/multiStepUtils';
-import { QExtension } from '../definitions/qExtension';
+import { QExtension } from '../definitions/extension';
 import { State } from '../definitions/state';
 import { SettingsJson } from '../definitions/configManager';
 import { getQExtensions } from '../utils/requestUtils';
