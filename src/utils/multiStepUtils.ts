@@ -24,7 +24,8 @@ export interface QuickPickParameters<T extends QuickPickItem> {
   items: T[];
   activeItem?: T;
   placeholder: string;
-  buttons?: QuickInputButton[];}
+  buttons?: QuickInputButton[];
+}
 
 export interface InputBoxParameters {
   title: string;

@@ -32,7 +32,7 @@ interface QuickPickItem {
   label: string;
   description: string;
   detail?: string;
-  artifactId?:string; // only for extensions
+  artifactId?: string; // only for extensions
 }
 
 /**
@@ -63,7 +63,6 @@ async function pickExtensions(input: MultiStepInput, state: Partial<State>, sett
       return allExtensions.some((extension) => extension.artifactId === defExtension.artifactId);
     });
   }
-  
 
   let selectedExtensions: QExtension[] = [];
   let unselectedExtensions: QExtension[] = allExtensions;
@@ -94,7 +93,7 @@ async function pickExtensions(input: MultiStepInput, state: Partial<State>, sett
             unselectedExtensions.sort((a, b) => a.name.localeCompare(b.name));
           }
         } else {
-          //select
+          // select
           const dependency = unselectedExtensions.find(((it) => { return it.artifactId === pick.artifactId; }));
           if (dependency) {
             unselectedExtensions = unselectedExtensions.filter((it) => it.artifactId !== pick.artifactId);
@@ -117,7 +116,6 @@ async function pickExtensions(input: MultiStepInput, state: Partial<State>, sett
 
   } while (pick.type === Type.Extension);
 }
-
 
 function getItems(selected: QExtension[], unselected: QExtension[], defaults: QExtension[]): QuickPickItem[] {
   const items: QuickPickItem[] = selected.concat(unselected).map((it) => {

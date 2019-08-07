@@ -19,7 +19,6 @@ import * as unzipper from 'unzipper';
 import { QExtension } from '../definitions/qExtension';
 import { State } from '../definitions/state';
 
-
 export async function getQExtensions(apiUrl: string): Promise<QExtension[]> {
 
   return await request.get(`${apiUrl}/extension/list`)
@@ -30,7 +29,7 @@ export async function getQExtensions(apiUrl: string): Promise<QExtension[]> {
 }
 
 export async function downloadProject(state: State, apiUrl: string) {
-  
+
   const chosenExtArtifactIds: string[] = state.extensions!.map((it) => it.artifactId);
 
   const qProjectUrl: string = `${apiUrl}/generator?` +
