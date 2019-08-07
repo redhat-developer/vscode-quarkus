@@ -8,7 +8,7 @@ const pathExists = require('path-exists');
 const expandHomeDir = require('expand-home-dir');
 const findJavaHome = require('find-java-home');
 const isWindows = process.platform.indexOf('win') === 0;
-const JAVA_FILENAME = 'java' + (isWindows?'.exe':'');
+const JAVA_FILENAME = 'java' + (isWindows?'.exe': '');
 
 export interface RequirementsData {
     java_home: string;
@@ -25,12 +25,12 @@ export interface RequirementsData {
 export async function resolveRequirements(): Promise<RequirementsData> {
     const javaHome = await checkJavaRuntime();
     const javaVersion = await checkJavaVersion(javaHome);
-    return Promise.resolve({ 'java_home': javaHome, 'java_version': javaVersion});
+    return Promise.resolve({ java_home: javaHome, java_version: javaVersion});
 }
 
 function checkJavaRuntime(): Promise<string> {
     return new Promise((resolve, reject) => {
-        let source : string;
+        let source: string;
         let javaHome: string|undefined = readJavaHomeConfig();
 
         if (javaHome) {
@@ -44,19 +44,19 @@ function checkJavaRuntime(): Promise<string> {
                 source = 'The JAVA_HOME environment variable';
             }
         }
-        
+
         if (javaHome) {
             javaHome = expandHomeDir(javaHome);
             if (!pathExists.sync(javaHome)) {
                 openJDKDownload(reject, source+' points to a missing folder');
-            } else if (!pathExists.sync(path.resolve(javaHome as string, 'bin', JAVA_FILENAME))){
+            } else if (!pathExists.sync(path.resolve(javaHome as string, 'bin', JAVA_FILENAME))) {
                 openJDKDownload(reject, source+ ' does not point to a Java runtime.');
             }
             return resolve(javaHome);
         }
-        //No settings, let's try to detect as last resort.
-        findJavaHome({ allowJre: true }, function (err: any, home: any) {
-            if (err){
+        // No settings, let's try to detect as last resort.
+        findJavaHome({ allowJre: true }, (err: any, home: any) => {
+            if (err) {
                 openJDKDownload(reject, 'Java runtime could not be located.');
             }
             else {
@@ -66,15 +66,15 @@ function checkJavaRuntime(): Promise<string> {
     });
 }
 
-function readJavaHomeConfig() : string|undefined {
+function readJavaHomeConfig(): string|undefined {
     const config = workspace.getConfiguration();
     return config.get<string>('java.home');
 }
- 
-function checkJavaVersion(java_home: string): Promise<number> {
+
+function checkJavaVersion(javaHome: string): Promise<number> {
     return new Promise((resolve, reject) => {
-        cp.execFile(java_home + '/bin/java', ['-version'], {}, (error, stdout, stderr) => {
-            let javaVersion = parseMajorVersion(stderr);
+        cp.execFile(javaHome + '/bin/java', ['-version'], {}, (error, stdout, stderr) => {
+            const javaVersion = parseMajorVersion(stderr);
             if (javaVersion < 8) {
                 openJDKDownload(reject, 'Java 8 or more recent is required to run. Please download and install a recent JDK.');
             }
@@ -85,19 +85,19 @@ function checkJavaVersion(java_home: string): Promise<number> {
     });
 }
 
-export function parseMajorVersion(content:string):number {
+export function parseMajorVersion(content: string): number {
     let regexp = /version "(.*)"/g;
     let match = regexp.exec(content);
     if (!match) {
         return 0;
     }
     let version = match[1];
-    //Ignore '1.' prefix for legacy Java versions
+    // Ignore '1.' prefix for legacy Java versions
     if (version.startsWith('1.')) {
         version = version.substring(2);
     }
 
-    //look into the interesting bits now
+    // look into the interesting bits now
     regexp = /\d+/g;
     match = regexp.exec(version);
     let javaVersion = 0;
@@ -107,7 +107,7 @@ export function parseMajorVersion(content:string):number {
     return javaVersion;
 }
 
-function openJDKDownload(reject: any, cause : string) {
+function openJDKDownload(reject: any, cause: string) {
     let jdkUrl = 'https://developers.redhat.com/products/openjdk/download/?sc_cid=701f2000000RWTnAAO';
     if (process.platform === 'darwin') {
         jdkUrl = 'http://www.oracle.com/technetwork/java/javase/downloads/index.html';

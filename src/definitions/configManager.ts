@@ -19,7 +19,7 @@ import { workspace } from 'vscode';
 import { QExtension } from './qExtension';
 
 /**
- * This class manages the extension's interaction with 
+ * This class manages the extension's interaction with
  * settings.json
  */
 
@@ -47,7 +47,7 @@ export class ConfigManager {
     }
   }
 
-  getSettingsJson(): SettingsJson{
+  getSettingsJson(): SettingsJson {
     return {
       apiUrl: this.apiUrl,
       defaults: this.defaults
@@ -62,7 +62,7 @@ export class ConfigManager {
 
 /**
  * Relevant data from the user's settings.json
- * 
+ *
  * ie, contents of  workspace.getConfiguration('quarkus.tools.starter')
  */
 export interface SettingsJson {

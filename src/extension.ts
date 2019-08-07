@@ -31,7 +31,7 @@ interface QuarkusProjectInfoParams {
 }
 
 export function activate(context: ExtensionContext) {
-  
+
   connectToLS().then(() => {
     const quarkusPojectInfoRequest = new RequestType<QuarkusProjectInfoParams, any, void, void>(QUARKUS_PROJECT_REQUEST);
     languageClient.onRequest(quarkusPojectInfoRequest, async (params: QuarkusProjectInfoParams) =>
@@ -46,7 +46,7 @@ export function activate(context: ExtensionContext) {
   });
 
   registerVSCodeCommands(context);
-  
+
 }
 
 export function deactivate() { }
@@ -71,13 +71,13 @@ function registerVSCodeCommands(context: ExtensionContext) {
 
 function connectToLS() {
   return requirements.resolveRequirements().then(requirements => {
-    let clientOptions: LanguageClientOptions = {
+    const clientOptions: LanguageClientOptions = {
       documentSelector: [
         { scheme: 'file', pattern: '**/application.properties' }
       ]
     };
 
-    let serverOptions = prepareExecutable(requirements);
+    const serverOptions = prepareExecutable(requirements);
     languageClient = new LanguageClient('Quarkus', 'Quarkus Tools', serverOptions, clientOptions);
     languageClient.start();
     return languageClient.onReady();
