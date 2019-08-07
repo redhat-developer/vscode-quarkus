@@ -3,7 +3,7 @@
 	"displayName": "Quarkus Tools",
 	"description": "Tools for Quarkus development",
 	"version": "0.15.0",
-	"icon": "images/logo.png",
+	"icon": "icons/logo.png",
 	"author": "Red Hat",
 	"publisher": "redhat",
 	"license": "Apache-2.0",
