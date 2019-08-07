@@ -130,7 +130,7 @@ export async function executeInTerminal(
 	const workspaceFolder: vscode.WorkspaceFolder | undefined = pomfile
 		? vscode.workspace.getWorkspaceFolder(vscode.Uri.file(pomfile))
 		: undefined;
-	var mvnString: string = "";
+	let mvnString: string = "";
 	if (prependMvn) {
 		mvnString = wrappedWithQuotes(
 			await quarkusTerminal.formattedPathForTerminal(

@@ -17,31 +17,31 @@ import { SettingsJson } from '../definitions/configManager';
 
 import {
   INPUT_TITLE,
-  DEFAULT_GROUP_ID, 
-  DEFAULT_ARTIFACT_ID, 
-  DEFAULT_PROJECT_VERSION, 
-  DEFAULT_PACKAGE_NAME, 
+  DEFAULT_GROUP_ID,
+  DEFAULT_ARTIFACT_ID,
+  DEFAULT_PROJECT_VERSION,
+  DEFAULT_PACKAGE_NAME,
   DEFAULT_RESOURCE_NAME } from '../definitions/projectGenerationConstants';
 
 /**
  * A multi-step input using window.createQuickPick() and window.createInputBox().
- * 
+ *
  * This first part uses the helper class `MultiStepInput` that wraps the API for the multi-step case.
  */
 export async function generateProject(configManager: ConfigManager) {
 
-  let state: Partial<State> = {
+  const state: Partial<State> = {
     totalSteps: 6
   };
 
   const settings: SettingsJson = configManager.getSettingsJson();
-  
+
   async function collectInputs(state: Partial<State>) {
     await MultiStepInput.run(input => inputGroupId(input, state));
   }
 
   async function inputGroupId(input: MultiStepInput, state: Partial<State>) {
-    
+
     const defaultInputBoxValue = settings.defaults.groupId ? settings.defaults.groupId : DEFAULT_GROUP_ID;
     const inputBoxValue = state.groupId ? state.groupId : defaultInputBoxValue;
 
@@ -57,7 +57,7 @@ export async function generateProject(configManager: ConfigManager) {
   }
 
   async function inputArtifactId(input: MultiStepInput, state: Partial<State>) {
-    
+
     const defaultInputBoxValue = settings.defaults.artifactId ? settings.defaults.artifactId : DEFAULT_ARTIFACT_ID;
     const inputBoxValue = state.artifactId ? state.artifactId : defaultInputBoxValue;
 
@@ -73,7 +73,7 @@ export async function generateProject(configManager: ConfigManager) {
   }
 
   async function inputProjectVersion(input: MultiStepInput, state: Partial<State>) {
-    
+
     const defaultInputBoxValue = settings.defaults.projectVersion ? settings.defaults.projectVersion : DEFAULT_PROJECT_VERSION;
     const inputBoxValue = state.projectVersion ? state.projectVersion : defaultInputBoxValue;
 
@@ -122,7 +122,7 @@ export async function generateProject(configManager: ConfigManager) {
 
   await collectInputs(state);
 
-  let targetDir = await window.showOpenDialog(
+  const targetDir = await window.showOpenDialog(
     { canSelectFiles: false, canSelectFolders: true, canSelectMany: false, openLabel: 'Generate Here' }
   );
   if (!(targetDir && targetDir[0])) {
@@ -152,7 +152,7 @@ export async function generateProject(configManager: ConfigManager) {
 }
 
 function validateInput(name: string) {
-  return async function f(userInput : string) {
+  return async function f(userInput: string) {
     const re = new RegExp("^[A-Za-z0-9_\\-.]+$");
     if (!re.test(userInput)) {
       return `Invalid ${name}`;
