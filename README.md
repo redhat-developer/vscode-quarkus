@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/redhat-developer/vscode-quarkus.svg?branch=master)](https://travis-ci.org/redhat-developer/vscode-quarkus)
+
 ## VSCode Quarkus
 Prototype VSCode Quarkus tools extension.
 Based on https://github.com/tsurdilo/quarkus-vsc
