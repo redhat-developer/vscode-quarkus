@@ -1,12 +1,18 @@
-language: node_js
+sudo: false
 
+language: node_js
 node_js:
-- 'node'
+- "node"
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+    - os: osx
 
 branches:
   only:
     - master
-    - jdtls-extension-ls
 
 before_install:
 - if [ $TRAVIS_OS_NAME == "linux" ]; then
@@ -14,10 +20,13 @@ before_install:
       sh -e /etc/init.d/xvfb start;
       sleep 3;
   fi
+- npm install -g vsce
 
 install:
   - npm install
+  - npm run vscode:prepublish
+  - vsce package
 
 script:
   - npm run tslint
-  - npm run test
+  - npm run test --silent
