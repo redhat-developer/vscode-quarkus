@@ -31,7 +31,7 @@ node('rhel7'){
         dir ('vscode-quarkus') {
             sh "npm install --ignore-scripts"
             sh "npm install"
-            sh "npm run build"
+            
             sh "npm run vscode:prepublish"
         }
     }
@@ -41,7 +41,7 @@ node('rhel7'){
             wrap([$class: 'Xvnc']) {
                 dir ('vscode-quarkus') {
                     sh "npm test --silent"
-                    junit 'report.xml'
+                    //junit 'report.xml'
                 }
             }
         }
