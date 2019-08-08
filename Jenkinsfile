@@ -5,14 +5,14 @@ node('rhel7'){
         deleteDir()
         def hasServerDir = fileExists 'quarkus-ls'
         if (!hasServerDir){
-            new File('quarkus-ls').mkdir()
+            sh 'mkdir quarkus-ls'
         }
         dir ('quarkus-ls') {
             git url: 'https://github.com/redhat-developer/quarkus-ls.git' 
         }
         def hasClientDir = fileExists 'vscode-quarkus'
         if (!hasClientDir) {
-            new File('vscode-quarkus').mkdir()
+            sh 'mkdir vscode-quarkus'
         }
         dir ('vscode-quarkus') {
             git url: 'https://github.com/redhat-developer/vscode-quarkus.git'
