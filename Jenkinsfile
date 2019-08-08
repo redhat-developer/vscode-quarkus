@@ -11,7 +11,7 @@ node('rhel7'){
             git url: 'https://github.com/redhat-developer/quarkus-ls.git' 
         }
         def hasClientDir = fileExists 'vscode-quarkus'
-        if (!hasClientDir){
+        if (!hasClientDir) {
             new File('vscode-quarkus').mkdir()
         }
         dir ('vscode-quarkus') {
@@ -24,7 +24,6 @@ node('rhel7'){
         env.PATH="${env.PATH}:${nodeHome}/bin"
         sh "npm install -g typescript vsce"
     }
-}
 
     stage('Build') {
         env.JAVA_HOME="${tool 'openjdk-1.8'}"
@@ -40,10 +39,10 @@ node('rhel7'){
     withEnv(['JUNIT_REPORT_PATH=report.xml']) {
         stage('Test') {
             wrap([$class: 'Xvnc']) {
-            dir ('vscode-quarkus') {
-                sh "npm test --silent"
-                junit 'report.xml'
-            }
+                dir ('vscode-quarkus') {
+                    sh "npm test --silent"
+                    junit 'report.xml'
+                }
             }
         }
     }
