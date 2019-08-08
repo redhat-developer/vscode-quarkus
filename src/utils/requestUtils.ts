@@ -34,7 +34,7 @@ function convertToQExtensions(extensions: APIExtension[]): QExtension[] {
     const semicolon: number = extension.id.indexOf(':');
     const groupId: string = extension.id.substring(0, semicolon);
     const artifactId: string = extension.id.substring(semicolon + 1);
-    
+
     return {
       name: extension.name,
       labels: extension.labels,
