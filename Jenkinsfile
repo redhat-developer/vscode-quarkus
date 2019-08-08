@@ -29,9 +29,9 @@ node('rhel7'){
         env.JAVA_HOME="${tool 'openjdk-1.8'}"
         env.PATH="${env.JAVA_HOME}/bin:${env.PATH}"
         dir ('vscode-quarkus') {
-            sh "npm run build"
             sh "npm install --ignore-scripts"
             sh "npm install"
+            sh "npm run build"
             sh "npm run vscode:prepublish"
         }
     }
