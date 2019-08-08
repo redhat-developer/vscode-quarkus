@@ -28,16 +28,11 @@
 	"activationEvents": [
 		"onCommand:quarkusTools.createMavenProject",
 		"onCommand:quarkusTools.addExtension",
-		"onCommand:quarkusTools.jdtls",
 		"*"
 	],
 	"main": "./dist/extension",
 	"contributes": {
 		"javaExtensions": [
-			"./jars/io.projectreactor.reactor-core.jar",
-			"./jars/org.reactivestreams.reactive-streams.jar",
-			"./jars/jdt-ls-commons.jar",
-			"./jars/jdt-ls-extension.jar",
 			"./jars/com.redhat.quarkus.jdt.core.jar"
 		],
 		"commands": [
