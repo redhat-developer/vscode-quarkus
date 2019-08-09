@@ -31,6 +31,9 @@
 		"*"
 	],
 	"main": "./dist/extension",
+	"extensionDependencies": [
+		"redhat.java"
+	],
 	"contributes": {
 		"javaExtensions": [
 			"./jars/com.redhat.quarkus.jdt.core.jar"
