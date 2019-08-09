@@ -20,7 +20,7 @@ import { QExtension } from './extension';
 /**
  * Class representing data required to generate project
  */
-export interface State {
+export interface ProjectGenState {
   totalSteps: number;
   groupId: string;
   artifactId: string;
@@ -29,4 +29,9 @@ export interface State {
   resourceName: string;
   extensions: QExtension[];
   targetDir: Uri;
+  wizardInterrupted?: Interrupted;
+}
+
+export interface Interrupted {
+  reason: string;
 }

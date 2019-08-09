@@ -11,7 +11,7 @@ import { window, Uri, commands, OpenDialogOptions } from 'vscode';
 import { ConfigManager } from '../definitions/configManager';
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { downloadProject } from '../utils/requestUtils';
-import { State } from '../definitions/state';
+import { ProjectGenState } from '../definitions/projectGenerationState';
 import { pickExtensionsWithLastUsed } from './pickExtensions';
 import { SettingsJson } from '../definitions/configManager';
 
@@ -30,17 +30,17 @@ import {
  */
 export async function generateProject(configManager: ConfigManager) {
 
-  const state: Partial<State> = {
+  const state: Partial<ProjectGenState> = {
     totalSteps: 6
   };
 
   const settings: SettingsJson = configManager.getSettingsJson();
 
-  async function collectInputs(state: Partial<State>) {
+  async function collectInputs(state: Partial<ProjectGenState>) {
     await MultiStepInput.run(input => inputGroupId(input, state));
   }
 
-  async function inputGroupId(input: MultiStepInput, state: Partial<State>) {
+  async function inputGroupId(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
     const defaultInputBoxValue = settings.defaults.groupId ? settings.defaults.groupId : DEFAULT_GROUP_ID;
     const inputBoxValue = state.groupId ? state.groupId : defaultInputBoxValue;
@@ -53,10 +53,11 @@ export async function generateProject(configManager: ConfigManager) {
       prompt: 'Your project group id',
       validate: validateInput('group id')
     });
-    return (input: MultiStepInput) => inputArtifactId(input, state);
+
+    return state.wizardInterrupted ? null : (input: MultiStepInput) => inputArtifactId(input, state);
   }
 
-  async function inputArtifactId(input: MultiStepInput, state: Partial<State>) {
+  async function inputArtifactId(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
     const defaultInputBoxValue = settings.defaults.artifactId ? settings.defaults.artifactId : DEFAULT_ARTIFACT_ID;
     const inputBoxValue = state.artifactId ? state.artifactId : defaultInputBoxValue;
@@ -69,10 +70,10 @@ export async function generateProject(configManager: ConfigManager) {
       prompt: 'Your project artifact id',
       validate: validateInput('artifact id')
     });
-    return (input: MultiStepInput) => inputProjectVersion(input, state);
+    return state.wizardInterrupted ? null : (input: MultiStepInput) => inputProjectVersion(input, state);
   }
 
-  async function inputProjectVersion(input: MultiStepInput, state: Partial<State>) {
+  async function inputProjectVersion(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
     const defaultInputBoxValue = settings.defaults.projectVersion ? settings.defaults.projectVersion : DEFAULT_PROJECT_VERSION;
     const inputBoxValue = state.projectVersion ? state.projectVersion : defaultInputBoxValue;
@@ -85,10 +86,10 @@ export async function generateProject(configManager: ConfigManager) {
       prompt: 'Your project version',
       validate: validateInput('project version')
     });
-    return (input: MultiStepInput) => inputPackageName(input, state);
+    return state.wizardInterrupted ? null : (input: MultiStepInput) => inputPackageName(input, state);
   }
 
-  async function inputPackageName(input: MultiStepInput, state: Partial<State>) {
+  async function inputPackageName(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
     const defaultInputBoxValue = settings.defaults.packageName ? settings.defaults.packageName : DEFAULT_PACKAGE_NAME;
     const inputBoxValue = state.packageName ? state.packageName : defaultInputBoxValue;
@@ -101,10 +102,10 @@ export async function generateProject(configManager: ConfigManager) {
       prompt: 'Your package name',
       validate: validateInput('package name')
     });
-    return (input: MultiStepInput) => inputResourceName(input, state);
+    return state.wizardInterrupted ? null : (input: MultiStepInput) => inputResourceName(input, state);
   }
 
-  async function inputResourceName(input: MultiStepInput, state: Partial<State>) {
+  async function inputResourceName(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
     const defaultInputBoxValue = settings.defaults.resourceName ? settings.defaults.resourceName : DEFAULT_RESOURCE_NAME;
     const inputBoxValue = state.resourceName ? state.resourceName : defaultInputBoxValue;
@@ -117,10 +118,15 @@ export async function generateProject(configManager: ConfigManager) {
       prompt: 'Your resource name',
       validate: validateInput('resource name')
     });
-    return (input: MultiStepInput) => pickExtensionsWithLastUsed(input, state, settings);
+    return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensionsWithLastUsed(input, state, settings);
   }
 
   await collectInputs(state);
+
+  if (state.wizardInterrupted) {
+    window.showErrorMessage(state.wizardInterrupted.reason);
+    return;
+  }
 
   state.targetDir = await getTargetDirectory(state.artifactId);
 
@@ -128,19 +134,23 @@ export async function generateProject(configManager: ConfigManager) {
     return;
   }
 
-  const fullState = state as State;
-
   configManager.saveDefaultsToConfig({
-    groupId: fullState.groupId,
-    artifactId: fullState.artifactId,
-    projectVersion: fullState.projectVersion,
-    packageName: fullState.packageName,
-    resourceName: fullState.resourceName,
-    extensions: fullState.extensions
+    groupId: state.groupId,
+    artifactId: state.artifactId,
+    projectVersion: state.projectVersion,
+    packageName: state.packageName,
+    resourceName: state.resourceName,
+    extensions: state.extensions
   });
 
-  downloadProject(fullState, settings.apiUrl).then(() => {
-    return commands.executeCommand('vscode.openFolder', fullState.targetDir, true);
+  tryDownloadProject(state as ProjectGenState, settings.apiUrl);
+}
+
+function tryDownloadProject(state: ProjectGenState, apiUrl: string) {
+  downloadProject(state, apiUrl).then(() => {
+    return commands.executeCommand('vscode.openFolder', state.targetDir, true);
+  }).catch(() => {
+    window.showErrorMessage(`Unable to download Quarkus project.`);
   });
 }
 

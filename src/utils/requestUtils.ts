@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-import * as request from 'request-promise';
+import * as rp from 'request-promise';
+import * as request from 'request';
 import * as unzipper from 'unzipper';
 import { QExtension, APIExtension } from '../definitions/extension';
-import { State } from '../definitions/state';
+import { ProjectGenState } from '../definitions/projectGenerationState';
 
 export async function getQExtensions(apiUrl: string): Promise<QExtension[]> {
-
-  return await request.get(`${apiUrl}/extensions`)
+  const requestOptions = {
+    uri: `${apiUrl}/extensions`,
+    timeout: 30000
+  };
+  return rp(requestOptions)
     .then((body) => {
       const qExtensions: QExtension[] = convertToQExtensions(JSON.parse(body));
-
       return qExtensions.sort((a, b) => a.name.localeCompare(b.name));
     });
 }
@@ -44,7 +47,7 @@ function convertToQExtensions(extensions: APIExtension[]): QExtension[] {
   });
 }
 
-export async function downloadProject(state: State, apiUrl: string) {
+export async function downloadProject(state: ProjectGenState, apiUrl: string) {
 
   const chosenExtArtifactIds: string[] = state.extensions!.map((it) => it.artifactId);
   const chosenIds: string[] = chosenExtArtifactIds.map((artifactId) => {
