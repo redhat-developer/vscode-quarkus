@@ -154,8 +154,8 @@
 	},
 	"dependencies": {
 		"@types/lodash": "^4.14.134",
-		"@types/request": "^2.48.1",
-		"@types/request-promise": "^4.1.43",
+		"@types/request": "^2.48.2",
+		"@types/request-promise": "^4.1.44",
 		"@types/unzipper": "^0.9.2",
 		"expand-home-dir": "0.0.3",
 		"find-java-home": "^1.0.0",

@@ -16,7 +16,7 @@
 
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { QExtension } from '../definitions/extension';
-import { State } from '../definitions/state';
+import { ProjectGenState } from '../definitions/projectGenerationState';
 import { SettingsJson } from '../definitions/configManager';
 import { getQExtensions } from '../utils/requestUtils';
 import { DEFAULT_API_URL } from '../definitions/projectGenerationConstants';
@@ -40,21 +40,28 @@ interface QuickPickItem {
  */
 let addLastUsed: boolean;
 
-export async function pickExtensionsWithoutLastUsed(input: MultiStepInput, state: Partial<State>, settings: SettingsJson) {
+export async function pickExtensionsWithoutLastUsed(input: MultiStepInput, state: Partial<ProjectGenState>, settings: SettingsJson) {
   addLastUsed = false;
   await pickExtensions(input, state, settings);
 }
 
-export async function pickExtensionsWithLastUsed(input: MultiStepInput, state: Partial<State>, settings: SettingsJson) {
+export async function pickExtensionsWithLastUsed(input: MultiStepInput, state: Partial<ProjectGenState>, settings: SettingsJson) {
   addLastUsed = true;
   await pickExtensions(input, state, settings);
 }
 
-async function pickExtensions(input: MultiStepInput, state: Partial<State>, settings: SettingsJson) {
+async function pickExtensions(input: MultiStepInput, state: Partial<ProjectGenState>, settings: SettingsJson) {
 
   const apiUrl = settings.apiUrl ? settings.apiUrl : DEFAULT_API_URL;
 
-  const allExtensions: QExtension[] = await getQExtensions(apiUrl);
+  let allExtensions: QExtension[];
+
+  try {
+    allExtensions = await getQExtensions(apiUrl);
+  } catch (err) {
+    state.wizardInterrupted = {reason: `Unable to reach ${apiUrl}/extensions.`};
+    return;
+  }
 
   let defaultExtensions: QExtension[] = [];
 

@@ -15,17 +15,17 @@
  */
 
 import { executeInTerminal } from "../terminal/quarkusTerminalUtils";
-import { State } from "../definitions/state";
+import { ProjectGenState } from "../definitions/projectGenerationState";
 import { ConfigManager } from "../definitions/configManager";
 import { MultiStepInput } from "../utils/multiStepUtils";
 import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions";
 import { QExtension } from "../definitions/extension";
 
 export async function add(configManager: ConfigManager) {
-  const state: Partial<State> = {
+  const state: Partial<ProjectGenState> = {
     totalSteps: 1
   };
-  async function collectInputs(state: Partial<State>) {
+  async function collectInputs(state: Partial<ProjectGenState>) {
     await MultiStepInput.run(input => pickExtensionsWithoutLastUsed(input, state, configManager.getSettingsJson()));
   }
   await collectInputs(state);
