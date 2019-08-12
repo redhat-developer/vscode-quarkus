@@ -131,6 +131,7 @@ export async function generateProject(configManager: ConfigManager) {
   state.targetDir = await getTargetDirectory(state.artifactId);
 
   if (!state.targetDir) {
+    window.showErrorMessage(`Project generation has been canceled.`);
     return;
   }
 
@@ -148,7 +149,8 @@ export async function generateProject(configManager: ConfigManager) {
 
 function tryDownloadProject(state: ProjectGenState, apiUrl: string) {
   downloadProject(state, apiUrl).then(() => {
-    return commands.executeCommand('vscode.openFolder', state.targetDir, true);
+    const dirToOpen = Uri.file(path.join(state.targetDir.fsPath, state.artifactId));
+    return commands.executeCommand('vscode.openFolder', dirToOpen, true);
   }).catch(() => {
     window.showErrorMessage(`Unable to download Quarkus project.`);
   });
@@ -172,13 +174,7 @@ async function getTargetDirectory(projectName: string) {
       return;
     }
   }
-
-  if (!directory) {
-    window.showErrorMessage(`Project generation has been canceled.`);
-    return;
-  }
-
-  return Uri.file(path.join(directory.fsPath, projectName));
+  return directory;
 }
 
 async function showOpenFolderDialog(customOptions: OpenDialogOptions): Promise<Uri> {
