@@ -6,7 +6,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { window, Uri, commands } from 'vscode';
+import { window, Uri, commands, OpenDialogOptions } from 'vscode';
 
 import { ConfigManager } from '../definitions/configManager';
 import { MultiStepInput } from '../utils/multiStepUtils';
@@ -122,16 +122,9 @@ export async function generateProject(configManager: ConfigManager) {
 
   await collectInputs(state);
 
-  const targetDir = await window.showOpenDialog(
-    { canSelectFiles: false, canSelectFolders: true, canSelectMany: false, openLabel: 'Generate Here' }
-  );
-  if (!(targetDir && targetDir[0])) {
-    window.showErrorMessage('Impossible to Create Quarkus Project: No directory provided.');
-    return;
-  }
-  state.targetDir = Uri.file(path.join(targetDir[0].fsPath, state.artifactId!));
-  if (fs.existsSync(state.targetDir.fsPath)) {
-    window.showErrorMessage(`Impossible to Create Quarkus Project: Directory ${state.targetDir} already exists.`);
+  state.targetDir = await getTargetDirectory(state.artifactId);
+
+  if (!state.targetDir) {
     return;
   }
 
@@ -149,6 +142,48 @@ export async function generateProject(configManager: ConfigManager) {
   downloadProject(fullState, settings.apiUrl).then(() => {
     return commands.executeCommand('vscode.openFolder', fullState.targetDir, true);
   });
+}
+
+async function getTargetDirectory(projectName: string) {
+  const MESSAGE_EXISTING_FOLDER = `'${projectName}' already exists in selected directory.`;
+  const LABEL_CHOOSE_FOLDER = 'Generate Here';
+  const OPTION_OVERWRITE = 'Overwrite';
+  const OPTION_CHOOSE_NEW_DIR = 'Choose new directory';
+
+  let directory = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER });
+
+  while (directory && fs.existsSync(path.join(directory.path, projectName))) {
+    const overrideChoice: string = await window.showWarningMessage(MESSAGE_EXISTING_FOLDER, OPTION_OVERWRITE, OPTION_CHOOSE_NEW_DIR);
+    if (overrideChoice === OPTION_CHOOSE_NEW_DIR) {
+      directory = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER });
+    } else if (overrideChoice === OPTION_OVERWRITE) {
+        break;
+    } else { // User closed the warning window
+      return;
+    }
+  }
+
+  if (!directory) {
+    window.showErrorMessage(`Project generation has been canceled.`);
+    return;
+  }
+
+  return Uri.file(path.join(directory.fsPath, projectName));
+}
+
+async function showOpenFolderDialog(customOptions: OpenDialogOptions): Promise<Uri> {
+  const options: OpenDialogOptions = {
+    canSelectFiles: false,
+    canSelectFolders: true,
+    canSelectMany: false,
+  };
+
+  const result: Uri[] = await window.showOpenDialog(Object.assign(options, customOptions));
+  if (result && result.length) {
+      return Promise.resolve(result[0]);
+  } else {
+      return Promise.resolve(undefined);
+  }
 }
 
 function validateInput(name: string) {
