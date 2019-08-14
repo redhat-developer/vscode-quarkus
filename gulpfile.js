@@ -22,14 +22,14 @@ const serverDir = '../quarkus-ls/quarkus.ls/com.redhat.quarkus.ls';
 const extensionDir = '../quarkus-ls/quarkus.jdt';
 
 gulp.task('buildServer', (done) => {
-  cp.execSync(mvnw() + ' clean verify', { cwd: serverDir , stdio: 'inherit' });
+  cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: serverDir , stdio: 'inherit' });
   gulp.src(serverDir + '/target/' + serverName)
     .pipe(gulp.dest('./server'));
   done();
 });
 
 gulp.task('buildExtension', (done) => {
-  cp.execSync(mvnw() + ' clean verify -f com.redhat.quarkus.jdt.core/pom.xml', { cwd: extensionDir, stdio: 'inherit' });
+  cp.execSync(mvnw() + ' clean verify -DskipTests -f com.redhat.quarkus.jdt.core/pom.xml', { cwd: extensionDir, stdio: 'inherit' });
   gulp.src(extensionDir + '/com.redhat.quarkus.jdt.core/target/' + extensionName)
     .pipe(rename(extensionVersionless))
     .pipe(gulp.dest('./jars'));
