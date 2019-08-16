@@ -28,7 +28,7 @@
 	"activationEvents": [
 		"onCommand:quarkusTools.createMavenProject",
 		"onCommand:quarkusTools.addExtension",
-		"*"
+		"onLanguage:quarkus-properties"
 	],
 	"main": "./dist/extension",
 	"extensionDependencies": [
@@ -38,6 +38,18 @@
 		"javaExtensions": [
 			"./jars/com.redhat.quarkus.jdt.core.jar"
 		],
+		"languages": [
+			{
+				"id": "quarkus-properties",
+				"aliases": [
+					"Quarkus properties"
+				],
+				"filenames": [
+					"application.properties"
+				],
+				"configuration": "./properties-support/language-configuration.json"
+			}
+		],
 		"commands": [
 			{
 				"command": "quarkusTools.createMavenProject",
@@ -46,10 +58,6 @@
 			{
 				"command": "quarkusTools.addExtension",
 				"title": "Quarkus: Add extensions to current project"
-			},
-			{
-				"command": "quarkusTools.jdtls",
-				"title": "Quarkus: Invoke jdt.ls"
 			}
 		],
 		"configuration": {
@@ -122,7 +130,14 @@
 					}
 				}
 			}
-		}
+		},
+		"grammars": [
+			{
+				"language": "quarkus-properties",
+				"scopeName": "source.java-properties",
+				"path": "./properties-support/java-properties.tmLanguage"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "webpack --mode production",
