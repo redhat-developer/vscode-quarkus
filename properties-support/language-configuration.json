@@ -1,0 +1,24 @@
+// Referenced from:
+// https://github.com/spring-projects/sts4/blob/0714b6a69309789ac85441062698153b0ac4d9c6/vscode-extensions/vscode-spring-boot/properties-support/language-configuration.json 
+
+{
+	"comments": {
+		"lineComment": "#"
+	},
+	"brackets": [
+	],
+	"autoClosingPairs": [
+		["{", "}"],
+		["[", "]"],
+		["(", ")"],
+		["\"", "\""],
+		["'", "'"]
+	],
+	"surroundingPairs": [
+		["{", "}"],
+		["[", "]"],
+		["(", ")"],
+		["\"", "\""],
+		["'", "'"]
+	]
+}
