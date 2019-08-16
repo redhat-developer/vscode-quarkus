@@ -55,6 +55,17 @@
 		"configuration": {
 			"title": "Quarkus Tools",
 			"properties": {
+				"quarkus.tools.trace.server": {
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces the communication between VS Code and the Quarkus language server.",
+					"scope": "window"
+				},
 				"quarkus.tools.starter": {
 					"type": "object",
 					"properties": {

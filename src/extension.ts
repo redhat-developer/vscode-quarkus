@@ -78,7 +78,7 @@ function connectToLS() {
     };
 
     const serverOptions = prepareExecutable(requirements);
-    languageClient = new LanguageClient('Quarkus', 'Quarkus Tools', serverOptions, clientOptions);
+    languageClient = new LanguageClient('quarkus.tools', 'Quarkus Tools', serverOptions, clientOptions);
     languageClient.start();
     return languageClient.onReady();
   });
