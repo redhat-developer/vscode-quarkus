@@ -83,7 +83,7 @@ async function pickExtensions(input: MultiStepInput, state: Partial<ProjectGenSt
       title: 'Quarkus Tools',
       step: input.getStepNumber(),
       totalSteps: state.totalSteps!,
-      placeholder: 'Pick extensions (placeholder)',
+      placeholder: 'Pick extensions',
       items: quickPickItems,
       activeItem: quickPickItems[0]
     });
