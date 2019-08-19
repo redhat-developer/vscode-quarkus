@@ -1,55 +1,53 @@
-[![Build Status](https://travis-ci.org/redhat-developer/vscode-quarkus.svg?branch=master)](https://travis-ci.org/redhat-developer/vscode-quarkus)
+# Quarkus Tooling by Red Hat
 
-## VSCode Quarkus
-Prototype VSCode Quarkus tools extension.
-Based on https://github.com/tsurdilo/quarkus-vsc
+## Description
 
-## What has been implemented?
-* Generating a Quarkus Maven Project
-  * Default values for groupId, artifactId etc.
-  * "Last Used" option when selecting extensions
-  * Back button works
-  * No intermediate delay when going through the wizard
-  * Choose initial Quarkus extensions to add
-    * The list of Quarkus extensions comes from a REST endpoint
-    * The "last used extensions" are checked in the list of Quarkus extensions, to ensure that they still exist. If an extension does not exist in the list, the extension is removed.
-* Adding Quarkus extensions to a current Quarkus project
-  * Able to run the terminal commands to add Quarkus extensions to current project
-* `settings.json` looks like the following:
-```
-"quarkus.tools.starter": {
-    "apiUrl": "http://quarkus-generator.6923.rh-us-east-1.openshiftapps.com",
-    "defaults": {
-        "groupId": {last used groupId},
-        "artifactId": {last used artifactId}",
-        "projectVersion": {last used projectVersion},
-        "packageName": {last used packageName},
-        "resourceName": {last used resourceName},
-        "extensions": [
-            {
-                "name": "Flyway",
-                "labels": [
-                    "flyway",
-                    "database",
-                    "data"
-                ],
-                "groupId": "io.quarkus",
-                "artifactId": "quarkus-flyway",
-                "guide": "https://quarkus.io/guides/flyway-guide"
-            }
-        ]
-    }
-}
-```
+This VS Code extension provides support for Quarkus development via a 
+[Quarkus language server](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.ls)
+and a [Quarkus jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt).
 
+![](images/applicationProperties.png)
 
-## What might be nice improvements?
-* Hide the `Quarkus: Add extensions to current project` command when the current project is not a Quarkus extension.
-* Handle the situation where the current project has `.mvnw` or not. Currently when the user adds Quarkus extensions after
-creating a starter project, the terminal command that runs is always prefixed with `mvn`.
-* When adding extensions, extensions that are already installed should be excluded from the list of extensions.
-* `settings.json`
-  * The user cannot edit anything in `quarkus.tools.starter` without going into `settings.json`. Might be a poor experience to users.
-  * Find a better place to store the last used extensions. [Spring Boot Initializr](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-spring-initializr) does not save its last used extensions in `settings.json`.
-  * Too much information is being saved for last used extensions. Only the artifactId should be saved.
-* Many features are missing.
+## Quarkus Project Features
+  * Generate a Quarkus Maven project with Maven wrapper files
+  * Add Quarkus extensions to current Maven-based Quarkus project
+
+## Quarkus `application.properties` Features
+  * Completion support for Quarkus properties
+  * Hover support for Quarkus properties
+
+## Requirements
+
+  * Java JDK (or JRE) 8 or more recent
+  * [Language Support for Java(TM) by Red Hat](https://marketplace.visualstudio.com/items?itemName=redhat.java)
+
+## Supported VS Code settings
+
+The following settings are supported:
+  
+* `quarkus.tools.trace.server` : Trace the communication between VS Code and the Quarkus Language Server in the Output view.
+
+## Contributing
+
+This is an open source project open to anyone. Contributions are extremely welcome!
+
+For information on getting started, refer to the [CONTRIBUTING instructions](CONTRIBUTING.md).
+
+CI builds can be installed manually by following these instructions:
+
+  1) Download the latest development VSIX archive [from here](https://download.jboss.org/jbosstools/vscode/snapshots/vscode-quarkus/?C=M;O=D). `(vscode-quarkus-XXX.vsix)`
+
+  2) Go to the Extensions section in VS Code.
+
+  3) At the top right click the `...` icon.
+
+  4) Select 'Install from VSIX...' and choose the `.vsix` file.
+
+## Feedback
+
+File a bug in [GitHub Issues](https://github.com/redhat-developer/vscode-quarkus/issues).
+
+## License
+
+Apache License 2.0.
+See [LICENSE](LICENSE) file.
