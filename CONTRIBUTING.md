@@ -114,7 +114,7 @@ Step 2. Open the Debugging tab, select and run
 ## Debugging  
 ### Debugging the Quarkus language server:
 In an IDE of your choice, set the debugger configuration to connect
-to localhost, port 1054.  
+to localhost, port 1064.  
 
 If using VSCode, open `quarkus-ls/quarkus.ls/` in VSCode. The proper
 debugger configurations are already defined in `.vscode/`.

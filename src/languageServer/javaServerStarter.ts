@@ -6,6 +6,7 @@ import * as path from 'path';
 const glob = require('glob');
 
 const DEBUG = startedInDebugMode();
+const DEBUG_PORT = 1064;
 const SERVER_NAME = 'com.redhat.quarkus.ls-uber.jar';
 
 export function prepareExecutable(requirements: RequirementsData): Executable {
@@ -22,9 +23,9 @@ export function prepareExecutable(requirements: RequirementsData): Executable {
 function prepareParams(): string[] {
   const params: string[] = [];
   if (DEBUG) {
-    params.push('-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1054,quiet=y');
+    params.push(`-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${DEBUG_PORT},quiet=y`);
     // suspend=y is the default. Use this form if you need to debug the server startup code:
-    // params.push('-agentlib:jdwp=transport=dt_socket,server=y,address=1054');
+    // params.push(`-agentlib:jdwp=transport=dt_socket,server=y,address=${DEBUG_PORT}`);
   }
 
   const vmargs = workspace.getConfiguration("xml").get("server.vmargs", '');
