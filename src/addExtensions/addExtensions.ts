@@ -16,17 +16,16 @@
 import { RelativePattern, Uri, QuickPickItem, WorkspaceFolder, workspace, window } from "vscode";
 import { executeMavenCommand } from "../terminal/quarkusTerminalUtils";
 import { State, AddExtensionsState } from "../definitions/inputState";
-import { ConfigManager } from "../definitions/configManager";
 import { MultiStepInput } from "../utils/multiStepUtils";
 import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions";
 import { QExtension } from "../definitions/extensionInterfaces";
 
-export async function add(configManager: ConfigManager) {
+export async function add() {
   const state: Partial<AddExtensionsState> = {
     totalSteps: 1
   };
   async function collectInputs(state: Partial<State>) {
-    await MultiStepInput.run(input => pickExtensionsWithoutLastUsed(input, state, configManager.getSettingsJson(), choosePomIfMultipleExists));
+    await MultiStepInput.run(input => pickExtensionsWithoutLastUsed(input, state, choosePomIfMultipleExists));
   }
 
   async function choosePomIfMultipleExists(input: MultiStepInput, state: Partial<AddExtensionsState>) {

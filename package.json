@@ -76,7 +76,7 @@
 				},
 				"quarkus.tools.starter.api": {
 					"type": "string",
-					"default": "http://code.quarkus.io/api/quarkus",
+					"default": "http://code.quarkus.io/api",
 					"pattern": "https?://.+",
 					"description": "Quarkus API base URL",
 					"scope": "window"

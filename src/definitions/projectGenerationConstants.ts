@@ -15,12 +15,10 @@
  */
 
 // Constants related to project generation
-export const DEFAULT_API_URL: string = 'https://code.quarkus.io/api/quarkus';
+export const DEFAULT_API_URL: string = 'https://code.quarkus.io/api';
 export const DEFAULT_GROUP_ID: string = 'org.my.group';
 export const DEFAULT_ARTIFACT_ID: string = 'MyQuarkusProject';
 export const DEFAULT_PROJECT_VERSION: string = '1.0-SNAPSHOT';
 export const DEFAULT_PACKAGE_NAME: string = 'PackageName';
 export const DEFAULT_RESOURCE_NAME: string = 'ResourceName';
 export const INPUT_TITLE: string = 'Quarkus Tools';
-
-export const QUARKUS_STARTER_CONFIG_NAME = 'quarkus.tools.starter';
