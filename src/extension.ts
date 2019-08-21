@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { window, commands, ExtensionContext } from 'vscode';
+import { ExtensionContext, commands, window, workspace } from 'vscode';
 import { generateProject } from './generateProject/generationWizard';
 import { add } from './addExtensions/addExtensions';
-import { ConfigManager } from './definitions/configManager';
+import { Config } from './Config';
 import { QUARKUS_PROJECT_REQUEST, JDTLS_PROJECT_INFO_COMMAND } from './definitions/commandConstants';
 import * as requirements from './languageServer/requirements';
 import { prepareExecutable } from './languageServer/javaServerStarter';
@@ -60,20 +60,19 @@ export function activate(context: ExtensionContext) {
 export function deactivate() { }
 
 function registerVSCodeCommands(context: ExtensionContext) {
-  const configManager = new ConfigManager();
 
   /**
    * Command for creating a Quarkus Maven project
    */
   context.subscriptions.push(commands.registerCommand('quarkusTools.createMavenProject', () => {
-    generateProject(configManager);
+    generateProject();
   }));
 
   /**
    * Command for adding Quarkus extensions to current Quarkus Maven project
    */
   context.subscriptions.push(commands.registerCommand('quarkusTools.addExtension', () => {
-    add(configManager);
+    add();
   }));
 }
 

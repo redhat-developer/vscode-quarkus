@@ -6,35 +6,24 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { window, Uri, commands, OpenDialogOptions } from 'vscode';
-
-import { ConfigManager } from '../definitions/configManager';
+import { OpenDialogOptions, Uri, commands, window } from 'vscode';
+import { Config } from '../Config';
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { downloadProject } from '../utils/requestUtils';
 import { ProjectGenState } from '../definitions/inputState';
 import { pickExtensionsWithLastUsed } from './pickExtensions';
-import { SettingsJson } from '../definitions/configManager';
-
-import {
-  INPUT_TITLE,
-  DEFAULT_GROUP_ID,
-  DEFAULT_ARTIFACT_ID,
-  DEFAULT_PROJECT_VERSION,
-  DEFAULT_PACKAGE_NAME,
-  DEFAULT_RESOURCE_NAME } from '../definitions/projectGenerationConstants';
+import { INPUT_TITLE } from '../definitions/projectGenerationConstants';
 
 /**
  * A multi-step input using window.createQuickPick() and window.createInputBox().
  *
  * This first part uses the helper class `MultiStepInput` that wraps the API for the multi-step case.
  */
-export async function generateProject(configManager: ConfigManager) {
+export async function generateProject() {
 
   const state: Partial<ProjectGenState> = {
     totalSteps: 6
   };
-
-  const settings: SettingsJson = configManager.getSettingsJson();
 
   async function collectInputs(state: Partial<ProjectGenState>) {
     await MultiStepInput.run(input => inputGroupId(input, state));
@@ -42,13 +31,13 @@ export async function generateProject(configManager: ConfigManager) {
 
   async function inputGroupId(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue = settings.defaults.groupId ? settings.defaults.groupId : DEFAULT_GROUP_ID;
-    const inputBoxValue = state.groupId ? state.groupId : defaultInputBoxValue;
+    const defaultInputBoxValue: string = Config.getDefaultGroupId();
+    const inputBoxValue: string = state.groupId ? state.groupId : defaultInputBoxValue;
 
     state.groupId = await input.showInputBox({
       title: INPUT_TITLE,
       step: input.getStepNumber(),
-      totalSteps: state.totalSteps!,
+      totalSteps: state.totalSteps,
       value: inputBoxValue,
       prompt: 'Your project group id',
       validate: validateInput('group id')
@@ -59,13 +48,13 @@ export async function generateProject(configManager: ConfigManager) {
 
   async function inputArtifactId(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue = settings.defaults.artifactId ? settings.defaults.artifactId : DEFAULT_ARTIFACT_ID;
-    const inputBoxValue = state.artifactId ? state.artifactId : defaultInputBoxValue;
+    const defaultInputBoxValue: string = Config.getDefaultArtifactId();
+    const inputBoxValue: string = state.artifactId ? state.artifactId : defaultInputBoxValue;
 
     state.artifactId = await input.showInputBox({
       title: INPUT_TITLE,
       step: input.getStepNumber(),
-      totalSteps: state.totalSteps!,
+      totalSteps: state.totalSteps,
       value: inputBoxValue,
       prompt: 'Your project artifact id',
       validate: validateInput('artifact id')
@@ -75,13 +64,13 @@ export async function generateProject(configManager: ConfigManager) {
 
   async function inputProjectVersion(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue = settings.defaults.projectVersion ? settings.defaults.projectVersion : DEFAULT_PROJECT_VERSION;
-    const inputBoxValue = state.projectVersion ? state.projectVersion : defaultInputBoxValue;
+    const defaultInputBoxValue: string = Config.getDefaultProjectVersion();
+    const inputBoxValue: string = state.projectVersion ? state.projectVersion : defaultInputBoxValue;
 
     state.projectVersion = await input.showInputBox({
       title: INPUT_TITLE,
       step: input.getStepNumber(),
-      totalSteps: state.totalSteps!,
+      totalSteps: state.totalSteps,
       value: inputBoxValue,
       prompt: 'Your project version',
       validate: validateInput('project version')
@@ -91,13 +80,13 @@ export async function generateProject(configManager: ConfigManager) {
 
   async function inputPackageName(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue = settings.defaults.packageName ? settings.defaults.packageName : DEFAULT_PACKAGE_NAME;
-    const inputBoxValue = state.packageName ? state.packageName : defaultInputBoxValue;
+    const defaultInputBoxValue: string = Config.getDefaultPackageName();
+    const inputBoxValue: string = state.packageName ? state.packageName : defaultInputBoxValue;
 
     state.packageName = await input.showInputBox({
       title: INPUT_TITLE,
       step: input.getStepNumber(),
-      totalSteps: state.totalSteps!,
+      totalSteps: state.totalSteps,
       value: inputBoxValue,
       prompt: 'Your package name',
       validate: validateInput('package name')
@@ -107,18 +96,18 @@ export async function generateProject(configManager: ConfigManager) {
 
   async function inputResourceName(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue = settings.defaults.resourceName ? settings.defaults.resourceName : DEFAULT_RESOURCE_NAME;
-    const inputBoxValue = state.resourceName ? state.resourceName : defaultInputBoxValue;
+    const defaultInputBoxValue: string = Config.getDefaultResourceName();
+    const inputBoxValue: string = state.resourceName ? state.resourceName : defaultInputBoxValue;
 
     state.resourceName = await input.showInputBox({
       title: INPUT_TITLE,
       step: input.getStepNumber(),
-      totalSteps: state.totalSteps!,
+      totalSteps: state.totalSteps,
       value: inputBoxValue,
       prompt: 'Your resource name',
       validate: validateInput('resource name')
     });
-    return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensionsWithLastUsed(input, state, settings);
+    return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensionsWithLastUsed(input, state);
   }
 
   await collectInputs(state);
@@ -135,7 +124,7 @@ export async function generateProject(configManager: ConfigManager) {
     return;
   }
 
-  configManager.saveDefaultsToConfig({
+  Config.saveDefaults({
     groupId: state.groupId,
     artifactId: state.artifactId,
     projectVersion: state.projectVersion,
@@ -144,12 +133,12 @@ export async function generateProject(configManager: ConfigManager) {
     extensions: state.extensions
   });
 
-  tryDownloadProject(state as ProjectGenState, settings);
+  tryDownloadProject(state as ProjectGenState);
 }
 
-async function tryDownloadProject(state: ProjectGenState, settings: SettingsJson) {
+async function tryDownloadProject(state: ProjectGenState): Promise<void> {
   try {
-    await downloadProject(state, settings);
+    await downloadProject(state);
     const dirToOpen = Uri.file(path.join(state.targetDir.fsPath, state.artifactId));
     commands.executeCommand('vscode.openFolder', dirToOpen, true);
   } catch (err) {

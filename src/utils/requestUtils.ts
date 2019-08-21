@@ -21,20 +21,22 @@ import * as fs from 'fs';
 
 import { QExtension, APIExtension } from '../definitions/extensionInterfaces';
 import { ProjectGenState } from '../definitions/inputState';
-import { SettingsJson } from '../definitions/configManager';
+import { Config } from '../Config';
 import { Readable } from 'stream';
-import { DEFAULT_API_URL } from '../definitions/projectGenerationConstants';
 
-export async function getQExtensions(apiUrl: string): Promise<QExtension[]> {
+export async function getQExtensions(): Promise<QExtension[]> {
+  const apiUrl: string = Config.getApiUrl();
   const requestOptions = {
     uri: `${apiUrl}/extensions`,
     timeout: 30000
   };
-  return request(requestOptions)
-    .then((body) => {
-      const qExtensions: QExtension[] = convertToQExtensions(JSON.parse(body));
-      return qExtensions.sort((a, b) => a.name.localeCompare(b.name));
-    });
+
+  return request(requestOptions).then((body) => {
+    const qExtensions: QExtension[] = convertToQExtensions(JSON.parse(body));
+    return qExtensions.sort((a, b) => a.name.localeCompare(b.name));
+  }).catch(() => {
+    throw `Unable to reach ${apiUrl}/extensions.`;
+  });
 }
 
 function convertToQExtensions(extensions: APIExtension[]): QExtension[] {
@@ -52,10 +54,9 @@ function convertToQExtensions(extensions: APIExtension[]): QExtension[] {
   });
 }
 
-export async function downloadProject(state: ProjectGenState, settings: SettingsJson) {
+export async function downloadProject(state: ProjectGenState) {
 
-  const apiUrl = settings.api ? settings.api : DEFAULT_API_URL;
-
+  const apiUrl: string = Config.getApiUrl();
   const chosenExtArtifactIds: string[] = state.extensions!.map((it) => it.artifactId);
   const chosenIds: string[] = chosenExtArtifactIds.map((artifactId) => {
     return 'io.quarkus:' + artifactId;
@@ -76,7 +77,7 @@ async function tryGetProjectBuffer(projectUrl: string): Promise<Buffer> {
   try {
     return await request(projectUrl, {encoding: null}) as Buffer;
   } catch (err) {
-    throw 'Unable to download Quarkus project';
+    throw 'Unable to download Quarkus project.';
   }
 }
 

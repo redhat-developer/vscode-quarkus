@@ -17,9 +17,8 @@
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { QExtension } from '../definitions/extensionInterfaces';
 import { State } from '../definitions/inputState';
-import { SettingsJson } from '../definitions/configManager';
 import { getQExtensions } from '../utils/requestUtils';
-import { DEFAULT_API_URL } from '../definitions/projectGenerationConstants';
+import { Config } from '../Config';
 
 enum Type {
   Extension,
@@ -43,44 +42,39 @@ let addLastUsed: boolean;
 export async function pickExtensionsWithoutLastUsed(
   input: MultiStepInput,
   state: Partial<State>,
-  settings: SettingsJson,
   next?: (input: MultiStepInput, state: Partial<State>) => any) {
 
   addLastUsed = false;
-  return pickExtensions(input, state, settings, next);
+  return pickExtensions(input, state, next);
 }
 
 export async function pickExtensionsWithLastUsed(
   input: MultiStepInput,
   state: Partial<State>,
-  settings: SettingsJson,
   next?: (input: MultiStepInput, state: Partial<State>) => any) {
 
   addLastUsed = true;
-  await pickExtensions(input, state, settings, next);
+  await pickExtensions(input, state, next);
 }
 
 async function pickExtensions(
   input: MultiStepInput,
   state: Partial<State>,
-  settings: SettingsJson,
   next: (input: MultiStepInput, state: Partial<State>) => any) {
-
-  const apiUrl = settings.api ? settings.api : DEFAULT_API_URL;
 
   let allExtensions: QExtension[];
 
   try {
-    allExtensions = await getQExtensions(apiUrl);
+    allExtensions = await getQExtensions();
   } catch (err) {
-    state.wizardInterrupted = {reason: `Unable to reach ${apiUrl}/extensions.`};
+    state.wizardInterrupted = {reason: err};
     return;
   }
 
-  let defaultExtensions: QExtension[] = [];
+  let defaultExtensions: QExtension[] = Config.getDefaultExtensions();
 
-  if (settings.defaults.extensions) {
-    defaultExtensions = settings.defaults.extensions.filter((defExtension) => {
+  if (defaultExtensions.length > 0) {
+    defaultExtensions = defaultExtensions.filter((defExtension) => {
       return allExtensions.some((extension) => extension.artifactId === defExtension.artifactId);
     });
   }
