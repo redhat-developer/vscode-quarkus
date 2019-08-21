@@ -144,19 +144,18 @@ export async function generateProject(configManager: ConfigManager) {
     extensions: state.extensions
   });
 
-  tryDownloadProject(state as ProjectGenState, settings.apiUrl);
+  tryDownloadProject(state as ProjectGenState, settings);
 }
 
-async function tryDownloadProject(state: ProjectGenState, apiUrl: string) {
+async function tryDownloadProject(state: ProjectGenState, settings: SettingsJson) {
   try {
-    await downloadProject(state, apiUrl);
+    await downloadProject(state, settings);
     const dirToOpen = Uri.file(path.join(state.targetDir.fsPath, state.artifactId));
     commands.executeCommand('vscode.openFolder', dirToOpen, true);
   } catch (err) {
     window.showErrorMessage(err);
   }
 }
-
 async function getTargetDirectory(projectName: string) {
   const MESSAGE_EXISTING_FOLDER = `'${projectName}' already exists in selected directory.`;
   const LABEL_CHOOSE_FOLDER = 'Generate Here';

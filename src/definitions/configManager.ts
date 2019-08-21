@@ -14,49 +14,36 @@
  * limitations under the License.
  */
 
-import { QUARKUS_CONFIG_NAME, DEFAULT_API_URL } from './projectGenerationConstants';
+import { QUARKUS_STARTER_CONFIG_NAME, DEFAULT_API_URL } from './projectGenerationConstants';
 import { workspace } from 'vscode';
-import { QExtension } from './extension';
+import { QExtension } from './extensionInterfaces';
 
 /**
  * This class manages the extension's interaction with
+ * the `quarkus.tools.starter` configuration in
  * settings.json
  */
 
 export class ConfigManager {
 
-  apiUrl: string;
+  apiUrl?: string;
   defaults: Partial<Defaults>;
 
   constructor() {
-    this.apiUrl = DEFAULT_API_URL;
     this.defaults = {};
-
-    const settings = workspace.getConfiguration('').get<SettingsJson>(QUARKUS_CONFIG_NAME);
-
-    if (!settings) {
-      return;
-    }
-
-    if (settings.apiUrl) {
-      this.apiUrl = settings.apiUrl;
-    }
-
-    if (settings.defaults) {
-      this.defaults = settings.defaults;
-    }
+    this.apiUrl = workspace.getConfiguration(QUARKUS_STARTER_CONFIG_NAME).get('api');
+    this.defaults =  workspace.getConfiguration(QUARKUS_STARTER_CONFIG_NAME).get('defaults');
   }
 
   getSettingsJson(): SettingsJson {
     return {
-      apiUrl: this.apiUrl,
+      api: this.apiUrl,
       defaults: this.defaults
     } as SettingsJson;
   }
 
   saveDefaultsToConfig(defaults: Defaults) {
-    this.defaults = defaults;
-    workspace.getConfiguration().update('quarkus.tools.starter', {apiUrl: this.apiUrl, defaults: defaults}, true);
+      workspace.getConfiguration(QUARKUS_STARTER_CONFIG_NAME).update('defaults', defaults, true);
   }
 }
 
@@ -66,11 +53,11 @@ export class ConfigManager {
  * ie, contents of  workspace.getConfiguration('quarkus.tools.starter')
  */
 export interface SettingsJson {
-  apiUrl: string;
+  api?: string;
   defaults: Partial<Defaults>;
 }
 
-interface Defaults {
+export interface Defaults {
   groupId: string;
   artifactId: string;
   projectVersion: string;

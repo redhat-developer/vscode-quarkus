@@ -19,9 +19,11 @@ import * as yauzl from 'yauzl';
 import * as p from 'path';
 import * as fs from 'fs';
 
-import { QExtension, APIExtension } from '../definitions/extension';
+import { QExtension, APIExtension } from '../definitions/extensionInterfaces';
 import { ProjectGenState } from '../definitions/inputState';
+import { SettingsJson } from '../definitions/configManager';
 import { Readable } from 'stream';
+import { DEFAULT_API_URL } from '../definitions/projectGenerationConstants';
 
 export async function getQExtensions(apiUrl: string): Promise<QExtension[]> {
   const requestOptions = {
@@ -50,7 +52,9 @@ function convertToQExtensions(extensions: APIExtension[]): QExtension[] {
   });
 }
 
-export async function downloadProject(state: ProjectGenState, apiUrl: string) {
+export async function downloadProject(state: ProjectGenState, settings: SettingsJson) {
+
+  const apiUrl = settings.api ? settings.api : DEFAULT_API_URL;
 
   const chosenExtArtifactIds: string[] = state.extensions!.map((it) => it.artifactId);
   const chosenIds: string[] = chosenExtArtifactIds.map((artifactId) => {

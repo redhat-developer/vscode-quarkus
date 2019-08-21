@@ -15,7 +15,7 @@
  */
 
 import { MultiStepInput } from '../utils/multiStepUtils';
-import { QExtension } from '../definitions/extension';
+import { QExtension } from '../definitions/extensionInterfaces';
 import { State } from '../definitions/inputState';
 import { SettingsJson } from '../definitions/configManager';
 import { getQExtensions } from '../utils/requestUtils';
@@ -66,7 +66,7 @@ async function pickExtensions(
   settings: SettingsJson,
   next: (input: MultiStepInput, state: Partial<State>) => any) {
 
-  const apiUrl = settings.apiUrl ? settings.apiUrl : DEFAULT_API_URL;
+  const apiUrl = settings.api ? settings.api : DEFAULT_API_URL;
 
   let allExtensions: QExtension[];
 

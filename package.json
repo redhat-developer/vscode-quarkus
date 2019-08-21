@@ -74,58 +74,54 @@
 					"description": "Traces the communication between VS Code and the Quarkus language server.",
 					"scope": "window"
 				},
-				"quarkus.tools.starter": {
+				"quarkus.tools.starter.api": {
+					"type": "string",
+					"default": "http://code.quarkus.io/api/quarkus",
+					"pattern": "https?://.+",
+					"description": "Quarkus API base URL",
+					"scope": "window"
+				},
+				"quarkus.tools.starter.defaults": {
 					"type": "object",
+					"default": {},
+					"description": "Default values for the project generation wizard.",
+					"scope": "window",
 					"properties": {
-						"apiUrl": {
+						"groupId": {
 							"type": "string",
-							"pattern": "https?://.+",
+							"pattern": "^[A-Za-z0-9_\\-.]+$",
 							"scope": "window",
-							"description": "Quarkus API base URL"
+							"description": "Default Group Id"
 						},
-						"defaults": {
-							"default": {},
-							"type": "object",
-							"description": "Default values for the project generation wizard.",
+						"artifactId": {
+							"type": "string",
+							"pattern": "^[A-Za-z0-9_\\-.]+$",
 							"scope": "window",
-							"properties": {
-								"groupId": {
-									"type": "string",
-									"pattern": "^[A-Za-z0-9_\\-.]+$",
-									"scope": "window",
-									"description": "Default Group Id"
-								},
-								"artifactId": {
-									"type": "string",
-									"pattern": "^[A-Za-z0-9_\\-.]+$",
-									"scope": "window",
-									"description": "Default Artifact Id"
-								},
-								"projectVersion": {
-									"type": "string",
-									"pattern": "^[A-Za-z0-9_\\-.]+$",
-									"scope": "window",
-									"description": "Default project version"
-								},
-								"packageName": {
-									"type": "string",
-									"pattern": "^[A-Za-z0-9_\\-.]+$",
-									"scope": "window",
-									"description": "Default package name"
-								},
-								"resourceName": {
-									"type": "string",
-									"pattern": "^[A-Za-z0-9_\\-.]+$",
-									"scope": "window",
-									"description": "Default resource name"
-								},
-								"extensions": {
-									"default": [],
-									"type": "array",
-									"scope": "window",
-									"description": "Store previously selected Quarkus extensions"
-								}
-							}
+							"description": "Default Artifact Id"
+						},
+						"projectVersion": {
+							"type": "string",
+							"pattern": "^[A-Za-z0-9_\\-.]+$",
+							"scope": "window",
+							"description": "Default project version"
+						},
+						"packageName": {
+							"type": "string",
+							"pattern": "^[A-Za-z0-9_\\-.]+$",
+							"scope": "window",
+							"description": "Default package name"
+						},
+						"resourceName": {
+							"type": "string",
+							"pattern": "^[A-Za-z0-9_\\-.]+$",
+							"scope": "window",
+							"description": "Default resource name"
+						},
+						"extensions": {
+							"default": [],
+							"type": "array",
+							"scope": "window",
+							"description": "Store previously selected Quarkus extensions"
 						}
 					}
 				}
