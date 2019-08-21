@@ -20,7 +20,7 @@ import * as p from 'path';
 import * as fs from 'fs';
 
 import { QExtension, APIExtension } from '../definitions/extension';
-import { ProjectGenState } from '../definitions/projectGenerationState';
+import { ProjectGenState } from '../definitions/inputState';
 import { Readable } from 'stream';
 
 export async function getQExtensions(apiUrl: string): Promise<QExtension[]> {

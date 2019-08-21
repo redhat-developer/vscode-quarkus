@@ -11,7 +11,7 @@ import { window, Uri, commands, OpenDialogOptions } from 'vscode';
 import { ConfigManager } from '../definitions/configManager';
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { downloadProject } from '../utils/requestUtils';
-import { ProjectGenState } from '../definitions/projectGenerationState';
+import { ProjectGenState } from '../definitions/inputState';
 import { pickExtensionsWithLastUsed } from './pickExtensions';
 import { SettingsJson } from '../definitions/configManager';
 
