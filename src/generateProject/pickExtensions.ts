@@ -16,7 +16,7 @@
 
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { QExtension } from '../definitions/extension';
-import { ProjectGenState } from '../definitions/projectGenerationState';
+import { State } from '../definitions/inputState';
 import { SettingsJson } from '../definitions/configManager';
 import { getQExtensions } from '../utils/requestUtils';
 import { DEFAULT_API_URL } from '../definitions/projectGenerationConstants';
@@ -40,17 +40,31 @@ interface QuickPickItem {
  */
 let addLastUsed: boolean;
 
-export async function pickExtensionsWithoutLastUsed(input: MultiStepInput, state: Partial<ProjectGenState>, settings: SettingsJson) {
+export async function pickExtensionsWithoutLastUsed(
+  input: MultiStepInput,
+  state: Partial<State>,
+  settings: SettingsJson,
+  next?: (input: MultiStepInput, state: Partial<State>) => any) {
+
   addLastUsed = false;
-  await pickExtensions(input, state, settings);
+  return pickExtensions(input, state, settings, next);
 }
 
-export async function pickExtensionsWithLastUsed(input: MultiStepInput, state: Partial<ProjectGenState>, settings: SettingsJson) {
+export async function pickExtensionsWithLastUsed(
+  input: MultiStepInput,
+  state: Partial<State>,
+  settings: SettingsJson,
+  next?: (input: MultiStepInput, state: Partial<State>) => any) {
+
   addLastUsed = true;
-  await pickExtensions(input, state, settings);
+  await pickExtensions(input, state, settings, next);
 }
 
-async function pickExtensions(input: MultiStepInput, state: Partial<ProjectGenState>, settings: SettingsJson) {
+async function pickExtensions(
+  input: MultiStepInput,
+  state: Partial<State>,
+  settings: SettingsJson,
+  next: (input: MultiStepInput, state: Partial<State>) => any) {
 
   const apiUrl = settings.apiUrl ? settings.apiUrl : DEFAULT_API_URL;
 
@@ -82,7 +96,7 @@ async function pickExtensions(input: MultiStepInput, state: Partial<ProjectGenSt
     pick = await input.showQuickPick({
       title: 'Quarkus Tools',
       step: input.getStepNumber(),
-      totalSteps: state.totalSteps!,
+      totalSteps: state.totalSteps,
       placeholder: 'Pick extensions',
       items: quickPickItems,
       activeItem: quickPickItems[0]
@@ -108,20 +122,23 @@ async function pickExtensions(input: MultiStepInput, state: Partial<ProjectGenSt
             selectedExtensions.sort((a, b) => a.name.localeCompare(b.name));
           }
         }
-
         break;
       }
       case Type.LastUsed: {
         state.extensions = defaultExtensions;
-        return;
+        break;
       }
       case Type.Stop: {
         state.extensions = selectedExtensions;
-        return;
+        break;
       }
     }
 
   } while (pick.type === Type.Extension);
+
+  if (next) {
+    return state.wizardInterrupted ? null : (input: MultiStepInput) => next(input, state);
+  }
 }
 
 function getItems(selected: QExtension[], unselected: QExtension[], defaults: QExtension[]): QuickPickItem[] {

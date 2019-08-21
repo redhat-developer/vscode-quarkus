@@ -1,6 +1,3 @@
-import { Uri } from 'vscode';
-import { QExtension } from './extension';
-
 /**
  * Copyright 2019 Red Hat, Inc. and others.
 
@@ -17,19 +14,29 @@ import { QExtension } from './extension';
  * limitations under the License.
  */
 
+import { Uri } from 'vscode';
+import { QExtension } from './extension';
+
+export interface State {
+  totalSteps: number;
+  extensions: QExtension[];
+  wizardInterrupted?: Interrupted;
+}
+
 /**
  * Class representing data required to generate project
  */
-export interface ProjectGenState {
-  totalSteps: number;
+export interface ProjectGenState extends State {
   groupId: string;
   artifactId: string;
   projectVersion: string;
   packageName: string;
   resourceName: string;
-  extensions: QExtension[];
   targetDir: Uri;
-  wizardInterrupted?: Interrupted;
+}
+
+export interface AddExtensionsState extends State {
+  pomPath: Uri;
 }
 
 export interface Interrupted {

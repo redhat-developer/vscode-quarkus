@@ -19,18 +19,18 @@ export type InputStep = (input: MultiStepInput) => Thenable<InputStep | void>;
 
 export interface QuickPickParameters<T extends QuickPickItem> {
   title: string;
-  step: number;
-  totalSteps: number;
+  step?: number;
+  totalSteps?: number;
   items: T[];
   activeItem?: T;
-  placeholder: string;
+  placeholder?: string;
   buttons?: QuickInputButton[];
 }
 
 export interface InputBoxParameters {
   title: string;
-  step: number;
-  totalSteps: number;
+  step?: number;
+  totalSteps?: number;
   value: string;
   prompt: string;
   validate: (value: string) => Promise<string | undefined>;
@@ -79,11 +79,18 @@ export class MultiStepInput {
 
   async showQuickPick<T extends QuickPickItem, P extends QuickPickParameters<T>>({ title, step, totalSteps, items, activeItem, placeholder, buttons }: P) {
     const disposables: Disposable[] = [];
+    const displaySteps: boolean = typeof step !== 'undefined' && typeof totalSteps !== 'undefined';
+
     try {
       return await new Promise<T | (P extends { buttons: (infer I)[] } ? I : never)>((resolve, reject) => {
         const input = window.createQuickPick<T>();
         input.title = title;
-        input.step = step;
+
+        if (displaySteps) {
+          input.step = step;
+          input.totalSteps = totalSteps;
+        }
+
         input.totalSteps = totalSteps;
         input.placeholder = placeholder;
         input.items = items;
@@ -118,12 +125,17 @@ export class MultiStepInput {
 
   async showInputBox<P extends InputBoxParameters>({ title, step, totalSteps, value, prompt, validate, buttons }: P) {
     const disposables: Disposable[] = [];
+    const displaySteps: boolean = typeof step !== 'undefined' && typeof totalSteps !== 'undefined';
+
     try {
       return await new Promise<string | (P extends { buttons: (infer I)[] } ? I : never)>((resolve, reject) => {
         const input = window.createInputBox();
         input.title = title;
-        input.step = step;
-        input.totalSteps = totalSteps;
+
+        if (displaySteps) {
+          input.step = step;
+          input.totalSteps = totalSteps;
+        }
         input.value = value || '';
         input.prompt = prompt;
         input.buttons = [
