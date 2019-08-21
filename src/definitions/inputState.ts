@@ -15,7 +15,7 @@
  */
 
 import { Uri } from 'vscode';
-import { QExtension } from './extension';
+import { QExtension } from './extensionInterfaces';
 
 export interface State {
   totalSteps: number;

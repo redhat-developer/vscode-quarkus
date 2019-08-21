@@ -26,7 +26,7 @@ export interface QExtension {
 
 /**
  * Interface representing a Quarkus extension
- * from the extensions endpoint
+ * from the ${apiUrl}/extensions endpoint
  */
 export interface APIExtension {
   id: string;

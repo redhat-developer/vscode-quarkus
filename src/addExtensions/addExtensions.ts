@@ -19,7 +19,7 @@ import { State, AddExtensionsState } from "../definitions/inputState";
 import { ConfigManager } from "../definitions/configManager";
 import { MultiStepInput } from "../utils/multiStepUtils";
 import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions";
-import { QExtension } from "../definitions/extension";
+import { QExtension } from "../definitions/extensionInterfaces";
 
 export async function add(configManager: ConfigManager) {
   const state: Partial<AddExtensionsState> = {
@@ -60,7 +60,7 @@ export async function add(configManager: ConfigManager) {
   await collectInputs(state);
 
   if (state.wizardInterrupted) {
-    window.showErrorMessage('pom.xml could not be located.');
+    window.showErrorMessage(state.wizardInterrupted.reason);
     return;
   }
 

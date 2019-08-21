@@ -23,4 +23,4 @@ export const DEFAULT_PACKAGE_NAME: string = 'PackageName';
 export const DEFAULT_RESOURCE_NAME: string = 'ResourceName';
 export const INPUT_TITLE: string = 'Quarkus Tools';
 
-export const QUARKUS_CONFIG_NAME = 'quarkus.tools.starter';
+export const QUARKUS_STARTER_CONFIG_NAME = 'quarkus.tools.starter';
