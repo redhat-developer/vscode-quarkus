@@ -21,7 +21,7 @@ import { ConfigManager } from './definitions/configManager';
 import { QUARKUS_PROJECT_REQUEST, JDTLS_PROJECT_INFO_COMMAND } from './definitions/commandConstants';
 import * as requirements from './languageServer/requirements';
 import { prepareExecutable } from './languageServer/javaServerStarter';
-import { LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
+import { LanguageClientOptions, LanguageClient, RequestType, ExecuteCommandParams } from 'vscode-languageclient';
 
 let languageClient: LanguageClient;
 
@@ -37,6 +37,14 @@ export function activate(context: ExtensionContext) {
     languageClient.onRequest(quarkusPojectInfoRequest, async (params: QuarkusProjectInfoParams) =>
        <any> await commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROJECT_INFO_COMMAND, params)
     );
+
+    /**
+     * Command for resetting Quarkus properties cache
+     */
+    context.subscriptions.push(commands.registerCommand('quarkusTools.classpathChanged', (projects) => {
+      languageClient.sendNotification("quarkus/classpathChanged", projects);
+    }));
+
   }).catch((error) => {
     window.showErrorMessage(error.message, error.label).then((selection) => {
       if (error.label && error.label === selection && error.openUrl) {
