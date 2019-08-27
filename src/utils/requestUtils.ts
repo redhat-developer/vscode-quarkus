@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-import * as rp from 'request-promise';
-import * as request from 'request';
-import * as unzipper from 'unzipper';
+import * as request from 'request-promise';
+import * as yauzl from 'yauzl';
+import * as p from 'path';
+import * as fs from 'fs';
+
 import { QExtension, APIExtension } from '../definitions/extension';
 import { ProjectGenState } from '../definitions/projectGenerationState';
+import { Readable } from 'stream';
 
 export async function getQExtensions(apiUrl: string): Promise<QExtension[]> {
   const requestOptions = {
     uri: `${apiUrl}/extensions`,
     timeout: 30000
   };
-  return rp(requestOptions)
+  return request(requestOptions)
     .then((body) => {
       const qExtensions: QExtension[] = convertToQExtensions(JSON.parse(body));
       return qExtensions.sort((a, b) => a.name.localeCompare(b.name));
@@ -61,6 +64,47 @@ export async function downloadProject(state: ProjectGenState, apiUrl: string) {
     `c=${state.packageName}.${state.resourceName}&` +
     `e=${chosenIds.join('&e=')}`;
 
-  return request(qProjectUrl)
-  .pipe(unzipper.Extract({ path: state.targetDir!.fsPath })).promise();
+  const buffer: Buffer = await tryGetProjectBuffer(qProjectUrl);
+  await extract(buffer, state.targetDir!.fsPath);
+}
+
+async function tryGetProjectBuffer(projectUrl: string): Promise<Buffer> {
+  try {
+    return await request(projectUrl, {encoding: null}) as Buffer;
+  } catch (err) {
+    throw 'Unable to download Quarkus project';
+  }
+}
+
+const yauzlFromBuffer = promisify(yauzl.fromBuffer);
+
+function promisify(api) {
+  return (...args) => {
+    return new Promise((resolve, reject) => {
+      api(...args, (err, response) => {
+        if (err) return reject(err);
+        resolve(response);
+      });
+    });
+  };
+}
+
+async function extract(content: Buffer, path: string) {
+  const zipfile: yauzl.ZipFile = (await yauzlFromBuffer(content, {lazyEntries: true})) as yauzl.ZipFile;
+  const openReadStream = promisify(zipfile.openReadStream.bind(zipfile));
+
+  zipfile.readEntry();
+
+  zipfile.on("entry", async (entry) => {
+    if (entry.fileName !== "/") {
+      const mappedPath = p.resolve(path, p.normalize(entry.fileName));
+      if (entry.fileName.endsWith("/")) {
+        fs.mkdirSync(mappedPath);
+      } else {
+        const stream: Readable = (await openReadStream(entry)) as Readable;
+        stream.pipe(fs.createWriteStream(mappedPath, {mode: entry.externalFileAttributes >>> 16}));
+      }
+    }
+    zipfile.readEntry();
+  });
 }

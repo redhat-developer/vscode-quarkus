@@ -147,13 +147,14 @@ export async function generateProject(configManager: ConfigManager) {
   tryDownloadProject(state as ProjectGenState, settings.apiUrl);
 }
 
-function tryDownloadProject(state: ProjectGenState, apiUrl: string) {
-  downloadProject(state, apiUrl).then(() => {
+async function tryDownloadProject(state: ProjectGenState, apiUrl: string) {
+  try {
+    await downloadProject(state, apiUrl);
     const dirToOpen = Uri.file(path.join(state.targetDir.fsPath, state.artifactId));
-    return commands.executeCommand('vscode.openFolder', dirToOpen, true);
-  }).catch(() => {
-    window.showErrorMessage(`Unable to download Quarkus project.`);
-  });
+    commands.executeCommand('vscode.openFolder', dirToOpen, true);
+  } catch (err) {
+    window.showErrorMessage(err);
+  }
 }
 
 async function getTargetDirectory(projectName: string) {

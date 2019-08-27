@@ -21,7 +21,7 @@ import { ConfigManager } from './definitions/configManager';
 import { QUARKUS_PROJECT_REQUEST, JDTLS_PROJECT_INFO_COMMAND } from './definitions/commandConstants';
 import * as requirements from './languageServer/requirements';
 import { prepareExecutable } from './languageServer/javaServerStarter';
-import { LanguageClientOptions, LanguageClient, RequestType, ExecuteCommandParams } from 'vscode-languageclient';
+import { LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
 
 let languageClient: LanguageClient;
 
