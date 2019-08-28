@@ -50,6 +50,63 @@ Step 4. The Quarkus jdt.ls extension receives the command, determines
 information about the currently opened Quarkus project and returns
 the information to vscode-quarkus.  
 
+The information is computed by scanning all classes annotated with `@ConfigRoot` Quarkus annotation from all project classpath JARs and generating the proper Quarkus properties.
+
+For instance if the project has a `pom.xml` with this dependency:
+
+```xml
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-core-deployment</artifactId>
+</dependency>
+```
+
+The scanner will collect the [io.quarkus.deployment.ApplicationConfig](https://github.com/quarkusio/quarkus/blob/master/core/deployment/src/main/java/io/quarkus/deployment/ApplicationConfig.java) class annotated with `@ConfigRoot` and will generate a Quarkus property for each field:
+
+ * `quarkus.application.name` for the `name` field.
+ * `quarkus.application.version` for the `version` field.
+ 
+In addition, the Quarkus jdt.ls extension is able to manage `Quarkus deployment JAR`. 
+
+For instance if the project has a `pom.xml` with this dependency:
+
+```xml
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-hibernate-orm</artifactId>
+</dependency>
+```
+
+this JAR doesn't contain the classes annotated with `@ConfigRoot`. The JAR which contains those classes is `quarkus-hibernate-orm-deployment*.jar`. This information comes from 
+the `META-INF/quarkus-extension.properties` of the `quarkus-hibernate-orm*.jar` as a property:
+		 
+```
+deployment-artifact=io.quarkus\:quarkus-hibernate-orm-deployment\:0.21.1
+```
+
+Under the hood, the quarkus jdt.ls extension delegates the resolution (i.e. download) of those deployment jars to Maven, regardless of the user project's build system. So, a project depending on:
+
+```xml
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-hibernate-orm</artifactId>
+</dependency>
+```
+
+will generate some hibernate properties like:
+
+ * `quarkus.hibernate-orm.dialect`
+ * `quarkus.hibernate-orm.sql-load-script`
+ 
+despite the fact that the following dependency was not declared in the `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-hibernate-orm-deployment</artifactId>
+</dependency>
+```
+ 
 Step 5. vscode-quarkus receives the project information and sends it
 to the Quarkus language server.  
 
