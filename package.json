@@ -13,6 +13,7 @@
 	},
 	"categories": [
 		"Programming Languages",
+		"Snippets",
 		"Other"
 	],
 	"repository": {
@@ -60,6 +61,10 @@
 				"title": "Quarkus: Add extensions to current project"
 			}
 		],
+		"snippets": [{
+			"language": "java",
+			"path": "./snippets/quarkus.json"
+		}],
 		"configuration": {
 			"title": "Quarkus Tools",
 			"properties": {
