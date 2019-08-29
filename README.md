@@ -8,13 +8,21 @@ and a [Quarkus jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/
 
 ![](images/applicationProperties.png)
 
-## Quarkus Project Features
+## Quarkus Project Wizards
   * Generate a Quarkus Maven project with Maven wrapper files
   * Add Quarkus extensions to current Maven-based Quarkus project
 
 ## Quarkus `application.properties` Features
   * Completion support for Quarkus properties
   * Hover support for Quarkus properties
+
+## Quarkus Code Snippets
+This extension provides several code snippets, available when editing Java files:
+
+  * **qrc** - Create a new Quarkus resource class
+  * **qrm** - Create a new Quarkus resource method
+  * **qtrc** - Create a new Quarkus test resource class
+  * **qntrc** - Create a new Quarkus native test resource class
 
 ## Requirements
 
