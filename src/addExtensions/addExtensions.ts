@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { RelativePattern, Uri, QuickPickItem, WorkspaceFolder, workspace, window } from "vscode";
-import { executeMavenCommand } from "../terminal/quarkusTerminalUtils";
-import { State, AddExtensionsState } from "../definitions/inputState";
+import { AddExtensionsState, State } from "../definitions/inputState";
 import { MultiStepInput } from "../utils/multiStepUtils";
+import { QExtension } from "../definitions/QExtension";
+import { QuickPickItem, RelativePattern, Uri, WorkspaceFolder, window, workspace } from "vscode";
+import { executeMavenCommand } from "../terminal/quarkusTerminalUtils";
 import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions";
-import { QExtension } from "../definitions/extensionInterfaces";
 
 export async function add() {
   const state: Partial<AddExtensionsState> = {

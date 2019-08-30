@@ -54,20 +54,20 @@ function startedInDebugMode(): boolean {
 
 // exported for tests
 export function parseVMargs(params: any[], vmargsLine: string) {
-	if (!vmargsLine) {
-		return;
-	}
-	const vmargs = vmargsLine.match(/(?:[^\s"]+|"[^"]*")+/g);
-	if (vmargs === null) {
-		return;
-	}
-	vmargs.forEach(arg => {
-		// remove all standalone double quotes
-		arg = arg.replace(/(\\)?"/g, ($0, $1) => { return ($1 ? $0 : ''); });
-		// unescape all escaped double quotes
-		arg = arg.replace(/(\\)"/g, '"');
-		if (params.indexOf(arg) < 0) {
-			params.push(arg);
-		}
-	});
+  if (!vmargsLine) {
+    return;
+  }
+  const vmargs = vmargsLine.match(/(?:[^\s"]+|"[^"]*")+/g);
+  if (vmargs === null) {
+    return;
+  }
+  vmargs.forEach(arg => {
+    // remove all standalone double quotes
+    arg = arg.replace(/(\\)?"/g, ($0, $1) => { return ($1 ? $0 : ''); });
+    // unescape all escaped double quotes
+    arg = arg.replace(/(\\)"/g, '"');
+    if (params.indexOf(arg) < 0) {
+      params.push(arg);
+    }
+  });
 }

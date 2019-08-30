@@ -14,14 +14,47 @@
  * limitations under the License.
  */
 
+import { QUARKUS_GROUP_ID } from './wizardConstants';
+
 /**
 * Interface representing a Quarkus extension
 */
-export interface QExtension {
+export class QExtension {
   name: string;
   labels: string[];
   groupId: string;
   artifactId: string;
+
+  constructor(name: string, labels: string[], groupId: string, artifactId: string) {
+    this.name = name;
+    this.labels = labels;
+    this.groupId = groupId;
+    this.artifactId = artifactId;
+  }
+
+  getGroupIdArtifactIdString() {
+    return `${this.groupId}:${this.artifactId}`;
+  }
+}
+
+export function convertToQExtension(extension: APIExtension): QExtension {
+
+  if (!extension.id || extension.id.length === 0) {
+    return;
+  }
+
+  const semicolon: number = extension.id.indexOf(':');
+  let groupId: string;
+  let artifactId: string;
+
+  if (semicolon !== -1) {
+    groupId = extension.id.substring(0, semicolon);
+    artifactId = extension.id.substring(semicolon + 1);
+  } else {
+    groupId = QUARKUS_GROUP_ID;
+    artifactId = extension.id;
+  }
+  return new QExtension(extension.name, extension.labels, groupId, artifactId);
 }
 
 /**

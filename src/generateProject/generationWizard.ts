@@ -6,13 +6,14 @@
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { OpenDialogOptions, Uri, commands, window } from 'vscode';
+import { INPUT_TITLE } from '../definitions/wizardConstants';
 import { Config } from '../Config';
 import { MultiStepInput } from '../utils/multiStepUtils';
-import { downloadProject } from '../utils/requestUtils';
+import { OpenDialogOptions, Uri, commands, window } from 'vscode';
 import { ProjectGenState } from '../definitions/inputState';
+import { QExtension } from '../definitions/QExtension';
+import { downloadProject } from '../utils/requestUtils';
 import { pickExtensionsWithLastUsed } from './pickExtensions';
-import { INPUT_TITLE } from '../definitions/projectGenerationConstants';
 
 /**
  * A multi-step input using window.createQuickPick() and window.createInputBox().
@@ -130,7 +131,9 @@ export async function generateProject() {
     projectVersion: state.projectVersion,
     packageName: state.packageName,
     resourceName: state.resourceName,
-    extensions: state.extensions
+    extensions: state.extensions.map((extension: QExtension) => {
+      return extension.getGroupIdArtifactIdString();
+    })
   });
 
   tryDownloadProject(state as ProjectGenState);

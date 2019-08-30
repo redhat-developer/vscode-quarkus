@@ -19,40 +19,32 @@ import * as yauzl from 'yauzl';
 import * as p from 'path';
 import * as fs from 'fs';
 
-import { QExtension, APIExtension } from '../definitions/extensionInterfaces';
-import { ProjectGenState } from '../definitions/inputState';
 import { Config } from '../Config';
+import { ProjectGenState } from '../definitions/inputState';
+import { QExtension, APIExtension } from '../definitions/QExtension';
 import { Readable } from 'stream';
+import { convertToQExtension } from '../definitions/QExtension';
 
 export async function getQExtensions(): Promise<QExtension[]> {
   const apiUrl: string = Config.getApiUrl();
+  const extensions: string = await tryGetExtensionsJSON(apiUrl);
+  const qExtensions: QExtension[] = JSON.parse(extensions).map((ext: APIExtension) => {
+    return convertToQExtension(ext);
+  });
+  const noDuplicates: QExtension[] = removeDuplicateArtifactIds(qExtensions);
+  return noDuplicates.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+async function tryGetExtensionsJSON(apiUrl: string): Promise<string> {
   const requestOptions = {
     uri: `${apiUrl}/extensions`,
     timeout: 30000
   };
-
-  return request(requestOptions).then((body) => {
-    const qExtensions: QExtension[] = convertToQExtensions(JSON.parse(body));
-    const noDuplicates: QExtension[] = removeDuplicateArtifactIds(qExtensions);
-    return noDuplicates.sort((a, b) => a.name.localeCompare(b.name));
-  }).catch(() => {
-    throw `Unable to reach ${apiUrl}/extensions.`;
-  });
-}
-
-function convertToQExtensions(extensions: APIExtension[]): QExtension[] {
-  return extensions.map((extension) => {
-    const semicolon: number = extension.id.indexOf(':');
-    const groupId: string = extension.id.substring(0, semicolon);
-    const artifactId: string = extension.id.substring(semicolon + 1);
-
-    return {
-      name: extension.name,
-      labels: extension.labels,
-      groupId,
-      artifactId
-    } as QExtension;
-  });
+  try {
+    return await request(requestOptions);
+  } catch (err) {
+    throw 'Unable to download Quarkus project.';
+  }
 }
 
 function removeDuplicateArtifactIds(extensions: QExtension[]): QExtension[] {
