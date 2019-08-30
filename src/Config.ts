@@ -20,9 +20,8 @@ import {
   DEFAULT_PROJECT_VERSION,
   DEFAULT_PACKAGE_NAME,
   DEFAULT_RESOURCE_NAME
-} from './definitions/projectGenerationConstants';
+} from './definitions/wizardConstants';
 import { workspace } from 'vscode';
-import { QExtension } from './definitions/extensionInterfaces';
 
 /**
  * This class manages the extension's interaction with
@@ -44,24 +43,24 @@ export namespace Config {
     return getQuarkusToolsSection<string>('defaults.artifactId', DEFAULT_ARTIFACT_ID);
   }
 
-  export function getDefaultProjectVersion() {
+  export function getDefaultProjectVersion(): string {
     return getQuarkusToolsSection<string>('defaults.projectVersion', DEFAULT_PROJECT_VERSION);
   }
 
-  export function getDefaultPackageName() {
+  export function getDefaultPackageName(): string {
     return getQuarkusToolsSection<string>('defaults.packageName', DEFAULT_PACKAGE_NAME);
   }
 
-  export function getDefaultResourceName() {
+  export function getDefaultResourceName(): string {
     return getQuarkusToolsSection<string>('defaults.resourceName', DEFAULT_RESOURCE_NAME);
   }
 
-  export function getDefaultExtensions() {
-    return getQuarkusToolsSection<QExtension[]>('defaults.extensions', []);
+  export function getDefaultExtensions(): any[] {
+    return getQuarkusToolsSection<string[]>('defaults.extensions', []);
   }
 
   export function saveDefaults(defaults: Defaults) {
-      workspace.getConfiguration(QUARKUS_CONFIG_NAME).update('defaults', defaults, true);
+    workspace.getConfiguration(QUARKUS_CONFIG_NAME).update('defaults', defaults, true);
   }
 
   function getQuarkusToolsSection<T>(section: string, fallback: T): T {
@@ -75,5 +74,5 @@ interface Defaults {
   projectVersion: string;
   packageName: string;
   resourceName: string;
-  extensions: QExtension[];
+  extensions: string[];
 }

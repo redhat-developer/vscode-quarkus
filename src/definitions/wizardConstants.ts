@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+// Quarkus language server request and notifications
+export const QUARKUS_PROJECT_REQUEST = 'quarkus/projectInfo';
+
+// Quarkus jdt.ls extension commands
+export const JDTLS_PROJECT_INFO_COMMAND = 'quarkus.java.projectInfo';
+
 // Constants related to project generation
 export const DEFAULT_API_URL: string = 'https://code.quarkus.io/api';
 export const DEFAULT_GROUP_ID: string = 'org.my.group';
@@ -22,3 +28,6 @@ export const DEFAULT_PROJECT_VERSION: string = '1.0-SNAPSHOT';
 export const DEFAULT_PACKAGE_NAME: string = 'PackageName';
 export const DEFAULT_RESOURCE_NAME: string = 'ResourceName';
 export const INPUT_TITLE: string = 'Quarkus Tools';
+
+// Quarkus extension default groupId
+export const QUARKUS_GROUP_ID: string = 'io.quarkus';

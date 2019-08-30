@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+import { QUARKUS_GROUP_ID } from '../definitions/wizardConstants';
+import { Config } from '../Config';
 import { MultiStepInput } from '../utils/multiStepUtils';
-import { QExtension } from '../definitions/extensionInterfaces';
+import { QExtension } from '../definitions/QExtension';
 import { State } from '../definitions/inputState';
 import { getQExtensions } from '../utils/requestUtils';
-import { Config } from '../Config';
 
 enum Type {
   Extension,
@@ -71,14 +71,7 @@ async function pickExtensions(
     return;
   }
 
-  let defaultExtensions: QExtension[] = Config.getDefaultExtensions();
-
-  if (defaultExtensions.length > 0) {
-    defaultExtensions = defaultExtensions.filter((defExtension) => {
-      return allExtensions.some((extension) => extension.artifactId === defExtension.artifactId);
-    });
-  }
-
+  const defaultExtensions: QExtension[] = getDefaultQExtensions(allExtensions);
   let selectedExtensions: QExtension[] = [];
   let unselectedExtensions: QExtension[] = allExtensions;
   let pick: QuickPickItem;
@@ -133,6 +126,31 @@ async function pickExtensions(
   if (next) {
     return state.wizardInterrupted ? null : (input: MultiStepInput) => next(input, state);
   }
+}
+
+function getDefaultQExtensions(allExtensions: QExtension[]): QExtension[] {
+  const result: QExtension[] = [];
+  let defaultExtensionIds: any[] = Config.getDefaultExtensions();
+
+  defaultExtensionIds = defaultExtensionIds.filter((extensionId: any) => {
+    return typeof extensionId === 'string' && extensionId.length > 0;
+  });
+
+  defaultExtensionIds = defaultExtensionIds.map((extensionId: any) => {
+    const semicolon: number = extensionId.indexOf(':');
+    if (semicolon !== -1) {
+      return extensionId;
+    } else {
+      return `${QUARKUS_GROUP_ID}:${extensionId}`;
+    }
+  });
+
+  allExtensions.forEach((extension: QExtension) => {
+    if (defaultExtensionIds.includes(extension.getGroupIdArtifactIdString())) {
+      result.push(extension);
+    }
+  });
+  return result;
 }
 
 function getItems(selected: QExtension[], unselected: QExtension[], defaults: QExtension[]): QuickPickItem[] {

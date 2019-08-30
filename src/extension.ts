@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { ExtensionContext, commands, window, workspace } from 'vscode';
-import { generateProject } from './generateProject/generationWizard';
-import { add } from './addExtensions/addExtensions';
-import { Config } from './Config';
-import { QUARKUS_PROJECT_REQUEST, JDTLS_PROJECT_INFO_COMMAND } from './definitions/commandConstants';
 import * as requirements from './languageServer/requirements';
-import { prepareExecutable } from './languageServer/javaServerStarter';
+
+import { QUARKUS_PROJECT_REQUEST, JDTLS_PROJECT_INFO_COMMAND } from './definitions/wizardConstants';
+import { ExtensionContext, commands, window } from 'vscode';
 import { LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
+import { add } from './addExtensions/addExtensions';
+import { generateProject } from './generateProject/generationWizard';
+import { prepareExecutable } from './languageServer/javaServerStarter';
 
 let languageClient: LanguageClient;
 
