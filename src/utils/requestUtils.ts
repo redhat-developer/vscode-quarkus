@@ -33,7 +33,8 @@ export async function getQExtensions(): Promise<QExtension[]> {
 
   return request(requestOptions).then((body) => {
     const qExtensions: QExtension[] = convertToQExtensions(JSON.parse(body));
-    return qExtensions.sort((a, b) => a.name.localeCompare(b.name));
+    const noDuplicates: QExtension[] = removeDuplicateArtifactIds(qExtensions);
+    return noDuplicates.sort((a, b) => a.name.localeCompare(b.name));
   }).catch(() => {
     throw `Unable to reach ${apiUrl}/extensions.`;
   });
@@ -54,8 +55,19 @@ function convertToQExtensions(extensions: APIExtension[]): QExtension[] {
   });
 }
 
-export async function downloadProject(state: ProjectGenState) {
+function removeDuplicateArtifactIds(extensions: QExtension[]): QExtension[] {
+  const ids: Set<string> = new Set();
 
+  return extensions.reduce((accumulator: QExtension[], extension: QExtension) => {
+    if (!ids.has(extension.artifactId)) {
+      ids.add(extension.artifactId);
+      accumulator.push(extension);
+    }
+    return accumulator;
+  }, [] as QExtension[]);
+}
+
+export async function downloadProject(state: ProjectGenState) {
   const apiUrl: string = Config.getApiUrl();
   const chosenExtArtifactIds: string[] = state.extensions!.map((it) => it.artifactId);
   const chosenIds: string[] = chosenExtArtifactIds.map((artifactId) => {
