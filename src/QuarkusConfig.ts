@@ -27,43 +27,51 @@ import { workspace } from 'vscode';
  * This class manages the extension's interaction with
  * settings.json
  */
-const QUARKUS_CONFIG_NAME = 'quarkus.tools.starter';
+const QUARKUS_CONFIG_NAME = 'quarkus.tools';
 
-export namespace Config {
+export namespace QuarkusConfig {
 
   export function getApiUrl(): string {
-    return getQuarkusToolsSection<string>('api', DEFAULT_API_URL);
+    return getQuarkusToolsSection<string>('starter.api', DEFAULT_API_URL);
   }
 
   export function getDefaultGroupId(): string {
-    return getQuarkusToolsSection<string>('defaults.groupId', DEFAULT_GROUP_ID);
+    return getQuarkusToolsSection<string>('starter.defaults.groupId', DEFAULT_GROUP_ID);
   }
 
   export function getDefaultArtifactId(): string {
-    return getQuarkusToolsSection<string>('defaults.artifactId', DEFAULT_ARTIFACT_ID);
+    return getQuarkusToolsSection<string>('starter.defaults.artifactId', DEFAULT_ARTIFACT_ID);
   }
 
   export function getDefaultProjectVersion(): string {
-    return getQuarkusToolsSection<string>('defaults.projectVersion', DEFAULT_PROJECT_VERSION);
+    return getQuarkusToolsSection<string>('starter.defaults.projectVersion', DEFAULT_PROJECT_VERSION);
   }
 
   export function getDefaultPackageName(): string {
-    return getQuarkusToolsSection<string>('defaults.packageName', DEFAULT_PACKAGE_NAME);
+    return getQuarkusToolsSection<string>('starter.defaults.packageName', DEFAULT_PACKAGE_NAME);
   }
 
   export function getDefaultResourceName(): string {
-    return getQuarkusToolsSection<string>('defaults.resourceName', DEFAULT_RESOURCE_NAME);
+    return getQuarkusToolsSection<string>('starter.defaults.resourceName', DEFAULT_RESOURCE_NAME);
   }
 
   export function getDefaultExtensions(): any[] {
-    return getQuarkusToolsSection<string[]>('defaults.extensions', []);
+    return getQuarkusToolsSection<string[]>('starter.defaults.extensions', []);
   }
 
-  export function saveDefaults(defaults: Defaults) {
-    workspace.getConfiguration(QUARKUS_CONFIG_NAME).update('defaults', defaults, true);
+  export function getTerminateProcessOnDebugExit(): TerminateProcessConfig {
+    return getQuarkusToolsSection<TerminateProcessConfig>('debug.terminateProcessOnExit');
   }
 
-  function getQuarkusToolsSection<T>(section: string, fallback: T): T {
+  export function saveDefaults(defaults: Defaults): void {
+    workspace.getConfiguration(QUARKUS_CONFIG_NAME).update('starter.defaults', defaults, true);
+  }
+
+  export function saveTerminateProcessOnDebugExit(save: string): void {
+    workspace.getConfiguration(QUARKUS_CONFIG_NAME).update('debug.terminateProcessOnExit', save, true);
+  }
+
+  function getQuarkusToolsSection<T>(section: string, fallback?: T): T|undefined {
     return workspace.getConfiguration(QUARKUS_CONFIG_NAME).get<T>(section, fallback);
   }
 }
@@ -75,4 +83,10 @@ interface Defaults {
   packageName: string;
   resourceName: string;
   extensions: string[];
+}
+
+export enum TerminateProcessConfig {
+  Ask = "Ask",
+  Terminate = "Always terminate",
+  DontTerminate = "Never terminate"
 }

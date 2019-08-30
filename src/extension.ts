@@ -16,12 +16,17 @@
 import * as requirements from './languageServer/requirements';
 
 import { QUARKUS_PROJECT_REQUEST, JDTLS_PROJECT_INFO_COMMAND } from './definitions/wizardConstants';
-import { ExtensionContext, commands, window, workspace } from 'vscode';
-import { LanguageClientOptions, LanguageClient, RequestType, DidChangeConfigurationNotification } from 'vscode-languageclient';
-import { add } from './addExtensions/addExtensions';
-import { generateProject } from './generateProject/generationWizard';
-import { prepareExecutable } from './languageServer/javaServerStarter';
 
+import { DidChangeConfigurationNotification, Disposable, LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
+import { ExtensionContext, commands, window, workspace } from 'vscode';
+import { addExtensionsWizard } from './addExtensions/addExtensionsWizard';
+import { createTerminateDebugListener } from './debugging/terminateProcess';
+import { generateProjectWizard } from './generateProject/generationWizard';
+import { prepareExecutable } from './languageServer/javaServerStarter';
+import { tryStartDebugging } from './debugging/startDebugging';
+
+const disposables = [];
+let terminateDebugListener: Disposable;
 let languageClient: LanguageClient;
 
 interface QuarkusProjectInfoParams {
@@ -30,6 +35,8 @@ interface QuarkusProjectInfoParams {
 }
 
 export function activate(context: ExtensionContext) {
+
+  terminateDebugListener = createTerminateDebugListener(disposables);
 
   connectToLS().then(() => {
     const quarkusPojectInfoRequest = new RequestType<QuarkusProjectInfoParams, any, void, void>(QUARKUS_PROJECT_REQUEST);
@@ -56,7 +63,10 @@ export function activate(context: ExtensionContext) {
 
 }
 
-export function deactivate() { }
+export function deactivate() {
+  terminateDebugListener.dispose();
+  disposables.forEach(disposable => disposable.dispose());
+}
 
 function registerVSCodeCommands(context: ExtensionContext) {
 
@@ -64,14 +74,21 @@ function registerVSCodeCommands(context: ExtensionContext) {
    * Command for creating a Quarkus Maven project
    */
   context.subscriptions.push(commands.registerCommand('quarkusTools.createMavenProject', () => {
-    generateProject();
+    generateProjectWizard();
   }));
 
   /**
    * Command for adding Quarkus extensions to current Quarkus Maven project
    */
   context.subscriptions.push(commands.registerCommand('quarkusTools.addExtension', () => {
-    add();
+    addExtensionsWizard();
+  }));
+
+  /**
+   * Command for debugging current Quarkus Maven project
+   */
+  context.subscriptions.push(commands.registerCommand('quarkusTools.debugQuarkusProject', () => {
+    tryStartDebugging();
   }));
 }
 
@@ -100,7 +117,7 @@ function connectToLS() {
 
     const serverOptions = prepareExecutable(requirements);
     languageClient = new LanguageClient('quarkus.tools', 'Quarkus Tools', serverOptions, clientOptions);
-    languageClient.start();
+    disposables.push(languageClient.start());
     return languageClient.onReady();
   });
 

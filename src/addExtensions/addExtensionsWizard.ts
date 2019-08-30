@@ -18,9 +18,10 @@ import { MultiStepInput } from "../utils/multiStepUtils";
 import { QExtension } from "../definitions/QExtension";
 import { QuickPickItem, RelativePattern, Uri, WorkspaceFolder, window, workspace } from "vscode";
 import { executeMavenCommand } from "../terminal/quarkusTerminalUtils";
+import { getPomPathsFromWorkspace } from "../utils/workspaceUtils";
 import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions";
 
-export async function add() {
+export async function addExtensionsWizard() {
   const state: Partial<AddExtensionsState> = {
     totalSteps: 1
   };
@@ -78,18 +79,15 @@ function getArtifactIds(extensions: QExtension[]): string[] {
  * files, under every currently opened workspace folder.
  */
 async function searchPomXml(): Promise<Uri[]> {
-  const pattern: string = '**/pom.xml';
   const workspaceFolders: WorkspaceFolder[] | undefined = workspace.workspaceFolders;
 
   if (workspaceFolders === undefined) {
     return [];
   }
 
-  const folderPaths: Uri[] = workspaceFolders.map((folder) => folder.uri);
-
-  const pomPaths: Uri[] = await folderPaths.reduce(async (pomPaths: Promise<Uri[]>, folderToSearch: Uri) => {
+  const pomPaths: Uri[] = await workspaceFolders.reduce(async (pomPaths: Promise<Uri[]>, folderToSearch: WorkspaceFolder) => {
     const accumulator = await pomPaths;
-    const pomFileUris: Uri[] = await workspace.findFiles(new RelativePattern(folderToSearch.fsPath, pattern));
+    const pomFileUris: Uri[] = await getPomPathsFromWorkspace(folderToSearch);
 
     return Promise.resolve(accumulator.concat(pomFileUris));
   }, Promise.resolve([]));

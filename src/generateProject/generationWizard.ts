@@ -5,13 +5,16 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
+import * as fse from 'fs-extra';
 
 import { INPUT_TITLE } from '../definitions/wizardConstants';
-import { Config } from '../Config';
+import { QuarkusConfig } from '../QuarkusConfig';
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { OpenDialogOptions, Uri, commands, window } from 'vscode';
 import { ProjectGenState } from '../definitions/inputState';
 import { QExtension } from '../definitions/QExtension';
+import { ZipFile } from 'yauzl';
+import { createDebugConfig } from '../debugging/createDebugConfig';
 import { downloadProject } from '../utils/requestUtils';
 import { pickExtensionsWithLastUsed } from './pickExtensions';
 
@@ -20,7 +23,7 @@ import { pickExtensionsWithLastUsed } from './pickExtensions';
  *
  * This first part uses the helper class `MultiStepInput` that wraps the API for the multi-step case.
  */
-export async function generateProject() {
+export async function generateProjectWizard() {
 
   const state: Partial<ProjectGenState> = {
     totalSteps: 6
@@ -32,7 +35,7 @@ export async function generateProject() {
 
   async function inputGroupId(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue: string = Config.getDefaultGroupId();
+    const defaultInputBoxValue: string = QuarkusConfig.getDefaultGroupId();
     const inputBoxValue: string = state.groupId ? state.groupId : defaultInputBoxValue;
 
     state.groupId = await input.showInputBox({
@@ -49,7 +52,7 @@ export async function generateProject() {
 
   async function inputArtifactId(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue: string = Config.getDefaultArtifactId();
+    const defaultInputBoxValue: string = QuarkusConfig.getDefaultArtifactId();
     const inputBoxValue: string = state.artifactId ? state.artifactId : defaultInputBoxValue;
 
     state.artifactId = await input.showInputBox({
@@ -65,7 +68,7 @@ export async function generateProject() {
 
   async function inputProjectVersion(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue: string = Config.getDefaultProjectVersion();
+    const defaultInputBoxValue: string = QuarkusConfig.getDefaultProjectVersion();
     const inputBoxValue: string = state.projectVersion ? state.projectVersion : defaultInputBoxValue;
 
     state.projectVersion = await input.showInputBox({
@@ -81,7 +84,7 @@ export async function generateProject() {
 
   async function inputPackageName(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue: string = Config.getDefaultPackageName();
+    const defaultInputBoxValue: string = QuarkusConfig.getDefaultPackageName();
     const inputBoxValue: string = state.packageName ? state.packageName : defaultInputBoxValue;
 
     state.packageName = await input.showInputBox({
@@ -97,7 +100,7 @@ export async function generateProject() {
 
   async function inputResourceName(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue: string = Config.getDefaultResourceName();
+    const defaultInputBoxValue: string = QuarkusConfig.getDefaultResourceName();
     const inputBoxValue: string = state.resourceName ? state.resourceName : defaultInputBoxValue;
 
     state.resourceName = await input.showInputBox({
@@ -125,7 +128,9 @@ export async function generateProject() {
     return;
   }
 
-  Config.saveDefaults({
+  const projectGenState: ProjectGenState = state as ProjectGenState;
+
+  QuarkusConfig.saveDefaults({
     groupId: state.groupId,
     artifactId: state.artifactId,
     projectVersion: state.projectVersion,
@@ -136,18 +141,18 @@ export async function generateProject() {
     })
   });
 
-  tryDownloadProject(state as ProjectGenState);
+  const projectDir: Uri = getNewProjectDirectory(projectGenState);
+  if (fs.existsSync(projectDir.fsPath)) {
+    fse.removeSync(projectDir.fsPath);
+  }
+
+  const zip: ZipFile = await downloadProject(projectGenState);
+  zip.on('end', () => {
+    createDebugConfig(projectDir);
+    commands.executeCommand('vscode.openFolder', projectDir, true);
+  });
 }
 
-async function tryDownloadProject(state: ProjectGenState): Promise<void> {
-  try {
-    await downloadProject(state);
-    const dirToOpen = Uri.file(path.join(state.targetDir.fsPath, state.artifactId));
-    commands.executeCommand('vscode.openFolder', dirToOpen, true);
-  } catch (err) {
-    window.showErrorMessage(err);
-  }
-}
 async function getTargetDirectory(projectName: string) {
   const MESSAGE_EXISTING_FOLDER = `'${projectName}' already exists in selected directory.`;
   const LABEL_CHOOSE_FOLDER = 'Generate Here';
@@ -182,6 +187,10 @@ async function showOpenFolderDialog(customOptions: OpenDialogOptions): Promise<U
   } else {
       return Promise.resolve(undefined);
   }
+}
+
+function getNewProjectDirectory(state: ProjectGenState): Uri {
+  return Uri.file(path.join(state.targetDir.fsPath, state.artifactId));
 }
 
 function validateInput(name: string) {
