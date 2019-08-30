@@ -15,18 +15,18 @@
  */
 
 import * as request from 'request-promise';
-import * as yauzl from 'yauzl';
 import * as p from 'path';
 import * as fs from 'fs';
 
-import { Config } from '../Config';
+import { QuarkusConfig } from '../QuarkusConfig';
 import { ProjectGenState } from '../definitions/inputState';
 import { QExtension, APIExtension } from '../definitions/QExtension';
 import { Readable } from 'stream';
+import { ZipFile, fromBuffer } from 'yauzl';
 import { convertToQExtension } from '../definitions/QExtension';
 
 export async function getQExtensions(): Promise<QExtension[]> {
-  const apiUrl: string = Config.getApiUrl();
+  const apiUrl: string = QuarkusConfig.getApiUrl();
   const extensions: string = await tryGetExtensionsJSON(apiUrl);
   const qExtensions: QExtension[] = JSON.parse(extensions).map((ext: APIExtension) => {
     return convertToQExtension(ext);
@@ -59,8 +59,8 @@ function removeDuplicateArtifactIds(extensions: QExtension[]): QExtension[] {
   }, [] as QExtension[]);
 }
 
-export async function downloadProject(state: ProjectGenState) {
-  const apiUrl: string = Config.getApiUrl();
+export async function downloadProject(state: ProjectGenState): Promise<ZipFile> {
+  const apiUrl: string = QuarkusConfig.getApiUrl();
   const chosenExtArtifactIds: string[] = state.extensions!.map((it) => it.artifactId);
   const chosenIds: string[] = chosenExtArtifactIds.map((artifactId) => {
     return 'io.quarkus:' + artifactId;
@@ -74,7 +74,7 @@ export async function downloadProject(state: ProjectGenState) {
     `e=${chosenIds.join('&e=')}`;
 
   const buffer: Buffer = await tryGetProjectBuffer(qProjectUrl);
-  await extract(buffer, state.targetDir!.fsPath);
+  return extract(buffer, state.targetDir!.fsPath);
 }
 
 async function tryGetProjectBuffer(projectUrl: string): Promise<Buffer> {
@@ -85,7 +85,7 @@ async function tryGetProjectBuffer(projectUrl: string): Promise<Buffer> {
   }
 }
 
-const yauzlFromBuffer = promisify(yauzl.fromBuffer);
+const yauzlFromBuffer = promisify(fromBuffer);
 
 function promisify(api) {
   return (...args) => {
@@ -98,8 +98,8 @@ function promisify(api) {
   };
 }
 
-async function extract(content: Buffer, path: string) {
-  const zipfile: yauzl.ZipFile = (await yauzlFromBuffer(content, {lazyEntries: true})) as yauzl.ZipFile;
+async function extract(content: Buffer, path: string): Promise<ZipFile> {
+  const zipfile: ZipFile = (await yauzlFromBuffer(content, {lazyEntries: true})) as ZipFile;
   const openReadStream = promisify(zipfile.openReadStream.bind(zipfile));
 
   zipfile.readEntry();
@@ -116,4 +116,6 @@ async function extract(content: Buffer, path: string) {
     }
     zipfile.readEntry();
   });
+
+  return zipfile;
 }

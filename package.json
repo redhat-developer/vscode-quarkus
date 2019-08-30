@@ -29,6 +29,7 @@
   "activationEvents": [
     "onCommand:quarkusTools.createMavenProject",
     "onCommand:quarkusTools.addExtension",
+    "onCommand:quarkusTools.debugQuarkusProject",
     "onLanguage:quarkus-properties"
   ],
   "main": "./dist/extension",
@@ -59,6 +60,10 @@
       {
         "command": "quarkusTools.addExtension",
         "title": "Quarkus: Add extensions to current project"
+      },
+      {
+        "command": "quarkusTools.debugQuarkusProject",
+        "title": "Quarkus: Debug current Quarkus project"
       }
     ],
     "snippets": [
@@ -79,6 +84,17 @@
           ],
           "default": "off",
           "description": "Traces the communication between VS Code and the Quarkus language server.",
+          "scope": "window"
+        },
+        "quarkus.tools.debug.terminateProcessOnExit": {
+          "type": "string",
+          "enum": [
+            "Always terminate",
+            "Never terminate",
+            "Ask"
+          ],
+          "default": "Ask",
+          "description": "Determines whether to terminate the quarkus:dev task after closing the debug session.",
           "scope": "window"
         },
         "quarkus.tools.starter.api": {

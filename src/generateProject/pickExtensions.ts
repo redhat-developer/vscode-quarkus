@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { QUARKUS_GROUP_ID } from '../definitions/wizardConstants';
-import { Config } from '../Config';
+import { QuarkusConfig } from '../QuarkusConfig';
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { QExtension } from '../definitions/QExtension';
 import { State } from '../definitions/inputState';
@@ -130,7 +130,7 @@ async function pickExtensions(
 
 function getDefaultQExtensions(allExtensions: QExtension[]): QExtension[] {
   const result: QExtension[] = [];
-  let defaultExtensionIds: any[] = Config.getDefaultExtensions();
+  let defaultExtensionIds: any[] = QuarkusConfig.getDefaultExtensions();
 
   defaultExtensionIds = defaultExtensionIds.filter((extensionId: any) => {
     return typeof extensionId === 'string' && extensionId.length > 0;
@@ -171,7 +171,7 @@ function getItems(selected: QExtension[], unselected: QExtension[], defaults: QE
     detail: 'Press <Enter>  to continue'
   });
 
-  if (selected.length === 0 && defaults.length > 0 && addLastUsed) { // TODO pass default extensions to this function. if exists, run addLastUsedOption
+  if (selected.length === 0 && defaults.length > 0 && addLastUsed) {
     addLastUsedOption(items, defaults);
   }
 
