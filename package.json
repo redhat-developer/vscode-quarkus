@@ -129,6 +129,12 @@
 							"description": "Store previously selected Quarkus extensions"
 						}
 					}
+        },
+        "quarkus.tools.symbols.showAsTree": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Show Quarkus properties as tree",
+					"scope": "window"
 				}
 			}
 		},

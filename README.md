@@ -34,6 +34,7 @@ This extension provides several code snippets, available when editing Java files
 The following settings are supported:
   
 * `quarkus.tools.trace.server` : Trace the communication between VS Code and the Quarkus Language Server in the Output view.
+* `quarkus.tools.symbols.showAsTree` : Show Quarkus properties as tree (Outline). Default is `true`.
 
 ## Contributing
 
