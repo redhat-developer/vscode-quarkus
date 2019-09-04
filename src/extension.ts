@@ -16,8 +16,8 @@
 import * as requirements from './languageServer/requirements';
 
 import { QUARKUS_PROJECT_REQUEST, JDTLS_PROJECT_INFO_COMMAND } from './definitions/wizardConstants';
-import { ExtensionContext, commands, window } from 'vscode';
-import { LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
+import { ExtensionContext, commands, window, workspace } from 'vscode';
+import { LanguageClientOptions, LanguageClient, RequestType, DidChangeConfigurationNotification } from 'vscode-languageclient';
 import { add } from './addExtensions/addExtensions';
 import { generateProject } from './generateProject/generationWizard';
 import { prepareExecutable } from './languageServer/javaServerStarter';
@@ -80,7 +80,22 @@ function connectToLS() {
     const clientOptions: LanguageClientOptions = {
       documentSelector: [
         { scheme: 'file', pattern: '**/application.properties' }
-      ]
+      ],
+      // wrap with key 'settings' so it can be handled same a DidChangeConfiguration
+      initializationOptions: {
+        settings: getQuarkusSettings()
+      },
+      synchronize: {
+        // preferences starting with these will trigger didChangeConfiguration
+        configurationSection: ['quarkus', '[quarkus]']
+      },
+      middleware: {
+        workspace: {
+          didChangeConfiguration: () => {
+            languageClient.sendNotification(DidChangeConfigurationNotification.type, { settings: getQuarkusSettings() });
+          }
+        }
+      }
     };
 
     const serverOptions = prepareExecutable(requirements);
@@ -88,4 +103,30 @@ function connectToLS() {
     languageClient.start();
     return languageClient.onReady();
   });
+
+  /**
+   * Returns a json object with key 'quarkus' and a json object value that
+   * holds all quarkus. settings.
+   *
+   * Returns: {
+   *            'quarkus': {...}
+   *          }
+   */
+  function getQuarkusSettings(): JSON {
+    const configQuarkus = workspace.getConfiguration().get('quarkus');
+    let quarkus;
+    if (!configQuarkus) { // Set default preferences if not provided
+      const defaultValue =
+      {
+        quarkus: {
+
+        }
+      };
+      quarkus = defaultValue;
+    } else {
+      const x = JSON.stringify(configQuarkus); // configQuarkus is not a JSON type
+      quarkus = { quarkus : JSON.parse(x)};
+    }
+    return quarkus;
+  }
 }
