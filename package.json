@@ -1,198 +1,226 @@
 {
-	"name": "vscode-quarkus",
-	"displayName": "Quarkus Tools",
-	"description": "Tools for Quarkus development",
-	"version": "0.15.0",
-	"icon": "icons/logo.png",
-	"author": "Red Hat",
-	"publisher": "redhat",
-	"license": "Apache-2.0",
-	"bugs": "https://github.com/redhat-developer/vscode-quarkus/issues",
-	"engines": {
-		"vscode": "^1.37.0"
-	},
-	"categories": [
-		"Programming Languages",
-		"Snippets",
-		"Other"
-	],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/redhat-developer/vscode-quarkus"
-	},
-	"keywords": [
-		"java",
-		"quarkus",
-		"maven",
-		"starter"
-	],
-	"activationEvents": [
-		"onCommand:quarkusTools.createMavenProject",
-		"onCommand:quarkusTools.addExtension",
-		"onLanguage:quarkus-properties"
-	],
-	"main": "./dist/extension",
-	"extensionDependencies": [
-		"redhat.java"
-	],
-	"contributes": {
-		"javaExtensions": [
-			"./jars/com.redhat.quarkus.jdt.core.jar"
-		],
-		"languages": [
-			{
-				"id": "quarkus-properties",
-				"aliases": [
-					"Quarkus properties"
-				],
-				"filenames": [
-					"application.properties"
-				],
-				"configuration": "./properties-support/language-configuration.json"
-			}
-		],
-		"commands": [
-			{
-				"command": "quarkusTools.createMavenProject",
-				"title": "Quarkus: Generate a Maven project"
-			},
-			{
-				"command": "quarkusTools.addExtension",
-				"title": "Quarkus: Add extensions to current project"
-			}
-		],
-		"snippets": [{
-			"language": "java",
-			"path": "./snippets/quarkus.json"
-		}],
-		"configuration": {
-			"title": "Quarkus Tools",
-			"properties": {
-				"quarkus.tools.trace.server": {
-					"type": "string",
-					"enum": [
-						"off",
-						"messages",
-						"verbose"
-					],
-					"default": "off",
-					"description": "Traces the communication between VS Code and the Quarkus language server.",
-					"scope": "window"
-				},
-				"quarkus.tools.starter.api": {
-					"type": "string",
-					"default": "http://code.quarkus.io/api",
-					"pattern": "https?://.+",
-					"description": "Quarkus API base URL",
-					"scope": "window"
-				},
-				"quarkus.tools.starter.defaults": {
-					"type": "object",
-					"default": {},
-					"description": "Default values for the project generation wizard.",
-					"scope": "window",
-					"properties": {
-						"groupId": {
-							"type": "string",
-							"pattern": "^[A-Za-z0-9_\\-.]+$",
-							"scope": "window",
-							"description": "Default Group Id"
-						},
-						"artifactId": {
-							"type": "string",
-							"pattern": "^[A-Za-z0-9_\\-.]+$",
-							"scope": "window",
-							"description": "Default Artifact Id"
-						},
-						"projectVersion": {
-							"type": "string",
-							"pattern": "^[A-Za-z0-9_\\-.]+$",
-							"scope": "window",
-							"description": "Default project version"
-						},
-						"packageName": {
-							"type": "string",
-							"pattern": "^[A-Za-z0-9_\\-.]+$",
-							"scope": "window",
-							"description": "Default package name"
-						},
-						"resourceName": {
-							"type": "string",
-							"pattern": "^[A-Za-z0-9_\\-.]+$",
-							"scope": "window",
-							"description": "Default resource name"
-						},
-						"extensions": {
-							"default": [],
-							"type": "array",
-							"scope": "window",
-							"description": "Store previously selected Quarkus extensions"
-						}
-					}
+  "name": "vscode-quarkus",
+  "displayName": "Quarkus Tools",
+  "description": "Tools for Quarkus development",
+  "version": "0.15.0",
+  "icon": "icons/logo.png",
+  "author": "Red Hat",
+  "publisher": "redhat",
+  "license": "Apache-2.0",
+  "bugs": "https://github.com/redhat-developer/vscode-quarkus/issues",
+  "engines": {
+    "vscode": "^1.37.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Other"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/redhat-developer/vscode-quarkus"
+  },
+  "keywords": [
+    "java",
+    "quarkus",
+    "maven",
+    "starter"
+  ],
+  "activationEvents": [
+    "onCommand:quarkusTools.createMavenProject",
+    "onCommand:quarkusTools.addExtension",
+    "onLanguage:quarkus-properties"
+  ],
+  "main": "./dist/extension",
+  "extensionDependencies": [
+    "redhat.java"
+  ],
+  "contributes": {
+    "javaExtensions": [
+      "./jars/com.redhat.quarkus.jdt.core.jar"
+    ],
+    "languages": [
+      {
+        "id": "quarkus-properties",
+        "aliases": [
+          "Quarkus properties"
+        ],
+        "filenames": [
+          "application.properties"
+        ],
+        "configuration": "./properties-support/language-configuration.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "quarkusTools.createMavenProject",
+        "title": "Quarkus: Generate a Maven project"
+      },
+      {
+        "command": "quarkusTools.addExtension",
+        "title": "Quarkus: Add extensions to current project"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "java",
+        "path": "./snippets/quarkus.json"
+      }
+    ],
+    "configuration": {
+      "title": "Quarkus Tools",
+      "properties": {
+        "quarkus.tools.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the Quarkus language server.",
+          "scope": "window"
+        },
+        "quarkus.tools.starter.api": {
+          "type": "string",
+          "default": "http://code.quarkus.io/api",
+          "pattern": "https?://.+",
+          "description": "Quarkus API base URL",
+          "scope": "window"
+        },
+        "quarkus.tools.starter.defaults": {
+          "type": "object",
+          "default": {},
+          "description": "Default values for the project generation wizard.",
+          "scope": "window",
+          "properties": {
+            "groupId": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_\\-.]+$",
+              "scope": "window",
+              "description": "Default Group Id"
+            },
+            "artifactId": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_\\-.]+$",
+              "scope": "window",
+              "description": "Default Artifact Id"
+            },
+            "projectVersion": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_\\-.]+$",
+              "scope": "window",
+              "description": "Default project version"
+            },
+            "packageName": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_\\-.]+$",
+              "scope": "window",
+              "description": "Default package name"
+            },
+            "resourceName": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_\\-.]+$",
+              "scope": "window",
+              "description": "Default resource name"
+            },
+            "extensions": {
+              "default": [],
+              "type": "array",
+              "scope": "window",
+              "description": "Store previously selected Quarkus extensions"
+            }
+          }
         },
         "quarkus.tools.symbols.showAsTree": {
-					"type": "boolean",
-					"default": "true",
-					"description": "Show Quarkus properties as tree",
-					"scope": "window"
-				}
-			}
-		},
-		"grammars": [
-			{
-				"language": "quarkus-properties",
-				"scopeName": "source.java-properties",
-				"path": "./properties-support/java-properties.tmLanguage"
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "webpack --mode production",
-		"compile": "webpack --mode none",
-		"watch": "webpack --mode development --watch --info-verbosity verbose",
-		"postinstall": "node ./node_modules/vscode/bin/install",
-		"test-compile": "tsc -p ./",
-		"test": "npm run test-compile && node ./node_modules/vscode/bin/test",
-		"tslint": "./node_modules/.bin/tslint -p .",
-		"build": "./node_modules/.bin/gulp build",
-		"build-server": "./node_modules/.bin/gulp buildServer",
-		"build-ext": "./node_modules/.bin/gulp buildExtension"
-	},
-	"devDependencies": {
-		"@types/fs-extra": "^7.0.0",
-		"@types/md5": "^2.1.33",
-		"@types/mocha": "^2.2.42",
-		"@types/node": "^10.14.16",
-		"@types/which": "^1.3.1",
-		"@types/xml2js": "^0.4.4",
-		"gulp": "^4.0.2",
-		"gulp-rename": "^1.4.0",
-		"ts-loader": "^6.0.1",
-		"tslint": "^5.12.1",
-		"typescript": "^3.4.1",
-		"typescript-tslint-plugin": "^0.3.1",
-		"vscode": "^1.1.36",
-		"webpack": "^4.32.2",
-		"webpack-cli": "^3.3.2"
-	},
-	"dependencies": {
-		"@types/lodash": "^4.14.134",
-		"@types/request": "^2.48.2",
-		"@types/request-promise": "^4.1.44",
-		"@types/unzipper": "^0.9.2",
-		"@types/yauzl": "^2.9.1",
-		"expand-home-dir": "0.0.3",
-		"find-java-home": "^1.0.0",
-		"find-up": "^4.1.0",
-		"fs-extra": "^8.0.1",
-		"glob": "^7.1.4",
-		"md5": "^2.2.1",
-		"path-exists": "^4.0.0",
-		"request-promise": "^4.2.4",
-		"user-home": "^2.0.0",
-		"vscode-languageclient": "^5.2.1",
-		"xml2js": "^0.4.19",
-		"yauzl": "^2.10.0",
-		"which": "^1.3.1"
-	}
+          "type": "boolean",
+          "default": "true",
+          "description": "Show Quarkus properties as tree",
+          "scope": "window"
+        },
+        "quarkus.tools.validation.enabled": {
+          "type": "boolean",
+          "default": "true",
+          "description": "Enabled Quarkus validation",
+          "scope": "window"
+        },
+        "quarkus.tools.validation.unknown.severity": {
+          "type": "string",
+          "enum": [
+            "none",
+            "warning",
+            "error"
+          ],
+          "default": "warning",
+          "description": "Validation severity for unknown Quarkus properties.",
+          "scope": "window"
+        },
+        "quarkus.tools.validation.unknown.excluded": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of properties to ignore for unknown Quarkus properties validation.",
+          "scope": "window"
+        }
+      }
+    },
+    "grammars": [
+      {
+        "language": "quarkus-properties",
+        "scopeName": "source.java-properties",
+        "path": "./properties-support/java-properties.tmLanguage"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "webpack --mode production",
+    "compile": "webpack --mode none",
+    "watch": "webpack --mode development --watch --info-verbosity verbose",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test-compile": "tsc -p ./",
+    "test": "npm run test-compile && node ./node_modules/vscode/bin/test",
+    "tslint": "./node_modules/.bin/tslint -p .",
+    "build": "./node_modules/.bin/gulp build",
+    "build-server": "./node_modules/.bin/gulp buildServer",
+    "build-ext": "./node_modules/.bin/gulp buildExtension"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^7.0.0",
+    "@types/md5": "^2.1.33",
+    "@types/mocha": "^2.2.42",
+    "@types/node": "^10.14.16",
+    "@types/which": "^1.3.1",
+    "@types/xml2js": "^0.4.4",
+    "gulp": "^4.0.2",
+    "gulp-rename": "^1.4.0",
+    "ts-loader": "^6.0.1",
+    "tslint": "^5.12.1",
+    "typescript": "^3.4.1",
+    "typescript-tslint-plugin": "^0.3.1",
+    "vscode": "^1.1.36",
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.2"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.134",
+    "@types/request": "^2.48.2",
+    "@types/request-promise": "^4.1.44",
+    "@types/unzipper": "^0.9.2",
+    "@types/yauzl": "^2.9.1",
+    "expand-home-dir": "0.0.3",
+    "find-java-home": "^1.0.0",
+    "find-up": "^4.1.0",
+    "fs-extra": "^8.0.1",
+    "glob": "^7.1.4",
+    "md5": "^2.2.1",
+    "path-exists": "^4.0.0",
+    "request-promise": "^4.2.4",
+    "user-home": "^2.0.0",
+    "vscode-languageclient": "^5.2.1",
+    "xml2js": "^0.4.19",
+    "yauzl": "^2.10.0",
+    "which": "^1.3.1"
+  }
 }
