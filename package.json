@@ -141,7 +141,7 @@
         "quarkus.tools.validation.enabled": {
           "type": "boolean",
           "default": "true",
-          "description": "Enabled Quarkus validation",
+          "description": "Enables Quarkus validation",
           "scope": "window"
         },
         "quarkus.tools.validation.unknown.severity": {

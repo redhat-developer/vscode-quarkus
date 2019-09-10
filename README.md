@@ -35,7 +35,7 @@ The following settings are supported:
   
 * `quarkus.tools.trace.server` : Trace the communication between VS Code and the Quarkus Language Server in the Output view.
 * `quarkus.tools.symbols.showAsTree` : Show Quarkus properties as tree (Outline). Default is `true`.
-* `quarkus.tools.validation.enabled` : Enabled Quarkus validation. Default is `true`.
+* `quarkus.tools.validation.enabled` : Enables Quarkus validation. Default is `true`.
 * `quarkus.tools.validation.unknown.severity` : Validation severity for unknown Quarkus properties. Default is `warning`.
 * `quarkus.tools.validation.unknown.excluded` : Array of properties to ignore for unknown Quarkus properties validation. Default is `[]`.
         
