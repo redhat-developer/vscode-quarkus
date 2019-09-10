@@ -19,7 +19,7 @@
 			"\t}",
 			"}"
 		],
-		"description": "Create a new Quarkus resource class"
+		"description": "Quarkus REST resource class"
 	},
 	"Quarkus - new resource method": {
 		"prefix": "qrm",
@@ -30,7 +30,7 @@
 			"\treturn \"hello\";",
 			"}"
 		],
-		"description": "Create a new Quarkus resource method"
+		"description": "Quarkus REST resource method"
 	},
 	"Quarkus - new test resource class": {
 		"prefix": "qtrc",
@@ -57,7 +57,7 @@
 			"",
 			"}"
 		],
-		"description": "Create a new Quarkus test resource class"
+		"description": "Quarkus test resource class"
 	},
 	"Quarkus - new native test resource class": {
 		"prefix": "qntrc",
@@ -72,6 +72,6 @@
 			"\t// Execute the same tests, but in native mode.",
 			"}"
 		],
-		"description": "Create a new Quarkus native test resource class"
+		"description": "Quarkus native test resource class"
 	}
 }
