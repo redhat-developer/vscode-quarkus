@@ -32,6 +32,12 @@ let languageClient: LanguageClient;
 interface QuarkusProjectInfoParams {
   uri: string;
   documentationFormat: string[];
+  scope: number;
+}
+
+interface QuarkusPropertiesChangeEvent {
+  type: number;
+  projectURIs: string[];
 }
 
 export function activate(context: ExtensionContext) {
@@ -47,8 +53,8 @@ export function activate(context: ExtensionContext) {
     /**
      * Command for resetting Quarkus properties cache
      */
-    context.subscriptions.push(commands.registerCommand('quarkusTools.classpathChanged', (projects) => {
-      languageClient.sendNotification("quarkus/classpathChanged", projects);
+    context.subscriptions.push(commands.registerCommand('quarkusTools.quarkusPropertiesChanged', (event: QuarkusPropertiesChangeEvent) => {
+      languageClient.sendNotification("quarkus/quarkusPropertiesChanged", event);
     }));
 
   }).catch((error) => {
