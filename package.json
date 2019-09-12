@@ -155,6 +155,17 @@
           "description": "Validation severity for unknown Quarkus properties.",
           "scope": "window"
         },
+        "quarkus.tools.validation.syntax.severity": {
+          "type": "string",
+          "enum": [
+            "none",
+            "warning",
+            "error"
+          ],
+          "default": "error",
+          "description": "Validation severity for Quarkus property syntax checking.",
+          "scope": "window"
+        },
         "quarkus.tools.validation.unknown.excluded": {
           "type": "array",
           "default": [],
