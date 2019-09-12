@@ -43,8 +43,8 @@ export async function generateProjectWizard() {
       step: input.getStepNumber(),
       totalSteps: state.totalSteps,
       value: inputBoxValue,
-      prompt: 'Your project group id',
-      validate: validateInput('group id')
+      prompt: 'Your project groupId',
+      validate: validateInput('groupId')
     });
 
     return state.wizardInterrupted ? null : (input: MultiStepInput) => inputArtifactId(input, state);
@@ -60,8 +60,8 @@ export async function generateProjectWizard() {
       step: input.getStepNumber(),
       totalSteps: state.totalSteps,
       value: inputBoxValue,
-      prompt: 'Your project artifact id',
-      validate: validateInput('artifact id')
+      prompt: 'Your project artifactId',
+      validate: validateInput('artifactId')
     });
     return state.wizardInterrupted ? null : (input: MultiStepInput) => inputProjectVersion(input, state);
   }
@@ -121,36 +121,16 @@ export async function generateProjectWizard() {
     return;
   }
 
-  state.targetDir = await getTargetDirectory(state.artifactId);
+  try {
+    state.targetDir = await getTargetDirectory(state.artifactId);
 
-  if (!state.targetDir) {
-    window.showErrorMessage(`Project generation has been canceled.`);
-    return;
+    const projectGenState: ProjectGenState = state as ProjectGenState;
+    saveDefaultsToConfig(projectGenState);
+    deleteFolderIfExists(getNewProjectDirectory(projectGenState));
+    await downloadAndSetupProject(projectGenState);
+  } catch (message) {
+    window.showErrorMessage(message);
   }
-
-  const projectGenState: ProjectGenState = state as ProjectGenState;
-
-  QuarkusConfig.saveDefaults({
-    groupId: state.groupId,
-    artifactId: state.artifactId,
-    projectVersion: state.projectVersion,
-    packageName: state.packageName,
-    resourceName: state.resourceName,
-    extensions: state.extensions.map((extension: QExtension) => {
-      return extension.getGroupIdArtifactIdString();
-    })
-  });
-
-  const projectDir: Uri = getNewProjectDirectory(projectGenState);
-  if (fs.existsSync(projectDir.fsPath)) {
-    fse.removeSync(projectDir.fsPath);
-  }
-
-  const zip: ZipFile = await downloadProject(projectGenState);
-  zip.on('end', () => {
-    createDebugConfig(projectDir);
-    commands.executeCommand('vscode.openFolder', projectDir, true);
-  });
 }
 
 async function getTargetDirectory(projectName: string) {
@@ -159,18 +139,24 @@ async function getTargetDirectory(projectName: string) {
   const OPTION_OVERWRITE = 'Overwrite';
   const OPTION_CHOOSE_NEW_DIR = 'Choose new directory';
 
-  let directory = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER });
+  let directory: Uri|undefined = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER });
 
   while (directory && fs.existsSync(path.join(directory.path, projectName))) {
     const overrideChoice: string = await window.showWarningMessage(MESSAGE_EXISTING_FOLDER, OPTION_OVERWRITE, OPTION_CHOOSE_NEW_DIR);
     if (overrideChoice === OPTION_CHOOSE_NEW_DIR) {
       directory = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER });
     } else if (overrideChoice === OPTION_OVERWRITE) {
-        break;
+      break;
     } else { // User closed the warning window
-      return;
+      directory = undefined;
+      break;
     }
   }
+
+  if (!directory) {
+    throw 'Project generation has been canceled.';
+  }
+
   return directory;
 }
 
@@ -189,8 +175,36 @@ async function showOpenFolderDialog(customOptions: OpenDialogOptions): Promise<U
   }
 }
 
+function saveDefaultsToConfig(state: ProjectGenState): void {
+  QuarkusConfig.saveDefaults({
+    groupId: state.groupId,
+    artifactId: state.artifactId,
+    projectVersion: state.projectVersion,
+    packageName: state.packageName,
+    resourceName: state.resourceName,
+    extensions: state.extensions.map((extension: QExtension) => {
+      return extension.getGroupIdArtifactIdString();
+    })
+  });
+}
+
+function deleteFolderIfExists(path: Uri): void {
+  if (fs.existsSync(path.fsPath)) {
+    fse.removeSync(path.fsPath);
+  }
+}
+
 function getNewProjectDirectory(state: ProjectGenState): Uri {
   return Uri.file(path.join(state.targetDir.fsPath, state.artifactId));
+}
+
+async function downloadAndSetupProject(state: ProjectGenState): Promise<void> {
+  const projectDir = getNewProjectDirectory(state);
+  const zip: ZipFile = await downloadProject(state);
+  zip.on('end', () => {
+    createDebugConfig(projectDir);
+    commands.executeCommand('vscode.openFolder', projectDir, true);
+  });
 }
 
 function validateInput(name: string) {
