@@ -43,7 +43,7 @@ async function tryGetExtensionsJSON(apiUrl: string): Promise<string> {
   try {
     return await request(requestOptions);
   } catch (err) {
-    throw 'Unable to download Quarkus project.';
+    throw `Unable to reach ${apiUrl}/extensions`;
   }
 }
 
