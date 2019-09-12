@@ -49,9 +49,9 @@ CI builds can be installed manually by following these instructions:
 
   1) Download the latest development VSIX archive [from here](https://download.jboss.org/jbosstools/vscode/snapshots/vscode-quarkus/?C=M;O=D). `(vscode-quarkus-XXX.vsix)`
 
-  2) Go to the Extensions section in VS Code.
-
-  3) At the top right click the `...` icon.
+  2) Click `View/Command Palette` 
+  
+  3) Type 'VSIX'
 
   4) Select 'Install from VSIX...' and choose the `.vsix` file.
 
