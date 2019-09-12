@@ -22,11 +22,11 @@ export const JDTLS_PROJECT_INFO_COMMAND = 'quarkus.java.projectInfo';
 
 // Constants related to project generation
 export const DEFAULT_API_URL: string = 'https://code.quarkus.io/api';
-export const DEFAULT_GROUP_ID: string = 'org.my.group';
-export const DEFAULT_ARTIFACT_ID: string = 'MyQuarkusProject';
+export const DEFAULT_GROUP_ID: string = 'org.acme';
+export const DEFAULT_ARTIFACT_ID: string = 'quarkus-getting-started';
 export const DEFAULT_PROJECT_VERSION: string = '1.0-SNAPSHOT';
-export const DEFAULT_PACKAGE_NAME: string = 'PackageName';
-export const DEFAULT_RESOURCE_NAME: string = 'ResourceName';
+export const DEFAULT_PACKAGE_NAME: string = DEFAULT_GROUP_ID;
+export const DEFAULT_RESOURCE_NAME: string = 'GreetingResource';
 export const INPUT_TITLE: string = 'Quarkus Tools';
 
 // Quarkus extension default groupId

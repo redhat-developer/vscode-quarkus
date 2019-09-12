@@ -85,7 +85,7 @@ export async function generateProjectWizard() {
   async function inputPackageName(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
     const defaultInputBoxValue: string = QuarkusConfig.getDefaultPackageName();
-    const inputBoxValue: string = state.packageName ? state.packageName : defaultInputBoxValue;
+    const inputBoxValue: string = state.packageName ? state.packageName : (state.groupId ? state.groupId : defaultInputBoxValue);
 
     state.packageName = await input.showInputBox({
       title: INPUT_TITLE,
