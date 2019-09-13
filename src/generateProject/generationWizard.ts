@@ -17,6 +17,7 @@ import { ZipFile } from 'yauzl';
 import { createDebugConfig } from '../debugging/createDebugConfig';
 import { downloadProject } from '../utils/requestUtils';
 import { pickExtensionsWithLastUsed } from './pickExtensions';
+import { validateArtifactId, validateGroupId, validatePackageName, validateResourceName, validateVersion } from './validateInput';
 
 /**
  * A multi-step input using window.createQuickPick() and window.createInputBox().
@@ -44,7 +45,7 @@ export async function generateProjectWizard() {
       totalSteps: state.totalSteps,
       value: inputBoxValue,
       prompt: 'Your project groupId',
-      validate: validateInput('groupId')
+      validate: validateGroupId
     });
 
     return state.wizardInterrupted ? null : (input: MultiStepInput) => inputArtifactId(input, state);
@@ -61,7 +62,7 @@ export async function generateProjectWizard() {
       totalSteps: state.totalSteps,
       value: inputBoxValue,
       prompt: 'Your project artifactId',
-      validate: validateInput('artifactId')
+      validate: validateArtifactId
     });
     return state.wizardInterrupted ? null : (input: MultiStepInput) => inputProjectVersion(input, state);
   }
@@ -77,7 +78,7 @@ export async function generateProjectWizard() {
       totalSteps: state.totalSteps,
       value: inputBoxValue,
       prompt: 'Your project version',
-      validate: validateInput('project version')
+      validate: validateVersion
     });
     return state.wizardInterrupted ? null : (input: MultiStepInput) => inputPackageName(input, state);
   }
@@ -93,7 +94,7 @@ export async function generateProjectWizard() {
       totalSteps: state.totalSteps,
       value: inputBoxValue,
       prompt: 'Your package name',
-      validate: validateInput('package name')
+      validate: validatePackageName
     });
     return state.wizardInterrupted ? null : (input: MultiStepInput) => inputResourceName(input, state);
   }
@@ -109,7 +110,7 @@ export async function generateProjectWizard() {
       totalSteps: state.totalSteps,
       value: inputBoxValue,
       prompt: 'Your resource name',
-      validate: validateInput('resource name')
+      validate: validateResourceName
     });
     return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensionsWithLastUsed(input, state);
   }
@@ -205,14 +206,4 @@ async function downloadAndSetupProject(state: ProjectGenState): Promise<void> {
     createDebugConfig(projectDir);
     commands.executeCommand('vscode.openFolder', projectDir, true);
   });
-}
-
-function validateInput(name: string) {
-  return async function f(userInput: string) {
-    const re = new RegExp("^[A-Za-z0-9_\\-.]+$");
-    if (!re.test(userInput)) {
-      return `Invalid ${name}`;
-    }
-    return undefined;
-  };
 }
