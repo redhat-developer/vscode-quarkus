@@ -16,6 +16,7 @@
 
 import { WorkspaceFolder, debug, window, workspace, DebugConfiguration } from 'vscode';
 import { containsMavenQuarkusProject } from '../utils/workspaceUtils';
+import { createDebugConfig } from '../debugging/createDebugConfig';
 import { getQuarkusDevDebugConfig } from '../utils/launchConfigUtils';
 
 export async function tryStartDebugging() {
@@ -34,9 +35,11 @@ async function startDebugging(): Promise<void> {
     throw 'Current workspace folder does not contain a Maven project.';
   }
 
-  const debugConfig: DebugConfiguration|undefined = await getQuarkusDevDebugConfig(workspaceFolder);
+  let debugConfig: DebugConfiguration|undefined = await getQuarkusDevDebugConfig(workspaceFolder);
+
   if (!debugConfig) {
-    throw 'Current workspace folder does not contain a debug configuration that starts the quarkus:dev command.';
+    await createDebugConfig(workspaceFolder.uri);
+    debugConfig = await getQuarkusDevDebugConfig(workspaceFolder);
   }
 
   debug.startDebugging(workspaceFolder, debugConfig);

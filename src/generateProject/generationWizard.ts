@@ -203,7 +203,6 @@ async function downloadAndSetupProject(state: ProjectGenState): Promise<void> {
   const projectDir = getNewProjectDirectory(state);
   const zip: ZipFile = await downloadProject(state);
   zip.on('end', () => {
-    createDebugConfig(projectDir);
     commands.executeCommand('vscode.openFolder', projectDir, true);
   });
 }

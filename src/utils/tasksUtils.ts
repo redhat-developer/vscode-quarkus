@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as fs from 'fs';
 import * as _ from 'lodash';
 
-import { tasks, ProcessExecution, ShellExecution, Task, TaskExecution, WorkspaceFolder } from 'vscode';
+import { parse } from 'comment-json';
+import { tasks, ProcessExecution, ShellExecution, Task, TaskExecution, WorkspaceFolder, TaskDefinition } from 'vscode';
 
 export async function getQuarkusDevTasks(workspaceFolder: WorkspaceFolder): Promise<Task[]> {
   const workspaceTasks: Task[] = await getTasksFromWorkspace(workspaceFolder);
@@ -29,6 +31,26 @@ export async function getTasksFromWorkspace(workspaceFolder: WorkspaceFolder): P
   return allTasks.filter((task: Task) => {
     return isTaskFromWorkspace(workspaceFolder, task);
   });
+}
+
+export function getQuarkusDevTaskDefinitions(workspaceFolder: WorkspaceFolder): TaskDefinition[] {
+  const workspaceTasks: TaskDefinition[] = getTaskDefinitionsFromWorkspace(workspaceFolder);
+  return workspaceTasks.filter((task: TaskDefinition) => {
+    return task.command && isQuarkusDevCommand(task.command);
+  });
+}
+
+export function getTaskDefinitionsFromWorkspace(workspaceFolder: WorkspaceFolder): TaskDefinition[] {
+  // If the tasks.json was created very recently, await tasks.fetchTasks() cannot
+  // retrieve the new tasks.
+  const tasksJson: string = workspaceFolder.uri.fsPath + '/.vscode/tasks.json';
+  if (fs.existsSync(tasksJson)) {
+    const tasks = parse(fs.readFileSync(tasksJson).toString());
+    if (tasks.tasks) {
+      return tasks.tasks as TaskDefinition[];
+    }
+  }
+  return [];
 }
 
 export async function getRunningQuarkusDevTasks(workspaceFolder: WorkspaceFolder): Promise<TaskExecution[]> {
@@ -47,7 +69,11 @@ export async function getRunningQuarkusDevTasks(workspaceFolder: WorkspaceFolder
 
 function isQuarkusDevTask(task: Task): boolean {
   const execution: ProcessExecution | ShellExecution = task.execution;
-  return 'commandLine' in execution && execution.commandLine.includes('quarkus:dev');
+  return 'commandLine' in execution && isQuarkusDevCommand(execution.commandLine);
+}
+
+function isQuarkusDevCommand(command: string): boolean {
+  return command.includes('quarkus:dev');
 }
 
 function isTaskFromWorkspace(workspaceFolder: WorkspaceFolder, task: Task): boolean {
