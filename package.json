@@ -160,6 +160,17 @@
           "description": "Enables Quarkus validation",
           "scope": "window"
         },
+        "quarkus.tools.validation.duplicate.severity": {
+          "type": "string",
+          "enum": [
+            "none",
+            "warning",
+            "error"
+          ],
+          "default": "warning",
+          "description": "Validation severity for duplicate Quarkus properties.",
+          "scope": "window"
+        },
         "quarkus.tools.validation.unknown.severity": {
           "type": "string",
           "enum": [
