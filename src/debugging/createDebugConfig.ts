@@ -16,34 +16,59 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { Uri, workspace } from 'vscode';
+import { DebugConfiguration, TaskDefinition, Uri, workspace, tasks } from 'vscode';
+import { parse } from 'comment-json';
 
-export function createDebugConfig(directory: Uri) {
+export async function createDebugConfig(directory: Uri) {
 
   const vscodeDir: string = directory.fsPath + '/.vscode';
   if (!fs.existsSync(vscodeDir)) {
     fs.mkdirSync(vscodeDir);
   }
 
-  let tasksContent: string = getDebugConfigFile('tasks.json');
-  let launchContent: string = getDebugConfigFile('launch.json');
-
-  const insertSpaces: boolean = workspace.getConfiguration('editor').get('insertSpaces');
-  if (insertSpaces) {
-    const numSpaces: number = workspace.getConfiguration('editor').get('tabSize');
-    tasksContent = replaceTabsWithSpaces(tasksContent, numSpaces);
-    launchContent = replaceTabsWithSpaces(launchContent, numSpaces);
+  if (fs.existsSync(vscodeDir + '/tasks.json')) {
+    const tasksJson = workspace.getConfiguration('tasks', directory);
+    const tasks: TaskDefinition[] = tasksJson.get<TaskDefinition[]>('tasks');
+    const taskToAdd: TaskDefinition = getDebugResource<TaskDefinition>('tasks.json').tasks[0];
+    tasks.push(taskToAdd);
+    await tasksJson.update('tasks', tasks, false);
+  } else {
+    let tasksContent: string = getDebugResourceAsString('tasks.json');
+    tasksContent = replaceWithSpacesIfNeeded(tasksContent);
+    fs.writeFileSync(vscodeDir + '/tasks.json', tasksContent);
   }
 
-  fs.writeFileSync(vscodeDir + '/tasks.json', tasksContent);
-  fs.writeFileSync(vscodeDir + '/launch.json', launchContent);
+  if (fs.existsSync(vscodeDir + '/launch.json')) {
+    const launchConfig = workspace.getConfiguration('launch', directory);
+    const configurations: DebugConfiguration[] = launchConfig.get<DebugConfiguration[]>('configurations');
+    const configToAdd: DebugConfiguration = getDebugResource<DebugConfiguration>('launch.json').configurations[0];
+    configurations.push(configToAdd);
+    await launchConfig.update('configurations', configurations, false);
+  } else {
+    let launchContent: string = getDebugResourceAsString('launch.json');
+    launchContent = replaceWithSpacesIfNeeded(launchContent);
+    fs.writeFileSync(vscodeDir + '/launch.json', launchContent);
+  }
 }
 
-function getDebugConfigFile(filename: string): string {
+function getDebugResource<T>(filename: string): T {
+  return parse(getDebugResourceAsString(filename));
+}
+
+function getDebugResourceAsString(filename: string): string {
   const pathToFile = path.resolve(__dirname, '../vscode-debug-files/' + filename);
   return fs.readFileSync(pathToFile).toString();
 }
 
-function replaceTabsWithSpaces(originalStr: string, numSpaces: number): string {
-  return originalStr.replace(/\t/g, ' '.repeat(numSpaces));
+function replaceWithSpacesIfNeeded(str: string): string {
+  if (workspace.getConfiguration('editor').get('insertSpaces')) {
+    const numSpaces: number = workspace.getConfiguration('editor').get('tabSize');
+    return replaceTabsWithSpaces(str, numSpaces);
+  }
+
+  return str;
+}
+
+function replaceTabsWithSpaces(str: string, numSpaces: number): string {
+  return str.replace(/\t/g, ' '.repeat(numSpaces));
 }

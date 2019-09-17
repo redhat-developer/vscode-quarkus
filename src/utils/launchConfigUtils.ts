@@ -13,15 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DebugConfiguration, Task, WorkspaceFolder, workspace } from 'vscode';
-import { getQuarkusDevTasks } from '../utils/tasksUtils';
+import * as fs from 'fs';
+
+import { DebugConfiguration, WorkspaceFolder, TaskDefinition } from 'vscode';
+import { getQuarkusDevTaskDefinitions } from '../utils/tasksUtils';
+import { parse } from 'comment-json';
+
+function getQuarkusDevTaskNames(workspaceFolder: WorkspaceFolder): string[] {
+
+  const quarkusDevTaskDefinitions: TaskDefinition[] = getQuarkusDevTaskDefinitions(workspaceFolder);
+  return quarkusDevTaskDefinitions.filter((taskDefinition: TaskDefinition) => {
+    return typeof taskDefinition.label !== 'undefined';
+  }).map((taskDefinition: TaskDefinition) => {
+    return taskDefinition.label;
+  });
+}
 
 export async function getQuarkusDevDebugConfig(workspaceFolder: WorkspaceFolder): Promise<DebugConfiguration | undefined> {
   const debugConfig: DebugConfiguration[] = getConfigsWithPreLaunchTask(workspaceFolder);
-  const quarkusDevTasks: Task[] = await getQuarkusDevTasks(workspaceFolder);
-  const devTasksNames: string[] = quarkusDevTasks.map((task: Task) => {
-    return task.name;
-  });
+  const devTasksNames: string[] = getQuarkusDevTaskNames(workspaceFolder);
 
   for (const config of debugConfig) {
     if (devTasksNames.includes(config.preLaunchTask)) {
@@ -34,10 +44,19 @@ export async function getQuarkusDevDebugConfig(workspaceFolder: WorkspaceFolder)
 
 export function getConfigsWithPreLaunchTask(workspaceFolder: WorkspaceFolder): DebugConfiguration[] {
   return getLaunchConfig(workspaceFolder).filter((config: DebugConfiguration) => {
-    return typeof config.preLaunchTask !== undefined;
+    return typeof config.preLaunchTask !== 'undefined';
   });
 }
 
 export function getLaunchConfig(workspaceFolder: WorkspaceFolder): DebugConfiguration[] {
-  return workspace.getConfiguration('launch', workspaceFolder.uri).get<DebugConfiguration[]>('configurations');
+  // If the launch.json was created very recently, workspace.getConfiguration(launch, workspaceFolder.uri)
+  // cannot retrieve it.
+  const launchJson: string = workspaceFolder.uri.fsPath + '/.vscode/launch.json';
+  if (fs.existsSync(launchJson)) {
+    const launchConfig = parse(fs.readFileSync(launchJson).toString());
+    if (launchConfig.configurations) {
+      return launchConfig.configurations as DebugConfiguration[];
+    }
+  }
+  return [];
 }
