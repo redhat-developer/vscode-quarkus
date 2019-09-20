@@ -1,4 +1,4 @@
-# Quarkus Tools by Red Hat
+# Quarkus Tools for Visual Studio Code
 
 ## Description
 
