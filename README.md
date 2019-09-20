@@ -1,20 +1,26 @@
-# Quarkus Tooling by Red Hat
+# Quarkus Tools by Red Hat
 
 ## Description
 
-This VS Code extension provides support for Quarkus development via a 
+This Visual Studio Code extension provides support for Quarkus development via a 
 [Quarkus language server](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.ls)
 and a [Quarkus jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt).
 
-![](images/applicationProperties.png)
+![](images/propertiesSupport.png)
 
 ## Quarkus Project Wizards
-  * Generate a Quarkus Maven project with Maven wrapper files
+  * Generate a Quarkus Maven project, based on https://code.quarkus.io/
   * Add Quarkus extensions to current Maven-based Quarkus project
 
 ## Quarkus `application.properties` Features
   * Completion support for Quarkus properties
   * Hover support for Quarkus properties
+  * Validation support for Quarkus properties 
+  * Support for Quarkus profiles
+  * Outline support (flat or tree view)
+
+## Quarkus debug command
+  * launches the Maven quarkus:dev plugin and automatically attaches a debugger
 
 ## Quarkus Code Snippets
 This extension provides several code snippets, available when editing Java files:
@@ -28,6 +34,7 @@ This extension provides several code snippets, available when editing Java files
 
   * Java JDK (or JRE) 8 or more recent
   * [Language Support for Java(TM) by Red Hat](https://marketplace.visualstudio.com/items?itemName=redhat.java)
+  * [Debugger for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-debug)
 
 ## Supported VS Code settings
 
