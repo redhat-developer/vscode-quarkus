@@ -8,9 +8,11 @@ and a [Quarkus jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/
 
 ![](images/propertiesSupport.png)
 
-## Quarkus Project Wizards
+## Quarkus project wizards
   * Generate a Quarkus Maven project, based on https://code.quarkus.io/
+    - Call `Quarkus: Generate a Maven project` from the VS Code command palette
   * Add Quarkus extensions to current Maven-based Quarkus project
+    - Call `Quarkus: Add extensions to current project` from the VS Code command palette
 
 ## Quarkus `application.properties` Features
   * Completion support for Quarkus properties
@@ -20,9 +22,10 @@ and a [Quarkus jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/
   * Outline support (flat or tree view)
 
 ## Quarkus debug command
-  * launches the Maven quarkus:dev plugin and automatically attaches a debugger
+  Launches the Maven quarkus:dev plugin and automatically attaches a debugger
+  * Call `Quarkus: Debug current Quarkus project` from the VS Code command palette
 
-## Quarkus Code Snippets
+## Quarkus code snippets
 This extension provides several code snippets, available when editing Java files:
 
   * **qrc** - Create a new Quarkus resource class
