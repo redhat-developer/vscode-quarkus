@@ -1,8 +1,8 @@
 {
   "name": "vscode-quarkus",
-  "displayName": "Quarkus Tools",
-  "description": "Tools for Quarkus development",
-  "version": "0.15.0",
+  "displayName": "Quarkus",
+  "description": "Quarkus Tools by Red Hat",
+  "version": "1.0.0",
   "icon": "icons/logo.png",
   "author": "Red Hat",
   "publisher": "redhat",
@@ -10,6 +10,10 @@
   "bugs": "https://github.com/redhat-developer/vscode-quarkus/issues",
   "engines": {
     "vscode": "^1.37.0"
+  },
+  "galleryBanner": {
+    "color": "#282a36",
+    "theme": "dark"
   },
   "categories": [
     "Programming Languages",
@@ -34,7 +38,8 @@
   ],
   "main": "./dist/extension",
   "extensionDependencies": [
-    "redhat.java"
+    "redhat.java",
+    "vscjava.vscode-java-debug"
   ],
   "contributes": {
     "javaExtensions": [
