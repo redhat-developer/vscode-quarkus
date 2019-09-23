@@ -1,3 +1,5 @@
+[![Marketplace Version](https://vsmarketplacebadge.apphb.com/version/redhat.vscode-quarkus.svg "Current Release")](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-quarkus)
+
 # Quarkus Tools for Visual Studio Code
 
 ## Description

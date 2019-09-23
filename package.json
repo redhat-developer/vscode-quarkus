@@ -1,8 +1,8 @@
 {
   "name": "vscode-quarkus",
   "displayName": "Quarkus",
-  "description": "Quarkus Tools by Red Hat",
-  "version": "1.0.0",
+  "description": "Quarkus Tools for Visual Studio Code",
+  "version": "1.0.1",
   "icon": "icons/logo.png",
   "author": "Red Hat",
   "publisher": "redhat",
