@@ -61,9 +61,7 @@ node('rhel7'){
             stash name:'vsix', includes:filesToPush[0].path
         }
     }
-}
 
-node('rhel7'){
     if('true'.equals(publishToMarketPlace)){
         timeout(time:5, unit:'DAYS') {
             input message:'Approve deployment?', submitter: 'fbricon,azerr,dakwon'
