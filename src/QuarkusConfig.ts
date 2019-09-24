@@ -59,16 +59,24 @@ export namespace QuarkusConfig {
     return getQuarkusToolsSection<string[]>('starter.defaults.extensions', []);
   }
 
+  export function getAlwaysShowWelcomePage(): boolean {
+    return getQuarkusToolsSection<boolean>('alwaysShowWelcomePage', true);
+  }
+
   export function getTerminateProcessOnDebugExit(): TerminateProcessConfig {
     return getQuarkusToolsSection<TerminateProcessConfig>('debug.terminateProcessOnExit');
   }
 
-  export function saveDefaults(defaults: Defaults): void {
+  export function setDefaults(defaults: Defaults): void {
     workspace.getConfiguration(QUARKUS_CONFIG_NAME).update('starter.defaults', defaults, true);
   }
 
-  export function saveTerminateProcessOnDebugExit(save: string): void {
-    workspace.getConfiguration(QUARKUS_CONFIG_NAME).update('debug.terminateProcessOnExit', save, true);
+  export function setAlwaysShowWelcomePage(value: boolean): void {
+    workspace.getConfiguration(QUARKUS_CONFIG_NAME).update('alwaysShowWelcomePage', value, true);
+  }
+
+  export function setTerminateProcessOnDebugExit(value: string): void {
+    workspace.getConfiguration(QUARKUS_CONFIG_NAME).update('debug.terminateProcessOnExit', value, true);
   }
 
   function getQuarkusToolsSection<T>(section: string, fallback?: T): T|undefined {

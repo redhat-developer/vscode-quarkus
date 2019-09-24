@@ -24,6 +24,8 @@ import { createTerminateDebugListener } from './debugging/terminateProcess';
 import { generateProjectWizard } from './generateProject/generationWizard';
 import { prepareExecutable } from './languageServer/javaServerStarter';
 import { tryStartDebugging } from './debugging/startDebugging';
+import { WelcomeWebview } from './webviews/WelcomeWebview';
+import { QuarkusConfig } from './QuarkusConfig';
 
 const disposables = [];
 let terminateDebugListener: Disposable;
@@ -46,6 +48,8 @@ interface QuarkusPropertyDefinitionParams {
 }
 
 export function activate(context: ExtensionContext) {
+
+  displayWelcomePageIfNeeded(context);
 
   terminateDebugListener = createTerminateDebugListener(disposables);
 
@@ -76,12 +80,17 @@ export function activate(context: ExtensionContext) {
   });
 
   registerVSCodeCommands(context);
-
 }
 
 export function deactivate() {
   terminateDebugListener.dispose();
   disposables.forEach(disposable => disposable.dispose());
+}
+
+function displayWelcomePageIfNeeded(context: ExtensionContext): void {
+  if (QuarkusConfig.getAlwaysShowWelcomePage()) {
+    WelcomeWebview.createOrShow(context);
+  }
 }
 
 function registerVSCodeCommands(context: ExtensionContext) {
@@ -105,6 +114,13 @@ function registerVSCodeCommands(context: ExtensionContext) {
    */
   context.subscriptions.push(commands.registerCommand('quarkusTools.debugQuarkusProject', () => {
     tryStartDebugging();
+  }));
+
+  /**
+   * Command for displaying welcome page
+   */
+  context.subscriptions.push(commands.registerCommand('quarkusTools.welcome', () => {
+    WelcomeWebview.createOrShow(context);
   }));
 }
 

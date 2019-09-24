@@ -51,6 +51,8 @@ When editing `application.properties` files, you have access to:
 
 The following settings are supported:
   
+* `quarkus.tools.alwaysShowWelcomePage` : Determines whether to show the welcome page on extension startup.
+* `quarkus.tools.debug.terminateProcessOnExit` : Determines whether to terminate the quarkus:dev task after closing the debug session.
 * `quarkus.tools.trace.server` : Trace the communication between VS Code and the Quarkus Language Server in the Output view.
 * `quarkus.tools.symbols.showAsTree` : Show Quarkus properties as tree (Outline). Default is `true`.
 * `quarkus.tools.validation.enabled` : Enables Quarkus validation. Default is `true`.

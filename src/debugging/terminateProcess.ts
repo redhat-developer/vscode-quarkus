@@ -72,7 +72,7 @@ function saveToConfig(terminate: boolean, askAgain: boolean): void {
   } else if (!terminate) {
     save = TerminateProcessConfig.DontTerminate;
   }
-  QuarkusConfig.saveTerminateProcessOnDebugExit(save);
+  QuarkusConfig.setTerminateProcessOnDebugExit(save);
 }
 
 async function getUserInputTerminate(): Promise<boolean> {
