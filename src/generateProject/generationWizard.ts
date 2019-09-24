@@ -176,7 +176,7 @@ async function showOpenFolderDialog(customOptions: OpenDialogOptions): Promise<U
 }
 
 function saveDefaultsToConfig(state: ProjectGenState): void {
-  QuarkusConfig.saveDefaults({
+  QuarkusConfig.setDefaults({
     groupId: state.groupId,
     artifactId: state.artifactId,
     projectVersion: state.projectVersion,

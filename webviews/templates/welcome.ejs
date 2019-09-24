@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src <%= cspSource %>; script-src <%= cspSource %>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="<%= cssUri %>">
+  <title>Welcome</title>
+</head>
+
+<body>
+  <div class="section-div">
+    <h2 class="title-header">Quarkus Tools for Visual Studio Code</h2>
+    <p class="no-bottom-margin">Welcome! This extension provides tools to get you up and running with Quarkus application development in Visual
+      Studio
+      Code.</p>
+  </div>
+
+  <div class="section-div">
+    <h2 class="section-title">Requirements</h2>
+    <p>The <a href="vscode:extension/vscjava.vscode-java-pack">Java Extension Pack</a> is highly recommended.</p>
+    <ul class="no-bottom-margin">
+      <li>Java JDK (or JRE) 8 or more recent</li>
+      <li><a href="vscode:extension/redhat.java">Language Support for Java(TM) by Red Hat</a></li>
+      <li><a href="vscode:extension/vscjava.vscode-java-debug">Debugger for Java</a></li>
+    </ul>
+  </div>
+
+  <div class="section-div">
+    <h2 class="section-title">Get started</h2>
+    <p>Create a new Maven based Quarkus project or open an existing Quarkus project to get started.</p>
+    <a href="command:quarkusTools.createMavenProject"><button>Create Quarkus project</button></a>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <div class="section-div">
+        <h2 class="section-title">New to Quarkus?</h2>
+        <p>Refer to the Quarkus Getting Started guide. The guide provides instructions from starting your first project,
+          to creating a native executable.
+        </p>
+        <a class="section-link" href="https://quarkus.io/get-started/">View Getting Started guide</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="section-div">
+          <h2 class="section-title">Documentation</h2>
+          <p>The Quarkus guides from quarkus.io/guides provides detailed documentation and tutorials for different use
+            cases.</p>
+          <a class="section-link" href="https://quarkus.io/guides/">View guides</a>
+          <a class="section-link" href="https://lordofthejars.github.io/quarkus-cheat-sheet/">View Quarkus Cheet-Sheet</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <div class="section-div">
+        <h2 class="section-title">Getting help</h2>
+        <p>Keep in touch with the Quarkus community; there are many ways to reach out.</p>
+        <a class="section-link" href="https://quarkus.io/community/">View community links</a>
+      </div>
+    </div>
+    <div class="column">
+      <div class="section-div">
+        <h2 class="section-title">Sample projects</h2>
+        <p>Explore a wide variety of Quarkus quickstart projects, each focusing on a different aspect of Quarkus
+          application development.</p>
+        <a class="section-link" href="https://github.com/quarkusio/quarkus-quickstarts">View quickstart projects</a>
+      </div>
+    </div>
+  </div>
+  <div class="section-div">
+    <input type="checkbox" id="showWhenUsingQuarkusTools" <% if (checkboxValue) { %> checked <% } %>>
+    <label for="showWhenUsingQuarkusTools">Show welcome page when using Quarkus Tools</label>
+  </div>
+</body>
+<script src="<%= jsUri %>"></script>
+</html>

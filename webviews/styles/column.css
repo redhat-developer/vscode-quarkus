@@ -1,0 +1,12 @@
+/* https://www.w3schools.cm/howto/howto_css_two_columns.asp */
+
+.column {
+  float: left;
+  width: 35%;
+}
+
+.row {
+  display: flex;
+  clear: both;
+  float: none;
+}
