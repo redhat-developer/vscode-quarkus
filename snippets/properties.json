@@ -1,0 +1,13 @@
+{
+	"Add datasource properties": {
+		"prefix": "qds",
+		"body": [
+			"quarkus.datasource.url=${1|jdbc:mariadb://localhost:3306/mydb,jdbc:mysql://localhost:3306/test,jdbc:h2:mem:mydb,jdbc:postgresql://localhost/mydb,jdbc:sqlserver://localhost:1433;databaseName=mydb|}",
+			"quarkus.datasource.driver=${2|org.mariadb.jdbc.Driver,org.mysql.jdbc.Driver,org.h2.Driver,org.postgresql.Driver,com.microsoft.sqlserver.jdbc.SQLServerDriver|}",
+			"quarkus.datasource.username=${3:developer}",
+			"quarkus.datasource.password=${4:developer}",
+			"quarkus.hibernate-orm.database.generation=${5|update,drop-and-create,create,drop,none|}"
+		],
+    "description": "Configure Quarkus datasource"
+  }
+}
