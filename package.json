@@ -75,6 +75,10 @@
       {
         "language": "java",
         "path": "./snippets/quarkus.json"
+      },
+      {
+        "language": "quarkus-properties",
+        "path": "./snippets/properties.json"
       }
     ],
     "configuration": {

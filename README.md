@@ -35,6 +35,11 @@ This extension provides several code snippets, available when editing Java files
   * **qtrc** - Create a new Quarkus test resource class
   * **qntrc** - Create a new Quarkus native test resource class
 
+When editing `application.properties` files, you have access to:
+
+  * **qds** - Configure a Quarkus datasource
+
+
 ## Requirements
 
   * Java JDK (or JRE) 8 or more recent
