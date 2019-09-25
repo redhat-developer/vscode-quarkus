@@ -38,6 +38,7 @@ This extension provides several code snippets, available when editing Java files
 When editing `application.properties` files, you have access to:
 
   * **qds** - Configure a Quarkus datasource
+  * **qj** - Configure a Jaeger tracer
 
 
 ## Requirements
