@@ -8,6 +8,16 @@
 			"quarkus.datasource.password=${4:developer}",
 			"quarkus.hibernate-orm.database.generation=${5|update,drop-and-create,create,drop,none|}"
 		],
-    "description": "Configure Quarkus datasource"
-  }
+	"description": "Configure Quarkus datasource"
+	},
+	"Add Jaeger properties": {
+		"prefix": "qj",
+		"body": [
+			"quarkus.jaeger.service-name=${1:myservice}",
+			"quarkus.jaeger.sampler-type=${2:const}",
+			"quarkus.jaeger.sampler-param=${3:1}",
+			"quarkus.jaeger.endpoint=${4:http://localhost:14268/api/traces}"
+		],
+		"description": "Configure Jaeger tracer"
+	}
 }
