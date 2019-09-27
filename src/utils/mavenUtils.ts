@@ -48,7 +48,8 @@ export function getMavenWrapperFilename(): string {
  * @param workspaceFolder
  */
 export async function mavenWrapperExists(workspaceFolder: WorkspaceFolder) {
-	return getMavenWrapperPathFromPom(workspaceFolder.uri, workspaceFolder) !== undefined;
+	const b = await getMavenWrapperPathFromPom(workspaceFolder.uri, workspaceFolder) !== undefined;
+	return b;
 }
 
 /**

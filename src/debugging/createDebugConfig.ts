@@ -20,108 +20,143 @@ import { DebugConfiguration, TaskDefinition, Uri, workspace, TaskPanelKind } fro
 import { getDefaultMavenExecutable, getUnixMavenWrapperExecuteable, getWindowsMavenWrapperExecutable, mavenWrapperExists } from '../utils/mavenUtils';
 import { parse } from 'comment-json';
 
-/**
- * Creates a .vscode/ directory in `directory` (if it does not exist)
- * and adds a new task and debug configuration which starts the quarkus:dev command
- * @param directory workspace directory to generate debug config in
- */
-export async function createDebugConfig(directory: Uri) {
+export class DebugConfigCreator {
 
-  const vscodeDir: string = directory.fsPath + '/.vscode';
-  if (!fs.existsSync(vscodeDir)) {
-    fs.mkdirSync(vscodeDir);
+  private workspaceDir: Uri;
+  private dotVSCodeDir: string;
+  private tasksJsonDir: string;
+  private launchJsonDir: string;
+
+  constructor(directory: Uri) {
+    this.workspaceDir = directory;
+    this.dotVSCodeDir = directory.fsPath + '/.vscode';
+    this.tasksJsonDir = this.dotVSCodeDir + '/tasks.json';
+    this.launchJsonDir = this.dotVSCodeDir + '/launch.json';
   }
 
-  await addDebugTask(directory);
-  await addDebugConfig();
-}
-
-async function addDebugTask(directory: Uri): Promise<void> {
-  await createTasksJsonIfMissing(directory);
-  const tasksJson = workspace.getConfiguration('tasks', directory);
-  const tasks: TaskDefinition[] = tasksJson.get<TaskDefinition[]>('tasks');
-  tasks.push(await getDebugTask(directory));
-  await tasksJson.update('tasks', tasks, false);
-
-}
-
-async function addDebugConfig() {
-  await createLaunchJsonIfMissing(directory);
-
-  // if (fs.existsSync(vscodeDir + '/launch.json')) {
-  //   const launchConfig = workspace.getConfiguration('launch', directory);
-  //   const configurations: DebugConfiguration[] = launchConfig.get<DebugConfiguration[]>('configurations');
-  //   const configToAdd: DebugConfiguration = getDebugResource<DebugConfiguration>('launch.json').configurations[0];
-  //   configurations.push(configToAdd);
-  //   await launchConfig.update('configurations', configurations, false);
-  // } else {
-  //   let launchContent: string = getDebugResourceAsString('launch.json');
-  //   launchContent = replaceWithSpacesIfNeeded(launchContent);
-  //   fs.writeFileSync(vscodeDir + '/launch.json', launchContent);
-  // }
-}
-
-/**
- * Creates a tasks.json file (with no tasks) in .vscode/ directory, if
- * one does not exist already
- * @param dotVSCodeDir absolute path to the .vscode/ directory
- */
-async function createTasksJsonIfMissing(directory: Uri): Promise<void> {
-  const vscodeDir: string = directory.fsPath + '/.vscode';
-  if (!fs.existsSync(vscodeDir + '/tasks.json')) {
-    await workspace.getConfiguration('tasks', directory).update('version', "2.0.0");
-    await workspace.getConfiguration('tasks', directory).update('tasks', []);
-  }
-}
-
-async function createLaunchJsonIfMissing(directory: Uri): Promise<void> {
-  const vscodeDir: string = directory.fsPath + '/.vscode';
-  if (!fs.existsSync(vscodeDir + '/launch.json')) {
-    await workspace.getConfiguration('launch', directory).update('version', "0.2.0");
-    await workspace.getConfiguration('launch', directory).update('configurations', []);
-  }
-}
-
-
-async function getDebugTask(directory: Uri): Promise<TaskDefinition> {
-
-  const QUARKUS_DEV: string = 'quarkus:dev';
-  let windowsMvn: string;
-  let unixMvn: string;
-
-  if (mavenWrapperExists(workspace.getWorkspaceFolder(directory))) {
-    windowsMvn = getWindowsMavenWrapperExecutable();
-    unixMvn = getUnixMavenWrapperExecuteable();
-  } else {
-    windowsMvn = await getDefaultMavenExecutable();
-    unixMvn = await getDefaultMavenExecutable();
+  public async createFiles(): Promise<void> {
+    this.createVSCodeDirIfMissing();
+    await this.addDebugTask();
+    await this.addDebugConfig();
   }
 
-  const taskToAdd: TaskDefinition = getDebugResource<TaskDefinition>('task.json');
-  taskToAdd.command = `${unixMvn} ${QUARKUS_DEV}`;
-  taskToAdd.windows.command = `${windowsMvn} ${QUARKUS_DEV}`;
-
-  return taskToAdd;
-}
-
-function getDebugResource<T>(filename: string): T {
-  return parse(getDebugResourceAsString(filename));
-}
-
-function getDebugResourceAsString(filename: string): string {
-  const pathToFile = path.resolve(__dirname, '../vscode-debug-files/' + filename);
-  return fs.readFileSync(pathToFile).toString();
-}
-
-function replaceWithSpacesIfNeeded(str: string): string {
-  if (workspace.getConfiguration('editor').get('insertSpaces')) {
-    const numSpaces: number = workspace.getConfiguration('editor').get('tabSize');
-    return replaceTabsWithSpaces(str, numSpaces);
+  private createVSCodeDirIfMissing(): void {
+    if (!fs.existsSync(this.dotVSCodeDir)) {
+      fs.mkdirSync(this.dotVSCodeDir);
+    }
   }
 
-  return str;
-}
+  private async addDebugTask(): Promise<void> {
+    await this.createTasksJsonIfMissing();
+    const tasksJson = workspace.getConfiguration('tasks', this.workspaceDir);
+    const tasks: TaskDefinition[] = tasksJson.get<TaskDefinition[]>('tasks');
+    tasks.push(await this.getDebugTask());
+    await tasksJson.update('tasks', tasks, false);
+  }
 
-function replaceTabsWithSpaces(str: string, numSpaces: number): string {
-  return str.replace(/\t/g, ' '.repeat(numSpaces));
+  private async addDebugConfig(): Promise<void> {
+    await this.createLaunchJsonIfMissing();
+    const launchJson = workspace.getConfiguration('launch', this.workspaceDir);
+    const configurations: DebugConfiguration[] = launchJson.get<DebugConfiguration[]>('configurations');
+    configurations.push(this.getDebugConfig());
+    await launchJson.update('configurations', configurations, false);
+  }
+
+  /**
+   * Creates a tasks.json file (with no tasks) in .vscode/ directory, if
+   * one does not exist already
+   * @param dotVSCodeDir absolute path to the .vscode/ directory
+   */
+  private async createTasksJsonIfMissing(): Promise<void> {
+
+    if (fs.existsSync(this.tasksJsonDir)) {
+      return;
+    }
+
+    // create tasks.json file in .vscode/
+    await workspace.getConfiguration('tasks', this.workspaceDir).update('version', "2.0.0");
+    await workspace.getConfiguration('tasks', this.workspaceDir).update('tasks', []);
+
+    if (fs.existsSync(this.tasksJsonDir)) {
+      this.prependTasksJsonComment();
+    }
+  }
+
+  private async createLaunchJsonIfMissing(): Promise<void> {
+
+    if (fs.existsSync(this.launchJsonDir)) {
+      return;
+    }
+
+    await workspace.getConfiguration('launch', this.workspaceDir).update('version', "0.2.0");
+    await workspace.getConfiguration('launch', this.workspaceDir).update('configurations', []);
+
+    if (fs.existsSync(this.launchJsonDir)) {
+      this.prependLaunchJsonComment();
+    }
+  }
+
+  private async getDebugTask(): Promise<TaskDefinition> {
+
+    const QUARKUS_DEV: string = 'quarkus:dev';
+    let windowsMvn: string;
+    let unixMvn: string;
+
+    if (await mavenWrapperExists(workspace.getWorkspaceFolder(this.workspaceDir))) {
+      windowsMvn = getWindowsMavenWrapperExecutable();
+      unixMvn = getUnixMavenWrapperExecuteable();
+    } else {
+      windowsMvn = await getDefaultMavenExecutable();
+      unixMvn = await getDefaultMavenExecutable();
+    }
+
+    const taskToAdd: TaskDefinition = this.getDebugResource<TaskDefinition>('task.json');
+    taskToAdd.command = `${unixMvn} ${QUARKUS_DEV}`;
+    taskToAdd.windows.command = `${windowsMvn} ${QUARKUS_DEV}`;
+
+    return taskToAdd;
+  }
+
+  private getDebugConfig(): DebugConfiguration {
+    return this.getDebugResource<DebugConfiguration>('configuration.json');
+  }
+
+  private getDebugResource<T>(filename: string): T {
+    return parse(this.getDebugResourceAsString(filename));
+  }
+
+  private getDebugResourceAsString(filename: string): string {
+    const pathToFile = path.resolve(__dirname, '../vscode-debug-files/' + filename);
+    return fs.readFileSync(pathToFile).toString();
+  }
+
+  private prependTasksJsonComment() {
+    let comment: string = `// See https://go.microsoft.com/fwlink/?LinkId=733558\n`;
+    comment += `// for the documentation about the tasks.json format\n`;
+    this.prependToFile(this.tasksJsonDir, comment);
+  }
+
+  private prependLaunchJsonComment() {
+    let comment: string = `// A launch configuration that compiles the extension and then opens it inside a new window\n`;
+    comment += `// Use IntelliSense to learn about possible attributes.\n`;
+    comment += `// Hover to view descriptions of existing attributes.\n`;
+    comment += `// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387\n`;
+    this.prependToFile(this.launchJsonDir, comment);
+  }
+
+  /**
+   * Referenced from https://stackoverflow.com/a/49889780
+   * @param fileDir
+   * @param str
+   */
+  private prependToFile(fileDir: string, str: string) {
+    const data = fs.readFileSync(fileDir);
+    const fd = fs.openSync(fileDir, 'w+');
+    const insert = new Buffer(str);
+    fs.writeSync(fd, insert, 0, insert.length, 0);
+    fs.writeSync(fd, data, 0, data.length, insert.length);
+    fs.close(fd, (err) => {
+      if (err) throw err;
+    });
+  }
 }
