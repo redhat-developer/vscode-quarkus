@@ -16,7 +16,7 @@
 
 import { WorkspaceFolder, debug, window, workspace, DebugConfiguration } from 'vscode';
 import { containsMavenQuarkusProject } from '../utils/workspaceUtils';
-import { DebugConfigCreator } from '../debugging/createDebugConfig';
+import { DebugConfigCreator } from './CreateDebugConfig';
 import { getQuarkusDevDebugConfig } from '../utils/launchConfigUtils';
 
 export async function tryStartDebugging() {
@@ -38,8 +38,7 @@ async function startDebugging(): Promise<void> {
   let debugConfig: DebugConfiguration|undefined = await getQuarkusDevDebugConfig(workspaceFolder);
 
   if (!debugConfig) {
-    const debugConfigCreator: DebugConfigCreator = new DebugConfigCreator(workspaceFolder.uri);
-    await debugConfigCreator.createFiles();
+    await DebugConfigCreator.createFiles(workspaceFolder.uri);
     debugConfig = await getQuarkusDevDebugConfig(workspaceFolder);
   }
 

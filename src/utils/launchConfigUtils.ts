@@ -13,32 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as fs from 'fs';
-
-import { DebugConfiguration, WorkspaceFolder, TaskDefinition } from 'vscode';
-import { getQuarkusDevTaskDefinitions } from '../utils/tasksUtils';
-import { parse } from 'comment-json';
-
-function getQuarkusDevTaskNames(workspaceFolder: WorkspaceFolder): string[] {
-
-  const quarkusDevTaskDefinitions: TaskDefinition[] = getQuarkusDevTaskDefinitions(workspaceFolder);
-  return quarkusDevTaskDefinitions.filter((taskDefinition: TaskDefinition) => {
-    return typeof taskDefinition.label !== 'undefined';
-  }).map((taskDefinition: TaskDefinition) => {
-    return taskDefinition.label;
-  });
-}
+import { DebugConfiguration, WorkspaceFolder, Task, workspace } from 'vscode';
+import { getQuarkusDevTasks } from '../utils/tasksUtils';
 
 export async function getQuarkusDevDebugConfig(workspaceFolder: WorkspaceFolder): Promise<DebugConfiguration | undefined> {
   const debugConfig: DebugConfiguration[] = getConfigsWithPreLaunchTask(workspaceFolder);
-  const devTasksNames: string[] = getQuarkusDevTaskNames(workspaceFolder);
+  const devTasksNames: string[] = await getQuarkusDevTaskNames(workspaceFolder);
 
   for (const config of debugConfig) {
     if (devTasksNames.includes(config.preLaunchTask)) {
       return config;
     }
   }
-
   return undefined;
 }
 
@@ -48,15 +34,15 @@ export function getConfigsWithPreLaunchTask(workspaceFolder: WorkspaceFolder): D
   });
 }
 
-export function getLaunchConfig(workspaceFolder: WorkspaceFolder): DebugConfiguration[] {
-  // If the launch.json was created very recently, workspace.getConfiguration(launch, workspaceFolder.uri)
-  // cannot retrieve it.
-  const launchJson: string = workspaceFolder.uri.fsPath + '/.vscode/launch.json';
-  if (fs.existsSync(launchJson)) {
-    const launchConfig = parse(fs.readFileSync(launchJson).toString());
-    if (launchConfig.configurations) {
-      return launchConfig.configurations as DebugConfiguration[];
-    }
-  }
-  return [];
+async function getQuarkusDevTaskNames(workspaceFolder: WorkspaceFolder): Promise<string[]> {
+  const quarkusDevTaskDefinitions: Task[] = await getQuarkusDevTasks(workspaceFolder);
+  return quarkusDevTaskDefinitions.filter((task: Task) => {
+    return typeof task.name !== 'undefined';
+  }).map((task: Task) => {
+    return task.name;
+  });
+}
+
+function getLaunchConfig(workspaceFolder: WorkspaceFolder): DebugConfiguration[] {
+  return workspace.getConfiguration('launch', workspaceFolder.uri).get<DebugConfiguration[]>('configurations');
 }

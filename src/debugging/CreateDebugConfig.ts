@@ -16,28 +16,32 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { DebugConfiguration, TaskDefinition, Uri, workspace, TaskPanelKind } from 'vscode';
-import { getDefaultMavenExecutable, getUnixMavenWrapperExecuteable, getWindowsMavenWrapperExecutable, mavenWrapperExists } from '../utils/mavenUtils';
-import { parse } from 'comment-json';
+import { DebugConfiguration, TaskDefinition, Uri, workspace } from 'vscode';
+import { getDefaultMavenExecutable, getUnixMavenWrapperExecuteable, getWindowsMavenWrapperExecutable,
+  mavenWrapperExistsWindows, mavenWrapperExistsUnix } from '../utils/mavenUtils';
 
 export class DebugConfigCreator {
 
+  public static debugConfigCreator: DebugConfigCreator;
+
   private workspaceDir: Uri;
   private dotVSCodeDir: string;
-  private tasksJsonDir: string;
-  private launchJsonDir: string;
+  private tasksJsonFile: string;
+  private launchJsonFile: string;
 
-  constructor(directory: Uri) {
-    this.workspaceDir = directory;
-    this.dotVSCodeDir = directory.fsPath + '/.vscode';
-    this.tasksJsonDir = this.dotVSCodeDir + '/tasks.json';
-    this.launchJsonDir = this.dotVSCodeDir + '/launch.json';
+  public static async createFiles(directory: Uri): Promise<void> {
+    DebugConfigCreator.debugConfigCreator = new DebugConfigCreator(directory);
+
+    DebugConfigCreator.debugConfigCreator.createVSCodeDirIfMissing();
+    await DebugConfigCreator.debugConfigCreator.addDebugTask();
+    await DebugConfigCreator.debugConfigCreator.addDebugConfig();
   }
 
-  public async createFiles(): Promise<void> {
-    this.createVSCodeDirIfMissing();
-    await this.addDebugTask();
-    await this.addDebugConfig();
+  private constructor(directory: Uri) {
+    this.workspaceDir = directory;
+    this.dotVSCodeDir = directory.fsPath + '/.vscode';
+    this.tasksJsonFile = this.dotVSCodeDir + '/tasks.json';
+    this.launchJsonFile = this.dotVSCodeDir + '/launch.json';
   }
 
   private createVSCodeDirIfMissing(): void {
@@ -69,7 +73,7 @@ export class DebugConfigCreator {
    */
   private async createTasksJsonIfMissing(): Promise<void> {
 
-    if (fs.existsSync(this.tasksJsonDir)) {
+    if (fs.existsSync(this.tasksJsonFile)) {
       return;
     }
 
@@ -77,21 +81,21 @@ export class DebugConfigCreator {
     await workspace.getConfiguration('tasks', this.workspaceDir).update('version', "2.0.0");
     await workspace.getConfiguration('tasks', this.workspaceDir).update('tasks', []);
 
-    if (fs.existsSync(this.tasksJsonDir)) {
+    if (fs.existsSync(this.tasksJsonFile)) {
       this.prependTasksJsonComment();
     }
   }
 
   private async createLaunchJsonIfMissing(): Promise<void> {
 
-    if (fs.existsSync(this.launchJsonDir)) {
+    if (fs.existsSync(this.launchJsonFile)) {
       return;
     }
 
     await workspace.getConfiguration('launch', this.workspaceDir).update('version', "0.2.0");
     await workspace.getConfiguration('launch', this.workspaceDir).update('configurations', []);
 
-    if (fs.existsSync(this.launchJsonDir)) {
+    if (fs.existsSync(this.launchJsonFile)) {
       this.prependLaunchJsonComment();
     }
   }
@@ -102,11 +106,15 @@ export class DebugConfigCreator {
     let windowsMvn: string;
     let unixMvn: string;
 
-    if (await mavenWrapperExists(workspace.getWorkspaceFolder(this.workspaceDir))) {
+    if (await mavenWrapperExistsWindows(workspace.getWorkspaceFolder(this.workspaceDir))) {
       windowsMvn = getWindowsMavenWrapperExecutable();
-      unixMvn = getUnixMavenWrapperExecuteable();
     } else {
       windowsMvn = await getDefaultMavenExecutable();
+    }
+
+    if (await mavenWrapperExistsUnix(workspace.getWorkspaceFolder(this.workspaceDir))) {
+      unixMvn = getUnixMavenWrapperExecuteable();
+    } else {
       unixMvn = await getDefaultMavenExecutable();
     }
 
@@ -122,18 +130,14 @@ export class DebugConfigCreator {
   }
 
   private getDebugResource<T>(filename: string): T {
-    return parse(this.getDebugResourceAsString(filename));
-  }
-
-  private getDebugResourceAsString(filename: string): string {
     const pathToFile = path.resolve(__dirname, '../vscode-debug-files/' + filename);
-    return fs.readFileSync(pathToFile).toString();
+    return JSON.parse(fs.readFileSync(pathToFile).toString());
   }
 
   private prependTasksJsonComment() {
     let comment: string = `// See https://go.microsoft.com/fwlink/?LinkId=733558\n`;
     comment += `// for the documentation about the tasks.json format\n`;
-    this.prependToFile(this.tasksJsonDir, comment);
+    this.prependToFile(this.tasksJsonFile, comment);
   }
 
   private prependLaunchJsonComment() {
@@ -141,7 +145,7 @@ export class DebugConfigCreator {
     comment += `// Use IntelliSense to learn about possible attributes.\n`;
     comment += `// Hover to view descriptions of existing attributes.\n`;
     comment += `// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387\n`;
-    this.prependToFile(this.launchJsonDir, comment);
+    this.prependToFile(this.launchJsonFile, comment);
   }
 
   /**

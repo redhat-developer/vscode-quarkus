@@ -16,7 +16,7 @@
 import { AddExtensionsState, State } from "../definitions/inputState";
 import { MultiStepInput } from "../utils/multiStepUtils";
 import { QExtension } from "../definitions/QExtension";
-import { QuickPickItem, RelativePattern, Uri, WorkspaceFolder, window, workspace } from "vscode";
+import { QuickPickItem, Uri, WorkspaceFolder, window, workspace } from "vscode";
 import { executeMavenCommand } from "../terminal/executeMavenCommand";
 import { getPomPathsFromWorkspace } from "../utils/workspaceUtils";
 import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions";

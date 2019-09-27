@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { Disposable, Terminal, env, window } from "vscode";
+import { Disposable, Terminal, window } from "vscode";
 import { Settings } from "./settings";
 
 import { WindowsShellType, currentWindowsShell, getCommand, getCDCommand, setupEnvForWSL } from '../utils/shellUtils';
