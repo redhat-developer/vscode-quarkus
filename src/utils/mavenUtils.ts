@@ -4,6 +4,9 @@ import * as path from "path";
 
 import { Uri, WorkspaceFolder } from "vscode";
 
+const MVNW: string = 'mvnw';
+const MVNW_CMD: string = 'mvnw.cmd';
+
 export function getMavenWrapperExecuteable(): string {
 	if (process.platform === "win32") {
 		return getWindowsMavenWrapperExecutable();
@@ -12,11 +15,11 @@ export function getMavenWrapperExecuteable(): string {
 }
 
 export function getWindowsMavenWrapperExecutable(): string {
-	return '.\\mvnw.cmd';
+	return `.\\${MVNW_CMD}`;
 }
 
 export function getUnixMavenWrapperExecuteable(): string {
-	return './mvnw';
+	return `./${MVNW}`;
 }
 
 /**
@@ -36,20 +39,20 @@ export async function getDefaultMavenExecutable(): Promise<string> {
 	});
 }
 
-export function getMavenWrapperFilename(): string {
-  if (process.platform === "win32") {
-      return 'mvnw.cmd';
-  }
-  return 'mvnw';
+/**
+ * Returns true if mvnw.cmd file exists in root of `workspaceFolder`
+ * @param workspaceFolder
+ */
+export async function mavenWrapperExistsWindows(workspaceFolder: WorkspaceFolder) {
+	return await getMavenWrapperPathFromPom(workspaceFolder.uri, workspaceFolder, MVNW_CMD) !== undefined;
 }
 
 /**
- * Returns true if Maven wrapper file exists in root of `workspaceFolder`
+ * Returns true if mvnw file exists in root of `workspaceFolder`
  * @param workspaceFolder
  */
-export async function mavenWrapperExists(workspaceFolder: WorkspaceFolder) {
-	const b = await getMavenWrapperPathFromPom(workspaceFolder.uri, workspaceFolder) !== undefined;
-	return b;
+export async function mavenWrapperExistsUnix(workspaceFolder: WorkspaceFolder) {
+	return await getMavenWrapperPathFromPom(workspaceFolder.uri, workspaceFolder, MVNW) !== undefined;
 }
 
 /**
@@ -58,14 +61,23 @@ export async function mavenWrapperExists(workspaceFolder: WorkspaceFolder) {
  * located closest to pom.xml provided by `pomPath`.
  * @param pomPath path to pom.xml
  * @param workspaceFolder workspace folder containing pom.xml specified by `pomPath`
+ * @param filename name of the maven wrapper file (mvnw or mvnw.cmd
+ *                 if not provided, detect automicatically depnding on OS (windows = mwnw.cmd, else = mvnw)
  */
-export async function getMavenWrapperPathFromPom(pomPath: Uri, workspaceFolder: WorkspaceFolder): Promise<string | undefined> {
+export async function getMavenWrapperPathFromPom(pomPath: Uri, workspaceFolder: WorkspaceFolder, filename?: string): Promise<string | undefined> {
 	const options = { cwd: pomPath.fsPath };
 	const topLevelFolder: string = workspaceFolder.uri.fsPath;
-	const mvnw = getMavenWrapperFilename();
+	const mvnw = filename ? filename : getMavenWrapperFilename();
 	return await findUp(dir => {
 		return (!isSameDirectory(topLevelFolder, dir) && !isSubDirectory(topLevelFolder, dir)) ? findUp.stop : mvnw;
 	}, options);
+}
+
+export function getMavenWrapperFilename(): string {
+  if (process.platform === "win32") {
+      return MVNW_CMD;
+  }
+  return MVNW;
 }
 
 /**

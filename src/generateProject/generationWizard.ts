@@ -14,7 +14,6 @@ import { OpenDialogOptions, Uri, commands, window } from 'vscode';
 import { ProjectGenState } from '../definitions/inputState';
 import { QExtension } from '../definitions/QExtension';
 import { ZipFile } from 'yauzl';
-import { createDebugConfig } from '../debugging/createDebugConfig';
 import { downloadProject } from '../utils/requestUtils';
 import { pickExtensionsWithLastUsed } from './pickExtensions';
 import { validateArtifactId, validateGroupId, validatePackageName, validateResourceName, validateVersion } from './validateInput';

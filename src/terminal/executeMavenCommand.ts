@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 import * as path from "path";
+
 import { Uri, Terminal, WorkspaceFolder, workspace } from "vscode";
 import { ITerminalOptions, mavenTerminal } from "./mavenTerminal";
 import { getDefaultMavenExecutable, getMavenWrapperExecuteable, getMavenWrapperPathFromPom } from '../utils/mavenUtils';
