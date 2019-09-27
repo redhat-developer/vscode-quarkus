@@ -1,0 +1,26 @@
+{
+	"label": "quarkus:dev",
+	"type": "shell",
+	"command": "./mvnw quarkus:dev",
+	"windows": {
+		"command": ".\\mvn.cmd quarkus:dev"
+	},
+	"isBackground": true,
+	"problemMatcher": [
+		{
+			"pattern": [
+				{
+					"regexp": "\\b\\B",
+					"file": 1,
+					"location": 2,
+					"message": 3
+				}
+			],
+			"background": {
+				"activeOnStart": true,
+				"beginsPattern": "^.*Scanning for projects...*",
+				"endsPattern": "^.*Quarkus .* started in .*\\. Listening on:*"
+			}
+		}
+	]
+}
