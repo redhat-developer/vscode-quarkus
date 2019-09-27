@@ -16,9 +16,15 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { DebugConfiguration, TaskDefinition, Uri, workspace, tasks } from 'vscode';
+import { DebugConfiguration, TaskDefinition, Uri, workspace, TaskPanelKind } from 'vscode';
+import { getDefaultMavenExecutable, getUnixMavenWrapperExecuteable, getWindowsMavenWrapperExecutable, mavenWrapperExists } from '../utils/mavenUtils';
 import { parse } from 'comment-json';
 
+/**
+ * Creates a .vscode/ directory in `directory` (if it does not exist)
+ * and adds a new task and debug configuration which starts the quarkus:dev command
+ * @param directory workspace directory to generate debug config in
+ */
 export async function createDebugConfig(directory: Uri) {
 
   const vscodeDir: string = directory.fsPath + '/.vscode';
@@ -26,29 +32,76 @@ export async function createDebugConfig(directory: Uri) {
     fs.mkdirSync(vscodeDir);
   }
 
-  if (fs.existsSync(vscodeDir + '/tasks.json')) {
-    const tasksJson = workspace.getConfiguration('tasks', directory);
-    const tasks: TaskDefinition[] = tasksJson.get<TaskDefinition[]>('tasks');
-    const taskToAdd: TaskDefinition = getDebugResource<TaskDefinition>('tasks.json').tasks[0];
-    tasks.push(taskToAdd);
-    await tasksJson.update('tasks', tasks, false);
+  await addDebugTask(directory);
+  await addDebugConfig();
+}
+
+async function addDebugTask(directory: Uri): Promise<void> {
+  await createTasksJsonIfMissing(directory);
+  const tasksJson = workspace.getConfiguration('tasks', directory);
+  const tasks: TaskDefinition[] = tasksJson.get<TaskDefinition[]>('tasks');
+  tasks.push(await getDebugTask(directory));
+  await tasksJson.update('tasks', tasks, false);
+
+}
+
+async function addDebugConfig() {
+  await createLaunchJsonIfMissing(directory);
+
+  // if (fs.existsSync(vscodeDir + '/launch.json')) {
+  //   const launchConfig = workspace.getConfiguration('launch', directory);
+  //   const configurations: DebugConfiguration[] = launchConfig.get<DebugConfiguration[]>('configurations');
+  //   const configToAdd: DebugConfiguration = getDebugResource<DebugConfiguration>('launch.json').configurations[0];
+  //   configurations.push(configToAdd);
+  //   await launchConfig.update('configurations', configurations, false);
+  // } else {
+  //   let launchContent: string = getDebugResourceAsString('launch.json');
+  //   launchContent = replaceWithSpacesIfNeeded(launchContent);
+  //   fs.writeFileSync(vscodeDir + '/launch.json', launchContent);
+  // }
+}
+
+/**
+ * Creates a tasks.json file (with no tasks) in .vscode/ directory, if
+ * one does not exist already
+ * @param dotVSCodeDir absolute path to the .vscode/ directory
+ */
+async function createTasksJsonIfMissing(directory: Uri): Promise<void> {
+  const vscodeDir: string = directory.fsPath + '/.vscode';
+  if (!fs.existsSync(vscodeDir + '/tasks.json')) {
+    await workspace.getConfiguration('tasks', directory).update('version', "2.0.0");
+    await workspace.getConfiguration('tasks', directory).update('tasks', []);
+  }
+}
+
+async function createLaunchJsonIfMissing(directory: Uri): Promise<void> {
+  const vscodeDir: string = directory.fsPath + '/.vscode';
+  if (!fs.existsSync(vscodeDir + '/launch.json')) {
+    await workspace.getConfiguration('launch', directory).update('version', "0.2.0");
+    await workspace.getConfiguration('launch', directory).update('configurations', []);
+  }
+}
+
+
+async function getDebugTask(directory: Uri): Promise<TaskDefinition> {
+
+  const QUARKUS_DEV: string = 'quarkus:dev';
+  let windowsMvn: string;
+  let unixMvn: string;
+
+  if (mavenWrapperExists(workspace.getWorkspaceFolder(directory))) {
+    windowsMvn = getWindowsMavenWrapperExecutable();
+    unixMvn = getUnixMavenWrapperExecuteable();
   } else {
-    let tasksContent: string = getDebugResourceAsString('tasks.json');
-    tasksContent = replaceWithSpacesIfNeeded(tasksContent);
-    fs.writeFileSync(vscodeDir + '/tasks.json', tasksContent);
+    windowsMvn = await getDefaultMavenExecutable();
+    unixMvn = await getDefaultMavenExecutable();
   }
 
-  if (fs.existsSync(vscodeDir + '/launch.json')) {
-    const launchConfig = workspace.getConfiguration('launch', directory);
-    const configurations: DebugConfiguration[] = launchConfig.get<DebugConfiguration[]>('configurations');
-    const configToAdd: DebugConfiguration = getDebugResource<DebugConfiguration>('launch.json').configurations[0];
-    configurations.push(configToAdd);
-    await launchConfig.update('configurations', configurations, false);
-  } else {
-    let launchContent: string = getDebugResourceAsString('launch.json');
-    launchContent = replaceWithSpacesIfNeeded(launchContent);
-    fs.writeFileSync(vscodeDir + '/launch.json', launchContent);
-  }
+  const taskToAdd: TaskDefinition = getDebugResource<TaskDefinition>('task.json');
+  taskToAdd.command = `${unixMvn} ${QUARKUS_DEV}`;
+  taskToAdd.windows.command = `${windowsMvn} ${QUARKUS_DEV}`;
+
+  return taskToAdd;
 }
 
 function getDebugResource<T>(filename: string): T {
