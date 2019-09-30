@@ -12,8 +12,8 @@
     "vscode": "^1.37.0"
   },
   "galleryBanner": {
-    "color": "#282a36",
-    "theme": "dark"
+    "color": "#d8ebff",
+    "theme": "light"
   },
   "categories": [
     "Programming Languages",
