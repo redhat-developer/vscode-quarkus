@@ -15,7 +15,7 @@
  */
 import * as requirements from './languageServer/requirements';
 
-import { QUARKUS_PROJECT_REQUEST, JDTLS_PROJECT_INFO_COMMAND } from './definitions/wizardConstants';
+import { QUARKUS_PROJECT_REQUEST, JDTLS_PROJECT_INFO_COMMAND, QUARKUS_PROPERTY_DEFINITION_REQUEST, JDTLS_PROPERTY_DEFINITION_COMMAND } from './definitions/wizardConstants';
 
 import { DidChangeConfigurationNotification, Disposable, LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
 import { ExtensionContext, commands, window, workspace } from 'vscode';
@@ -40,6 +40,11 @@ interface QuarkusPropertiesChangeEvent {
   projectURIs: string[];
 }
 
+interface QuarkusPropertyDefinitionParams {
+	uri: string;
+	propertySource: string;
+}
+
 export function activate(context: ExtensionContext) {
 
   terminateDebugListener = createTerminateDebugListener(disposables);
@@ -48,6 +53,11 @@ export function activate(context: ExtensionContext) {
     const quarkusPojectInfoRequest = new RequestType<QuarkusProjectInfoParams, any, void, void>(QUARKUS_PROJECT_REQUEST);
     languageClient.onRequest(quarkusPojectInfoRequest, async (params: QuarkusProjectInfoParams) =>
        <any> await commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROJECT_INFO_COMMAND, params)
+    );
+
+	const quarkusPropertyDefinitionRequest = new RequestType<QuarkusPropertyDefinitionParams, any, void, void>(QUARKUS_PROPERTY_DEFINITION_REQUEST);
+    languageClient.onRequest(quarkusPropertyDefinitionRequest, async (params: QuarkusPropertyDefinitionParams) =>
+       <any> await commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROPERTY_DEFINITION_COMMAND, params)
     );
 
     /**

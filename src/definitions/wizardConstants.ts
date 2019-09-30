@@ -16,9 +16,11 @@
 
 // Quarkus language server request and notifications
 export const QUARKUS_PROJECT_REQUEST = 'quarkus/projectInfo';
+export const QUARKUS_PROPERTY_DEFINITION_REQUEST = 'quarkus/propertyDefinition';
 
 // Quarkus jdt.ls extension commands
 export const JDTLS_PROJECT_INFO_COMMAND = 'quarkus.java.projectInfo';
+export const JDTLS_PROPERTY_DEFINITION_COMMAND = 'quarkus.java.propertyDefinition';
 
 // Constants related to project generation
 export const DEFAULT_API_URL: string = 'https://code.quarkus.io/api';
