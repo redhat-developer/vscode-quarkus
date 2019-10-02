@@ -15,12 +15,23 @@
  */
 
 // Quarkus language server request and notifications
-export const QUARKUS_PROJECT_REQUEST = 'quarkus/projectInfo';
-export const QUARKUS_PROPERTY_DEFINITION_REQUEST = 'quarkus/propertyDefinition';
+export namespace QuarkusLS {
+  export const PROJECT_REQUEST = 'quarkus/projectInfo';
+  export const PROPERTY_DEFINITION_REQUEST = 'quarkus/propertyDefinition';
+}
 
-// Quarkus jdt.ls extension commands
-export const JDTLS_PROJECT_INFO_COMMAND = 'quarkus.java.projectInfo';
-export const JDTLS_PROPERTY_DEFINITION_COMMAND = 'quarkus.java.propertyDefinition';
+export namespace JdtLSCommands {
+  export const PROJECT_INFO_COMMAND = 'quarkus.java.projectInfo';
+  export const PROPERTY_DEFINITION_COMMAND = 'quarkus.java.propertyDefinition';
+}
+
+// VSCode Quarkus Tools commands
+export namespace VSCodeCommands {
+  export const CREATE_PROJECT = 'quarkusTools.createProject';
+  export const ADD_EXTENSIONS = 'quarkusTools.addExtension';
+  export const DEBUG_QUARKUS_PROJECT = 'quarkusTools.debugQuarkusProject';
+  export const QUARKUS_WELCOME = 'quarkusTools.welcome';
+}
 
 // Constants related to project generation
 export const DEFAULT_API_URL: string = 'https://code.quarkus.io/api';
