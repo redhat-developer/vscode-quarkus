@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { QUARKUS_GROUP_ID } from '../definitions/wizardConstants';
+import { QUARKUS_GROUP_ID } from '../definitions/constants';
 import { QuarkusConfig } from '../QuarkusConfig';
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { QExtension } from '../definitions/QExtension';

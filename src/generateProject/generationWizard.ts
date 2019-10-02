@@ -7,7 +7,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as fse from 'fs-extra';
 
-import { INPUT_TITLE } from '../definitions/wizardConstants';
+import { INPUT_TITLE } from '../definitions/constants';
 import { QuarkusConfig } from '../QuarkusConfig';
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { OpenDialogOptions, Uri, commands, window } from 'vscode';

@@ -15,7 +15,7 @@
  */
 import * as requirements from './languageServer/requirements';
 
-import { QUARKUS_PROJECT_REQUEST, JDTLS_PROJECT_INFO_COMMAND, QUARKUS_PROPERTY_DEFINITION_REQUEST, JDTLS_PROPERTY_DEFINITION_COMMAND } from './definitions/wizardConstants';
+import { JdtLSCommands, QuarkusLS, VSCodeCommands } from './definitions/constants';
 
 import { DidChangeConfigurationNotification, Disposable, LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
 import { ExtensionContext, commands, window, workspace } from 'vscode';
@@ -54,14 +54,14 @@ export function activate(context: ExtensionContext) {
   terminateDebugListener = createTerminateDebugListener(disposables);
 
   connectToLS().then(() => {
-    const quarkusPojectInfoRequest = new RequestType<QuarkusProjectInfoParams, any, void, void>(QUARKUS_PROJECT_REQUEST);
+    const quarkusPojectInfoRequest = new RequestType<QuarkusProjectInfoParams, any, void, void>(QuarkusLS.PROJECT_REQUEST);
     languageClient.onRequest(quarkusPojectInfoRequest, async (params: QuarkusProjectInfoParams) =>
-       <any> await commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROJECT_INFO_COMMAND, params)
+       <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.PROJECT_INFO_COMMAND, params)
     );
 
-	const quarkusPropertyDefinitionRequest = new RequestType<QuarkusPropertyDefinitionParams, any, void, void>(QUARKUS_PROPERTY_DEFINITION_REQUEST);
+	const quarkusPropertyDefinitionRequest = new RequestType<QuarkusPropertyDefinitionParams, any, void, void>(QuarkusLS.PROPERTY_DEFINITION_REQUEST);
     languageClient.onRequest(quarkusPropertyDefinitionRequest, async (params: QuarkusPropertyDefinitionParams) =>
-       <any> await commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROPERTY_DEFINITION_COMMAND, params)
+       <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.PROPERTY_DEFINITION_COMMAND, params)
     );
 
     /**
@@ -98,28 +98,28 @@ function registerVSCodeCommands(context: ExtensionContext) {
   /**
    * Command for creating a Quarkus Maven project
    */
-  context.subscriptions.push(commands.registerCommand('quarkusTools.createProject', () => {
+  context.subscriptions.push(commands.registerCommand(VSCodeCommands.CREATE_PROJECT, () => {
     generateProjectWizard();
   }));
 
   /**
    * Command for adding Quarkus extensions to current Quarkus Maven project
    */
-  context.subscriptions.push(commands.registerCommand('quarkusTools.addExtension', () => {
+  context.subscriptions.push(commands.registerCommand(VSCodeCommands.ADD_EXTENSIONS, () => {
     addExtensionsWizard();
   }));
 
   /**
    * Command for debugging current Quarkus Maven project
    */
-  context.subscriptions.push(commands.registerCommand('quarkusTools.debugQuarkusProject', () => {
+  context.subscriptions.push(commands.registerCommand(VSCodeCommands.DEBUG_QUARKUS_PROJECT, () => {
     tryStartDebugging();
   }));
 
   /**
    * Command for displaying welcome page
    */
-  context.subscriptions.push(commands.registerCommand('quarkusTools.welcome', () => {
+  context.subscriptions.push(commands.registerCommand(VSCodeCommands.QUARKUS_WELCOME, () => {
     WelcomeWebview.createOrShow(context);
   }));
 }

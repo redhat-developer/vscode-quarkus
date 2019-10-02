@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { QUARKUS_GROUP_ID } from './wizardConstants';
+import { QUARKUS_GROUP_ID } from './constants';
 
 /**
 * Interface representing a Quarkus extension

@@ -20,7 +20,7 @@ import {
   DEFAULT_PROJECT_VERSION,
   DEFAULT_PACKAGE_NAME,
   DEFAULT_RESOURCE_NAME
-} from './definitions/wizardConstants';
+} from './definitions/constants';
 import { workspace } from 'vscode';
 
 /**
