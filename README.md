@@ -58,6 +58,8 @@ The following settings are supported:
 * `quarkus.tools.validation.enabled` : Enables Quarkus validation. Default is `true`.
 * `quarkus.tools.validation.duplicate.severity` : Validation severity for duplicate Quarkus properties.
 Default is `warning`.
+* `quarkus.tools.validation.required.severity` : Validation severity for required Quarkus properties.
+Default is `none`.
 * `quarkus.tools.validation.syntax.severity` : Validation severity for Quarkus property syntax checking.
 Default is `error`.
 * `quarkus.tools.validation.unknown.severity` : Validation severity for unknown Quarkus properties. Default is `warning`.
