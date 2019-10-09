@@ -180,6 +180,17 @@
           "description": "Validation severity for duplicate Quarkus properties.",
           "scope": "window"
         },
+        "quarkus.tools.validation.required.severity": {
+          "type": "string",
+          "enum": [
+            "none",
+            "warning",
+            "error"
+          ],
+          "default": "none",
+          "description": "Validation severity for required Quarkus properties.",
+          "scope": "window"
+        },
         "quarkus.tools.validation.unknown.severity": {
           "type": "string",
           "enum": [
