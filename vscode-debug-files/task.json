@@ -3,7 +3,7 @@
 	"type": "shell",
 	"command": "./mvnw quarkus:dev",
 	"windows": {
-		"command": ".\\mvn.cmd quarkus:dev"
+		"command": ".\\mvnw.cmd quarkus:dev"
 	},
 	"isBackground": true,
 	"problemMatcher": [
