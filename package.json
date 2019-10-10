@@ -167,10 +167,16 @@
             }
           }
         },
+        "quarkus.tools.formatting.surroundEqualsWithSpaces": {
+          "type": "boolean",
+          "default": "false",
+          "description": "Insert spaces around the equals sign when formatting the application.properties file",
+          "scope": "window"
+        },
         "quarkus.tools.symbols.showAsTree": {
           "type": "boolean",
           "default": "true",
-          "description": "Show Quarkus properties as tree",
+          "description": "Show Quarkus properties as tree.",
           "scope": "window"
         },
         "quarkus.tools.validation.enabled": {
