@@ -47,6 +47,7 @@ export class WelcomeWebview {
     this._panel = this.createPanel();
     this.setPanelHtml();
     this.setCheckboxListener();
+    this.setConfigListener();
   }
 
   private createPanel(): vscode.WebviewPanel {
@@ -112,15 +113,6 @@ export class WelcomeWebview {
     );
   }
 
-  private getNonce(): string {
-    let text: string = '';
-    const possible: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < 32; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-  }
-
   private setCheckboxListener() {
     this._panel.webview.onDidReceiveMessage(
       message => {
@@ -132,6 +124,14 @@ export class WelcomeWebview {
       undefined,
       this._context.subscriptions
     );
+  }
+
+  private setConfigListener() {
+    vscode.workspace.onDidChangeConfiguration((event: vscode.ConfigurationChangeEvent) => {
+      if (event.affectsConfiguration('quarkus.tools.alwaysShowWelcomePage')) {
+        this.setPanelHtml();
+      }
+    });
   }
 
   private dispose() {
