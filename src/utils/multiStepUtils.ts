@@ -7,7 +7,7 @@
 // Reference:
 // https://github.com/microsoft/vscode-extension-samples/blob/master/quickinput-sample/src/multiStepInput.ts
 // -------------------------------------------------------
-import { QuickPickItem, window, Disposable, QuickInputButton, QuickInput, QuickInputButtons } from 'vscode';
+import { QuickPickItem, window, Disposable, InputBox, QuickInputButton, QuickInput, QuickInputButtons, QuickPick } from 'vscode';
 
 export class InputFlowAction {
   private constructor() { }
@@ -83,7 +83,7 @@ export class MultiStepInput {
 
     try {
       return await new Promise<T | (P extends { buttons: (infer I)[] } ? I : never)>((resolve, reject) => {
-        const input = window.createQuickPick<T>();
+        const input: QuickPick<T> = window.createQuickPick<T>();
         input.title = title;
 
         if (displaySteps) {
@@ -128,22 +128,25 @@ export class MultiStepInput {
     const displaySteps: boolean = typeof step !== 'undefined' && typeof totalSteps !== 'undefined';
 
     try {
-      return await new Promise<string | (P extends { buttons: (infer I)[] } ? I : never)>((resolve, reject) => {
-        const input = window.createInputBox();
+      return await new Promise<string | (P extends { buttons: (infer I)[] } ? I : never)>(async (resolve, reject) => {
+        const input: InputBox = window.createInputBox();
         input.title = title;
 
         if (displaySteps) {
           input.step = step;
           input.totalSteps = totalSteps;
         }
-        input.value = value || '';
+        input.value = value;
         input.prompt = prompt;
         input.buttons = [
           ...(this.steps.length > 1 ? [QuickInputButtons.Back] : []),
           ...(buttons || [])
         ];
         input.ignoreFocusOut = true;
-        let validating = validate('');
+        const validationMessage: string = await validate(input.value);
+        if (validationMessage) {
+          input.validationMessage = validationMessage;
+        }
         disposables.push(
           input.onDidTriggerButton(item => {
             if (item === QuickInputButtons.Back) {
@@ -164,7 +167,7 @@ export class MultiStepInput {
           }),
           input.onDidChangeValue(async text => {
             const current = validate(text);
-            validating = current;
+            const validating = current;
             const validationMessage = await current;
             if (current === validating) {
               input.validationMessage = validationMessage;
