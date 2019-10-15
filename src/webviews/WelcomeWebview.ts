@@ -1,5 +1,3 @@
-import { ExtensionContext } from "vscode";
-
 /**
  * Copyright 2019 Red Hat, Inc. and others.
 
@@ -25,10 +23,11 @@ export class WelcomeWebview {
   public static currentPanel: WelcomeWebview | undefined;
 
   private readonly RESOURCE_FOLDER: string = 'webviews';
-  private _context: ExtensionContext;
+  private _context: vscode.ExtensionContext;
   private _panel: vscode.WebviewPanel;
+  private _disposables: vscode.Disposable[] = [];
 
-  public static createOrShow(context: ExtensionContext) {
+  public static createOrShow(context: vscode.ExtensionContext) {
     const column = vscode.window.activeTextEditor
       ? vscode.window.activeTextEditor.viewColumn
       : undefined;
@@ -42,7 +41,7 @@ export class WelcomeWebview {
     WelcomeWebview.currentPanel = new WelcomeWebview(context);
   }
 
-  private constructor(context: ExtensionContext) {
+  private constructor(context: vscode.ExtensionContext) {
     this._context = context;
     this._panel = this.createPanel();
     this.setPanelHtml();
@@ -61,7 +60,7 @@ export class WelcomeWebview {
         localResourceRoots: [vscode.Uri.file(path.join(this._context.extensionPath, this.RESOURCE_FOLDER))]
       }
     );
-    panel.onDidDispose(() => this.dispose(), null, []);
+    panel.onDidDispose(() => this.dispose(), null, this._disposables);
     return panel;
   }
 
@@ -122,19 +121,27 @@ export class WelcomeWebview {
         }
       },
       undefined,
-      this._context.subscriptions
+      this._disposables
     );
   }
 
   private setConfigListener() {
     vscode.workspace.onDidChangeConfiguration((event: vscode.ConfigurationChangeEvent) => {
-      if (event.affectsConfiguration('quarkus.tools.alwaysShowWelcomePage')) {
+      if (event.affectsConfiguration(QuarkusConfig.ALWAYS_SHOW_WELCOME_PAGE) && WelcomeWebview.currentPanel) {
         this.setPanelHtml();
       }
-    });
+    },
+      undefined,
+      this._disposables);
   }
 
   private dispose() {
     WelcomeWebview.currentPanel = undefined;
+    while (this._disposables.length) {
+      const x: vscode.Disposable = this._disposables.pop();
+      if (x) {
+        x.dispose();
+      }
+    }
   }
 }

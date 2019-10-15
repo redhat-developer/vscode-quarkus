@@ -113,7 +113,7 @@
         },
         "quarkus.tools.alwaysShowWelcomePage": {
           "type": "boolean",
-          "default": "true",
+          "default": true,
           "description": "Determines whether to show the welcome page on extension startup."
         },
         "quarkus.tools.starter.api": {
@@ -169,19 +169,19 @@
         },
         "quarkus.tools.formatting.surroundEqualsWithSpaces": {
           "type": "boolean",
-          "default": "false",
+          "default": false,
           "description": "Insert spaces around the equals sign when formatting the application.properties file",
           "scope": "window"
         },
         "quarkus.tools.symbols.showAsTree": {
           "type": "boolean",
-          "default": "true",
+          "default": true,
           "description": "Show Quarkus properties as tree.",
           "scope": "window"
         },
         "quarkus.tools.validation.enabled": {
           "type": "boolean",
-          "default": "true",
+          "default": true,
           "description": "Enables Quarkus validation",
           "scope": "window"
         },
