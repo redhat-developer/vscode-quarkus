@@ -292,7 +292,6 @@
     "fs-extra": "^8.0.1",
     "glob": "^7.1.4",
     "md5": "^2.2.1",
-    "path-exists": "^4.0.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "user-home": "^2.0.0",

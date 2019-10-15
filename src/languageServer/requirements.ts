@@ -3,8 +3,8 @@
 import { workspace, Uri } from 'vscode';
 import * as cp from 'child_process';
 import * as path from 'path';
+import * as fs from 'fs';
 
-const pathExists = require('path-exists');
 const expandHomeDir = require('expand-home-dir');
 const findJavaHome = require('find-java-home');
 const isWindows = process.platform.indexOf('win') === 0;
@@ -47,9 +47,9 @@ function checkJavaRuntime(): Promise<string> {
 
         if (javaHome) {
             javaHome = expandHomeDir(javaHome);
-            if (!pathExists.sync(javaHome)) {
+            if (!fs.existsSync(javaHome)) {
                 openJDKDownload(reject, source+' points to a missing folder');
-            } else if (!pathExists.sync(path.resolve(javaHome as string, 'bin', JAVA_FILENAME))) {
+            } else if (!fs.existsSync(path.resolve(javaHome as string, 'bin', JAVA_FILENAME))) {
                 openJDKDownload(reject, source+ ' does not point to a Java runtime.');
             }
             return resolve(javaHome);
