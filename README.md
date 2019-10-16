@@ -51,20 +51,22 @@ When editing `application.properties` files, you have access to:
 
 The following settings are supported:
   
-* `quarkus.tools.alwaysShowWelcomePage` : Determines whether to show the welcome page on extension startup.
 * `quarkus.tools.debug.terminateProcessOnExit` : Determines whether to terminate the quarkus:dev task after closing the debug session.
-* `quarkus.tools.formatting.surroundEqualsWithSpaces` : Insert spaces around the equals sign when formatting the application.properties file. Default is `false`.
 * `quarkus.tools.trace.server` : Trace the communication between VS Code and the Quarkus Language Server in the Output view.
 * `quarkus.tools.symbols.showAsTree` : Show Quarkus properties as tree (Outline). Default is `true`.
 * `quarkus.tools.validation.enabled` : Enables Quarkus validation. Default is `true`.
 * `quarkus.tools.validation.duplicate.severity` : Validation severity for duplicate Quarkus properties.
 Default is `warning`.
-* `quarkus.tools.validation.required.severity` : Validation severity for required Quarkus properties.
-Default is `none`.
 * `quarkus.tools.validation.syntax.severity` : Validation severity for Quarkus property syntax checking.
 Default is `error`.
 * `quarkus.tools.validation.unknown.severity` : Validation severity for unknown Quarkus properties. Default is `warning`.
 * `quarkus.tools.validation.unknown.excluded` : Array of properties to ignore for unknown Quarkus properties validation. Default is `[]`.
+
+Since 1.0.2:
+* `quarkus.tools.alwaysShowWelcomePage` : Determines whether to show the welcome page on extension startup.
+* `quarkus.tools.formatting.surroundEqualsWithSpaces` : Insert spaces around the equals sign when formatting the application.properties file. Default is `false`.
+* `quarkus.tools.validation.required.severity` : Validation severity for required Quarkus properties.
+Default is `none`.
         
 ## Contributing
 
