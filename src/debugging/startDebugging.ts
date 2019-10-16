@@ -15,9 +15,10 @@
  */
 
 import { WorkspaceFolder, debug, window, workspace, DebugConfiguration } from 'vscode';
-import { containsMavenQuarkusProject } from '../utils/workspaceUtils';
-import { DebugConfigCreator } from './CreateDebugConfig';
+import { containsQuarkusProject, getQuarkusProjectBuildSupport } from '../utils/workspaceUtils';
+import { DebugConfigCreator } from './DebugConfigCreator';
 import { getQuarkusDevDebugConfig } from '../utils/launchConfigUtils';
+import { IBuildSupport } from '../definitions/IBuildSupport';
 
 export async function tryStartDebugging() {
   try {
@@ -31,15 +32,16 @@ async function startDebugging(): Promise<void> {
 
   const workspaceFolder: WorkspaceFolder = getDebugWorkspace();
 
-  if (!(await containsMavenQuarkusProject(workspaceFolder))) {
-    throw 'Current workspace folder does not contain a Maven project.';
+  if (!(await containsQuarkusProject(workspaceFolder))) {
+    throw 'Current workspace folder does not contain a Quarkus project.';
   }
 
-  let debugConfig: DebugConfiguration|undefined = await getQuarkusDevDebugConfig(workspaceFolder);
+  const projectBuildSupport: IBuildSupport = await getQuarkusProjectBuildSupport(workspaceFolder);
+  let debugConfig: DebugConfiguration|undefined = await getQuarkusDevDebugConfig(workspaceFolder, projectBuildSupport);
 
   if (!debugConfig) {
-    await DebugConfigCreator.createFiles(workspaceFolder.uri);
-    debugConfig = await getQuarkusDevDebugConfig(workspaceFolder);
+    await DebugConfigCreator.createFiles(workspaceFolder);
+    debugConfig = await getQuarkusDevDebugConfig(workspaceFolder, projectBuildSupport);
   }
 
   debug.startDebugging(workspaceFolder, debugConfig);

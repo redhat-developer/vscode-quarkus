@@ -5,7 +5,7 @@ import * as path from "path";
 
 import { Uri, Terminal, WorkspaceFolder, workspace } from "vscode";
 import { ITerminalOptions, mavenTerminal } from "./mavenTerminal";
-import { getDefaultMavenExecutable, getMavenWrapperExecuteable, getMavenWrapperPathFromPom } from '../utils/mavenUtils';
+import { MavenUtils } from '../utils/mavenUtils';
 import { formattedPathForTerminal } from '../utils/shellUtils';
 
 /**
@@ -19,17 +19,17 @@ export async function executeMavenCommand (
 ): Promise<Terminal> {
 	const workspaceFolder: WorkspaceFolder = workspace.getWorkspaceFolder(pomPath);
 
-	const mvnWrapperPath: string|undefined = await getMavenWrapperPathFromPom(pomPath, workspaceFolder);
+	const mvnWrapperPath: string|undefined = await MavenUtils.getMavenWrapperPathFromPom(pomPath, workspaceFolder);
 	const terminalOptions: ITerminalOptions = {} as ITerminalOptions;
 
 	let mvnString;
 	if (mvnWrapperPath !== undefined) {
 		// cd to the directory containing mvn wrapper
 		terminalOptions.cwd = path.dirname(mvnWrapperPath);
-		mvnString = getMavenWrapperExecuteable();
+		mvnString = MavenUtils.getMavenWrapperExecuteable();
 	} else {
 		mvnString = await formattedPathForTerminal(
-			await getDefaultMavenExecutable()
+			await MavenUtils.getDefaultMavenExecutable()
 		);
 	}
 
