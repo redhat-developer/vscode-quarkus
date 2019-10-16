@@ -13,48 +13,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as path from "path";
 import { AddExtensionsState, State } from "../definitions/inputState";
+
 import { MultiStepInput } from "../utils/multiStepUtils";
 import { QExtension } from "../definitions/QExtension";
-import { QuickPickItem, Uri, WorkspaceFolder, window, workspace } from "vscode";
-import { executeMavenCommand } from "../terminal/executeMavenCommand";
-import { getFilePathsFromWorkspace } from "../utils/workspaceUtils";
+import { QuickPickItem, Terminal, Uri, WorkspaceFolder, window, workspace } from "vscode";
+import { ITerminalOptions, terminalCommandRunner } from "../terminal/terminalCommandRunner";
+import { getBuildSupport, searchBuildFile } from '../buildSupport/BuildSupportUtils';
 import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions";
+import { TerminalCommand } from "../buildSupport/BuildSupport";
 
 export async function addExtensionsWizard() {
   const state: Partial<AddExtensionsState> = {
     totalSteps: 1
   };
   async function collectInputs(state: Partial<State>) {
-    await MultiStepInput.run(input => pickExtensionsWithoutLastUsed(input, state, choosePomIfMultipleExists));
+    await MultiStepInput.run(input => chooseBuildFileIfMultipleExists(input, state));
   }
 
-  async function choosePomIfMultipleExists(input: MultiStepInput, state: Partial<AddExtensionsState>) {
+  async function chooseBuildFileIfMultipleExists(input: MultiStepInput, state: Partial<AddExtensionsState>) {
 
-    const pomList: Uri[] = await searchPomXml();
+    const buildFileList: Uri[] = await searchBuildFile(); // TODO deal with this better
 
-    if (pomList.length === 0) {
-      state.wizardInterrupted = { reason: 'pom.xml could not be located.' };
+    if (buildFileList.length === 0) {
+      state.wizardInterrupted = { reason: 'pom.xml or build.gradle could not be located.' };
       return;
-    } else if (pomList.length === 1) {
-      state.pomPath = pomList[0];
-      return;
+    } else if (buildFileList.length === 1) {
+      state.buildFilePath = buildFileList[0];
+    } else {
+      // show quick pick in this case
+      state.totalSteps = 2;
+      const quickPickItems: QuickPickItem[] = buildFileList.map((uri: Uri) => {
+        return { label: uri.fsPath };
+      });
+
+      const selectedPomPath: string = (await input.showQuickPick({
+        title: "Multiple build files found under current directory. Choose a build file.",
+        items: quickPickItems
+      })).label;
+
+      state.buildFilePath = buildFileList.filter((uri: Uri) => {
+        return uri.fsPath === selectedPomPath;
+      })[0];
     }
 
-    const quickPickItems: QuickPickItem[] = pomList.map((pomUri: Uri) => {
-      return { label: pomUri.fsPath };
-    });
-
-    const selectedPomPath: string = (await input.showQuickPick({
-      title: "Multiple pom.xml found under current directory. Choose a pom.xml.",
-      items: quickPickItems
-    })).label;
-
-    state.pomPath = pomList.filter((pomUri: Uri) => {
-      return pomUri.fsPath === selectedPomPath;
-    })[0];
-
-    return;
+    state.workspaceFolder = workspace.getWorkspaceFolder(state.buildFilePath);
+    state.buildSupport = await getBuildSupport(state.workspaceFolder);
+    return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensionsWithoutLastUsed(input, state);
   }
 
   await collectInputs(state);
@@ -64,33 +70,27 @@ export async function addExtensionsWizard() {
     return;
   }
 
-  const artifactIds: String[] = getArtifactIds(state.extensions!);
-  const command = `quarkus:add-extension -Dextensions="${artifactIds.join(',')}"`;
+  await executeAddExtensionsCommand(state as AddExtensionsState);
+}
 
-  await executeMavenCommand(command, state.pomPath);
+async function executeAddExtensionsCommand(state: AddExtensionsState): Promise<Terminal> {
+  const artifactIds: string[] = getArtifactIds(state.extensions);
+  let terminalOptions: ITerminalOptions = {} as ITerminalOptions;
+
+  const terminalCommand: TerminalCommand = await state.buildSupport.getQuarkusAddExtensionsCommand(state.workspaceFolder, artifactIds, { buildFilePath: state.buildFilePath.fsPath });
+  if (terminalCommand.cwd) {
+    terminalOptions.cwd = path.dirname(terminalCommand.cwd);
+  }
+
+  const name: string = state.workspaceFolder
+    ? `Quarkus-${state.workspaceFolder.name}`
+    : "Quarkus";
+
+  terminalOptions =  Object.assign({ name }, terminalOptions);
+
+  return await terminalCommandRunner.runInTerminal(terminalCommand.command, terminalOptions);
 }
 
 function getArtifactIds(extensions: QExtension[]): string[] {
   return extensions.map((it) => it.artifactId);
-}
-
-/**
- * Returns a promise resolving with an array of absolute paths to pom.xml
- * files, under every currently opened workspace folder.
- */
-async function searchPomXml(): Promise<Uri[]> {
-  const workspaceFolders: WorkspaceFolder[] | undefined = workspace.workspaceFolders;
-
-  if (workspaceFolders === undefined) {
-    return [];
-  }
-
-  const pomPaths: Uri[] = await workspaceFolders.reduce(async (pomPaths: Promise<Uri[]>, folderToSearch: WorkspaceFolder) => {
-    const accumulator = await pomPaths;
-    const pomFileUris: Uri[] = await getFilePathsFromWorkspace(folderToSearch, 'pom.xml');
-
-    return Promise.resolve(accumulator.concat(pomFileUris));
-  }, Promise.resolve([]));
-
-  return pomPaths;
 }

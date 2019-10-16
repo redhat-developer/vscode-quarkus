@@ -16,7 +16,7 @@
 import * as fs from 'fs';
 
 import { ConfigurationChangeEvent, Disposable, DebugConfiguration, WorkspaceFolder, workspace } from 'vscode';
-import { IBuildSupport } from '../definitions/IBuildSupport';
+import { BuildSupport } from '../buildSupport/BuildSupport';
 import { FsUtils } from '../utils/fsUtils';
 import { getQuarkusDevDebugConfig } from '../utils/launchConfigUtils';
 
@@ -27,7 +27,7 @@ import { getQuarkusDevDebugConfig } from '../utils/launchConfigUtils';
 export class LaunchConfigCreator {
 
   private workspaceFolder: WorkspaceFolder;
-  private quarkusBuildSupport: IBuildSupport;
+  private quarkusBuildSupport: BuildSupport;
   private launchJsonFile: string;
 
   /**
@@ -35,14 +35,14 @@ export class LaunchConfigCreator {
    * @param workspaceFolder the workspaceFolder containing the Quarkus project
    * @param quarkusBuildSupport specifies whether the project in `workspaceFolder` is a Maven project or Gradle project
    */
-  public static async createLaunchConfig(workspaceFolder: WorkspaceFolder, quarkusBuildSupport: IBuildSupport): Promise<void> {
+  public static async createLaunchConfig(workspaceFolder: WorkspaceFolder, quarkusBuildSupport: BuildSupport): Promise<void> {
     const launchConfigCreator: LaunchConfigCreator = new LaunchConfigCreator(workspaceFolder, quarkusBuildSupport);
     await launchConfigCreator.createLaunchJsonIfMissing();
     await launchConfigCreator.addLaunchConfig();
     await launchConfigCreator.waitUntilTaskExists();
   }
 
-  private constructor(workspaceFolder: WorkspaceFolder, quarkusBuildSupport: IBuildSupport) {
+  private constructor(workspaceFolder: WorkspaceFolder, quarkusBuildSupport: BuildSupport) {
     this.workspaceFolder = workspaceFolder;
     this.quarkusBuildSupport = quarkusBuildSupport;
     this.launchJsonFile = workspaceFolder.uri.fsPath + '/.vscode/launch.json';
@@ -80,7 +80,7 @@ export class LaunchConfigCreator {
   private async getLaunchConfig(): Promise<DebugConfiguration> {
     const launchConfig: DebugConfiguration =
       {
-        preLaunchTask: this.quarkusBuildSupport.quarkusDev,
+        preLaunchTask: this.quarkusBuildSupport.getQuarkusDev(),
         type: "java",
         request: "attach",
         hostName: "localhost",

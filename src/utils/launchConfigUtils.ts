@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { DebugConfiguration, WorkspaceFolder, Task, workspace } from 'vscode';
+import { DebugConfiguration, WorkspaceFolder, workspace } from 'vscode';
 import { getQuarkusDevTaskNames } from '../utils/tasksUtils';
-import { IBuildSupport } from '../definitions/IBuildSupport';
+import { BuildSupport } from '../buildSupport/BuildSupport';
 
-export async function getQuarkusDevDebugConfig(workspaceFolder: WorkspaceFolder, projectBuildSupport: IBuildSupport): Promise<DebugConfiguration | undefined> {
+export async function getQuarkusDevDebugConfig(workspaceFolder: WorkspaceFolder, projectBuildSupport: BuildSupport): Promise<DebugConfiguration | undefined> {
   const debugConfig: DebugConfiguration[] = getConfigsWithPreLaunchTask(workspaceFolder);
   const devTasksNames: string[] = await getQuarkusDevTaskNames(workspaceFolder, projectBuildSupport);
 
@@ -29,7 +29,7 @@ export async function getQuarkusDevDebugConfig(workspaceFolder: WorkspaceFolder,
   return undefined;
 }
 
-export function getConfigsWithPreLaunchTask(workspaceFolder: WorkspaceFolder): DebugConfiguration[] {
+function getConfigsWithPreLaunchTask(workspaceFolder: WorkspaceFolder): DebugConfiguration[] {
   return getLaunchConfig(workspaceFolder).filter((config: DebugConfiguration) => {
     return typeof config.preLaunchTask !== 'undefined';
   });

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-import { WorkspaceFolder, debug, window, workspace, DebugConfiguration } from 'vscode';
-import { containsQuarkusProject, getQuarkusProjectBuildSupport } from '../utils/workspaceUtils';
+import { WorkspaceFolder, debug, window, DebugConfiguration } from 'vscode';
+import { containsQuarkusProject, getTargetWorkspace } from '../utils/workspaceUtils';
 import { DebugConfigCreator } from './DebugConfigCreator';
 import { getQuarkusDevDebugConfig } from '../utils/launchConfigUtils';
-import { IBuildSupport } from '../definitions/IBuildSupport';
+import { BuildSupport } from '../buildSupport/BuildSupport';
+import { getBuildSupport } from '../buildSupport/BuildSupportUtils';
 
 export async function tryStartDebugging() {
   try {
@@ -30,41 +31,19 @@ export async function tryStartDebugging() {
 
 async function startDebugging(): Promise<void> {
 
-  const workspaceFolder: WorkspaceFolder = getDebugWorkspace();
+  const workspaceFolder: WorkspaceFolder = getTargetWorkspace();
 
   if (!(await containsQuarkusProject(workspaceFolder))) {
     throw 'Current workspace folder does not contain a Quarkus project.';
   }
 
-  const projectBuildSupport: IBuildSupport = await getQuarkusProjectBuildSupport(workspaceFolder);
+  const projectBuildSupport: BuildSupport = await getBuildSupport(workspaceFolder);
   let debugConfig: DebugConfiguration|undefined = await getQuarkusDevDebugConfig(workspaceFolder, projectBuildSupport);
 
   if (!debugConfig) {
-    await DebugConfigCreator.createFiles(workspaceFolder);
+    await DebugConfigCreator.createFiles(workspaceFolder, projectBuildSupport);
     debugConfig = await getQuarkusDevDebugConfig(workspaceFolder, projectBuildSupport);
   }
 
   debug.startDebugging(workspaceFolder, debugConfig);
-}
-
-function getDebugWorkspace(): WorkspaceFolder {
-
-  const workspaceFolders: WorkspaceFolder[]|undefined = workspace.workspaceFolders;
-
-  if (!workspaceFolders) {
-    throw 'No workspace folders are opened.';
-  }
-
-  if (workspaceFolders.length === 1) {
-    return workspace.workspaceFolders[0];
-  }
-
-  // try to return workspace folder containing currently opened file
-  const currentDoc = window.activeTextEditor.document.uri;
-  if (currentDoc && workspace.getWorkspaceFolder(currentDoc)) {
-    return workspace.getWorkspaceFolder(currentDoc);
-  }
-
-  // TODO maybe implement an input box to determine which workspace folder to debug in
-  return workspace.workspaceFolders[0]; // dummy return statement
 }

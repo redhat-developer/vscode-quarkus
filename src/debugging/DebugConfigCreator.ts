@@ -18,8 +18,7 @@ import * as fs from 'fs';
 import { WorkspaceFolder } from 'vscode';
 import { TaskCreator } from './TaskCreator';
 import { LaunchConfigCreator } from './LaunchConfigCreator';
-import { getQuarkusProjectBuildSupport } from '../utils/workspaceUtils';
-import { IBuildSupport } from '../definitions/IBuildSupport';
+import { BuildSupport } from '../buildSupport/BuildSupport';
 
 /**
  * This class is responsible for creating the .vscode/ folder (if it does not
@@ -30,9 +29,8 @@ export class DebugConfigCreator {
 
   private dotVSCodeDir: string;
 
-  public static async createFiles(workspaceFolder: WorkspaceFolder): Promise<void> {
+  public static async createFiles(workspaceFolder: WorkspaceFolder, projectBuildSupport: BuildSupport): Promise<void> {
     const debugConfigCreator: DebugConfigCreator = new DebugConfigCreator(workspaceFolder);
-    const projectBuildSupport: IBuildSupport =  await getQuarkusProjectBuildSupport(workspaceFolder);
     debugConfigCreator.createVSCodeDirIfMissing();
     await TaskCreator.createTask(workspaceFolder, projectBuildSupport);
     await LaunchConfigCreator.createLaunchConfig(workspaceFolder, projectBuildSupport);

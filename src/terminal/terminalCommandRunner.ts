@@ -14,7 +14,7 @@ export interface ITerminalOptions {
     env?: { [key: string]: string };
 }
 
-class MavenTerminal implements Disposable {
+class TerminalCommandRunner implements Disposable {
     private readonly terminals: { [id: string]: Terminal } = {};
 
     public async runInTerminal(command: string, options: ITerminalOptions): Promise<Terminal> {
@@ -61,4 +61,4 @@ class MavenTerminal implements Disposable {
     }
 }
 
-export const mavenTerminal: MavenTerminal = new MavenTerminal();
+export const terminalCommandRunner: TerminalCommandRunner = new TerminalCommandRunner();
