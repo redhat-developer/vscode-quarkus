@@ -45,7 +45,7 @@ export async function pickExtensionsWithoutLastUsed(
   next?: (input: MultiStepInput, state: Partial<State>) => any) {
 
   addLastUsed = false;
-  return pickExtensions(input, state, next);
+  await pickExtensions(input, state, next);
 }
 
 export async function pickExtensionsWithLastUsed(

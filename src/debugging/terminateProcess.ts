@@ -17,8 +17,8 @@ import { QuarkusConfig, TerminateProcessConfig } from '../QuarkusConfig';
 import { DebugSession, TaskExecution, debug, window } from 'vscode';
 import { Disposable } from 'vscode-languageclient';
 import { getRunningQuarkusDevTasks } from '../utils/tasksUtils';
-import { getQuarkusProjectBuildSupport } from '../utils/workspaceUtils';
-import { IBuildSupport } from '../definitions/IBuildSupport';
+import { BuildSupport } from '../buildSupport/BuildSupport';
+import { getBuildSupport } from '../buildSupport/BuildSupportUtils';
 
 export function createTerminateDebugListener(disposables: Disposable[]): Disposable {
 
@@ -54,7 +54,7 @@ async function getPreLaunchTaskExecution(debugSession: DebugSession): Promise<Ta
 
   const preLaunchTask: string = debugSession.configuration.preLaunchTask;
 
-  const projectBuildSupport: IBuildSupport = await getQuarkusProjectBuildSupport(debugSession.workspaceFolder);
+  const projectBuildSupport: BuildSupport = await getBuildSupport(debugSession.workspaceFolder);
   const runningQuarkusDevTasks: TaskExecution[] = await getRunningQuarkusDevTasks(debugSession.workspaceFolder, projectBuildSupport);
 
   for (const taskExe of runningQuarkusDevTasks) {

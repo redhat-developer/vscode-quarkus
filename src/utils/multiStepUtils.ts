@@ -9,15 +9,15 @@
 // -------------------------------------------------------
 import { QuickPickItem, window, Disposable, InputBox, QuickInputButton, QuickInput, QuickInputButtons, QuickPick } from 'vscode';
 
-export class InputFlowAction {
+class InputFlowAction {
   private constructor() { }
   static back = new InputFlowAction();
   static cancel = new InputFlowAction();
 }
 
-export type InputStep = (input: MultiStepInput) => Thenable<InputStep | void>;
+type InputStep = (input: MultiStepInput) => Thenable<InputStep | void>;
 
-export interface QuickPickParameters<T extends QuickPickItem> {
+interface QuickPickParameters<T extends QuickPickItem> {
   title: string;
   step?: number;
   totalSteps?: number;
@@ -27,7 +27,7 @@ export interface QuickPickParameters<T extends QuickPickItem> {
   buttons?: QuickInputButton[];
 }
 
-export interface InputBoxParameters {
+interface InputBoxParameters {
   title: string;
   step?: number;
   totalSteps?: number;

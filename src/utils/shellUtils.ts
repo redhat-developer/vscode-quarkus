@@ -77,7 +77,7 @@ export function currentWindowsShell(): WindowsShellType {
   }
 }
 
-export function toDefaultWslPath(p: string): string {
+function toDefaultWslPath(p: string): string {
   const arr: string[] = p.split(":\\");
   if (arr.length === 2) {
       const drive: string = arr[0].toLowerCase();
@@ -88,16 +88,12 @@ export function toDefaultWslPath(p: string): string {
   }
 }
 
-export async function toWslPath(path: string): Promise<string> {
+async function toWslPath(path: string): Promise<string> {
   try {
       return (await executeCommand("wsl", ["wslpath", "-u", `"${path.replace(/\\/g, "/")}"`])).trim();
   } catch (error) {
     return toDefaultWslPath(path);
   }
-}
-
-export async function toWinPath(path: string): Promise<string> {
-  return (await executeCommand("wsl", ["wslpath", "-w", `"${path}"`])).trim();
 }
 
 export function setupEnvForWSL(terminal: Terminal, env: { [envKey: string]: string }): void {

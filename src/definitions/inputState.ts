@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { Uri } from 'vscode';
+import { Uri, WorkspaceFolder } from 'vscode';
 import { QExtension } from './QExtension';
+import { BuildSupport } from '../buildSupport/BuildSupport';
 
 export interface State {
   totalSteps: number;
@@ -36,7 +37,9 @@ export interface ProjectGenState extends State {
 }
 
 export interface AddExtensionsState extends State {
-  pomPath: Uri;
+  buildFilePath: Uri;
+  buildSupport: BuildSupport;
+  workspaceFolder: WorkspaceFolder;
 }
 
 export interface Interrupted {

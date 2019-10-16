@@ -2,7 +2,6 @@
 // Licensed under the MIT license.
 
 import * as cp from "child_process";
-import * as vscode from "vscode";
 import { quarkusOutputChannel } from "../terminal/quarkusOutputChannel";
 
 export async function executeCommand(command: string, args: string[], options: cp.SpawnOptions = { shell: true }): Promise<string> {
@@ -23,21 +22,4 @@ export async function executeCommand(command: string, args: string[], options: c
             }
         });
     });
-}
-
-export async function executeCommandWithProgress(message: string, command: string, args: string[], options: cp.SpawnOptions = { shell: true }): Promise<string> {
-    let result: string = "";
-    await vscode.window.withProgress({ location: vscode.ProgressLocation.Window }, async (p: vscode.Progress<{}>) => {
-			quarkusOutputChannel.appendLine(`${command}, [${args.join(",")}]`);
-        return new Promise(async (resolve: () => void, reject: (e: Error) => void): Promise<void> => {
-            p.report({ message });
-            try {
-                result = await executeCommand(command, args, options);
-                resolve();
-            } catch (e) {
-                reject(e);
-            }
-        });
-    });
-    return result;
 }

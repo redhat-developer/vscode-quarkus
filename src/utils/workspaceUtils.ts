@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import { IBuildSupport } from '../definitions/IBuildSupport';
-import { RelativePattern, Uri, WorkspaceFolder, workspace } from "vscode";
-import { MavenBuildSupport } from '../definitions/MavenBuildSupport';
-import { GradleBuildSupport } from '../definitions/GradleBuildSupport';
+import { RelativePattern, Uri, WorkspaceFolder, window, workspace } from "vscode";
 
 /**
  * Returns a promise resolving to `true` only if the project located in `workspaceFolder`
@@ -26,30 +23,34 @@ import { GradleBuildSupport } from '../definitions/GradleBuildSupport';
  */
 export async function containsQuarkusProject(workspaceFolder: WorkspaceFolder): Promise<boolean> {
   // TODO this function must be improved. It only checks if a file named
-  // pom.xml or build.gradle exists under the provided workspaceFolder
-  return (await getFilePathsFromWorkspace(workspaceFolder, 'pom.xml')).length > 0 ||
-      (await getFilePathsFromWorkspace(workspaceFolder, 'build.gradle')).length > 0;
+  // pom.xml or build.gradle exists under the provided workspaceFolder\
+
+  return (await getFilePathsFromWorkspace(workspaceFolder, '**/pom.xml')).length > 0 ||
+    (await getFilePathsFromWorkspace(workspaceFolder, '**/build.gradle')).length > 0;
 }
 
-/**
- * Determines whether the Quarkus project located in `workspaceFolder` is a Maven project
- * or a Gradle project
- * @param workspaceFolder
- */
-export async function getQuarkusProjectBuildSupport(workspaceFolder: WorkspaceFolder): Promise<IBuildSupport | undefined> {
-
-  if ((await getFilePathsFromWorkspace(workspaceFolder, 'build.gradle')).length > 0) {
-    return GradleBuildSupport();
-  }
-
-  if ((await getFilePathsFromWorkspace(workspaceFolder, 'pom.xml')).length > 0) {
-    return MavenBuildSupport();
-  }
-
-  throw 'Workspace folder does not contain a Maven or Gradle project';
+export async function getFilePathsFromWorkspace(workspaceFolder: WorkspaceFolder, glob: string): Promise<Uri[]> {
+  return await workspace.findFiles(new RelativePattern(workspaceFolder.uri.fsPath, glob));
 }
 
-export async function getFilePathsFromWorkspace(workspaceFolder: WorkspaceFolder, fileName: string): Promise<Uri[]> {
-  const pattern: string = `**/${fileName}`;
-  return await workspace.findFiles(new RelativePattern(workspaceFolder.uri.fsPath, pattern));
+export function getTargetWorkspace(): WorkspaceFolder {
+
+  const workspaceFolders: WorkspaceFolder[]|undefined = workspace.workspaceFolders;
+
+  if (!workspaceFolders) {
+    throw 'No workspace folders are opened.';
+  }
+
+  if (workspaceFolders.length === 1) {
+    return workspace.workspaceFolders[0];
+  }
+
+  // try to return workspace folder containing currently opened file
+  const currentDoc = window.activeTextEditor.document.uri;
+  if (currentDoc && workspace.getWorkspaceFolder(currentDoc)) {
+    return workspace.getWorkspaceFolder(currentDoc);
+  }
+
+  // TODO maybe implement an input box to determine which workspace folder to debug in
+  return workspace.workspaceFolders[0]; // dummy return statement
 }

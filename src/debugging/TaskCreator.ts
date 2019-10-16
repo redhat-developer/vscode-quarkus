@@ -16,8 +16,8 @@
 import * as fs from 'fs';
 
 import { FsUtils } from '../utils/fsUtils';
-import { IBuildSupport } from '../definitions/IBuildSupport';
-import { ConfigurationChangeEvent, Disposable, TaskDefinition, WorkspaceFolder, workspace, window } from 'vscode';
+import { BuildSupport } from '../buildSupport/BuildSupport';
+import { ConfigurationChangeEvent, Disposable, TaskDefinition, WorkspaceFolder, workspace } from 'vscode';
 import { getQuarkusDevTasks } from '../utils/tasksUtils';
 
 /**
@@ -27,7 +27,7 @@ import { getQuarkusDevTasks } from '../utils/tasksUtils';
 export class TaskCreator {
 
   private workspaceFolder: WorkspaceFolder;
-  private quarkusBuildSupport: IBuildSupport;
+  private quarkusBuildSupport: BuildSupport;
   private tasksJsonFile: string;
 
   /**
@@ -35,14 +35,14 @@ export class TaskCreator {
    * @param workspaceFolder the workspaceFolder containing the Quarkus project
    * @param quarkusBuildSupport specifies whether the project in `workspaceFolder` is a Maven project or Gradle project
    */
-  public static async createTask(workspaceFolder: WorkspaceFolder, quarkusBuildSupport: IBuildSupport): Promise<void> {
+  public static async createTask(workspaceFolder: WorkspaceFolder, quarkusBuildSupport: BuildSupport): Promise<void> {
     const taskCreator: TaskCreator = new TaskCreator(workspaceFolder, quarkusBuildSupport);
     await taskCreator.createTasksJsonIfMissing();
     await taskCreator.addTask();
     await taskCreator.waitUntilTaskExists();
   }
 
-  private constructor(workspaceFolder: WorkspaceFolder, quarkusBuildSupport: IBuildSupport) {
+  private constructor(workspaceFolder: WorkspaceFolder, quarkusBuildSupport: BuildSupport) {
     this.workspaceFolder = workspaceFolder;
     this.quarkusBuildSupport = quarkusBuildSupport;
     this.tasksJsonFile = workspaceFolder.uri.fsPath + '/.vscode/tasks.json';
@@ -82,9 +82,9 @@ export class TaskCreator {
   }
 
   private async getTask(): Promise<TaskDefinition> {
-    const taskLabel: string = this.quarkusBuildSupport.quarkusDev;
-    const unixCommand: string = await this.quarkusBuildSupport.getUnixCommand(this.workspaceFolder);
-    const windowsCommand: string = await this.quarkusBuildSupport.getWindowsCommand(this.workspaceFolder);
+    const taskLabel: string = this.quarkusBuildSupport.getQuarkusDev();
+    const unixCommand: string = (await this.quarkusBuildSupport.getQuarkusDevCommand(this.workspaceFolder, { windows: false })).command;
+    const windowsCommand: string = (await this.quarkusBuildSupport.getQuarkusDevCommand(this.workspaceFolder, { windows: true })).command;
 
     const task: TaskDefinition =
     {
