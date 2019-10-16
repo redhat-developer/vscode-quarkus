@@ -18,7 +18,7 @@ import { MultiStepInput } from "../utils/multiStepUtils";
 import { QExtension } from "../definitions/QExtension";
 import { QuickPickItem, Uri, WorkspaceFolder, window, workspace } from "vscode";
 import { executeMavenCommand } from "../terminal/executeMavenCommand";
-import { getPomPathsFromWorkspace } from "../utils/workspaceUtils";
+import { getFilePathsFromWorkspace } from "../utils/workspaceUtils";
 import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions";
 
 export async function addExtensionsWizard() {
@@ -87,7 +87,7 @@ async function searchPomXml(): Promise<Uri[]> {
 
   const pomPaths: Uri[] = await workspaceFolders.reduce(async (pomPaths: Promise<Uri[]>, folderToSearch: WorkspaceFolder) => {
     const accumulator = await pomPaths;
-    const pomFileUris: Uri[] = await getPomPathsFromWorkspace(folderToSearch);
+    const pomFileUris: Uri[] = await getFilePathsFromWorkspace(folderToSearch, 'pom.xml');
 
     return Promise.resolve(accumulator.concat(pomFileUris));
   }, Promise.resolve([]));

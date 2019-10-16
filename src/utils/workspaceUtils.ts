@@ -14,19 +14,42 @@
  * limitations under the License.
  */
 
+import { IBuildSupport } from '../definitions/IBuildSupport';
 import { RelativePattern, Uri, WorkspaceFolder, workspace } from "vscode";
+import { MavenBuildSupport } from '../definitions/MavenBuildSupport';
+import { GradleBuildSupport } from '../definitions/GradleBuildSupport';
 
-export async function containsMavenQuarkusProject(workspaceFolder: WorkspaceFolder): Promise<boolean> {
+/**
+ * Returns a promise resolving to `true` only if the project located in `workspaceFolder`
+ * is a Quarkus project
+ * @param workspaceFolder
+ */
+export async function containsQuarkusProject(workspaceFolder: WorkspaceFolder): Promise<boolean> {
   // TODO this function must be improved. It only checks if a file named
-  // pom.xml exists under the provided workspaceFolder
-  return (await getPomPathsFromWorkspace(workspaceFolder)).length > 0;
+  // pom.xml or build.gradle exists under the provided workspaceFolder
+  return (await getFilePathsFromWorkspace(workspaceFolder, 'pom.xml')).length > 0 ||
+      (await getFilePathsFromWorkspace(workspaceFolder, 'build.gradle')).length > 0;
 }
 
-export async function getPomPathsFromWorkspace(workspaceFolder: WorkspaceFolder): Promise<Uri[]> {
-  const pattern: string = '**/pom.xml';
-  workspace.findFiles(new RelativePattern(workspaceFolder.uri.fsPath, pattern)).then((ff) => {
-    const i = 0;
-  });
+/**
+ * Determines whether the Quarkus project located in `workspaceFolder` is a Maven project
+ * or a Gradle project
+ * @param workspaceFolder
+ */
+export async function getQuarkusProjectBuildSupport(workspaceFolder: WorkspaceFolder): Promise<IBuildSupport | undefined> {
 
-  return workspace.findFiles(new RelativePattern(workspaceFolder.uri.fsPath, pattern));
+  if ((await getFilePathsFromWorkspace(workspaceFolder, 'build.gradle')).length > 0) {
+    return GradleBuildSupport();
+  }
+
+  if ((await getFilePathsFromWorkspace(workspaceFolder, 'pom.xml')).length > 0) {
+    return MavenBuildSupport();
+  }
+
+  throw 'Workspace folder does not contain a Maven or Gradle project';
+}
+
+export async function getFilePathsFromWorkspace(workspaceFolder: WorkspaceFolder, fileName: string): Promise<Uri[]> {
+  const pattern: string = `**/${fileName}`;
+  return await workspace.findFiles(new RelativePattern(workspaceFolder.uri.fsPath, pattern));
 }

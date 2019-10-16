@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 import { DebugConfiguration, WorkspaceFolder, Task, workspace } from 'vscode';
-import { getQuarkusDevTasks } from '../utils/tasksUtils';
+import { getQuarkusDevTaskNames } from '../utils/tasksUtils';
+import { IBuildSupport } from '../definitions/IBuildSupport';
 
-export async function getQuarkusDevDebugConfig(workspaceFolder: WorkspaceFolder): Promise<DebugConfiguration | undefined> {
+export async function getQuarkusDevDebugConfig(workspaceFolder: WorkspaceFolder, projectBuildSupport: IBuildSupport): Promise<DebugConfiguration | undefined> {
   const debugConfig: DebugConfiguration[] = getConfigsWithPreLaunchTask(workspaceFolder);
-  const devTasksNames: string[] = await getQuarkusDevTaskNames(workspaceFolder);
+  const devTasksNames: string[] = await getQuarkusDevTaskNames(workspaceFolder, projectBuildSupport);
 
   for (const config of debugConfig) {
     if (devTasksNames.includes(config.preLaunchTask)) {
@@ -31,15 +32,6 @@ export async function getQuarkusDevDebugConfig(workspaceFolder: WorkspaceFolder)
 export function getConfigsWithPreLaunchTask(workspaceFolder: WorkspaceFolder): DebugConfiguration[] {
   return getLaunchConfig(workspaceFolder).filter((config: DebugConfiguration) => {
     return typeof config.preLaunchTask !== 'undefined';
-  });
-}
-
-async function getQuarkusDevTaskNames(workspaceFolder: WorkspaceFolder): Promise<string[]> {
-  const quarkusDevTaskDefinitions: Task[] = await getQuarkusDevTasks(workspaceFolder);
-  return quarkusDevTaskDefinitions.filter((task: Task) => {
-    return typeof task.name !== 'undefined';
-  }).map((task: Task) => {
-    return task.name;
   });
 }
 

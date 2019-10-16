@@ -16,11 +16,21 @@
 import * as _ from 'lodash';
 
 import { tasks, ProcessExecution, ShellExecution, Task, TaskExecution, WorkspaceFolder } from 'vscode';
+import { IBuildSupport } from '../definitions/IBuildSupport';
 
-export async function getQuarkusDevTasks(workspaceFolder: WorkspaceFolder): Promise<Task[]> {
+export async function getQuarkusDevTaskNames(workspaceFolder: WorkspaceFolder, projectBuildSupport: IBuildSupport) {
+  const quarkusDevTaskDefinitions: Task[] = await getQuarkusDevTasks(workspaceFolder, projectBuildSupport);
+  return quarkusDevTaskDefinitions.filter((task: Task) => {
+    return typeof task.name !== 'undefined';
+  }).map((task: Task) => {
+    return task.name;
+  });
+}
+
+export async function getQuarkusDevTasks(workspaceFolder: WorkspaceFolder, projectBuildSupport: IBuildSupport): Promise<Task[]> {
   const workspaceTasks: Task[] = await getTasksFromWorkspace(workspaceFolder);
   return workspaceTasks.filter((task: Task) => {
-    return isQuarkusDevTask(task);
+    return isQuarkusDevTask(task, projectBuildSupport);
   });
 }
 
@@ -31,12 +41,12 @@ export async function getTasksFromWorkspace(workspaceFolder: WorkspaceFolder): P
   });
 }
 
-export async function getRunningQuarkusDevTasks(workspaceFolder: WorkspaceFolder): Promise<TaskExecution[]> {
+export async function getRunningQuarkusDevTasks(workspaceFolder: WorkspaceFolder, projectBuildSupport: IBuildSupport): Promise<TaskExecution[]> {
   const runningTasksInWorkspace: TaskExecution[] = tasks.taskExecutions.filter(taskExe => {
     return isTaskFromWorkspace(workspaceFolder, taskExe.task);
   });
 
-  const quarkusDevTasks: Task[] = await getQuarkusDevTasks(workspaceFolder);
+  const quarkusDevTasks: Task[] = await getQuarkusDevTasks(workspaceFolder, projectBuildSupport);
 
   return runningTasksInWorkspace.filter((runningTask: TaskExecution) => {
     return quarkusDevTasks.some((task: Task) => {
@@ -45,13 +55,9 @@ export async function getRunningQuarkusDevTasks(workspaceFolder: WorkspaceFolder
   });
 }
 
-function isQuarkusDevTask(task: Task): boolean {
+function isQuarkusDevTask(task: Task, projectBuildSupport: IBuildSupport): boolean {
   const execution: ProcessExecution | ShellExecution = task.execution;
-  return 'commandLine' in execution && isQuarkusDevCommand(execution.commandLine);
-}
-
-function isQuarkusDevCommand(command: string): boolean {
-  return command.includes('quarkus:dev');
+  return 'commandLine' in execution && projectBuildSupport.isQuarkusDevCommand(execution.commandLine);
 }
 
 function isTaskFromWorkspace(workspaceFolder: WorkspaceFolder, task: Task): boolean {
