@@ -29,18 +29,18 @@ export class WelcomeWebview {
   private _panel: vscode.WebviewPanel;
 
   public static createOrShow(context: ExtensionContext) {
-		const column = vscode.window.activeTextEditor
-			? vscode.window.activeTextEditor.viewColumn
-			: undefined;
+    const column = vscode.window.activeTextEditor
+      ? vscode.window.activeTextEditor.viewColumn
+      : undefined;
 
-		// If we already have a panel, show it.
-		if (WelcomeWebview.currentPanel) {
-			WelcomeWebview.currentPanel._panel.reveal(column);
-			return;
-		}
+    // If we already have a panel, show it.
+    if (WelcomeWebview.currentPanel) {
+      WelcomeWebview.currentPanel._panel.reveal(column);
+      return;
+    }
 
-		WelcomeWebview.currentPanel = new WelcomeWebview(context);
-	}
+    WelcomeWebview.currentPanel = new WelcomeWebview(context);
+  }
 
   private constructor(context: ExtensionContext) {
     this._context = context;
@@ -50,7 +50,7 @@ export class WelcomeWebview {
   }
 
   private createPanel(): vscode.WebviewPanel {
-    return vscode.window.createWebviewPanel(
+    const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
       'welcome', // Identifies the type of the webview. Used internally
       'Quarkus Tools for Visual Studio Code', // Title of the panel displayed to the user
       { viewColumn: vscode.ViewColumn.One, preserveFocus: false }, // Editor column to show the new webview panel in.
@@ -60,6 +60,8 @@ export class WelcomeWebview {
         localResourceRoots: [vscode.Uri.file(path.join(this._context.extensionPath, this.RESOURCE_FOLDER))]
       }
     );
+    panel.onDidDispose(() => this.dispose(), null, []);
+    return panel;
   }
 
   private async setPanelHtml(): Promise<void> {
@@ -79,11 +81,11 @@ export class WelcomeWebview {
 
     return await new Promise((resolve: any, reject: any): any => {
       ejs.renderFile(htmlTemplatePath, data, { async: true }, (error: any, data: string) => {
-          if (error) {
-              reject(error);
-          } else {
-              resolve(data);
-          }
+        if (error) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
       });
     });
   }
@@ -130,5 +132,9 @@ export class WelcomeWebview {
       undefined,
       this._context.subscriptions
     );
+  }
+
+  private dispose() {
+    WelcomeWebview.currentPanel = undefined;
   }
 }
