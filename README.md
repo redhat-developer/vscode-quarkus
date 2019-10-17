@@ -62,7 +62,7 @@ Default is `error`.
 * `quarkus.tools.validation.unknown.severity` : Validation severity for unknown Quarkus properties. Default is `warning`.
 * `quarkus.tools.validation.unknown.excluded` : Array of properties to ignore for unknown Quarkus properties validation. Default is `[]`.
 
-Since 1.0.2:
+Since 1.1.0:
 * `quarkus.tools.alwaysShowWelcomePage` : Determines whether to show the welcome page on extension startup.
 * `quarkus.tools.formatting.surroundEqualsWithSpaces` : Insert spaces around the equals sign when formatting the application.properties file. Default is `false`.
 * `quarkus.tools.validation.required.severity` : Validation severity for required Quarkus properties.
