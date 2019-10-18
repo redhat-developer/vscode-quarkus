@@ -60,7 +60,7 @@ Default is `warning`.
 * `quarkus.tools.validation.syntax.severity` : Validation severity for Quarkus property syntax checking.
 Default is `error`.
 * `quarkus.tools.validation.unknown.severity` : Validation severity for unknown Quarkus properties. Default is `warning`.
-* `quarkus.tools.validation.unknown.excluded` : Array of properties to ignore for unknown Quarkus properties validation. Default is `[]`.
+* `quarkus.tools.validation.unknown.excluded` : Array of properties to ignore for unknown Quarkus properties validation. Patterns can be used ('*' = any string, '?' = any character). Default is `[]`.
 
 Since 1.1.0:
 * `quarkus.tools.alwaysShowWelcomePage` : Determines whether to show the welcome page on extension startup.
