@@ -235,7 +235,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Array of properties to ignore for unknown Quarkus properties validation.",
+          "description": "Array of properties to ignore for unknown Quarkus properties validation. Patterns can be used ('*' = any string, '?' = any character)",
           "scope": "window"
         }
       }
