@@ -53,7 +53,7 @@ export class WelcomeWebview {
     const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
       'welcome', // Identifies the type of the webview. Used internally
       'Quarkus Tools for Visual Studio Code', // Title of the panel displayed to the user
-      { viewColumn: vscode.ViewColumn.One, preserveFocus: false }, // Editor column to show the new webview panel in.
+      { viewColumn: vscode.ViewColumn.Beside, preserveFocus: false }, // Editor column to show the new webview panel in.
       {
         enableCommandUris: true,
         enableScripts: true,

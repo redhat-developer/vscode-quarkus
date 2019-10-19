@@ -2,7 +2,18 @@
 
 .column {
   float: left;
-  width: 35%;
+}
+
+@media all and (max-width: 850px) {
+  .column {
+    width: 50%;
+  }
+}
+
+@media all and (min-width: 850px) {
+  .column {
+    width: 35%;
+  }
 }
 
 .row {
