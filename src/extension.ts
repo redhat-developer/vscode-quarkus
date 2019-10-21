@@ -98,7 +98,7 @@ function registerVSCodeCommands(context: ExtensionContext) {
   /**
    * Command for creating a Quarkus Maven project
    */
-  context.subscriptions.push(commands.registerCommand('quarkusTools.createMavenProject', () => {
+  context.subscriptions.push(commands.registerCommand('quarkusTools.createProject', () => {
     generateProjectWizard();
   }));
 
