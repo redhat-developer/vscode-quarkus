@@ -31,7 +31,7 @@
     "starter"
   ],
   "activationEvents": [
-    "onCommand:quarkusTools.createMavenProject",
+    "onCommand:quarkusTools.createProject",
     "onCommand:quarkusTools.addExtension",
     "onCommand:quarkusTools.debugQuarkusProject",
     "onCommand:quarkusTools.welcome",
@@ -60,7 +60,7 @@
     ],
     "commands": [
       {
-        "command": "quarkusTools.createMavenProject",
+        "command": "quarkusTools.createProject",
         "title": "Quarkus: Generate a Maven project"
       },
       {
