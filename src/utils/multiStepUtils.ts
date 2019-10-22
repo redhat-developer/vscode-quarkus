@@ -81,107 +81,101 @@ export class MultiStepInput {
     const disposables: Disposable[] = [];
     const displaySteps: boolean = typeof step !== 'undefined' && typeof totalSteps !== 'undefined';
 
-    try {
-      return await new Promise<T | (P extends { buttons: (infer I)[] } ? I : never)>((resolve, reject) => {
-        const input: QuickPick<T> = window.createQuickPick<T>();
-        input.title = title;
+    return await new Promise<T | (P extends { buttons: (infer I)[] } ? I : never)>((resolve, reject) => {
+      const input: QuickPick<T> = window.createQuickPick<T>();
+      input.title = title;
 
-        if (displaySteps) {
-          input.step = step;
-          input.totalSteps = totalSteps;
-        }
-
+      if (displaySteps) {
+        input.step = step;
         input.totalSteps = totalSteps;
-        input.placeholder = placeholder;
-        input.items = items;
-        if (activeItem) {
-          input.activeItems = [activeItem];
-        }
-        input.buttons = [
-          ...(this.steps.length > 1 ? [QuickInputButtons.Back] : []),
-          ...(buttons || [])
-        ];
-        input.ignoreFocusOut = true;
-        disposables.push(
-          input.onDidTriggerButton(item => {
-            if (item === QuickInputButtons.Back) {
-              reject(InputFlowAction.back);
-            } else {
-              resolve(<any>item);
-            }
-          }),
-          input.onDidChangeSelection(items => resolve(items[0])),
-        );
-        if (this.current) {
-          this.current.dispose();
-        }
-        this.current = input;
-        this.current.show();
-      });
-    } finally {
-      disposables.forEach(d => d.dispose());
-    }
+      }
+
+      input.totalSteps = totalSteps;
+      input.placeholder = placeholder;
+      input.items = items;
+      if (activeItem) {
+        input.activeItems = [activeItem];
+      }
+      input.buttons = [
+        ...(this.steps.length > 1 ? [QuickInputButtons.Back] : []),
+        ...(buttons || [])
+      ];
+      input.ignoreFocusOut = true;
+      disposables.push(
+        input.onDidTriggerButton(item => {
+          if (item === QuickInputButtons.Back) {
+            reject(InputFlowAction.back);
+          } else {
+            resolve(<any>item);
+          }
+        }),
+        input.onDidChangeSelection(items => resolve(items[0])),
+        input.onDidHide(() => {
+          input.dispose();
+          disposables.forEach(d => d.dispose());
+        })
+      );
+      this.current = input;
+      this.current.show();
+    });
   }
 
   async showInputBox<P extends InputBoxParameters>({ title, step, totalSteps, value, prompt, validate, buttons }: P) {
     const disposables: Disposable[] = [];
     const displaySteps: boolean = typeof step !== 'undefined' && typeof totalSteps !== 'undefined';
 
-    try {
-      return await new Promise<string | (P extends { buttons: (infer I)[] } ? I : never)>(async (resolve, reject) => {
-        const input: InputBox = window.createInputBox();
-        input.title = title;
+    return await new Promise<string | (P extends { buttons: (infer I)[] } ? I : never)>(async (resolve, reject) => {
+      const input: InputBox = window.createInputBox();
+      input.title = title;
 
-        if (displaySteps) {
-          input.step = step;
-          input.totalSteps = totalSteps;
-        }
-        input.value = value;
-        input.prompt = prompt;
-        input.buttons = [
-          ...(this.steps.length > 1 ? [QuickInputButtons.Back] : []),
-          ...(buttons || [])
-        ];
-        input.ignoreFocusOut = true;
-        const validationMessage: string = await validate(input.value);
-        if (validationMessage) {
-          input.validationMessage = validationMessage;
-        }
-        disposables.push(
-          input.onDidTriggerButton(item => {
-            if (item === QuickInputButtons.Back) {
-              reject(InputFlowAction.back);
-            } else {
-              resolve(<any>item);
-            }
-          }),
-          input.onDidAccept(async () => {
-            const value = input.value;
-            input.enabled = false;
-            input.busy = true;
-            if (!(await validate(value))) {
-              resolve(value);
-            }
-            input.enabled = true;
-            input.busy = false;
-          }),
-          input.onDidChangeValue(async text => {
-            const current = validate(text);
-            const validating = current;
-            const validationMessage = await current;
-            if (current === validating) {
-              input.validationMessage = validationMessage;
-            }
-          })
-        );
-        if (this.current) {
-          this.current.dispose();
-        }
-        this.current = input;
-        this.current.show();
-      });
-    } finally {
-      disposables.forEach(d => d.dispose());
-    }
+      if (displaySteps) {
+        input.step = step;
+        input.totalSteps = totalSteps;
+      }
+      input.value = value;
+      input.prompt = prompt;
+      input.buttons = [
+        ...(this.steps.length > 1 ? [QuickInputButtons.Back] : []),
+        ...(buttons || [])
+      ];
+      input.ignoreFocusOut = true;
+      const validationMessage: string = await validate(input.value);
+      if (validationMessage) {
+        input.validationMessage = validationMessage;
+      }
+      disposables.push(
+        input.onDidTriggerButton(item => {
+          if (item === QuickInputButtons.Back) {
+            reject(InputFlowAction.back);
+          } else {
+            resolve(<any>item);
+          }
+        }),
+        input.onDidAccept(async () => {
+          const value = input.value;
+          input.enabled = false;
+          input.busy = true;
+          if (!(await validate(value))) {
+            resolve(value);
+          }
+          input.enabled = true;
+          input.busy = false;
+        }),
+        input.onDidChangeValue(async text => {
+          const current = validate(text);
+          const validating = current;
+          const validationMessage = await current;
+          if (current === validating) {
+            input.validationMessage = validationMessage;
+          }
+        }),
+        input.onDidHide(() => {
+          input.dispose();
+          disposables.forEach(d => d.dispose());
+        })
+      );
+      this.current = input;
+      this.current.show();
+    });
   }
 }
