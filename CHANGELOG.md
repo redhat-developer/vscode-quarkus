@@ -1,5 +1,20 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.1.1 (October 23, 2019)
+
+### Enhancements
+
+ * Support glob pattern to exclude unknown validation. See [#118](https://github.com/redhat-developer/vscode-quarkus/pull/118)
+ * Welcome page opens on the side. See [#120](https://github.com/redhat-developer/vscode-quarkus/pull/120)
+
+### Bug Fixes
+
+ * Preserve focus when welcome page is displayed. See [#73](https://github.com/redhat-developer/vscode-quarkus/issues/73)
+
+### Others
+
+* Change "Quarkus: Generate a Maven Project" command ID. See [#123](https://github.com/redhat-developer/vscode-quarkus/pull/123)
+
 ## 1.1.0 (October 17, 2019)
 
 ### Enhancements
