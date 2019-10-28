@@ -35,7 +35,8 @@
     "onCommand:quarkusTools.addExtension",
     "onCommand:quarkusTools.debugQuarkusProject",
     "onCommand:quarkusTools.welcome",
-    "onLanguage:quarkus-properties"
+    "onLanguage:quarkus-properties",
+    "*"
   ],
   "main": "./dist/extension",
   "extensionDependencies": [
@@ -113,7 +114,7 @@
         },
         "quarkus.tools.alwaysShowWelcomePage": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "Determines whether to show the welcome page on extension startup."
         },
         "quarkus.tools.starter.api": {

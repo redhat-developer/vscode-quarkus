@@ -70,7 +70,7 @@ export namespace QuarkusConfig {
   }
 
   export function getAlwaysShowWelcomePage(): boolean {
-    return workspace.getConfiguration().get<boolean>(ALWAYS_SHOW_WELCOME_PAGE, true);
+    return workspace.getConfiguration().get<boolean>(ALWAYS_SHOW_WELCOME_PAGE, false);
   }
 
   export function getTerminateProcessOnDebugExit(): TerminateProcessConfig {

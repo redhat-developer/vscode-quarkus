@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import * as requirements from './languageServer/requirements';
+import * as fs from 'fs';
 
 import { QUARKUS_PROJECT_REQUEST, JDTLS_PROJECT_INFO_COMMAND, QUARKUS_PROPERTY_DEFINITION_REQUEST, JDTLS_PROPERTY_DEFINITION_COMMAND } from './definitions/wizardConstants';
 
@@ -43,8 +44,8 @@ interface QuarkusPropertiesChangeEvent {
 }
 
 interface QuarkusPropertyDefinitionParams {
-	uri: string;
-	propertySource: string;
+  uri: string;
+  propertySource: string;
 }
 
 export function activate(context: ExtensionContext) {
@@ -56,12 +57,12 @@ export function activate(context: ExtensionContext) {
   connectToLS().then(() => {
     const quarkusPojectInfoRequest = new RequestType<QuarkusProjectInfoParams, any, void, void>(QUARKUS_PROJECT_REQUEST);
     languageClient.onRequest(quarkusPojectInfoRequest, async (params: QuarkusProjectInfoParams) =>
-       <any> await commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROJECT_INFO_COMMAND, params)
+      <any>await commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROJECT_INFO_COMMAND, params)
     );
 
-	const quarkusPropertyDefinitionRequest = new RequestType<QuarkusPropertyDefinitionParams, any, void, void>(QUARKUS_PROPERTY_DEFINITION_REQUEST);
+    const quarkusPropertyDefinitionRequest = new RequestType<QuarkusPropertyDefinitionParams, any, void, void>(QUARKUS_PROPERTY_DEFINITION_REQUEST);
     languageClient.onRequest(quarkusPropertyDefinitionRequest, async (params: QuarkusPropertyDefinitionParams) =>
-       <any> await commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROPERTY_DEFINITION_COMMAND, params)
+      <any>await commands.executeCommand("java.execute.workspaceCommand", JDTLS_PROPERTY_DEFINITION_COMMAND, params)
     );
 
     /**
@@ -88,8 +89,14 @@ export function deactivate() {
 }
 
 function displayWelcomePageIfNeeded(context: ExtensionContext): void {
-  if (QuarkusConfig.getAlwaysShowWelcomePage()) {
+  const welcomePageDisplayed: boolean|undefined = context.globalState.get('welcomePageDisplayed');
+  if (!welcomePageDisplayed || QuarkusConfig.getAlwaysShowWelcomePage()) {
     WelcomeWebview.createOrShow(context);
+  }
+
+  if (!welcomePageDisplayed) {
+    context.globalState.update('welcomePageDisplayed', true);
+    removeStartupActivationEvent(context);
   }
 }
 
@@ -174,8 +181,21 @@ function connectToLS() {
       quarkus = defaultValue;
     } else {
       const x = JSON.stringify(configQuarkus); // configQuarkus is not a JSON type
-      quarkus = { quarkus : JSON.parse(x)};
+      quarkus = { quarkus: JSON.parse(x) };
     }
     return quarkus;
+  }
+}
+
+function removeStartupActivationEvent(context: ExtensionContext) {
+  const extensionPackage = JSON.parse((fs.readFileSync(context.asAbsolutePath('./package.json'))).toString());
+  if (extensionPackage && extensionPackage.activationEvents) {
+    let i: number = extensionPackage.activationEvents.length;
+    while (i--) {
+      if (extensionPackage.activationEvents[i] === "*") {
+        extensionPackage.activationEvents.splice(i, 1);
+      }
+    }
+    fs.writeFileSync(context.asAbsolutePath('./package.json'), JSON.stringify(extensionPackage, null, 2));
   }
 }
