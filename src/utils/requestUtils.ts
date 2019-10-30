@@ -25,6 +25,11 @@ import { Readable } from 'stream';
 import { ZipFile, fromBuffer } from 'yauzl';
 import { convertToQExtension } from '../definitions/QExtension';
 
+const HEADERS = {
+  'Client-Name': 'vscode-quarkus',
+  'Client-Contact-Email': 'fbricon@redhat.com,azerr@redhat.com,dakwon@redhat.com'
+};
+
 export async function getQExtensions(): Promise<QExtension[]> {
   const apiUrl: string = QuarkusConfig.getApiUrl();
   const extensions: string = await tryGetExtensionsJSON(apiUrl);
@@ -36,8 +41,9 @@ export async function getQExtensions(): Promise<QExtension[]> {
 }
 
 async function tryGetExtensionsJSON(apiUrl: string): Promise<string> {
-  const requestOptions = {
+  const requestOptions: request.OptionsWithUri = {
     uri: `${apiUrl}/extensions`,
+    headers: HEADERS,
     timeout: 30000
   };
   try {
@@ -78,8 +84,13 @@ export async function downloadProject(state: ProjectGenState): Promise<ZipFile> 
 }
 
 async function tryGetProjectBuffer(projectUrl: string): Promise<Buffer> {
+  const requestOptions: request.OptionsWithUri = {
+    uri: projectUrl,
+    headers: HEADERS,
+    encoding: null
+  };
   try {
-    return await request(projectUrl, {encoding: null}) as Buffer;
+    return await request(requestOptions) as Buffer;
   } catch (err) {
     throw 'Unable to download Quarkus project.';
   }
