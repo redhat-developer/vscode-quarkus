@@ -52,7 +52,7 @@ export class WelcomeWebview {
   private createPanel(): vscode.WebviewPanel {
     const panel: vscode.WebviewPanel = vscode.window.createWebviewPanel(
       'welcome', // Identifies the type of the webview. Used internally
-      'Quarkus Tools for Visual Studio Code', // Title of the panel displayed to the user
+      `Quarkus Tools for ${vscode.env.appName}`, // Title of the panel displayed to the user
       { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true }, // Editor column to show the new webview panel in.
       {
         enableCommandUris: true,
@@ -73,6 +73,7 @@ export class WelcomeWebview {
     const htmlTemplatePath: string = this.getHtmlTemplateUri().fsPath;
 
     const data = {
+      appName: vscode.env.appName,
       checkboxValue: QuarkusConfig.getAlwaysShowWelcomePage(),
       cssUri: this.getCssUri(),
       cspSource: this._panel.webview.cspSource,
