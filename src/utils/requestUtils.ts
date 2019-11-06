@@ -67,10 +67,7 @@ function removeDuplicateArtifactIds(extensions: QExtension[]): QExtension[] {
 
 export async function downloadProject(state: ProjectGenState): Promise<ZipFile> {
   const apiUrl: string = QuarkusConfig.getApiUrl();
-  const chosenExtArtifactIds: string[] = state.extensions!.map((it) => it.artifactId);
-  const chosenIds: string[] = chosenExtArtifactIds.map((artifactId) => {
-    return 'io.quarkus:' + artifactId;
-  });
+  const chosenIds: string[] = state.extensions!.map((it) => `${it.groupId}:${it.artifactId}`);
 
   const qProjectUrl: string = `${apiUrl}/download?` +
     `g=${state.groupId}&` +
