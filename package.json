@@ -61,7 +61,7 @@
     "commands": [
       {
         "command": "quarkusTools.createProject",
-        "title": "Quarkus: Generate a Maven project"
+        "title": "Quarkus: Generate a Quarkus project"
       },
       {
         "command": "quarkusTools.addExtension",
@@ -129,17 +129,26 @@
           "description": "Default values for the project generation wizard.",
           "scope": "window",
           "properties": {
+            "buildTool": {
+              "type": "string",
+              "enum": [
+                "Maven",
+                "Gradle"
+              ],
+              "scope": "window",
+              "description": "Default build tool"
+            },
             "groupId": {
               "type": "string",
               "pattern": "^[A-Za-z0-9_\\-.]+$",
               "scope": "window",
-              "description": "Default Group Id"
+              "description": "Default groupId"
             },
             "artifactId": {
               "type": "string",
               "pattern": "^[A-Za-z0-9_\\-.]+$",
               "scope": "window",
-              "description": "Default Artifact Id"
+              "description": "Default artifactId"
             },
             "projectVersion": {
               "type": "string",

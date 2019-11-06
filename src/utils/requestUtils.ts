@@ -70,6 +70,7 @@ export async function downloadProject(state: ProjectGenState): Promise<ZipFile> 
   const chosenIds: string[] = state.extensions!.map((it) => `${it.groupId}:${it.artifactId}`);
 
   const qProjectUrl: string = `${apiUrl}/download?` +
+    `b=${state.buildTool.toUpperCase()}&` +
     `g=${state.groupId}&` +
     `a=${state.artifactId}&` +
     `v=${state.projectVersion}&` +

@@ -28,6 +28,7 @@ export interface State {
  * Class representing data required to generate project
  */
 export interface ProjectGenState extends State {
+  buildTool: string;
   groupId: string;
   artifactId: string;
   projectVersion: string;
