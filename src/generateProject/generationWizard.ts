@@ -7,10 +7,10 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as fse from 'fs-extra';
 
-import { INPUT_TITLE } from '../definitions/constants';
+import { INPUT_TITLE, BuildToolName } from '../definitions/constants';
 import { QuarkusConfig } from '../QuarkusConfig';
 import { MultiStepInput } from '../utils/multiStepUtils';
-import { OpenDialogOptions, Uri, commands, window } from 'vscode';
+import { OpenDialogOptions, QuickPickItem, Uri, commands, window } from 'vscode';
 import { ProjectGenState } from '../definitions/inputState';
 import { QExtension } from '../definitions/QExtension';
 import { ZipFile } from 'yauzl';
@@ -26,11 +26,40 @@ import { validateArtifactId, validateGroupId, validatePackageName, validateResou
 export async function generateProjectWizard() {
 
   const state: Partial<ProjectGenState> = {
-    totalSteps: 6
+    totalSteps: 7
   };
 
   async function collectInputs(state: Partial<ProjectGenState>) {
-    await MultiStepInput.run(input => inputGroupId(input, state));
+    await MultiStepInput.run(input => inputBuildTool(input, state));
+  }
+
+  async function inputBuildTool(input: MultiStepInput, state: Partial<ProjectGenState>) {
+
+    interface BuildToolPickItem extends QuickPickItem {
+      preferred: boolean;
+    }
+
+    const defaultBuildTool: BuildToolName = QuarkusConfig.getDefaultBuildTool();
+    const quickPickItems: BuildToolPickItem[] = [
+      {label: BuildToolName.Maven, preferred: BuildToolName.Maven === defaultBuildTool},
+      {label: BuildToolName.Gradle, preferred: BuildToolName.Gradle === defaultBuildTool}
+    ];
+
+    // Place the preferred option first in the quick pick list
+    quickPickItems.sort((x: BuildToolPickItem, y: BuildToolPickItem) => {
+      return (x.preferred === y.preferred)? 0 : x.preferred ? -1 : 1;
+    });
+
+    state.buildTool = (await input.showQuickPick({
+      title: 'Quarkus Tools',
+      step: input.getStepNumber(),
+      totalSteps: state.totalSteps,
+      placeholder: 'Pick build tool',
+      items: quickPickItems,
+      activeItem: quickPickItems[0]
+    })).label;
+
+    return state.wizardInterrupted ? null : (input: MultiStepInput) => inputGroupId(input, state);
   }
 
   async function inputGroupId(input: MultiStepInput, state: Partial<ProjectGenState>) {
@@ -177,6 +206,7 @@ async function showOpenFolderDialog(customOptions: OpenDialogOptions): Promise<U
 
 function saveDefaultsToConfig(state: ProjectGenState): void {
   QuarkusConfig.setDefaults({
+    buildTool: state.buildTool,
     groupId: state.groupId,
     artifactId: state.artifactId,
     projectVersion: state.projectVersion,

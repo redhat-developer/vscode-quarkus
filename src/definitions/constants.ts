@@ -34,7 +34,13 @@ export namespace VSCodeCommands {
 }
 
 // Constants related to project generation
+export const enum BuildToolName {
+  Maven = 'Maven',
+  Gradle = 'Gradle'
+}
+
 export const DEFAULT_API_URL: string = 'https://code.quarkus.io/api';
+export const DEFAULT_BUILD_TOOL: BuildToolName = BuildToolName.Maven;
 export const DEFAULT_GROUP_ID: string = 'org.acme';
 export const DEFAULT_ARTIFACT_ID: string = 'quarkus-getting-started';
 export const DEFAULT_PROJECT_VERSION: string = '1.0.0-SNAPSHOT';

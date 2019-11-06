@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 import {
+  BuildToolName,
   DEFAULT_API_URL,
+  DEFAULT_BUILD_TOOL,
   DEFAULT_GROUP_ID,
   DEFAULT_ARTIFACT_ID,
   DEFAULT_PROJECT_VERSION,
@@ -32,6 +34,7 @@ export namespace QuarkusConfig {
   export const QUARKUS_CONFIG_NAME = 'quarkus.tools';
 
   export const STARTER_API = 'quarkus.tools.starter.api';
+  export const BUILD_TOOL = 'quarkus.tools.starter.defaults.buildTool';
   export const GROUP_ID = 'quarkus.tools.starter.defaults.groupId';
   export const ARTIFACT_ID = 'quarkus.tools.starter.defaults.artifactId';
   export const PROJECT_VERSION = 'quarkus.tools.starter.defaults.projectVersion';
@@ -43,6 +46,10 @@ export namespace QuarkusConfig {
 
   export function getApiUrl(): string {
     return workspace.getConfiguration().get<string>(STARTER_API, DEFAULT_API_URL);
+  }
+
+  export function getDefaultBuildTool(): BuildToolName {
+    return workspace.getConfiguration().get<BuildToolName>(BUILD_TOOL, DEFAULT_BUILD_TOOL);
   }
 
   export function getDefaultGroupId(): string {
@@ -95,8 +102,9 @@ export namespace QuarkusConfig {
 }
 
 interface Defaults {
-  groupId?: string;
-  artifactId?: string;
+  buildTool: string;
+  groupId: string;
+  artifactId: string;
   projectVersion: string;
   packageName: string;
   resourceName: string;
