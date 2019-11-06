@@ -25,8 +25,9 @@ import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions
 import { TerminalCommand } from "../buildSupport/BuildSupport";
 
 export async function addExtensionsWizard() {
+  let currentStep: number = 1;
   const state: Partial<AddExtensionsState> = {
-    totalSteps: 1
+    totalSteps: 2
   };
   async function collectInputs(state: Partial<State>) {
     await MultiStepInput.run(input => chooseBuildFileIfMultipleExists(input, state));
@@ -41,9 +42,10 @@ export async function addExtensionsWizard() {
       return;
     } else if (buildFileList.length === 1) {
       state.buildFilePath = buildFileList[0];
+      state.totalSteps = 1;
     } else {
       // show quick pick in this case
-      state.totalSteps = 2;
+
       const quickPickItems: QuickPickItem[] = buildFileList.map((uri: Uri) => {
         return { label: uri.fsPath };
       });
@@ -52,6 +54,7 @@ export async function addExtensionsWizard() {
         title: "Multiple build files found under current directory. Choose a build file.",
         items: quickPickItems
       })).label;
+      currentStep = 2;
 
       state.buildFilePath = buildFileList.filter((uri: Uri) => {
         return uri.fsPath === selectedPomPath;
@@ -60,7 +63,7 @@ export async function addExtensionsWizard() {
 
     state.workspaceFolder = workspace.getWorkspaceFolder(state.buildFilePath);
     state.buildSupport = await getBuildSupport(state.workspaceFolder);
-    return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensionsWithoutLastUsed(input, state);
+    return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensionsWithoutLastUsed(input, state, currentStep);
   }
 
   await collectInputs(state);
