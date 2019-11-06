@@ -42,25 +42,28 @@ let addLastUsed: boolean;
 export async function pickExtensionsWithoutLastUsed(
   input: MultiStepInput,
   state: Partial<State>,
+  step?: number,
   next?: (input: MultiStepInput, state: Partial<State>) => any) {
 
   addLastUsed = false;
-  await pickExtensions(input, state, next);
+  await pickExtensions(input, state, step, next);
 }
 
 export async function pickExtensionsWithLastUsed(
   input: MultiStepInput,
   state: Partial<State>,
+  step?: number,
   next?: (input: MultiStepInput, state: Partial<State>) => any) {
 
   addLastUsed = true;
-  await pickExtensions(input, state, next);
+  await pickExtensions(input, state, step, next);
 }
 
 async function pickExtensions(
   input: MultiStepInput,
   state: Partial<State>,
-  next: (input: MultiStepInput, state: Partial<State>) => any) {
+  step?: number,
+  next?: (input: MultiStepInput, state: Partial<State>) => any) {
 
   let allExtensions: QExtension[];
 
@@ -82,7 +85,7 @@ async function pickExtensions(
 
     pick = await input.showQuickPick({
       title: 'Quarkus Tools',
-      step: input.getStepNumber(),
+      step: step ? step : input.getStepNumber(),
       totalSteps: state.totalSteps,
       placeholder: 'Pick extensions',
       items: quickPickItems,
