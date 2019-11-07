@@ -10,7 +10,9 @@ export class GradleBuildSupport extends BuildSupport {
       defaultExecutable: 'gradle',
       quarkusDev: 'quarkusDev',
       wrapper: 'gradlew',
-      wrapperWindows: 'gradlew.bat'
+      wrapperWindows: 'gradlew.bat',
+      taskBeginsPattern: '^.*Starting a Gradle Daemon*',
+      taskEndsPattern: '^.*Quarkus .* started in .*\\. Listening on:*'
     });
   }
 

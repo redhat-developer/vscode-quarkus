@@ -9,7 +9,9 @@ export class MavenBuildSupport extends BuildSupport {
       defaultExecutable: 'mvn',
       quarkusDev: 'quarkus:dev',
       wrapper: 'mvnw',
-      wrapperWindows: 'mvnw.cmd'
+      wrapperWindows: 'mvnw.cmd',
+      taskBeginsPattern: '^.*Scanning for projects...*',
+      taskEndsPattern: '^.*Quarkus .* started in .*\\. Listening on:*'
     });
   }
 

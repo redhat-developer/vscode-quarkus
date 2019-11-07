@@ -16,6 +16,7 @@
 import * as findUp from 'find-up';
 import { Uri, WorkspaceFolder } from 'vscode';
 import { FsUtils } from '../utils/fsUtils';
+import { TaskPattern } from './TaskPattern';
 import { formattedPathForTerminal } from '../utils/shellUtils';
 import { getFilePathsFromWorkspace } from '../utils/workspaceUtils';
 
@@ -25,6 +26,8 @@ interface BuildSupportData {
   quarkusDev: string;
   wrapper: string;
   wrapperWindows: string;
+  taskBeginsPattern: string;
+  taskEndsPattern: string;
 }
 
 /**
@@ -186,5 +189,12 @@ export abstract class BuildSupport {
 
   public getWrapperWindows(): string {
     return this.buildSupportData.wrapperWindows;
+  }
+
+  public getTaskPatterns(): TaskPattern {
+    return {
+      beginsPattern: this.buildSupportData.taskBeginsPattern,
+      endsPattern: this.buildSupportData.taskEndsPattern
+    };
   }
 }
