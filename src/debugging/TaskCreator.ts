@@ -18,6 +18,7 @@ import * as fs from 'fs';
 import { FsUtils } from '../utils/fsUtils';
 import { BuildSupport } from '../buildSupport/BuildSupport';
 import { ConfigurationChangeEvent, Disposable, TaskDefinition, WorkspaceFolder, workspace } from 'vscode';
+import { TaskPattern } from '../buildSupport/TaskPattern';
 import { getQuarkusDevTasks } from '../utils/tasksUtils';
 
 /**
@@ -86,6 +87,7 @@ export class TaskCreator {
     const unixCommand: string = (await this.quarkusBuildSupport.getQuarkusDevCommand(this.workspaceFolder, { windows: false })).command;
     const windowsCommand: string = (await this.quarkusBuildSupport.getQuarkusDevCommand(this.workspaceFolder, { windows: true })).command;
 
+    const taskPatterns: TaskPattern = this.quarkusBuildSupport.getTaskPatterns();
     const task: TaskDefinition =
     {
       label: taskLabel,
@@ -107,8 +109,8 @@ export class TaskCreator {
           ],
           background: {
             activeOnStart: true,
-            beginsPattern: "^.*Scanning for projects...*",
-            endsPattern: "^.*Quarkus .* started in .*\\. Listening on:*"
+            beginsPattern: taskPatterns.beginsPattern,
+            endsPattern: taskPatterns.endsPattern,
           }
         }
       ]
