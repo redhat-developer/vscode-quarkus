@@ -64,6 +64,9 @@ Since 1.1.0:
 * `quarkus.tools.validation.required.severity` : Validation severity for required Quarkus properties.
 Default is `none`.
 
+Since 1.3.0:
+* `quarkus.tools.codeLens.urlCodeLensEnabled` : Enable/disable the URL code lenses for REST services. Default is`true`.
+
 ## Articles
 
  * [Quarkus developer joy for VS Code](https://quarkus.io/blog/quarkus-developer-joy-for-vs-code/)

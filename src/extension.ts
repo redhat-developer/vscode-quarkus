@@ -27,7 +27,7 @@ import { prepareExecutable } from './languageServer/javaServerStarter';
 import { tryStartDebugging } from './debugging/startDebugging';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { QuarkusConfig } from './QuarkusConfig';
-import { registerConfigurationUpdateCommand } from './lsp-commands';
+import { registerConfigurationUpdateCommand, registerOpenURICommand, CommandKind } from './lsp-commands';
 
 let languageClient: LanguageClient;
 
@@ -47,6 +47,10 @@ interface QuarkusPropertyDefinitionParams {
 	propertySource: string;
 }
 
+interface QuarkusJavaCodeLensParams {
+	uri: string;
+}
+
 export function activate(context: ExtensionContext) {
   QuarkusContext.setContext(context);
   displayWelcomePageIfNeeded(context);
@@ -64,6 +68,11 @@ export function activate(context: ExtensionContext) {
        <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.PROPERTY_DEFINITION_COMMAND, params)
     );
 
+	const quarkusJavaCodeLensRequest = new RequestType<QuarkusJavaCodeLensParams, any, void, void>(QuarkusLS.JAVA_CODELENS_REQUEST);
+    languageClient.onRequest(quarkusJavaCodeLensRequest, async (params: QuarkusJavaCodeLensParams) =>
+       <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.JAVA_CODELENS_COMMAND, params)
+    );
+
     /**
      * Command for resetting Quarkus properties cache
      */
@@ -71,10 +80,6 @@ export function activate(context: ExtensionContext) {
       languageClient.sendNotification("quarkus/quarkusPropertiesChanged", event);
     }));
 
-    /**
-     * Register standard LSP commands
-     */
-    context.subscriptions.push(registerConfigurationUpdateCommand());
   }).catch((error) => {
     window.showErrorMessage(error.message, error.label).then((selection) => {
       if (error.label && error.label === selection && error.openUrl) {
@@ -124,13 +129,20 @@ function registerVSCodeCommands(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand(VSCodeCommands.QUARKUS_WELCOME, () => {
     WelcomeWebview.createOrShow(context);
   }));
+
+  /**
+   * Register standard LSP commands
+   */
+  context.subscriptions.push(registerConfigurationUpdateCommand());
+  context.subscriptions.push(registerOpenURICommand());
 }
 
 function connectToLS(context: ExtensionContext) {
   return requirements.resolveRequirements().then(requirements => {
     const clientOptions: LanguageClientOptions = {
       documentSelector: [
-        { scheme: 'file', language: 'quarkus-properties' }
+        { scheme: 'file', language: 'quarkus-properties' },
+        { scheme: 'file', language: 'java' }
       ],
       // wrap with key 'settings' so it can be handled same a DidChangeConfiguration
       initializationOptions: {
@@ -139,7 +151,8 @@ function connectToLS(context: ExtensionContext) {
           commands: {
             commandsKind: {
                 valueSet: [
-                    "quarkus.command.configuration.update"
+                  CommandKind.COMMAND_CONFIGURATION_UPDATE,
+                  CommandKind.COMMAND_OPEN_URI
                 ]
             }
         }

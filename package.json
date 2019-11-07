@@ -36,7 +36,8 @@
     "onCommand:quarkusTools.debugQuarkusProject",
     "onCommand:quarkusTools.welcome",
     "workspaceContains:**/src/main/resources/application.properties",
-    "onLanguage:quarkus-properties"
+    "onLanguage:quarkus-properties",
+    "onLanguage:java"
   ],
   "main": "./dist/extension",
   "extensionDependencies": [
@@ -193,6 +194,12 @@
             "type": "string"
           },
           "description": "Array of properties to ignore for unknown Quarkus properties validation. Patterns can be used ('*' = any string, '?' = any character)",
+          "scope": "window"
+        },
+        "quarkus.tools.codeLens.urlCodeLensEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable the URL code lenses for REST services.",
           "scope": "window"
         }
       }
