@@ -18,11 +18,13 @@
 export namespace QuarkusLS {
   export const PROJECT_REQUEST = 'quarkus/projectInfo';
   export const PROPERTY_DEFINITION_REQUEST = 'quarkus/propertyDefinition';
+  export const JAVA_CODELENS_REQUEST = 'quarkus/java/codeLens';
 }
 
 export namespace JdtLSCommands {
   export const PROJECT_INFO_COMMAND = 'quarkus.java.projectInfo';
   export const PROPERTY_DEFINITION_COMMAND = 'quarkus.java.propertyDefinition';
+  export const JAVA_CODELENS_COMMAND = 'quarkus.java.codeLens';
 }
 
 // VSCode Quarkus Tools commands

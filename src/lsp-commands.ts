@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { ConfigurationTarget, Disposable, commands, workspace } from 'vscode';
+import { ConfigurationTarget, Disposable, commands, workspace, Uri } from 'vscode';
 
-namespace CommandKind {
+export namespace CommandKind {
   export const COMMAND_REFERENCES = 'quarkus.command.references';
   export const COMMAND_IMPLEMENTATIONS = 'quarkus.command.implementations';
   export const COMMAND_OPEN_URI = 'quarkus.command.open.uri';
@@ -31,11 +31,12 @@ export function registerConfigurationUpdateCommand(): Disposable {
 }
 
 /**
- * Registers the `CommandKind.COMMAND_OPEN_URI` command
+ * Registers the `quarkus.command.open.uri` command.
+ * This command gives the capability to open the given uri of the command.
  */
 export function registerOpenURICommand(): Disposable {
-  return commands.registerCommand(CommandKind.COMMAND_OPEN_URI, () => {
-
+  return commands.registerCommand(CommandKind.COMMAND_OPEN_URI, (uri) => {
+    commands.executeCommand('vscode.open', Uri.parse(uri));
   });
 }
 
