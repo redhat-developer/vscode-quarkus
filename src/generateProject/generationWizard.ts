@@ -8,9 +8,9 @@ import * as fs from 'fs';
 import * as fse from 'fs-extra';
 
 import { INPUT_TITLE, BuildToolName } from '../definitions/constants';
-import { QuarkusConfig } from '../QuarkusConfig';
 import { MultiStepInput } from '../utils/multiStepUtils';
-import { OpenDialogOptions, QuickPickItem, Uri, commands, window } from 'vscode';
+import { ExtensionContext, OpenDialogOptions, QuickPickItem, Uri, commands, window } from 'vscode';
+import { QuarkusContext } from '../QuarkusContext';
 import { ProjectGenState } from '../definitions/inputState';
 import { QExtension } from '../definitions/QExtension';
 import { ZipFile } from 'yauzl';
@@ -39,7 +39,7 @@ export async function generateProjectWizard() {
       preferred: boolean;
     }
 
-    const defaultBuildTool: BuildToolName = QuarkusConfig.getDefaultBuildTool();
+    const defaultBuildTool: BuildToolName = QuarkusContext.getDefaultBuildTool();
     const quickPickItems: BuildToolPickItem[] = [
       {label: BuildToolName.Maven, preferred: BuildToolName.Maven === defaultBuildTool},
       {label: BuildToolName.Gradle, preferred: BuildToolName.Gradle === defaultBuildTool}
@@ -64,7 +64,7 @@ export async function generateProjectWizard() {
 
   async function inputGroupId(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue: string = QuarkusConfig.getDefaultGroupId();
+    const defaultInputBoxValue: string = QuarkusContext.getDefaultGroupId();
     const inputBoxValue: string = state.groupId ? state.groupId : defaultInputBoxValue;
 
     state.groupId = await input.showInputBox({
@@ -81,7 +81,7 @@ export async function generateProjectWizard() {
 
   async function inputArtifactId(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue: string = QuarkusConfig.getDefaultArtifactId();
+    const defaultInputBoxValue: string = QuarkusContext.getDefaultArtifactId();
     const inputBoxValue: string = state.artifactId ? state.artifactId : defaultInputBoxValue;
 
     state.artifactId = await input.showInputBox({
@@ -97,7 +97,7 @@ export async function generateProjectWizard() {
 
   async function inputProjectVersion(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue: string = QuarkusConfig.getDefaultProjectVersion();
+    const defaultInputBoxValue: string = QuarkusContext.getDefaultProjectVersion();
     const inputBoxValue: string = state.projectVersion ? state.projectVersion : defaultInputBoxValue;
 
     state.projectVersion = await input.showInputBox({
@@ -113,7 +113,7 @@ export async function generateProjectWizard() {
 
   async function inputPackageName(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue: string = QuarkusConfig.getDefaultPackageName();
+    const defaultInputBoxValue: string = QuarkusContext.getDefaultPackageName();
     const inputBoxValue: string = state.packageName ? state.packageName : (state.groupId ? state.groupId : defaultInputBoxValue);
 
     state.packageName = await input.showInputBox({
@@ -129,7 +129,7 @@ export async function generateProjectWizard() {
 
   async function inputResourceName(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const defaultInputBoxValue: string = QuarkusConfig.getDefaultResourceName();
+    const defaultInputBoxValue: string = QuarkusContext.getDefaultResourceName();
     const inputBoxValue: string = state.resourceName ? state.resourceName : defaultInputBoxValue;
 
     state.resourceName = await input.showInputBox({
@@ -154,7 +154,7 @@ export async function generateProjectWizard() {
     state.targetDir = await getTargetDirectory(state.artifactId);
 
     const projectGenState: ProjectGenState = state as ProjectGenState;
-    saveDefaultsToConfig(projectGenState);
+    saveDefaults(projectGenState);
     deleteFolderIfExists(getNewProjectDirectory(projectGenState));
     await downloadAndSetupProject(projectGenState);
   } catch (message) {
@@ -204,8 +204,8 @@ async function showOpenFolderDialog(customOptions: OpenDialogOptions): Promise<U
   }
 }
 
-function saveDefaultsToConfig(state: ProjectGenState): void {
-  QuarkusConfig.setDefaults({
+function saveDefaults(state: ProjectGenState): void {
+  QuarkusContext.setDefaults({
     buildTool: state.buildTool,
     groupId: state.groupId,
     artifactId: state.artifactId,

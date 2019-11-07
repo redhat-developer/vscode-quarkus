@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 import {
-  BuildToolName,
   DEFAULT_API_URL,
-  DEFAULT_BUILD_TOOL,
-  DEFAULT_GROUP_ID,
-  DEFAULT_ARTIFACT_ID,
-  DEFAULT_PROJECT_VERSION,
-  DEFAULT_PACKAGE_NAME,
-  DEFAULT_RESOURCE_NAME
 } from './definitions/constants';
 import { workspace } from 'vscode';
 
@@ -34,46 +27,11 @@ export namespace QuarkusConfig {
   export const QUARKUS_CONFIG_NAME = 'quarkus.tools';
 
   export const STARTER_API = 'quarkus.tools.starter.api';
-  export const BUILD_TOOL = 'quarkus.tools.starter.defaults.buildTool';
-  export const GROUP_ID = 'quarkus.tools.starter.defaults.groupId';
-  export const ARTIFACT_ID = 'quarkus.tools.starter.defaults.artifactId';
-  export const PROJECT_VERSION = 'quarkus.tools.starter.defaults.projectVersion';
-  export const PACKAGE_NAME = 'quarkus.tools.starter.defaults.packageName';
-  export const RESOURCE_NAME = 'quarkus.tools.starter.defaults.resourceName';
-  export const EXTENSIONS = 'quarkus.tools.starter.defaults.extensions';
   export const ALWAYS_SHOW_WELCOME_PAGE = 'quarkus.tools.alwaysShowWelcomePage';
   export const DEBUG_TERMINATE_ON_EXIT = 'quarkus.tools.debug.terminateProcessOnExit';
 
   export function getApiUrl(): string {
     return workspace.getConfiguration().get<string>(STARTER_API, DEFAULT_API_URL);
-  }
-
-  export function getDefaultBuildTool(): BuildToolName {
-    return workspace.getConfiguration().get<BuildToolName>(BUILD_TOOL, DEFAULT_BUILD_TOOL);
-  }
-
-  export function getDefaultGroupId(): string {
-    return workspace.getConfiguration().get<string>(GROUP_ID, DEFAULT_GROUP_ID);
-  }
-
-  export function getDefaultArtifactId(): string {
-    return workspace.getConfiguration().get<string>(ARTIFACT_ID, DEFAULT_ARTIFACT_ID);
-  }
-
-  export function getDefaultProjectVersion(): string {
-    return workspace.getConfiguration().get<string>(PROJECT_VERSION, DEFAULT_PROJECT_VERSION);
-  }
-
-  export function getDefaultPackageName(): string {
-    return workspace.getConfiguration().get<string>(PACKAGE_NAME, DEFAULT_PACKAGE_NAME);
-  }
-
-  export function getDefaultResourceName(): string {
-    return workspace.getConfiguration().get<string>(RESOURCE_NAME, DEFAULT_RESOURCE_NAME);
-  }
-
-  export function getDefaultExtensions(): any[] {
-    return workspace.getConfiguration().get<string[]>(EXTENSIONS, []);
   }
 
   export function getAlwaysShowWelcomePage(): boolean {
@@ -82,10 +40,6 @@ export namespace QuarkusConfig {
 
   export function getTerminateProcessOnDebugExit(): TerminateProcessConfig {
     return workspace.getConfiguration().get<TerminateProcessConfig>(DEBUG_TERMINATE_ON_EXIT);
-  }
-
-  export function setDefaults(defaults: Defaults): void {
-    workspace.getConfiguration(QUARKUS_CONFIG_NAME).update('starter.defaults', defaults, true);
   }
 
   export function setAlwaysShowWelcomePage(value: boolean): void {
@@ -99,16 +53,6 @@ export namespace QuarkusConfig {
   function removeQuarkusConfigName(configName: string) {
     return configName.replace(QUARKUS_CONFIG_NAME + '.', '');
   }
-}
-
-interface Defaults {
-  buildTool: string;
-  groupId: string;
-  artifactId: string;
-  projectVersion: string;
-  packageName: string;
-  resourceName: string;
-  extensions: string[];
 }
 
 export enum TerminateProcessConfig {
