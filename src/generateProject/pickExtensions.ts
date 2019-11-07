@@ -157,26 +157,27 @@ function getDefaultQExtensions(allExtensions: QExtension[]): QExtension[] {
 }
 
 function getItems(selected: QExtension[], unselected: QExtension[], defaults: QExtension[]): QuickPickItem[] {
-  const items: QuickPickItem[] = selected.concat(unselected).map((it) => {
+  let items: QuickPickItem[] = [];
+
+  if (selected.length === 0 && defaults.length > 0 && addLastUsed) {
+    addLastUsedOption(items, defaults);
+  } else if (selected.length > 0) {
+    items.push({
+      type: Type.Stop,
+      label: `$(tasklist) ${selected.length} extensions selected`,
+      description: '',
+      detail: 'Press <Enter>  to continue'
+    });
+  }
+
+  items = items.concat(selected.concat(unselected).map((it) => {
     return {
       type: Type.Extension,
       label: `${selected.some((other) => it.artifactId === other.artifactId) ? '$(check) ' : ''}${it.name}`,
       description: `(${it.artifactId})`,
       artifactId: it.artifactId
     };
-  });
-
-  // Push the dependencies selection stopper on top of the dependencies list
-  items.unshift({
-    type: Type.Stop,
-    label: `$(tasklist) ${selected.length} extensions selected`,
-    description: '',
-    detail: 'Press <Enter>  to continue'
-  });
-
-  if (selected.length === 0 && defaults.length > 0 && addLastUsed) {
-    addLastUsedOption(items, defaults);
-  }
+  }));
 
   return items;
 }
@@ -185,7 +186,7 @@ function addLastUsedOption(items: QuickPickItem[], prevExtensions: QExtension[])
 
   const extensionNames = prevExtensions.map((it) => it.name).join(', ');
 
-  items.unshift({
+  items.push({
     type: Type.LastUsed,
     label: `$(clock) Last used`,
     description: '',
