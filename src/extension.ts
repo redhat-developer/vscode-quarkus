@@ -19,6 +19,7 @@ import { JdtLSCommands, QuarkusLS, VSCodeCommands } from './definitions/constant
 
 import { DidChangeConfigurationNotification, Disposable, LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
 import { ExtensionContext, commands, window, workspace } from 'vscode';
+import { QuarkusContext } from './QuarkusContext';
 import { addExtensionsWizard } from './addExtensions/addExtensionsWizard';
 import { createTerminateDebugListener } from './debugging/terminateProcess';
 import { generateProjectWizard } from './generateProject/generationWizard';
@@ -48,7 +49,7 @@ interface QuarkusPropertyDefinitionParams {
 }
 
 export function activate(context: ExtensionContext) {
-
+  QuarkusContext.setContext(context);
   displayWelcomePageIfNeeded(context);
 
   terminateDebugListener = createTerminateDebugListener(disposables);

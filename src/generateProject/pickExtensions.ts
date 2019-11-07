@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { QUARKUS_GROUP_ID } from '../definitions/constants';
-import { QuarkusConfig } from '../QuarkusConfig';
+import { QuarkusContext } from '../QuarkusContext';
 import { MultiStepInput } from '../utils/multiStepUtils';
 import { QExtension } from '../definitions/QExtension';
 import { State } from '../definitions/inputState';
@@ -133,7 +133,7 @@ async function pickExtensions(
 
 function getDefaultQExtensions(allExtensions: QExtension[]): QExtension[] {
   const result: QExtension[] = [];
-  let defaultExtensionIds: any[] = QuarkusConfig.getDefaultExtensions();
+  let defaultExtensionIds: any[] = QuarkusContext.getDefaultExtensions();
 
   defaultExtensionIds = defaultExtensionIds.filter((extensionId: any) => {
     return typeof extensionId === 'string' && extensionId.length > 0;

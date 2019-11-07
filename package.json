@@ -123,59 +123,6 @@
           "description": "Quarkus API base URL",
           "scope": "window"
         },
-        "quarkus.tools.starter.defaults": {
-          "type": "object",
-          "default": {},
-          "description": "Default values for the project generation wizard.",
-          "scope": "window",
-          "properties": {
-            "buildTool": {
-              "type": "string",
-              "enum": [
-                "Maven",
-                "Gradle"
-              ],
-              "scope": "window",
-              "description": "Default build tool"
-            },
-            "groupId": {
-              "type": "string",
-              "pattern": "^[A-Za-z0-9_\\-.]+$",
-              "scope": "window",
-              "description": "Default groupId"
-            },
-            "artifactId": {
-              "type": "string",
-              "pattern": "^[A-Za-z0-9_\\-.]+$",
-              "scope": "window",
-              "description": "Default artifactId"
-            },
-            "projectVersion": {
-              "type": "string",
-              "pattern": "^[A-Za-z0-9_\\-.]+$",
-              "scope": "window",
-              "description": "Default project version"
-            },
-            "packageName": {
-              "type": "string",
-              "pattern": "^[A-Za-z0-9_\\-.]+$",
-              "scope": "window",
-              "description": "Default package name"
-            },
-            "resourceName": {
-              "type": "string",
-              "pattern": "^[A-Za-z0-9_\\-.]+$",
-              "scope": "window",
-              "description": "Default resource name"
-            },
-            "extensions": {
-              "default": [],
-              "type": "array",
-              "scope": "window",
-              "description": "Store previously selected Quarkus extensions"
-            }
-          }
-        },
         "quarkus.tools.formatting.surroundEqualsWithSpaces": {
           "type": "boolean",
           "default": false,
