@@ -17,7 +17,7 @@ import * as requirements from './languageServer/requirements';
 
 import { JdtLSCommands, QuarkusLS, VSCodeCommands } from './definitions/constants';
 
-import { DidChangeConfigurationNotification, Disposable, LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
+import { DidChangeConfigurationNotification, LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
 import { ExtensionContext, commands, window, workspace } from 'vscode';
 import { QuarkusContext } from './QuarkusContext';
 import { addExtensionsWizard } from './addExtensions/addExtensionsWizard';
@@ -27,6 +27,7 @@ import { prepareExecutable } from './languageServer/javaServerStarter';
 import { tryStartDebugging } from './debugging/startDebugging';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { QuarkusConfig } from './QuarkusConfig';
+import { registerConfigurationUpdateCommand } from './lsp-commands';
 
 let languageClient: LanguageClient;
 
@@ -53,8 +54,8 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(createTerminateDebugListener());
 
   connectToLS(context).then(() => {
-    const quarkusPojectInfoRequest = new RequestType<QuarkusProjectInfoParams, any, void, void>(QuarkusLS.PROJECT_REQUEST);
-    languageClient.onRequest(quarkusPojectInfoRequest, async (params: QuarkusProjectInfoParams) =>
+    const quarkusProjectInfoRequest = new RequestType<QuarkusProjectInfoParams, any, void, void>(QuarkusLS.PROJECT_REQUEST);
+    languageClient.onRequest(quarkusProjectInfoRequest, async (params: QuarkusProjectInfoParams) =>
        <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.PROJECT_INFO_COMMAND, params)
     );
 
@@ -70,6 +71,10 @@ export function activate(context: ExtensionContext) {
       languageClient.sendNotification("quarkus/quarkusPropertiesChanged", event);
     }));
 
+    /**
+     * Register standard LSP commands
+     */
+    context.subscriptions.push(registerConfigurationUpdateCommand());
   }).catch((error) => {
     window.showErrorMessage(error.message, error.label).then((selection) => {
       if (error.label && error.label === selection && error.openUrl) {
@@ -129,7 +134,16 @@ function connectToLS(context: ExtensionContext) {
       ],
       // wrap with key 'settings' so it can be handled same a DidChangeConfiguration
       initializationOptions: {
-        settings: getQuarkusSettings()
+        settings: getQuarkusSettings(),
+        extendedClientCapabilities: {
+          commands: {
+            commandsKind: {
+                valueSet: [
+                    "quarkus.command.configuration.update"
+                ]
+            }
+        }
+        }
       },
       synchronize: {
         // preferences starting with these will trigger didChangeConfiguration
