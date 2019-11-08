@@ -128,7 +128,7 @@ function connectToLS() {
   return requirements.resolveRequirements().then(requirements => {
     const clientOptions: LanguageClientOptions = {
       documentSelector: [
-        { scheme: 'file', pattern: '**/application.properties' }
+        { scheme: 'file', language: 'quarkus-properties' }
       ],
       // wrap with key 'settings' so it can be handled same a DidChangeConfiguration
       initializationOptions: {
