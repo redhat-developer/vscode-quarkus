@@ -20,7 +20,7 @@ import { getRunningQuarkusDevTasks } from '../utils/tasksUtils';
 import { BuildSupport } from '../buildSupport/BuildSupport';
 import { getBuildSupport } from '../buildSupport/BuildSupportUtils';
 
-export function createTerminateDebugListener(disposables: Disposable[]): Disposable {
+export function createTerminateDebugListener(): Disposable {
 
   return debug.onDidTerminateDebugSession(async (debugSession: DebugSession) => {
 
@@ -41,7 +41,7 @@ export function createTerminateDebugListener(disposables: Disposable[]): Disposa
       quarkusDevTaskExe.terminate();
     }
 
-  }, null, disposables);
+  });
 }
 
 function checkHasPreLaunchTask(debugSession: DebugSession): void {
