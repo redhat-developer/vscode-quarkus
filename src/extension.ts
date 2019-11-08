@@ -28,8 +28,6 @@ import { tryStartDebugging } from './debugging/startDebugging';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { QuarkusConfig } from './QuarkusConfig';
 
-const disposables = [];
-let terminateDebugListener: Disposable;
 let languageClient: LanguageClient;
 
 interface QuarkusProjectInfoParams {
@@ -52,15 +50,15 @@ export function activate(context: ExtensionContext) {
   QuarkusContext.setContext(context);
   displayWelcomePageIfNeeded(context);
 
-  terminateDebugListener = createTerminateDebugListener(disposables);
+  context.subscriptions.push(createTerminateDebugListener());
 
-  connectToLS().then(() => {
+  connectToLS(context).then(() => {
     const quarkusPojectInfoRequest = new RequestType<QuarkusProjectInfoParams, any, void, void>(QuarkusLS.PROJECT_REQUEST);
     languageClient.onRequest(quarkusPojectInfoRequest, async (params: QuarkusProjectInfoParams) =>
        <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.PROJECT_INFO_COMMAND, params)
     );
 
-	const quarkusPropertyDefinitionRequest = new RequestType<QuarkusPropertyDefinitionParams, any, void, void>(QuarkusLS.PROPERTY_DEFINITION_REQUEST);
+    const quarkusPropertyDefinitionRequest = new RequestType<QuarkusPropertyDefinitionParams, any, void, void>(QuarkusLS.PROPERTY_DEFINITION_REQUEST);
     languageClient.onRequest(quarkusPropertyDefinitionRequest, async (params: QuarkusPropertyDefinitionParams) =>
        <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.PROPERTY_DEFINITION_COMMAND, params)
     );
@@ -84,8 +82,6 @@ export function activate(context: ExtensionContext) {
 }
 
 export function deactivate() {
-  terminateDebugListener.dispose();
-  disposables.forEach(disposable => disposable.dispose());
 }
 
 function displayWelcomePageIfNeeded(context: ExtensionContext): void {
@@ -125,7 +121,7 @@ function registerVSCodeCommands(context: ExtensionContext) {
   }));
 }
 
-function connectToLS() {
+function connectToLS(context: ExtensionContext) {
   return requirements.resolveRequirements().then(requirements => {
     const clientOptions: LanguageClientOptions = {
       documentSelector: [
@@ -150,7 +146,7 @@ function connectToLS() {
 
     const serverOptions = prepareExecutable(requirements);
     languageClient = new LanguageClient('quarkus.tools', 'Quarkus Tools', serverOptions, clientOptions);
-    disposables.push(languageClient.start());
+    context.subscriptions.push(languageClient.start());
     return languageClient.onReady();
   });
 
