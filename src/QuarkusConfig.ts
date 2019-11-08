@@ -16,7 +16,7 @@
 import {
   DEFAULT_API_URL,
 } from './definitions/constants';
-import { workspace } from 'vscode';
+import { ConfigurationTarget, workspace } from 'vscode';
 
 /**
  * This class manages the extension's interaction with
@@ -43,15 +43,15 @@ export namespace QuarkusConfig {
   }
 
   export function setAlwaysShowWelcomePage(value: boolean): void {
-    workspace.getConfiguration(QUARKUS_CONFIG_NAME).update(removeQuarkusConfigName(ALWAYS_SHOW_WELCOME_PAGE), value, true);
+    saveToQuarkusConfig(ALWAYS_SHOW_WELCOME_PAGE, value);
   }
 
   export function setTerminateProcessOnDebugExit(value: string): void {
-    workspace.getConfiguration(QUARKUS_CONFIG_NAME).update(removeQuarkusConfigName(DEBUG_TERMINATE_ON_EXIT), value, true);
+    saveToQuarkusConfig(DEBUG_TERMINATE_ON_EXIT, value);
   }
 
-  function removeQuarkusConfigName(configName: string) {
-    return configName.replace(QUARKUS_CONFIG_NAME + '.', '');
+  export function saveToQuarkusConfig<T>(configName: string, value: T) {
+    workspace.getConfiguration().update(configName, value, ConfigurationTarget.Global);
   }
 }
 
