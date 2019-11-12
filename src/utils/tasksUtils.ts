@@ -71,5 +71,5 @@ function isTaskFromWorkspace(workspaceFolder: WorkspaceFolder, task: Task): bool
   }
 
   const taskWorkspace: WorkspaceFolder = task.scope as WorkspaceFolder;
-  return taskWorkspace.uri === workspaceFolder.uri;
+  return taskWorkspace.uri.toString() === workspaceFolder.uri.toString();
 }
