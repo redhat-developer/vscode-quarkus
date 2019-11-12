@@ -35,6 +35,7 @@
     "onCommand:quarkusTools.addExtension",
     "onCommand:quarkusTools.debugQuarkusProject",
     "onCommand:quarkusTools.welcome",
+    "workspaceContains:**/src/main/resources/application.properties",
     "onLanguage:quarkus-properties"
   ],
   "main": "./dist/extension",
