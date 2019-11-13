@@ -20,10 +20,13 @@ import { QExtension } from '../definitions/QExtension';
 import { State } from '../definitions/inputState';
 import { getQExtensions } from '../utils/requestUtils';
 
-enum Type {
-  Extension,
-  Stop,
-  LastUsed
+/**
+ * Options for the 'pick extensions' quick input
+ */
+interface PickExtensionsOptions {
+  showLastUsed: boolean; // Set to true to show the 'last used' option
+  allowZeroExtensions: boolean; // Set to true to allow user to continue with zero extensions
+  step?: number; // Optional: Specify an explicit step number if desired
 }
 
 interface QuickPickItem {
@@ -34,35 +37,16 @@ interface QuickPickItem {
   artifactId?: string; // only for extensions
 }
 
-/**
- * Determines if the "Last Used" item should appear in the QuickPick menu
- */
-let addLastUsed: boolean;
-
-export async function pickExtensionsWithoutLastUsed(
-  input: MultiStepInput,
-  state: Partial<State>,
-  step?: number,
-  next?: (input: MultiStepInput, state: Partial<State>) => any) {
-
-  addLastUsed = false;
-  await pickExtensions(input, state, step, next);
+enum Type {
+  Extension,
+  Stop,
+  LastUsed
 }
 
-export async function pickExtensionsWithLastUsed(
+export async function pickExtensions(
   input: MultiStepInput,
   state: Partial<State>,
-  step?: number,
-  next?: (input: MultiStepInput, state: Partial<State>) => any) {
-
-  addLastUsed = true;
-  await pickExtensions(input, state, step, next);
-}
-
-async function pickExtensions(
-  input: MultiStepInput,
-  state: Partial<State>,
-  step?: number,
+  options: PickExtensionsOptions,
   next?: (input: MultiStepInput, state: Partial<State>) => any) {
 
   let allExtensions: QExtension[];
@@ -81,11 +65,11 @@ async function pickExtensions(
 
   do {
 
-    const quickPickItems: QuickPickItem[] = getItems(selectedExtensions, unselectedExtensions, defaultExtensions);
+    const quickPickItems: QuickPickItem[] = getItems(selectedExtensions, unselectedExtensions, defaultExtensions, options);
 
     pick = await input.showQuickPick({
       title: 'Quarkus Tools',
-      step: step ? step : input.getStepNumber(),
+      step: options.step ? options.step : input.getStepNumber(),
       totalSteps: state.totalSteps,
       placeholder: 'Pick extensions',
       items: quickPickItems,
@@ -156,18 +140,15 @@ function getDefaultQExtensions(allExtensions: QExtension[]): QExtension[] {
   return result;
 }
 
-function getItems(selected: QExtension[], unselected: QExtension[], defaults: QExtension[]): QuickPickItem[] {
+function getItems(selected: QExtension[], unselected: QExtension[], defaults: QExtension[], options: PickExtensionsOptions): QuickPickItem[] {
   let items: QuickPickItem[] = [];
 
-  if (selected.length === 0 && defaults.length > 0 && addLastUsed) {
+  if (selected.length === 0 && defaults.length > 0 && options.showLastUsed) {
     addLastUsedOption(items, defaults);
-  } else if (selected.length > 0) {
-    items.push({
-      type: Type.Stop,
-      label: `$(tasklist) ${selected.length} extensions selected`,
-      description: '',
-      detail: 'Press <Enter>  to continue'
-    });
+  }
+
+  if (options.allowZeroExtensions || selected.length > 0) {
+    addContinueOption(items, selected.length);
   }
 
   items = items.concat(selected.concat(unselected).map((it) => {
@@ -180,6 +161,15 @@ function getItems(selected: QExtension[], unselected: QExtension[], defaults: QE
   }));
 
   return items;
+}
+
+function addContinueOption(items: QuickPickItem[], numOfSelected: number) {
+  items.push({
+    type: Type.Stop,
+    label: `$(tasklist) ${numOfSelected} extensions selected`,
+    description: '',
+    detail: 'Press <Enter>  to continue'
+  });
 }
 
 function addLastUsedOption(items: QuickPickItem[], prevExtensions: QExtension[]) {
