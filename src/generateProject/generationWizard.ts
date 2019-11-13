@@ -15,7 +15,7 @@ import { ProjectGenState } from '../definitions/inputState';
 import { QExtension } from '../definitions/QExtension';
 import { ZipFile } from 'yauzl';
 import { downloadProject } from '../utils/requestUtils';
-import { pickExtensionsWithLastUsed } from './pickExtensions';
+import { pickExtensions } from './pickExtensions';
 import { validateArtifactId, validateGroupId, validatePackageName, validateResourceName, validateVersion } from './validateInput';
 
 /**
@@ -140,7 +140,7 @@ export async function generateProjectWizard() {
       prompt: 'Your resource name',
       validate: validateResourceName
     });
-    return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensionsWithLastUsed(input, state);
+    return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensions(input, state, { showLastUsed: true, allowZeroExtensions: true });
   }
 
   await collectInputs(state);

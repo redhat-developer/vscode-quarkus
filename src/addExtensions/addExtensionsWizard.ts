@@ -21,7 +21,7 @@ import { QExtension } from "../definitions/QExtension";
 import { QuickPickItem, Terminal, Uri, WorkspaceFolder, window, workspace } from "vscode";
 import { ITerminalOptions, terminalCommandRunner } from "../terminal/terminalCommandRunner";
 import { getBuildSupport, searchBuildFile } from '../buildSupport/BuildSupportUtils';
-import { pickExtensionsWithoutLastUsed } from "../generateProject/pickExtensions";
+import { pickExtensions } from "../generateProject/pickExtensions";
 import { TerminalCommand } from "../buildSupport/BuildSupport";
 
 export async function addExtensionsWizard() {
@@ -63,7 +63,7 @@ export async function addExtensionsWizard() {
 
     state.workspaceFolder = workspace.getWorkspaceFolder(state.buildFilePath);
     state.buildSupport = await getBuildSupport(state.workspaceFolder);
-    return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensionsWithoutLastUsed(input, state, currentStep);
+    return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensions(input, state, { showLastUsed: false, allowZeroExtensions: false, step: currentStep });
   }
 
   await collectInputs(state);
