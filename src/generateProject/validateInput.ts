@@ -24,7 +24,7 @@ export async function validateGroupId(userInput: string): Promise<string | undef
     } else if (!/[a-zA-Z\\d_$]$/.test(userInput)) {
       return 'Invalid groupId: A valid groupId must end with a character from A to z, a number, or one of the following symbols: _$';
     }
-    return 'Invalid groupId: A valid groupId can only contain characters from A to z, and the following symbols: ._$';
+    return 'Invalid groupId: A valid groupId can only contain characters from A to z, numbers, and the following symbols: ._$';
   }
   return undefined;
 }
@@ -56,7 +56,7 @@ export async function validatePackageName(userInput: string): Promise<string | u
     } else if (!/[a-zA-Z\\d_$]$/.test(userInput)) {
       return 'Invalid package name: A valid package name must end with characters from A to z, a number, or the following symbols: _$';
     }
-    return 'Invalid package name: A valid package name can only contain characters from A to z and the following symbols: ._$';
+    return 'Invalid package name: A valid package name can only contain characters from A to z, numbers, and the following symbols: ._$';
   }
   return undefined;
 }

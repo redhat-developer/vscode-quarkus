@@ -24,12 +24,19 @@
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
+				"--extensionTestsPath=${workspaceFolder}/out/test/vscodeTest/suite/index"
 			],
 			"outFiles": [
-				"${workspaceFolder}/out/test/**/*.js"
+				"${workspaceFolder}/out/test/vscodeTest/**/*.js"
 			],
 			"preLaunchTask": "npm: watch"
-		}
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "VS Code UI Extension Tests",
+      "program": "${workspaceFolder}/out/test/vscodeUiTest/index.js",
+      "preLaunchTask": "npm: test-compile"
+    }
 	]
 }

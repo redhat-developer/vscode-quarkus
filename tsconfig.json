@@ -12,7 +12,8 @@
 	},
 	"exclude": [
 		"node_modules",
-		"server",
+    "server",
+    "test-resources",
 		".vscode-test"
 	]
 }

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { VSCodeCommands } from '../../definitions/constants';
+import { VSCodeCommands } from '../../../definitions/constants';
 
 import { expect } from 'chai';
 import { describe, it } from 'mocha';

@@ -2,13 +2,16 @@ sudo: false
 
 language: node_js
 node_js:
-- "node"
+- "lts/*"
 
 matrix:
   include:
     - os: linux
-      dist: trusty
+      dist: xenial
     - os: osx
+
+services:
+  - xvfb
 
 branches:
   only:
@@ -16,9 +19,10 @@ branches:
 
 before_install:
 - if [ $TRAVIS_OS_NAME == "linux" ]; then
-      export CXX="g++-4.9" CC="gcc-4.9" DISPLAY=:99.0;
-      sh -e /etc/init.d/xvfb start;
-      sleep 3;
+      sudo apt-get -y install libxtst-dev;
+  fi
+- if [ $TRAVIS_OS_NAME == "osx" ]; then
+      nvm install 12.12;
   fi
 - npm install -g vsce
 
@@ -29,4 +33,4 @@ install:
 
 script:
   - npm run tslint
-  - npm run test --silent
+  - npm run test-all --silent

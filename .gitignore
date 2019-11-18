@@ -1,4 +1,5 @@
 out
+test-resources
 dist
 server/**
 jars/**
