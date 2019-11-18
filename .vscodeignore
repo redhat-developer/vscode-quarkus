@@ -8,3 +8,4 @@ out/
 images/
 tsconfig.json
 webpack.config.js
+test-resources/**

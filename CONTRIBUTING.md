@@ -195,7 +195,6 @@ contains the MicroProfile jdt.ls extension and MicroProfile language server
 ```
 YOUR_FOLDER/
          ├──── vscode-quarkus/
-         │      
          ├──── quarkus-ls/
 ```  
 **Step 3.** Navigate into `vscode-quarkus/`
@@ -228,7 +227,48 @@ In addition to `npm run build`, there are two more build scripts:
 "Launch Extension (vscode-quarkus)" at the top left.
 ![](images/runExtension.png)
 
-## Debugging  
+### Testing vscode-quarkus
+There are two types of tests written for vscode-quarkus:
+the [integration tests](https://code.visualstudio.com/api/working-with-extensions/testing-extension) and the UI tests.
+
+Run integration tests: `npm test`
+
+Run UI tests: `npm run test-ui`
+
+Run both (integration tests first, UI tests second): `npm run test-all`
+
+These tests are located located in the `vscodeTest/` and `vscodeUiTest/` directories
+respectively:
+```
+vscode-quarkus/
+         ├──── src/
+                ├──── test/
+                        ├──── vscodeTest/
+                        ├──── vscodeUiTest/
+```  
+
+To debug the integration tests, open the VS Code Debugging tab and
+select the "Extension Tests (vscode-quarkus)" at the top left:
+![](images/runDebuggerVSCodeTests.png)  
+
+To debug the UI tests, open the VS Code Debugging tab and select
+the "VS Code UI Extension Tests (vscode-quarkus)" at the top left:
+![](images/runDebuggerUiTests.png)  
+
+When running the UI tests, it would be best to disable all other VS Code extensions
+so that they don't interfere during the testing. Also, please be sure to not do anything else with your machine. Its very important to not disturb your machine when running the UI tests, or
+else the test functions will not run properly.
+
+**Note for running UI tests of macOS:**
+Due to an issue for an upstream UI testing library:
+[nut-tree/nut.js#98 (issue)](https://github.com/nut-tree/nut.js/issues/98#issuecomment-571494625), UI tests on macOS work as long as
+Node version 12.12 or lower is used.
+
+Additionally, you may also need to allow your terminal application to control your
+computer like so:
+![](images/macPermissions.png)
+
+## Debugging
 ### Debugging the MicroProfile language server:
 In an IDE of your choice, set the debugger configuration to connect
 to localhost, port 1064.
