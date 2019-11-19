@@ -24,6 +24,10 @@ export function createTerminateDebugListener(): Disposable {
 
   return debug.onDidTerminateDebugSession(async (debugSession: DebugSession) => {
 
+    if (QuarkusConfig.getTerminateProcessOnDebugExit() === TerminateProcessConfig.Ask) {
+      await new Promise((resolve) => setTimeout(resolve, 400));
+    }
+
     let quarkusDevTaskExe: TaskExecution;
 
     try {
