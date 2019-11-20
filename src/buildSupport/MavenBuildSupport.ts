@@ -15,8 +15,8 @@ export class MavenBuildSupport extends BuildSupport {
     });
   }
 
-  public async getQuarkusAddExtensionsCommand(workspaceFolder: WorkspaceFolder, artifactIds: string[], options?: TerminalCommandOptions): Promise<TerminalCommand> {
-    const addExtensions: string = `quarkus:add-extension -Dextensions="${artifactIds.join(',')}"`;
+  public async getQuarkusAddExtensionsCommand(workspaceFolder: WorkspaceFolder, extensionGAVs: string[], options?: TerminalCommandOptions): Promise<TerminalCommand> {
+    const addExtensions: string = `quarkus:add-extension -Dextensions="${extensionGAVs.join(',')}"`;
     const pomPath: string = options.buildFilePath ? `-f "${await formattedPathForTerminal(options.buildFilePath)}"` : '';
     const mvn: string = await this.getCommand(workspaceFolder, options && options.buildFilePath, { windows: options && options.windows });
     const command: string = [mvn, addExtensions, pomPath].join(' ');

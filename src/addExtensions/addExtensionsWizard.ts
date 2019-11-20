@@ -77,10 +77,10 @@ export async function addExtensionsWizard() {
 }
 
 async function executeAddExtensionsCommand(state: AddExtensionsState): Promise<Terminal> {
-  const artifactIds: string[] = getArtifactIds(state.extensions);
+  const extensionGAVs: string[] = getExtensionGAVs(state.extensions);
   let terminalOptions: ITerminalOptions = {} as ITerminalOptions;
 
-  const terminalCommand: TerminalCommand = await state.buildSupport.getQuarkusAddExtensionsCommand(state.workspaceFolder, artifactIds, { buildFilePath: state.buildFilePath.fsPath });
+  const terminalCommand: TerminalCommand = await state.buildSupport.getQuarkusAddExtensionsCommand(state.workspaceFolder, extensionGAVs, { buildFilePath: state.buildFilePath.fsPath });
   if (terminalCommand.cwd) {
     terminalOptions.cwd = path.dirname(terminalCommand.cwd);
   }
@@ -94,6 +94,8 @@ async function executeAddExtensionsCommand(state: AddExtensionsState): Promise<T
   return await terminalCommandRunner.runInTerminal(terminalCommand.command, terminalOptions);
 }
 
-function getArtifactIds(extensions: QExtension[]): string[] {
-  return extensions.map((it) => it.artifactId);
+function getExtensionGAVs(extensions: QExtension[]): string[] {
+  return extensions.map((it) => {
+    return it.getGroupIdArtifactIdString();
+  });
 }
