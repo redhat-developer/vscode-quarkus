@@ -16,8 +16,8 @@ export class GradleBuildSupport extends BuildSupport {
     });
   }
 
-  public async getQuarkusAddExtensionsCommand(workspaceFolder: WorkspaceFolder, artifactIds: string[], options?: TerminalCommandOptions): Promise<TerminalCommand> {
-    const addExtensions: string = `addExtension --extensions="${artifactIds.join(',')}"`;
+  public async getQuarkusAddExtensionsCommand(workspaceFolder: WorkspaceFolder, extensionGAVs: string[], options?: TerminalCommandOptions): Promise<TerminalCommand> {
+    const addExtensions: string = `addExtension --extensions="${extensionGAVs.join(',')}"`;
     const buildGradlePath: string = `-b "${await formattedPathForTerminal(options.buildFilePath)}"`;
     const gradle: string = await this.getCommand(workspaceFolder, options && options.buildFilePath, { windows: options && options.windows });
     const command = [gradle, addExtensions, buildGradlePath].join(' ');

@@ -62,12 +62,12 @@ export abstract class BuildSupport {
   }
 
   /**
-   * Returns a command that adds all extensions in `artifactIds`
+   * Returns a command that adds all extensions listed in `extensionGAVs`
    * @param workspaceFolder
-   * @param artifactIds
+   * @param extensionGAVs
    * @param options
    */
-  public abstract getQuarkusAddExtensionsCommand(workspaceFolder: WorkspaceFolder, artifactIds: string[], options?: TerminalCommandOptions): Promise<TerminalCommand>;
+  public abstract getQuarkusAddExtensionsCommand(workspaceFolder: WorkspaceFolder, extensionGAVs: string[], options?: TerminalCommandOptions): Promise<TerminalCommand>;
 
   /**
    * Returns a command that runs the Quarkus application using 'Quarkus Dev'
