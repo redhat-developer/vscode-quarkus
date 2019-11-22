@@ -15,9 +15,7 @@ The following commands are supported for both Maven and Gradle Quarkus projects:
 
   * `Quarkus: Generate a Quarkus project`: Generate a Quarkus project, based on https://code.quarkus.io/
   * `Quarkus: Add extensions to current project`: Add Quarkus extensions to currently opened Quarkus project
-  * `Quarkus: Debug current Quarkus project`: Launches the Maven `quarkus:dev` plugin or the Gradle `quarkusDev` command and automatically attaches a debugger
-
-  
+  * `Quarkus: Debug current Quarkus project`: Launches the Maven `quarkus:dev` plugin or the Gradle `quarkusDev` command and automatically attaches a debugger  
 
 ## Quarkus `application.properties` Features
   * Completion support for Quarkus properties
@@ -38,7 +36,6 @@ When editing `application.properties` files, you have access to:
 
   * **qds** - Configure a Quarkus datasource
   * **qj** - Configure a Jaeger tracer
-
 
 ## Requirements
 
@@ -66,7 +63,13 @@ Since 1.1.0:
 * `quarkus.tools.formatting.surroundEqualsWithSpaces` : Insert spaces around the equals sign when formatting the application.properties file. Default is `false`.
 * `quarkus.tools.validation.required.severity` : Validation severity for required Quarkus properties.
 Default is `none`.
-        
+
+## Articles
+
+ * [Quarkus developer joy for VS Code](https://quarkus.io/blog/quarkus-developer-joy-for-vs-code/)
+ * [Quarkus Tools for Visual Studio Code - 1.1.0 release](https://quarkus.io/blog/vscode-quarkus-1.1.0/)
+ * [Quarkus Tools for Visual Studio Code - 1.2.0 release](https://quarkus.io/blog/vscode-quarkus-1.2.0/)
+ 
 ## Contributing
 
 This is an open source project open to anyone. Contributions are extremely welcome!
