@@ -18,7 +18,7 @@ import * as requirements from './languageServer/requirements';
 import { JdtLSCommands, QuarkusLS, VSCodeCommands } from './definitions/constants';
 
 import { DidChangeConfigurationNotification, LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
-import { ExtensionContext, commands, window, workspace } from 'vscode';
+import { ExtensionContext, commands, window, workspace, Uri } from 'vscode';
 import { QuarkusContext } from './QuarkusContext';
 import { addExtensionsWizard } from './addExtensions/addExtensionsWizard';
 import { createTerminateDebugListener } from './debugging/terminateProcess';
@@ -35,6 +35,11 @@ interface QuarkusProjectInfoParams {
   uri: string;
   documentationFormat: string[];
   scope: number;
+}
+
+interface QuarkusJavaHoverParams {
+  uri: string;
+  position: any;
 }
 
 interface QuarkusPropertiesChangeEvent {
@@ -68,9 +73,14 @@ export function activate(context: ExtensionContext) {
        <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.PROPERTY_DEFINITION_COMMAND, params)
     );
 
-	const quarkusJavaCodeLensRequest = new RequestType<QuarkusJavaCodeLensParams, any, void, void>(QuarkusLS.JAVA_CODELENS_REQUEST);
+    const quarkusJavaCodeLensRequest = new RequestType<QuarkusJavaCodeLensParams, any, void, void>(QuarkusLS.JAVA_CODELENS_REQUEST);
     languageClient.onRequest(quarkusJavaCodeLensRequest, async (params: QuarkusJavaCodeLensParams) =>
        <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.JAVA_CODELENS_COMMAND, params)
+    );
+
+    const quarkusJavaHoverRequest = new RequestType<QuarkusJavaHoverParams, any, void, void>(QuarkusLS.JAVA_HOVER_REQUEST);
+    languageClient.onRequest(quarkusJavaHoverRequest, async (params: QuarkusJavaHoverParams) =>
+      <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.JAVA_HOVER_COMMAND, params)
     );
 
     /**
