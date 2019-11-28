@@ -9,13 +9,13 @@ import * as fse from 'fs-extra';
 
 import { INPUT_TITLE, BuildToolName } from '../definitions/constants';
 import { MultiStepInput } from '../utils/multiStepUtils';
-import { ExtensionContext, OpenDialogOptions, QuickPickItem, Uri, commands, window } from 'vscode';
+import { OpenDialogOptions, QuickPickItem, Uri, commands, window } from 'vscode';
 import { QuarkusContext } from '../QuarkusContext';
 import { ProjectGenState } from '../definitions/inputState';
 import { QExtension } from '../definitions/QExtension';
 import { ZipFile } from 'yauzl';
 import { downloadProject } from '../utils/requestUtils';
-import { pickExtensions } from './pickExtensions';
+import { ExtensionsPicker } from './ExtensionsPicker';
 import { validateArtifactId, validateGroupId, validatePackageName, validateResourceName, validateVersion } from './validateInput';
 
 /**
@@ -140,7 +140,7 @@ export async function generateProjectWizard() {
       prompt: 'Your resource name',
       validate: validateResourceName
     });
-    return (input: MultiStepInput) => pickExtensions(input, state, { showLastUsed: true, allowZeroExtensions: true });
+    return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(input, state, { showLastUsed: true, allowZeroExtensions: true });
   }
 
   try {

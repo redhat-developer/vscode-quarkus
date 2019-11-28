@@ -21,12 +21,16 @@ import { QUARKUS_GROUP_ID } from './constants';
 */
 export class QExtension {
   name: string;
+  category: string;
+  description: string;
   labels: string[];
   groupId: string;
   artifactId: string;
 
-  constructor(name: string, labels: string[], groupId: string, artifactId: string) {
+  constructor(name: string, category: string, description: string, labels: string[], groupId: string, artifactId: string) {
     this.name = name;
+    this.category = category;
+    this.description = description;
     this.labels = labels;
     this.groupId = groupId;
     this.artifactId = artifactId;
@@ -54,7 +58,8 @@ export function convertToQExtension(extension: APIExtension): QExtension {
     groupId = QUARKUS_GROUP_ID;
     artifactId = extension.id;
   }
-  return new QExtension(extension.name, extension.labels, groupId, artifactId);
+  return new QExtension(extension.name, extension.category, extension.description,
+      extension.labels, groupId, artifactId);
 }
 
 /**
@@ -67,6 +72,6 @@ export interface APIExtension {
   labels: string[];
   description: string;
   shortName: string;
-  category?: string;
+  category: string;
   order: Number;
 }
