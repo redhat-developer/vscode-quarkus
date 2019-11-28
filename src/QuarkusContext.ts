@@ -24,6 +24,11 @@ export namespace QuarkusContext {
     context = extensionContext;
   }
 
+  export function getExtensionContext(): ExtensionContext {
+    checkContext();
+    return context;
+  }
+
   export function getDefaultBuildTool(): BuildToolName {
     checkContext();
     return context.globalState.get<BuildToolName>(BUILD_TOOL, DEFAULT_BUILD_TOOL);

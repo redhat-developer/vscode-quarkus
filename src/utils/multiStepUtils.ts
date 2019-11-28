@@ -7,7 +7,7 @@
 // Reference:
 // https://github.com/microsoft/vscode-extension-samples/blob/master/quickinput-sample/src/multiStepInput.ts
 // -------------------------------------------------------
-import { QuickPickItem, window, Disposable, InputBox, QuickInputButton, QuickInput, QuickInputButtons, QuickPick } from 'vscode';
+import { QuickPickItem, window, Disposable, InputBox, QuickInputButton, QuickInput, QuickInputButtons, QuickPick, Uri, workspace, ConfigurationChangeEvent } from 'vscode';
 
 class InputFlowAction {
   private constructor() { }
@@ -17,24 +17,35 @@ class InputFlowAction {
 
 type InputStep = (input: MultiStepInput) => Thenable<InputStep | void>;
 
-interface QuickPickParameters<T extends QuickPickItem> {
+export interface QuickPickParameters<T extends QuickPickItem> {
   title: string;
   step?: number;
   totalSteps?: number;
   items: T[];
   activeItem?: T;
   placeholder?: string;
-  buttons?: QuickInputButton[];
+  buttons?: QuickInputButtonWithCallback[];
+  configChanges?: ConfigChangeCallback[];
 }
 
-interface InputBoxParameters {
+export interface InputBoxParameters {
   title: string;
   step?: number;
   totalSteps?: number;
   value: string;
   prompt: string;
   validate: (value: string) => Promise<string | undefined>;
-  buttons?: QuickInputButton[];
+  buttons?: QuickInputButtonWithCallback[];
+  configChanges?: ConfigChangeCallback[];
+}
+
+export interface QuickInputButtonWithCallback extends QuickInputButton {
+  callback: () => any;
+}
+
+export interface ConfigChangeCallback {
+  configName: string;
+  callback: () => any;
 }
 
 export class MultiStepInput {
@@ -49,6 +60,10 @@ export class MultiStepInput {
 
   public getStepNumber(): number {
     return this.steps.length;
+  }
+
+  public ignoreStep(): void {
+    this.steps.pop();
   }
 
   private async stepThrough(start: InputStep) {
@@ -77,7 +92,7 @@ export class MultiStepInput {
     }
   }
 
-  async showQuickPick<T extends QuickPickItem, P extends QuickPickParameters<T>>({ title, step, totalSteps, items, activeItem, placeholder, buttons }: P) {
+  async showQuickPick<T extends QuickPickItem, P extends QuickPickParameters<T>>({ title, step, totalSteps, items, activeItem, placeholder, buttons, configChanges}: P) {
     const disposables: Disposable[] = [];
     const displaySteps: boolean = typeof step !== 'undefined' && typeof totalSteps !== 'undefined';
 
@@ -96,31 +111,55 @@ export class MultiStepInput {
       if (activeItem) {
         input.activeItems = [activeItem];
       }
+
       input.buttons = [
         ...(this.steps.length > 1 ? [QuickInputButtons.Back] : []),
         ...(buttons || [])
       ];
       input.ignoreFocusOut = true;
       disposables.push(
-        input.onDidTriggerButton(item => {
-          if (item === QuickInputButtons.Back) {
+        input.onDidTriggerButton((item: QuickInputButton) => {
+          disposables.forEach(d => d.dispose());
+          if (buttons && buttons.includes(item as QuickInputButtonWithCallback)) {
+            (item as QuickInputButtonWithCallback).callback();
+            resolve();
+          } else if (item === QuickInputButtons.Back) {
             reject(InputFlowAction.back);
           } else {
             resolve(<any>item);
           }
         }),
-        input.onDidChangeSelection(items => resolve(items[0])),
+        input.onDidChangeSelection(items => {
+          disposables.forEach(d => d.dispose());
+          resolve(items[0]);
+        }),
         input.onDidHide(() => {
           input.dispose();
           disposables.forEach(d => d.dispose());
         })
       );
+
+      if (configChanges) {
+        disposables.push(workspace.onDidChangeConfiguration((event: ConfigurationChangeEvent) => {
+          const configNames: string[] = configChanges.map((configChange: ConfigChangeCallback) => configChange.configName);
+          const configName: string|undefined = configNames.find((name: string) => event.affectsConfiguration(name));
+          if (!configName) return;
+
+          configChanges.forEach((configChange: ConfigChangeCallback) => {
+            if (configChange.configName === configName) {
+              configChange.callback();
+              resolve();
+            }
+          });
+        }));
+      }
+
       this.current = input;
       this.current.show();
     });
   }
 
-  async showInputBox<P extends InputBoxParameters>({ title, step, totalSteps, value, prompt, validate, buttons }: P) {
+  async showInputBox<P extends InputBoxParameters>({ title, step, totalSteps, value, prompt, validate, buttons, configChanges }: P) {
     const disposables: Disposable[] = [];
     const displaySteps: boolean = typeof step !== 'undefined' && typeof totalSteps !== 'undefined';
 
@@ -134,6 +173,7 @@ export class MultiStepInput {
       }
       input.value = value;
       input.prompt = prompt;
+
       input.buttons = [
         ...(this.steps.length > 1 ? [QuickInputButtons.Back] : []),
         ...(buttons || [])
@@ -144,8 +184,12 @@ export class MultiStepInput {
         input.validationMessage = validationMessage;
       }
       disposables.push(
-        input.onDidTriggerButton(item => {
-          if (item === QuickInputButtons.Back) {
+        input.onDidTriggerButton((item: QuickInputButton) => {
+          disposables.forEach(d => d.dispose());
+          if (buttons && buttons.includes(item as QuickInputButtonWithCallback)) {
+            (item as QuickInputButtonWithCallback).callback();
+            resolve();
+          } else if (item === QuickInputButtons.Back) {
             reject(InputFlowAction.back);
           } else {
             resolve(<any>item);
@@ -174,6 +218,22 @@ export class MultiStepInput {
           disposables.forEach(d => d.dispose());
         })
       );
+
+      if (configChanges) {
+        disposables.push(workspace.onDidChangeConfiguration((event: ConfigurationChangeEvent) => {
+          const configNames: string[] = configChanges.map((configChange: ConfigChangeCallback) => configChange.configName);
+          const configName: string|undefined = configNames.find((name: string) => event.affectsConfiguration(name));
+          if (!configName) return;
+
+          configChanges.forEach((configChange: ConfigChangeCallback) => {
+            if (configChange.configName === configName) {
+              configChange.callback();
+              resolve();
+            }
+          });
+        }));
+      }
+
       this.current = input;
       this.current.show();
     });

@@ -125,6 +125,12 @@
           "description": "Quarkus API base URL",
           "scope": "window"
         },
+        "quarkus.tools.starter.showExtensionDescriptions": {
+          "type": "boolean",
+          "default": true,
+          "description": "Determines whether to show the Quarkus extension descriptions when selecting Quarkus extensions.",
+          "scope": "window"
+        },
         "quarkus.tools.formatting.surroundEqualsWithSpaces": {
           "type": "boolean",
           "default": false,

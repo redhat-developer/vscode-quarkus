@@ -21,7 +21,7 @@ import { QExtension } from "../definitions/QExtension";
 import { QuickPickItem, Terminal, Uri, WorkspaceFolder, window, workspace } from "vscode";
 import { ITerminalOptions, terminalCommandRunner } from "../terminal/terminalCommandRunner";
 import { getBuildSupport, searchBuildFile } from '../buildSupport/BuildSupportUtils';
-import { pickExtensions } from "../generateProject/pickExtensions";
+import { ExtensionsPicker } from "../generateProject/ExtensionsPicker";
 import { TerminalCommand } from "../buildSupport/BuildSupport";
 
 export async function addExtensionsWizard() {
@@ -42,6 +42,7 @@ export async function addExtensionsWizard() {
     } else if (buildFileList.length === 1) {
       state.buildFilePath = buildFileList[0];
       state.totalSteps = 1;
+      input.ignoreStep();
     } else {
       // show quick pick in this case
 
@@ -62,7 +63,7 @@ export async function addExtensionsWizard() {
 
     state.workspaceFolder = workspace.getWorkspaceFolder(state.buildFilePath);
     state.buildSupport = await getBuildSupport(state.workspaceFolder);
-    return (input: MultiStepInput) => pickExtensions(input, state, { showLastUsed: false, allowZeroExtensions: false, step: currentStep });
+    return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(input, state, { showLastUsed: false, allowZeroExtensions: false, step: currentStep });
   }
 
   try {

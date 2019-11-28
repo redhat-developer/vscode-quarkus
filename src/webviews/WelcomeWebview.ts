@@ -22,7 +22,7 @@ export class WelcomeWebview {
 
   public static currentPanel: WelcomeWebview | undefined;
 
-  private readonly RESOURCE_FOLDER: string = 'webviews';
+  private readonly RESOURCE_FOLDER: string = 'assets/webviews';
   private _context: vscode.ExtensionContext;
   private _panel: vscode.WebviewPanel;
   private _disposables: vscode.Disposable[] = [];

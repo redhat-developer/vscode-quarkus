@@ -27,6 +27,7 @@ export namespace QuarkusConfig {
   export const QUARKUS_CONFIG_NAME = 'quarkus.tools';
 
   export const STARTER_API = 'quarkus.tools.starter.api';
+  export const STARTER_SHOW_EXT_DESC = 'quarkus.tools.starter.showExtensionDescriptions';
   export const ALWAYS_SHOW_WELCOME_PAGE = 'quarkus.tools.alwaysShowWelcomePage';
   export const DEBUG_TERMINATE_ON_EXIT = 'quarkus.tools.debug.terminateProcessOnExit';
 
@@ -38,12 +39,20 @@ export namespace QuarkusConfig {
     return workspace.getConfiguration().get<boolean>(ALWAYS_SHOW_WELCOME_PAGE, true);
   }
 
+  export function getShowExtensionDescriptions(): boolean {
+    return workspace.getConfiguration().get<boolean>(STARTER_SHOW_EXT_DESC, true);
+  }
+
   export function getTerminateProcessOnDebugExit(): TerminateProcessConfig {
     return workspace.getConfiguration().get<TerminateProcessConfig>(DEBUG_TERMINATE_ON_EXIT);
   }
 
   export function setAlwaysShowWelcomePage(value: boolean): void {
     saveToQuarkusConfig(ALWAYS_SHOW_WELCOME_PAGE, value);
+  }
+
+  export function setShowExtensionDescriptions(value: boolean): void {
+    saveToQuarkusConfig(STARTER_SHOW_EXT_DESC, value);
   }
 
   export function setTerminateProcessOnDebugExit(value: string): void {
