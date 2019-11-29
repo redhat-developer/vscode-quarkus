@@ -59,7 +59,7 @@ export async function generateProjectWizard() {
       activeItem: quickPickItems[0]
     })).label;
 
-    return state.wizardInterrupted ? null : (input: MultiStepInput) => inputGroupId(input, state);
+    return (input: MultiStepInput) => inputGroupId(input, state);
   }
 
   async function inputGroupId(input: MultiStepInput, state: Partial<ProjectGenState>) {
@@ -76,7 +76,7 @@ export async function generateProjectWizard() {
       validate: validateGroupId
     });
 
-    return state.wizardInterrupted ? null : (input: MultiStepInput) => inputArtifactId(input, state);
+    return (input: MultiStepInput) => inputArtifactId(input, state);
   }
 
   async function inputArtifactId(input: MultiStepInput, state: Partial<ProjectGenState>) {
@@ -92,7 +92,7 @@ export async function generateProjectWizard() {
       prompt: 'Your project artifactId',
       validate: validateArtifactId
     });
-    return state.wizardInterrupted ? null : (input: MultiStepInput) => inputProjectVersion(input, state);
+    return (input: MultiStepInput) => inputProjectVersion(input, state);
   }
 
   async function inputProjectVersion(input: MultiStepInput, state: Partial<ProjectGenState>) {
@@ -108,7 +108,7 @@ export async function generateProjectWizard() {
       prompt: 'Your project version',
       validate: validateVersion
     });
-    return state.wizardInterrupted ? null : (input: MultiStepInput) => inputPackageName(input, state);
+    return (input: MultiStepInput) => inputPackageName(input, state);
   }
 
   async function inputPackageName(input: MultiStepInput, state: Partial<ProjectGenState>) {
@@ -124,7 +124,7 @@ export async function generateProjectWizard() {
       prompt: 'Your package name',
       validate: validatePackageName
     });
-    return state.wizardInterrupted ? null : (input: MultiStepInput) => inputResourceName(input, state);
+    return (input: MultiStepInput) => inputResourceName(input, state);
   }
 
   async function inputResourceName(input: MultiStepInput, state: Partial<ProjectGenState>) {
@@ -140,13 +140,13 @@ export async function generateProjectWizard() {
       prompt: 'Your resource name',
       validate: validateResourceName
     });
-    return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensions(input, state, { showLastUsed: true, allowZeroExtensions: true });
+    return (input: MultiStepInput) => pickExtensions(input, state, { showLastUsed: true, allowZeroExtensions: true });
   }
 
-  await collectInputs(state);
-
-  if (state.wizardInterrupted) {
-    window.showErrorMessage(state.wizardInterrupted.reason);
+  try {
+    await collectInputs(state);
+  } catch (e) {
+    window.showErrorMessage(e);
     return;
   }
 

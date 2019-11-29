@@ -49,14 +49,7 @@ export async function pickExtensions(
   options: PickExtensionsOptions,
   next?: (input: MultiStepInput, state: Partial<State>) => any) {
 
-  let allExtensions: QExtension[];
-
-  try {
-    allExtensions = await getQExtensions();
-  } catch (err) {
-    state.wizardInterrupted = {reason: err};
-    return;
-  }
+  const allExtensions: QExtension[] = await getQExtensions();
 
   const defaultExtensions: QExtension[] = getDefaultQExtensions(allExtensions);
   let selectedExtensions: QExtension[] = [];
@@ -111,7 +104,7 @@ export async function pickExtensions(
   } while (pick.type === Type.Extension);
 
   if (next) {
-    return state.wizardInterrupted ? null : (input: MultiStepInput) => next(input, state);
+    return (input: MultiStepInput) => next(input, state);
   }
 }
 

@@ -38,8 +38,7 @@ export async function addExtensionsWizard() {
     const buildFileList: Uri[] = await searchBuildFile(); // TODO deal with this better
 
     if (buildFileList.length === 0) {
-      state.wizardInterrupted = { reason: 'pom.xml or build.gradle could not be located.' };
-      return;
+      throw 'pom.xml or build.gradle could not be located.';
     } else if (buildFileList.length === 1) {
       state.buildFilePath = buildFileList[0];
       state.totalSteps = 1;
@@ -63,13 +62,13 @@ export async function addExtensionsWizard() {
 
     state.workspaceFolder = workspace.getWorkspaceFolder(state.buildFilePath);
     state.buildSupport = await getBuildSupport(state.workspaceFolder);
-    return state.wizardInterrupted ? null : (input: MultiStepInput) => pickExtensions(input, state, { showLastUsed: false, allowZeroExtensions: false, step: currentStep });
+    return (input: MultiStepInput) => pickExtensions(input, state, { showLastUsed: false, allowZeroExtensions: false, step: currentStep });
   }
 
-  await collectInputs(state);
-
-  if (state.wizardInterrupted) {
-    window.showErrorMessage(state.wizardInterrupted.reason);
+  try {
+    await collectInputs(state);
+  } catch (e) {
+    window.showErrorMessage(e);
     return;
   }
 
