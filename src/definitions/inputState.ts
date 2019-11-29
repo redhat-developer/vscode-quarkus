@@ -21,7 +21,6 @@ import { BuildSupport } from '../buildSupport/BuildSupport';
 export interface State {
   totalSteps: number;
   extensions: QExtension[];
-  wizardInterrupted?: Interrupted;
 }
 
 /**
@@ -41,8 +40,4 @@ export interface AddExtensionsState extends State {
   buildFilePath: Uri;
   buildSupport: BuildSupport;
   workspaceFolder: WorkspaceFolder;
-}
-
-export interface Interrupted {
-  reason: string;
 }
