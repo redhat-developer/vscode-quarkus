@@ -5,5 +5,6 @@
 node_modules/
 src/
 out/
+images/
 tsconfig.json
 webpack.config.js
