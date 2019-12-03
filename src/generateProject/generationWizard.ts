@@ -170,7 +170,7 @@ async function getTargetDirectory(projectName: string) {
 
   let directory: Uri|undefined = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER });
 
-  while (directory && fs.existsSync(path.join(directory.path, projectName))) {
+  while (directory && fs.existsSync(path.join(directory.fsPath, projectName))) {
     const overrideChoice: string = await window.showWarningMessage(MESSAGE_EXISTING_FOLDER, OPTION_OVERWRITE, OPTION_CHOOSE_NEW_DIR);
     if (overrideChoice === OPTION_CHOOSE_NEW_DIR) {
       directory = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER });
