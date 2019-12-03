@@ -9,7 +9,7 @@ import * as fse from 'fs-extra';
 
 import { INPUT_TITLE, BuildToolName } from '../definitions/constants';
 import { MultiStepInput } from '../utils/multiStepUtils';
-import { OpenDialogOptions, QuickPickItem, Uri, commands, window } from 'vscode';
+import { OpenDialogOptions, QuickPickItem, Uri, commands, window, workspace } from 'vscode';
 import { QuarkusContext } from '../QuarkusContext';
 import { ProjectGenState } from '../definitions/inputState';
 import { QExtension } from '../definitions/QExtension';
@@ -229,9 +229,40 @@ function getNewProjectDirectory(state: ProjectGenState): Uri {
 }
 
 async function downloadAndSetupProject(state: ProjectGenState): Promise<void> {
-  const projectDir = getNewProjectDirectory(state);
+  const projectDir: Uri = getNewProjectDirectory(state);
   const zip: ZipFile = await downloadProject(state);
   zip.on('end', () => {
-    commands.executeCommand('vscode.openFolder', projectDir, true);
+    openProject(projectDir);
   });
+}
+
+async function openProject(uri: Uri): Promise<void> {
+  const NEW_WINDOW: string = 'Open in new window';
+  const CURRENT_WINDOW: string = 'Open in current window';
+  const ADD_TO_WORKSPACE: string = 'Add to current workspace';
+
+  if (workspace.workspaceFolders) {
+    const input: string|undefined = await window.showInformationMessage('New project has been generated.', NEW_WINDOW, ADD_TO_WORKSPACE);
+    if (!input) return;
+    if (input === NEW_WINDOW) {
+      commands.executeCommand('vscode.openFolder', uri, true);
+    } else {
+      addFolderToWorkspace(uri);
+    }
+  } else if (window.visibleTextEditors.length > 0) {
+    const input: string|undefined = await window.showInformationMessage('New project has been generated.', NEW_WINDOW, CURRENT_WINDOW);
+    if (!input) return;
+    commands.executeCommand('vscode.openFolder', uri, NEW_WINDOW === input);
+  } else {
+    commands.executeCommand('vscode.openFolder', uri, false);
+  }
+
+}
+
+function addFolderToWorkspace(uri: Uri): void {
+  workspace.updateWorkspaceFolders(
+    workspace.workspaceFolders ? workspace.workspaceFolders.length : 0,
+    undefined,
+    { uri }
+  );
 }
