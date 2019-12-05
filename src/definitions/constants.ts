@@ -14,21 +14,6 @@
  * limitations under the License.
  */
 
-// Quarkus language server request and notifications
-export namespace QuarkusLS {
-  export const PROJECT_REQUEST = 'quarkus/projectInfo';
-  export const PROPERTY_DEFINITION_REQUEST = 'quarkus/propertyDefinition';
-  export const JAVA_CODELENS_REQUEST = 'quarkus/java/codeLens';
-  export const JAVA_HOVER_REQUEST = 'quarkus/java/hover';
-}
-
-export namespace JdtLSCommands {
-  export const PROJECT_INFO_COMMAND = 'quarkus.java.projectInfo';
-  export const PROPERTY_DEFINITION_COMMAND = 'quarkus.java.propertyDefinition';
-  export const JAVA_CODELENS_COMMAND = 'quarkus.java.codeLens';
-  export const JAVA_HOVER_COMMAND = 'quarkus.java.hover';
-}
-
 // VSCode Quarkus Tools commands
 export namespace VSCodeCommands {
   export const CREATE_PROJECT = 'quarkusTools.createProject';

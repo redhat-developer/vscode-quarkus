@@ -46,7 +46,8 @@
   ],
   "contributes": {
     "javaExtensions": [
-      "./jars/com.redhat.quarkus.jdt.core.jar"
+      "./jars/com.redhat.microprofile.jdt.core.jar",
+      "./jars/com.redhat.microprofile.jdt.quarkus.jar"
     ],
     "languages": [
       {

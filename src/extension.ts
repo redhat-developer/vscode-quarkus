@@ -15,10 +15,10 @@
  */
 import * as requirements from './languageServer/requirements';
 
-import { JdtLSCommands, QuarkusLS, VSCodeCommands } from './definitions/constants';
+import { VSCodeCommands } from './definitions/constants';
 
-import { DidChangeConfigurationNotification, LanguageClientOptions, LanguageClient, RequestType } from 'vscode-languageclient';
-import { ExtensionContext, commands, window, workspace, Uri } from 'vscode';
+import { DidChangeConfigurationNotification, LanguageClientOptions, LanguageClient } from 'vscode-languageclient';
+import { ExtensionContext, commands, window, workspace } from 'vscode';
 import { QuarkusContext } from './QuarkusContext';
 import { addExtensionsWizard } from './addExtensions/addExtensionsWizard';
 import { createTerminateDebugListener } from './debugging/terminateProcess';
@@ -31,31 +31,6 @@ import { registerConfigurationUpdateCommand, registerOpenURICommand, CommandKind
 
 let languageClient: LanguageClient;
 
-interface QuarkusProjectInfoParams {
-  uri: string;
-  documentationFormat: string[];
-  scope: number;
-}
-
-interface QuarkusJavaHoverParams {
-  uri: string;
-  position: any;
-}
-
-interface QuarkusPropertiesChangeEvent {
-  type: number;
-  projectURIs: string[];
-}
-
-interface QuarkusPropertyDefinitionParams {
-	uri: string;
-	propertySource: string;
-}
-
-interface QuarkusJavaCodeLensParams {
-	uri: string;
-}
-
 export function activate(context: ExtensionContext) {
   QuarkusContext.setContext(context);
   displayWelcomePageIfNeeded(context);
@@ -63,32 +38,19 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(createTerminateDebugListener());
 
   connectToLS(context).then(() => {
-    const quarkusProjectInfoRequest = new RequestType<QuarkusProjectInfoParams, any, void, void>(QuarkusLS.PROJECT_REQUEST);
-    languageClient.onRequest(quarkusProjectInfoRequest, async (params: QuarkusProjectInfoParams) =>
-       <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.PROJECT_INFO_COMMAND, params)
-    );
-
-    const quarkusPropertyDefinitionRequest = new RequestType<QuarkusPropertyDefinitionParams, any, void, void>(QuarkusLS.PROPERTY_DEFINITION_REQUEST);
-    languageClient.onRequest(quarkusPropertyDefinitionRequest, async (params: QuarkusPropertyDefinitionParams) =>
-       <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.PROPERTY_DEFINITION_COMMAND, params)
-    );
-
-    const quarkusJavaCodeLensRequest = new RequestType<QuarkusJavaCodeLensParams, any, void, void>(QuarkusLS.JAVA_CODELENS_REQUEST);
-    languageClient.onRequest(quarkusJavaCodeLensRequest, async (params: QuarkusJavaCodeLensParams) =>
-       <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.JAVA_CODELENS_COMMAND, params)
-    );
-
-    const quarkusJavaHoverRequest = new RequestType<QuarkusJavaHoverParams, any, void, void>(QuarkusLS.JAVA_HOVER_REQUEST);
-    languageClient.onRequest(quarkusJavaHoverRequest, async (params: QuarkusJavaHoverParams) =>
-      <any> await commands.executeCommand("java.execute.workspaceCommand", JdtLSCommands.JAVA_HOVER_COMMAND, params)
-    );
 
     /**
-     * Command for resetting Quarkus properties cache
+     * Delegate requests from MicroProfile LS to the Java JDT LS
      */
-    context.subscriptions.push(commands.registerCommand('quarkusTools.quarkusPropertiesChanged', (event: QuarkusPropertiesChangeEvent) => {
-      languageClient.sendNotification("quarkus/quarkusPropertiesChanged", event);
-    }));
+    bindRequest('microprofile/projectInfo');
+    bindRequest('microprofile/propertyDefinition');
+    bindRequest('microprofile/java/codeLens');
+    bindRequest('microprofile/java/hover');
+
+    /**
+     * Delegate notifications from Java JDT LS to the MicroProfile LS
+     */
+    bindNotification('microprofile/propertiesChanged');
 
   }).catch((error) => {
     window.showErrorMessage(error.message, error.label).then((selection) => {
@@ -97,6 +59,18 @@ export function activate(context: ExtensionContext) {
       }
     });
   });
+
+  function bindRequest(request: string) {
+    languageClient.onRequest(request, async (params: any) =>
+      <any> await commands.executeCommand("java.execute.workspaceCommand", request, params)
+    );
+  }
+
+  function bindNotification(notification: string) {
+    context.subscriptions.push(commands.registerCommand(notification, (event: any) => {
+      languageClient.sendNotification(notification, event);
+    }));
+  }
 
   registerVSCodeCommands(context);
 }
