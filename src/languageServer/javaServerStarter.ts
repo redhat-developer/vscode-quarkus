@@ -7,7 +7,7 @@ const glob = require('glob');
 
 const DEBUG = startedInDebugMode();
 const DEBUG_PORT = 1064;
-const SERVER_NAME = 'com.redhat.quarkus.ls-uber.jar';
+const SERVER_NAME = 'com.redhat.microprofile.ls-uber.jar';
 
 export function prepareExecutable(requirements: RequirementsData): Executable {
   const executable: Executable = Object.create(null);

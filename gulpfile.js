@@ -15,11 +15,10 @@ const gulp = require('gulp');
 const rename = require('gulp-rename');
 const cp = require('child_process');
 
-const serverName = 'com.redhat.quarkus.ls-uber.jar';
-const extensionName = 'com.redhat.quarkus.jdt.core-*.jar';
-const extensionVersionless = 'com.redhat.quarkus.jdt.core.jar';
-const serverDir = '../quarkus-ls/quarkus.ls/com.redhat.quarkus.ls';
-const extensionDir = '../quarkus-ls/quarkus.jdt';
+const serverName = 'com.redhat.microprofile.ls-uber.jar';
+const extensions = ['com.redhat.microprofile.jdt.core', 'com.redhat.microprofile.jdt.quarkus'];
+const serverDir = '../quarkus-ls/microprofile.ls/com.redhat.microprofile.ls';
+const extensionDir = '../quarkus-ls/microprofile.jdt';
 
 gulp.task('buildServer', (done) => {
   cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: serverDir , stdio: 'inherit' });
@@ -29,10 +28,12 @@ gulp.task('buildServer', (done) => {
 });
 
 gulp.task('buildExtension', (done) => {
-  cp.execSync(mvnw() + ' clean verify -DskipTests -f com.redhat.quarkus.jdt.core/pom.xml', { cwd: extensionDir, stdio: 'inherit' });
-  gulp.src(extensionDir + '/com.redhat.quarkus.jdt.core/target/' + extensionName)
-    .pipe(rename(extensionVersionless))
-    .pipe(gulp.dest('./jars'));
+  cp.execSync(mvnw() + ' -pl "' + extensions.join(',') + '" clean verify -DskipTests' , { cwd: extensionDir, stdio: 'inherit' });
+  extensions.forEach(extension => {
+    gulp.src(extensionDir + '/' + extension + '/target/' + extension + '-*.jar')
+      .pipe(rename(extension + '.jar'))
+      .pipe(gulp.dest('./jars'));
+  });
   done();
 });
 
