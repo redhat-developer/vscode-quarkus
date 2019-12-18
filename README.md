@@ -4,9 +4,11 @@
 
 ## Description
 
-This Visual Studio Code extension provides support for Quarkus development via a 
-[Quarkus language server](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.ls)
-and a [Quarkus jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt).
+This Visual Studio Code extension provides support for Quarkus development via:
+
+ * a [MicroProfile language server](https://github.com/redhat-developer/quarkus-ls/tree/master/microprofile.ls).
+ * a [MicroProfile jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/microprofile.jdt/com.redhat.microprofile.jdt.core).
+ * a [Quarkus jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/microprofile.jdt/com.redhat.microprofile.jdt.quarkus).
 
 ![](images/propertiesSupport.png)
 
