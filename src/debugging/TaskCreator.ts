@@ -50,20 +50,29 @@ export class TaskCreator {
   }
 
   /**
-   * Creates a tasks.json file (with no tasks) in .vscode/ directory, if
+   * Creates a tasks.json file (with no tasks), if
    * one does not exist already
-   * @param dotVSCodeDir absolute path to the .vscode/ directory
    */
   private async createTasksJsonIfMissing(): Promise<void> {
+    const tasksKey = 'tasks';
+    const versionKey = 'version';
+    const version = '2.0.0';
 
-    if (fs.existsSync(this.tasksJsonFile)) {
+    const workspaceConfiguration = workspace.getConfiguration(tasksKey, this.workspaceFolder.uri);
+
+    // Get all registered tasks and current version
+    const tasks = workspaceConfiguration.get(tasksKey);
+    const currentVersion = workspaceConfiguration.get(versionKey);
+
+    if (Array.isArray(tasks) && currentVersion) {
       return;
     }
 
-    // create tasks.json file in .vscode/
-    await workspace.getConfiguration('tasks', this.workspaceFolder.uri).update('version', "2.0.0");
-    await workspace.getConfiguration('tasks', this.workspaceFolder.uri).update('tasks', []);
+    // Create tasks.json file with empty list of tasks and with version 2.0.0
+    await workspaceConfiguration.update(versionKey, version);
+    await workspaceConfiguration.update(tasksKey, []);
 
+    // If tasks.json was created in .vscode/ directory, add special comments on top of the file
     if (fs.existsSync(this.tasksJsonFile)) {
       this.prependTasksJsonComment();
     }

@@ -49,14 +49,26 @@ export class LaunchConfigCreator {
   }
 
   private async createLaunchJsonIfMissing(): Promise<void> {
+    const configurationsKey = 'configurations';
+    const launchKey = 'launch';
+    const versionKey = 'version';
+    const launchVersion = '0.2.0';
 
-    if (fs.existsSync(this.launchJsonFile)) {
+    const workspaceConfiguration = workspace.getConfiguration(launchKey, this.workspaceFolder.uri);
+
+    // Get all registered launch configurations and version
+    const configurations =  workspaceConfiguration.get(configurationsKey);
+    const version = workspaceConfiguration.get(versionKey);
+
+    if (Array.isArray(configurations) && version) {
       return;
     }
 
-    await workspace.getConfiguration('launch', this.workspaceFolder.uri).update('version', "0.2.0");
-    await workspace.getConfiguration('launch', this.workspaceFolder.uri).update('configurations', []);
+    // Create launch.json file with empty list of configurations and with version 0.2.0
+    await workspaceConfiguration.update(versionKey, launchVersion);
+    await workspaceConfiguration.update(configurationsKey, []);
 
+    // If launch.json was created in .vscode/ directory, add special comments on top of the file
     if (fs.existsSync(this.launchJsonFile)) {
       this.prependLaunchJsonComment();
     }
