@@ -1,0 +1,25 @@
+{
+  "name": "Qute HTML",
+  "injections": {
+    "L:meta.tag": {
+      "patterns": [
+        {
+          "include": "grammar.qute#expression"
+        },
+        {
+          "include": "grammar.qute#comment"
+        }
+      ]
+    }
+  },
+  "patterns": [
+    {
+      "include": "grammar.qute"
+    },
+    {
+      "include": "text.html.basic"
+    }
+  ],
+  "scopeName": "text.html.qute",
+  "uuid": "C011BB07-875D-4DEB-9582-0E1FEC0D1E5E"
+}

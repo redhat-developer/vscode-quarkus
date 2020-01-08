@@ -1,0 +1,200 @@
+{! Most of the following code is from https://quarkus.io/guides/qute-reference !}
+
+{! Example html !}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Report {now}</title>
+</head>
+<body>
+    <h1>Report {now}</h1>
+    {#for sample in samples}
+      <h2>{sample.name ?: 'Unknown'}</h2>
+      <p>
+      {#if sample.valid}
+        {sample.data}
+        {myObject.myValue}
+      {#else}
+        <strong>Invalid sample found</strong>.
+      {/if}
+      </p>
+    {/for}
+
+    First name: <input type="text" name="fname" value="{person.name}">
+</body>
+</html>
+
+{! Expression !}
+simple properties: {foo}, {item.name}
+virtual methods: {item.get(name)}, {name ?: 'John'}
+with namespace: {inject:colors}.
+
+{! Section tag !}
+{#if foo}{foo.name}{/if},
+the name in the closing tag is optional: {#if active}ACTIVE!{/},
+can be empty: {#myTag image=true /},
+may declare nested section blocks: {#if item.valid} Valid. {#else} Invalid. {/if} and decide which block to render.
+
+{! 2.1.1.1. Current Context !}
+{#each items}
+  {count}. {it.name} 
+{/each}
+
+{! Another form of iteration... !}
+{#for item in items}
+  {count}. {item.name} 
+{/for}
+
+<html>
+{item.name} 
+<ul>
+{#for item in item.getDerivedItems()} 
+  <li>
+  {item.name} 
+  is derived from
+  {data:item.name} 
+  </li>
+{/for}
+</ul>
+</html>
+
+
+{! 2.1.2. Sections !}
+{#if item.name is 'sword'}
+  It's a sword!
+{#else if item.name hello is 'shield'}
+  It's a shield!
+{#else}
+  Item is neither a sword nor a shield.
+{/if}
+
+
+{! 2.1.2.1. Loop Section !}
+{#each items}
+  {it.name} 
+{/each}
+
+{#for item in items}
+  {item.name}
+{/for}
+
+{#each items}
+  {count}. {it.name} 
+{/each}
+
+
+{! 2.1.2.2. If Section !}
+{#if item.active}
+  This item is active.
+{/if}
+
+{#if item.age > 10}
+  This item is very old.
+{/if}
+
+{#if item.age > 10}
+  This item is very old.
+{#else if item.age > 5}
+  This item is quite old.
+{#else if item.age > 2}
+  This item is old.
+{#else}
+  This item is not old at all!
+{/if}
+
+{#if item.age eq 10}
+  This item is 10 years old
+{/if}
+
+{#if item.age ne 10}
+  This item is not 10 years old
+{/if}
+
+{#if item.age gt 10}
+  This item is greater than 10 years old
+{/if}
+
+{#if item.age ge 10}
+  This item is greater than or equal to 10 years old
+{/if}
+
+{#if item.age lt 10}
+  This item is less than 10 years old
+{/if}<h1>{title}</h1>
+  Hello {foo.message}!
+{#if item.age le 10}
+  This item is less than or equal to 10 years old
+{/if}
+
+
+{! 2.1.2.3. With Section !}
+{#with item.parent}
+  {name}  
+{/with}
+
+{#with item.parent as myParent}
+  {myParent.name}
+{/with}
+
+
+{! 2.1.2.4. Include/Insert Sections !}
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{#insert title}Default Title{/}</title>
+</head>
+<body>
+  {#insert body}No body!{/}
+</body>
+</html>
+
+{#include base} 
+  {#title}My Title{/title} 
+  {#body}
+    <div>
+      My body.
+    </div>
+{/include}
+
+
+{! 2.1.2.5. User-defined Tags !}
+{#if showImage}
+  {it.image}
+{/if}
+
+<ul>
+{#each items}
+  <li>
+  {#item this showImage=true /} 
+  </li>
+{/each}
+</ul>
+
+
+{! 3.1. Injecting Beans Directly In Templates !}
+{inject:foo.price} 
+
+
+{! 3.2. Parameter Declarations !}
+{@org.acme.Foo foo}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Qute Hello</title>
+</head>
+<body>
+  <h1>{title}</h1>
+  Hello {foo.message}!
+</body>
+</html>
+
+{! Qute grammar highlighting works in html tags and strings !}
+<body>
+  <div 
+  {! Comment highlighting works inside html tags too !}
+  class='myClass'>
+    First name: <input type="text" name="fname" value='{person.name}'>
+  </div>
+</body>

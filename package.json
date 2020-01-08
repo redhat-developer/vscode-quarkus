@@ -37,7 +37,8 @@
     "onCommand:quarkusTools.welcome",
     "workspaceContains:**/src/main/resources/application.properties",
     "onLanguage:quarkus-properties",
-    "onLanguage:java"
+    "onLanguage:java",
+    "onLanguage:qute"
   ],
   "main": "./dist/extension",
   "extensionDependencies": [
@@ -58,7 +59,17 @@
         "filenames": [
           "application.properties"
         ],
-        "configuration": "./properties-support/language-configuration.json"
+        "configuration": "./language-support/properties-support/language-configuration.json"
+      },
+      {
+        "id": "qute-html",
+        "aliases": [
+          "Qute HTML"
+        ],
+        "extensions": [
+          "qute.html"
+        ],
+        "configuration": "./language-support/qute/language-configuration.json"
       }
     ],
     "commands": [
@@ -215,7 +226,16 @@
       {
         "language": "quarkus-properties",
         "scopeName": "source.java-properties",
-        "path": "./properties-support/java-properties.tmLanguage"
+        "path": "./language-support/properties-support/java-properties.tmLanguage"
+      },
+      {
+        "language": "qute-html",
+        "scopeName": "text.html.qute",
+        "path": "./language-support/qute/qute-html.tmLanguage.json"
+      },
+      {
+        "scopeName": "grammar.qute",
+        "path": "./language-support/qute/qute.tmLanguage.json"
       }
     ]
   },
