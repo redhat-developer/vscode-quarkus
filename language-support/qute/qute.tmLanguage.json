@@ -1,0 +1,470 @@
+{
+  "name": "Qute",
+  "patterns": [
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#parameter_declaration"
+    },
+    {
+      "include": "#section_start_tag"
+    },
+    {
+      "include": "#section_end_tag"
+    },
+    {
+      "include": "#expression"
+    }
+  ],
+  "repository": {
+    "parameter_declaration": {
+      "begin": "(?<!\\\\){@",
+      "end": "(?<!\\\\)}",
+      "name": "keyword.other.qute"
+    },
+    "comment": {
+      "begin": "{!",
+      "captures": {
+        "0": {
+          "name": "punctuation.definition.comment.qute"
+        }
+      },
+      "end": "!}",
+      "name": "comment.block.qute"
+    },
+    "section_start_tag": {
+      "begin": "({)(#)(else\\sif|\\w+(\\.\\w+)*)",
+      "end": "(\\/)?((?<!\\\\)})",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "keyword.control"
+        },
+        "3": {
+          "name": "keyword.control"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "keyword.control"
+        },
+        "2": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "section_end_tag": {
+      "begin": "({)(\\/)(\\w+(\\.\\w+)*)?\\s*",
+      "end": "((?<!\\\\)})",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "keyword.control"
+        },
+        "3": {
+          "name": "keyword.control"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      }
+    },
+    "section_start_tag_content": {
+      "match": "((\\s+[^}\\/]+)*)\\s*",
+      "name": "variable.parameter.function.qute"
+    },
+    "expression": {
+      "begin": "((?<!\\\\){)(?![!#@\\/])",
+      "end": "((?<!\\\\)})",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "expression_content": {
+      "match": "[a-zA-Z_\\(][\\w\\(\\)+-\/\\*]+(\\.?[\\w\\(\\)+-\/\\*]+)*",
+      "name": "variable.other.readwrite.local.qute"
+    },
+    "code": {
+      "patterns": [
+        {
+          "include": "#parens"
+        },
+        {
+          "include": "#constants-and-special-vars"
+        },
+        {
+          "include": "#numbers"
+        },
+        {
+          "include": "#lambda-expression"
+        },
+        {
+          "include": "#keywords"
+        },
+        {
+          "include": "#method-call"
+        },
+        {
+          "include": "#function-call"
+        },
+        {
+          "include": "#objects"
+        },
+        {
+          "include": "#properties"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.delimiter.java"
+        },
+        {
+          "match": "\\.",
+          "name": "punctuation.separator.period.java"
+        },
+        {
+          "include": "#variable"
+        }
+      ]
+    },
+    "variable": {
+      "match": "[a-zA-Z_$][a-zA-Z_$0-9]*",
+      "name": "variable.other.object.java"
+    },
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.java"
+            }
+          },
+          "end": "\"",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.java"
+            }
+          },
+          "name": "string.quoted.double.java",
+          "patterns": [
+            {
+              "match": "\\\\.",
+              "name": "constant.character.escape.java"
+            },
+            {
+              "include": "#expression"
+            }
+          ]
+        },
+        {
+          "begin": "'",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.java"
+            }
+          },
+          "end": "'",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.java"
+            }
+          },
+          "name": "string.quoted.single.java",
+          "patterns": [
+            {
+              "match": "\\\\.",
+              "name": "constant.character.escape.java"
+            },
+            {
+              "include": "#expression"
+            }
+          ]
+        }
+      ]
+    },
+    "objects": {
+      "match": "(?<![\\w$])[a-zA-Z_$][\\w$]*(?=\\s*\\.\\s*[\\w$]+)",
+      "name": "variable.other.object.java"
+    },
+    "function-call": {
+      "begin": "([A-Za-z_$][\\w$]*)\\s*(\\()",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.function.java"
+        },
+        "2": {
+          "name": "punctuation.definition.parameters.begin.bracket.round.java"
+        }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.parameters.end.bracket.round.java"
+        }
+      },
+      "name": "meta.function-call.java",
+      "patterns": [
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "method-call": {
+      "begin": "(\\.)\\s*([A-Za-z_$][\\w$]*)\\s*(\\()",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.separator.period.java"
+        },
+        "2": {
+          "name": "entity.name.function.java"
+        },
+        "3": {
+          "name": "punctuation.definition.parameters.begin.bracket.round.java"
+        }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.parameters.end.bracket.round.java"
+        }
+      },
+      "name": "meta.method-call.java",
+      "patterns": [
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "match": "\\bthrow\\b",
+          "name": "keyword.control.throw.java"
+        },
+        {
+          "match": "\\?|:",
+          "name": "keyword.control.ternary.java"
+        },
+        {
+          "match": "\\b(return|break|case|continue|default|do|while|for|switch|if|else)\\b",
+          "name": "keyword.control.java"
+        },
+        {
+          "match": "\\b(instanceof)\\b",
+          "name": "keyword.operator.instanceof.java"
+        },
+        {
+          "match": "(<<|>>>?|~|\\^)",
+          "name": "keyword.operator.bitwise.java"
+        },
+        {
+          "match": "((&|\\^|\\||<<|>>>?)=)",
+          "name": "keyword.operator.assignment.bitwise.java"
+        },
+        {
+          "match": "(===?|!=|<=|>=|<>|<|>)",
+          "name": "keyword.operator.comparison.java"
+        },
+        {
+          "match": "([+*/%-]=)",
+          "name": "keyword.operator.assignment.arithmetic.java"
+        },
+        {
+          "match": "(=)",
+          "name": "keyword.operator.assignment.java"
+        },
+        {
+          "match": "(\\-\\-|\\+\\+)",
+          "name": "keyword.operator.increment-decrement.java"
+        },
+        {
+          "match": "(\\-|\\+|\\*|\\/|%)",
+          "name": "keyword.operator.arithmetic.java"
+        },
+        {
+          "match": "(!|&&|\\|\\|)",
+          "name": "keyword.operator.logical.java"
+        },
+        {
+          "match": "(\\||&)",
+          "name": "keyword.operator.bitwise.java"
+        },
+        {
+          "match": "\\b(const|goto)\\b",
+          "name": "keyword.reserved.java"
+        }
+      ]
+    },
+    "lambda-expression": {
+      "patterns": [
+        {
+          "match": "->",
+          "name": "storage.type.function.arrow.java"
+        }
+      ]
+    },
+    "constants-and-special-vars": {
+      "patterns": [
+        {
+          "match": "\\b(true|false|null)\\b",
+          "name": "constant.language.java"
+        },
+        {
+          "match": "\\bthis\\b",
+          "name": "variable.language.this.java"
+        },
+        {
+          "match": "\\b(in|as|eq|ne|gt|ge|lt|le)\\b",
+          "name": "keyword.operator"
+        }
+      ]
+    },
+    "parens": {
+      "patterns": [
+        {
+          "begin": "\\(",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.bracket.round.java"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.bracket.round.java"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#code"
+            }
+          ]
+        },
+        {
+          "begin": "\\[",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.bracket.square.java"
+            }
+          },
+          "end": "\\]",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.bracket.square.java"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#code"
+            }
+          ]
+        },
+        {
+          "begin": "{",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.bracket.curly.java"
+            }
+          },
+          "end": "}",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.bracket.curly.java"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#code"
+            }
+          ]
+        }
+      ]
+    },
+    "properties": {
+      "patterns": [
+        {
+          "match": "(\\.)\\s*([a-zA-Z_$][\\w$]*)(?=\\s*\\.\\s*[a-zA-Z_$][\\w$]*)",
+          "captures": {
+            "1": {
+              "name": "punctuation.separator.period.java"
+            },
+            "2": {
+              "name": "variable.other.object.property.java"
+            }
+          }
+        },
+        {
+          "match": "(\\.)\\s*([a-zA-Z_$][\\w$]*)",
+          "captures": {
+            "1": {
+              "name": "punctuation.separator.period.java"
+            },
+            "2": {
+              "name": "variable.other.property.java"
+            }
+          }
+        },
+        {
+          "match": "(\\.)\\s*([0-9][\\w$]*)",
+          "captures": {
+            "1": {
+              "name": "punctuation.separator.period.java"
+            },
+            "2": {
+              "name": "invalid.illegal.identifier.java"
+            }
+          }
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "match": "(?x)\n\\b(?<!\\$)\n0(x|X)\n(\n  (?<!\\.)[0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?[Ll]?(?!\\.)\n  |\n  (\n    [0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?\\.?\n    |\n    ([0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?)?\\.[0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?\n  )\n  [Pp][+-]?[0-9]([0-9_]*[0-9])?[FfDd]?\n)\n\\b(?!\\$)",
+          "name": "constant.numeric.hex.java"
+        },
+        {
+          "match": "\\b(?<!\\$)0(b|B)[01]([01_]*[01])?[Ll]?\\b(?!\\$)",
+          "name": "constant.numeric.binary.java"
+        },
+        {
+          "match": "\\b(?<!\\$)0[0-7]([0-7_]*[0-7])?[Ll]?\\b(?!\\$)",
+          "name": "constant.numeric.octal.java"
+        },
+        {
+          "match": "(?x)\n(?<!\\$)\n(\n  \\b[0-9]([0-9_]*[0-9])?\\.\\B(?!\\.)\n  |\n  \\b[0-9]([0-9_]*[0-9])?\\.([Ee][+-]?[0-9]([0-9_]*[0-9])?)[FfDd]?\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?\\.([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?\\.([0-9]([0-9_]*[0-9])?)([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]?\\b\n  |\n  (?<!\\.)\\B\\.[0-9]([0-9_]*[0-9])?([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]?\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?([Ee][+-]?[0-9]([0-9_]*[0-9])?)[FfDd]?\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]\\b\n  |\n  \\b(0|[1-9]([0-9_]*[0-9])?)(?!\\.)[Ll]?\\b\n)\n(?!\\$)",
+          "name": "constant.numeric.decimal.java"
+        }
+      ]
+    }
+  },
+  "scopeName": "grammar.qute",
+  "uuid": "C011BB07-875D-4DEB-9582-0E1FEC0D1E4E"
+}
