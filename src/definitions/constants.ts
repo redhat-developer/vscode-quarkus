@@ -28,6 +28,16 @@ export const enum BuildToolName {
   Gradle = 'Gradle'
 }
 
+// MicroProfile language server request and notifications
+export namespace MicroProfileLS {
+  export const PROJECT_INFO_REQUEST = 'microprofile/projectInfo';
+  export const PROPERTY_DEFINITION_REQUEST = 'microprofile/propertyDefinition';
+  export const JSON_SCHEMA_FOR_PROJECT_INFO_REQUEST = 'microprofile/jsonSchemaForProjectInfo';
+  export const JAVA_CODELENS_REQUEST = 'microprofile/java/codeLens';
+  export const JAVA_HOVER_REQUEST = 'microprofile/java/hover';
+  export const PROPERTIES_CHANGED_NOTIFICATION = 'microprofile/propertiesChanged';
+}
+
 export const DEFAULT_API_URL: string = 'https://code.quarkus.io/api';
 export const DEFAULT_BUILD_TOOL: BuildToolName = BuildToolName.Maven;
 export const DEFAULT_GROUP_ID: string = 'org.acme';
