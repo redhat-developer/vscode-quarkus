@@ -37,6 +37,7 @@
     "onCommand:quarkusTools.welcome",
     "workspaceContains:**/src/main/resources/application.properties",
     "workspaceContains:**src/main/resources/META-INF/microprofile-config.properties",
+    "workspaceContains:**/src/main/resources/application.yaml",
     "onLanguage:microprofile-properties",
     "onLanguage:quarkus-properties",
     "onLanguage:java",

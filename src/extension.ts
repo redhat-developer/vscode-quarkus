@@ -15,7 +15,7 @@
  */
 import * as requirements from './languageServer/requirements';
 
-import { VSCodeCommands } from './definitions/constants';
+import { VSCodeCommands, MicroProfileLS } from './definitions/constants';
 
 import { DidChangeConfigurationNotification, LanguageClientOptions, LanguageClient } from 'vscode-languageclient';
 import { ExtensionContext, commands, window, workspace } from 'vscode';
@@ -28,6 +28,7 @@ import { tryStartDebugging } from './debugging/startDebugging';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { QuarkusConfig } from './QuarkusConfig';
 import { registerConfigurationUpdateCommand, registerOpenURICommand, CommandKind } from './lsp-commands';
+import { registerYamlSchemaSupport, MicroProfilePropertiesChangeEvent } from './yaml/YamlSchema';
 
 let languageClient: LanguageClient;
 
@@ -37,21 +38,29 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(createTerminateDebugListener());
 
+  /**
+   * Register Yaml Schema support to manage application.yaml
+   */
+  const yamlSchemaCache = registerYamlSchemaSupport();
+
   connectToLS(context).then(() => {
+    yamlSchemaCache.then(cache => { if (cache) { cache.languageClient = languageClient; } });
 
     /**
      * Delegate requests from MicroProfile LS to the Java JDT LS
      */
-    bindRequest('microprofile/projectInfo');
-    bindRequest('microprofile/propertyDefinition');
-    bindRequest('microprofile/java/codeLens');
-    bindRequest('microprofile/java/hover');
+    bindRequest(MicroProfileLS.PROJECT_INFO_REQUEST);
+    bindRequest(MicroProfileLS.PROPERTY_DEFINITION_REQUEST);
+    bindRequest(MicroProfileLS.JAVA_CODELENS_REQUEST);
+    bindRequest(MicroProfileLS.JAVA_HOVER_REQUEST);
 
     /**
      * Delegate notifications from Java JDT LS to the MicroProfile LS
      */
-    bindNotification('microprofile/propertiesChanged');
-
+    context.subscriptions.push(commands.registerCommand(MicroProfileLS.PROPERTIES_CHANGED_NOTIFICATION, (event: MicroProfilePropertiesChangeEvent) => {
+      languageClient.sendNotification(MicroProfileLS.PROPERTIES_CHANGED_NOTIFICATION, event);
+      yamlSchemaCache.then(cache => { if (cache) cache.evict(event); });
+    }));
   }).catch((error) => {
     window.showErrorMessage(error.message, error.label).then((selection) => {
       if (error.label && error.label === selection && error.openUrl) {
@@ -62,14 +71,8 @@ export function activate(context: ExtensionContext) {
 
   function bindRequest(request: string) {
     languageClient.onRequest(request, async (params: any) =>
-      <any> await commands.executeCommand("java.execute.workspaceCommand", request, params)
+      <any>await commands.executeCommand("java.execute.workspaceCommand", request, params)
     );
-  }
-
-  function bindNotification(notification: string) {
-    context.subscriptions.push(commands.registerCommand(notification, (event: any) => {
-      languageClient.sendNotification(notification, event);
-    }));
   }
 
   registerVSCodeCommands(context);
@@ -135,12 +138,12 @@ function connectToLS(context: ExtensionContext) {
         extendedClientCapabilities: {
           commands: {
             commandsKind: {
-                valueSet: [
-                  CommandKind.COMMAND_CONFIGURATION_UPDATE,
-                  CommandKind.COMMAND_OPEN_URI
-                ]
+              valueSet: [
+                CommandKind.COMMAND_CONFIGURATION_UPDATE,
+                CommandKind.COMMAND_OPEN_URI
+              ]
             }
-        }
+          }
         }
       },
       synchronize: {
@@ -183,7 +186,7 @@ function connectToLS(context: ExtensionContext) {
       quarkus = defaultValue;
     } else {
       const x = JSON.stringify(configQuarkus); // configQuarkus is not a JSON type
-      quarkus = { quarkus : JSON.parse(x)};
+      quarkus = { quarkus: JSON.parse(x) };
     }
     return quarkus;
   }
