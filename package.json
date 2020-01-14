@@ -38,7 +38,7 @@
     "workspaceContains:**/src/main/resources/application.properties",
     "onLanguage:quarkus-properties",
     "onLanguage:java",
-    "onLanguage:qute"
+    "onLanguage:qute-html"
   ],
   "main": "./dist/extension",
   "extensionDependencies": [
