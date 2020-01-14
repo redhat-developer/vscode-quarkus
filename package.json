@@ -36,6 +36,8 @@
     "onCommand:quarkusTools.debugQuarkusProject",
     "onCommand:quarkusTools.welcome",
     "workspaceContains:**/src/main/resources/application.properties",
+    "workspaceContains:**src/main/resources/META-INF/microprofile-config.properties",
+    "onLanguage:microprofile-properties",
     "onLanguage:quarkus-properties",
     "onLanguage:java",
     "onLanguage:qute-html"
@@ -51,6 +53,16 @@
       "./jars/com.redhat.microprofile.jdt.quarkus.jar"
     ],
     "languages": [
+      {
+        "id": "microprofile-properties",
+        "aliases": [
+          "MicroProfile properties"
+        ],
+        "filenames": [
+          "microprofile-config.properties"
+        ],
+        "configuration": "./language-support/properties-support/language-configuration.json"
+      },
       {
         "id": "quarkus-properties",
         "aliases": [
@@ -223,6 +235,11 @@
       }
     },
     "grammars": [
+      {
+        "language": "microprofile-properties",
+        "scopeName": "source.java-properties",
+        "path": "./language-support/properties-support/java-properties.tmLanguage"
+      },
       {
         "language": "quarkus-properties",
         "scopeName": "source.java-properties",
