@@ -125,6 +125,7 @@ function connectToLS(context: ExtensionContext) {
   return requirements.resolveRequirements().then(requirements => {
     const clientOptions: LanguageClientOptions = {
       documentSelector: [
+        { scheme: 'file', language: 'microprofile-properties' },
         { scheme: 'file', language: 'quarkus-properties' },
         { scheme: 'file', language: 'java' }
       ],
