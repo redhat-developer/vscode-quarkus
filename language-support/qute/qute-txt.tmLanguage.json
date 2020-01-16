@@ -1,0 +1,10 @@
+{
+  "name": "Qute Text",
+  "patterns": [
+    {
+      "include": "grammar.qute"
+    }
+  ],
+  "scopeName": "text.qute",
+  "uuid": "753080cc-cfc9-4a1e-8f1b-f5c7d0fd5edc"
+}

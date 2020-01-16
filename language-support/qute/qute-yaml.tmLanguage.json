@@ -1,7 +1,7 @@
 {
-  "name": "Qute HTML",
+  "name": "Qute YAML",
   "injections": {
-    "L:meta.tag": {
+    "L:entity.name.tag.yaml, L:string.unquoted, L:string.quoted": {
       "patterns": [
         {
           "include": "grammar.qute#templates"
@@ -17,9 +17,9 @@
       "include": "grammar.qute"
     },
     {
-      "include": "text.html.basic"
+      "include": "source.yaml"
     }
   ],
-  "scopeName": "text.html.qute",
-  "uuid": "b4a8c279-6147-4ad0-8762-189dc6205546"
+  "scopeName": "source.yaml.qute",
+  "uuid": "3a51bb50-65bb-41e3-8d5b-d5af19b6f74d"
 }
