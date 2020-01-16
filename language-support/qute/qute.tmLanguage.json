@@ -8,16 +8,23 @@
       "include": "#parameter_declaration"
     },
     {
-      "include": "#section_start_tag"
-    },
-    {
-      "include": "#section_end_tag"
-    },
-    {
-      "include": "#expression"
+      "include": "#templates"
     }
   ],
   "repository": {
+    "templates": {
+      "patterns": [
+        {
+          "include": "#section_start_tag"
+        },
+        {
+          "include": "#section_end_tag"
+        },
+        {
+          "include": "#expression"
+        }
+      ]
+    },
     "parameter_declaration": {
       "begin": "(?<!\\\\){@",
       "end": "(?<!\\\\)}",
@@ -341,7 +348,7 @@
           "name": "variable.language.this.java"
         },
         {
-          "match": "\\b(in|as|eq|ne|gt|ge|lt|le)\\b",
+          "match": "\\b(in|is|as|eq|ne|gt|ge|lt|le)\\b",
           "name": "keyword.operator"
         }
       ]
