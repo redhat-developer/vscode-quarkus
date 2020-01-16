@@ -4,7 +4,7 @@
     "L:meta.tag": {
       "patterns": [
         {
-          "include": "grammar.qute#expression"
+          "include": "grammar.qute#templates"
         },
         {
           "include": "grammar.qute#comment"
