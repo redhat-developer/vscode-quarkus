@@ -1,0 +1,29 @@
+{
+  "name": "Qute JSON",
+  "injections": {
+    "L:support.type.property-name.json, L:string.quoted.double.json": {
+      "patterns": [
+        {
+          "include": "grammar.qute#templates"
+        },
+        {
+          "include": "grammar.qute#comment"
+        }
+      ]
+    },
+    "L:meta.structure.dictionary.json": {
+      "patterns": [
+        {
+          "include": "grammar.qute#comment"
+        }
+      ]
+    }
+  },
+  "patterns": [
+    {
+      "include": "source.json"
+    }
+  ],
+  "scopeName": "source.json.qute",
+  "uuid": "6c100627-887e-4550-82a8-a8b38084bfeb"
+}

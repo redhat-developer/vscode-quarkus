@@ -38,7 +38,10 @@
     "workspaceContains:**/src/main/resources/application.properties",
     "onLanguage:quarkus-properties",
     "onLanguage:java",
-    "onLanguage:qute-html"
+    "onLanguage:qute-html",
+    "onLanguage:qute-json",
+    "onLanguage:qute-yaml",
+    "onLanguage:qute-txt"
   ],
   "main": "./dist/extension",
   "extensionDependencies": [
@@ -68,6 +71,36 @@
         ],
         "extensions": [
           "qute.html"
+        ],
+        "configuration": "./language-support/qute/language-configuration.json"
+      },
+      {
+        "id": "qute-json",
+        "aliases": [
+          "Qute JSON"
+        ],
+        "extensions": [
+          "qute.json"
+        ],
+        "configuration": "./language-support/qute/language-configuration.json"
+      },
+      {
+        "id": "qute-yaml",
+        "aliases": [
+          "Qute YAML"
+        ],
+        "extensions": [
+          "qute.yaml"
+        ],
+        "configuration": "./language-support/qute/language-configuration.json"
+      },
+      {
+        "id": "qute-txt",
+        "aliases": [
+          "Qute Text"
+        ],
+        "extensions": [
+          "qute.txt"
         ],
         "configuration": "./language-support/qute/language-configuration.json"
       }
@@ -232,6 +265,21 @@
         "language": "qute-html",
         "scopeName": "text.html.qute",
         "path": "./language-support/qute/qute-html.tmLanguage.json"
+      },
+      {
+        "language": "qute-json",
+        "scopeName": "source.json.qute",
+        "path": "./language-support/qute/qute-json.tmLanguage.json"
+      },
+      {
+        "language": "qute-yaml",
+        "scopeName": "source.yaml.qute",
+        "path": "./language-support/qute/qute-yaml.tmLanguage.json"
+      },
+      {
+        "language": "qute-txt",
+        "scopeName": "text.qute",
+        "path": "./language-support/qute/qute-txt.tmLanguage.json"
       },
       {
         "scopeName": "grammar.qute",
