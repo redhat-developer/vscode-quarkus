@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 import * as vscode from 'vscode';
+import * as path from 'path';
 import * as semver from 'semver';
-import { VSCODE_YAML_EXTENSION_ID, MICROPROFILE_SCHEMA, MICROPROFILE_SCHEMA_PREFIX } from "./YamlConstants";
+
+import {
+  VSCODE_YAML_EXTENSION_ID,
+  VSCODE_YAML_DISPLAY_NAME,
+  VSCODE_YAML_NOT_INSTALLED_MESSAGE,
+  VSCODE_YAML_LOW_VERSION_MESSAGE,
+  VSCODE_YAML_NO_REGISTRATION_MESSAGE,
+  VSCODE_YAML_INSTALL_SUCCESS,
+  MICROPROFILE_SCHEMA,
+  MICROPROFILE_SCHEMA_PREFIX
+} from "./YamlConstants";
+
 import { Uri } from 'vscode';
 import { LanguageClient } from 'vscode-languageclient';
 import { MicroProfileLS } from '../definitions/constants';
@@ -91,6 +103,7 @@ export class YamlSchemaCache {
 }
 
 let yamlSchemaCache: YamlSchemaCache;
+let listener: vscode.Disposable|undefined = undefined;
 
 export async function registerYamlSchemaSupport(): Promise<YamlSchemaCache | undefined> {
   const yamlPlugin: any = await activateYamlExtension();
@@ -105,22 +118,39 @@ export async function registerYamlSchemaSupport(): Promise<YamlSchemaCache | und
 }
 
 // find redhat.vscode-yaml extension and try to activate it to get the yaml contributor
+// this function should only be called once when vscode-quarkus activates
 async function activateYamlExtension(): Promise<{ registerContributor: YamlSchemaContributor } | undefined> {
   const ext = vscode.extensions.getExtension(VSCODE_YAML_EXTENSION_ID);
+  const isApplicationYamlOpened: boolean = isEditorApplicationYaml(vscode.window.activeTextEditor);
+
   if (!ext) {
-    vscode.window.showWarningMessage('Please install \'YAML Support by Red Hat\' via the Extensions pane.');
+    if (isApplicationYamlOpened) {
+      await askInstallVSCodeYaml(VSCODE_YAML_NOT_INSTALLED_MESSAGE);
+    } else {
+      listener = createInstallListener(VSCODE_YAML_NOT_INSTALLED_MESSAGE);
+    }
+    return undefined;
+  }
+
+  if (ext.packageJSON.version && !semver.gte(ext.packageJSON.version, '0.0.15')) {
+    if (isApplicationYamlOpened) {
+      await askInstallVSCodeYaml(VSCODE_YAML_LOW_VERSION_MESSAGE);
+    } else {
+      listener = createInstallListener(VSCODE_YAML_LOW_VERSION_MESSAGE);
+    }
     return undefined;
   }
   const yamlPlugin = await ext.activate();
 
   if (!yamlPlugin || !yamlPlugin.registerContributor) {
-    vscode.window.showWarningMessage('The installed Red Hat YAML extension doesn\'t support Quarkus Intellisense. Please upgrade \'YAML Support by Red Hat\' via the Extensions pane.');
+    if (isApplicationYamlOpened) {
+      await askInstallVSCodeYaml(VSCODE_YAML_NO_REGISTRATION_MESSAGE);
+    } else {
+      listener = createInstallListener(VSCODE_YAML_NO_REGISTRATION_MESSAGE);
+    }
     return undefined;
   }
 
-  if (ext.packageJSON.version && !semver.gte(ext.packageJSON.version, '0.0.15')) {
-    vscode.window.showWarningMessage('The installed Red Hat YAML extension doesn\'t support multiple schemas. Please upgrade \'YAML Support by Red Hat\' via the Extensions pane.');
-  }
   return yamlPlugin;
 }
 
@@ -146,4 +176,44 @@ function requestYamlSchemaContentCallback(uri: string): Promise<string | undefin
   }
   const applicationYamlUri = uri.substring(MICROPROFILE_SCHEMA_PREFIX.length);
   return yamlSchemaCache.getSchema(applicationYamlUri);
+}
+
+function isEditorApplicationYaml(editor: vscode.TextEditor|undefined): boolean {
+  if (!editor) {
+    return false;
+  }
+  const currentFileName: string = editor.document.fileName;
+  if (!currentFileName) return false;
+  return currentFileName.endsWith(path.sep + 'application.yaml') || currentFileName.endsWith(path.sep + 'application.yml');
+}
+
+function createInstallListener(message: string): vscode.Disposable {
+  return vscode.window.onDidChangeActiveTextEditor(async (change: vscode.TextEditor | undefined) => {
+    if (!change) return;
+
+    if (isEditorApplicationYaml(change)) {
+      await askInstallVSCodeYaml(message);
+    }
+  });
+}
+
+async function askInstallVSCodeYaml(message: string): Promise<void> {
+  const INSTALL: string = 'Install';
+  const RELOAD: string = 'Reload';
+
+  const response: string|undefined = await vscode.window.showWarningMessage(message, INSTALL);
+  if (response === INSTALL) {
+    await installVSCodeYaml();
+    if (listener) listener.dispose();
+    const response: string|undefined = await vscode.window.showInformationMessage(VSCODE_YAML_INSTALL_SUCCESS, RELOAD);
+    if (response === RELOAD) {
+      await vscode.commands.executeCommand<void>('workbench.action.reloadWindow');
+    }
+  }
+}
+
+async function installVSCodeYaml(): Promise<void> {
+  await vscode.window.withProgress<void>({ location: vscode.ProgressLocation.Notification, title: `Installing '${VSCODE_YAML_DISPLAY_NAME}'...`}, () => {
+    return vscode.commands.executeCommand<void>('workbench.extensions.installExtension', VSCODE_YAML_EXTENSION_ID);
+  });
 }
