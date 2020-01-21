@@ -13,6 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as vscode from 'vscode';
+
 export const MICROPROFILE_SCHEMA = 'microprofile';
 export const MICROPROFILE_SCHEMA_PREFIX = MICROPROFILE_SCHEMA + '://schema/';
 export const VSCODE_YAML_EXTENSION_ID = 'redhat.vscode-yaml';
+export const VSCODE_YAML_DISPLAY_NAME = 'YAML Support by Red Hat';
+export const VSCODE_YAML_NOT_INSTALLED_MESSAGE = `For application.yaml support, please install '${VSCODE_YAML_DISPLAY_NAME}' and reload ${vscode.env.appName}.`;
+export const VSCODE_YAML_LOW_VERSION_MESSAGE = `The installed version of '${VSCODE_YAML_DISPLAY_NAME}' doesn't support multiple schemas. Please install the latest version and reload ${vscode.env.appName}.`;
+export const VSCODE_YAML_NO_REGISTRATION_MESSAGE = `The installed version of '${VSCODE_YAML_DISPLAY_NAME}' doesn't support Quarkus Intellisense. Please install the latest version and reload ${vscode.env.appName}.`;
+export const VSCODE_YAML_INSTALL_SUCCESS = `Successfully installed '${VSCODE_YAML_DISPLAY_NAME}'. Please reload ${vscode.env.appName}.`;
