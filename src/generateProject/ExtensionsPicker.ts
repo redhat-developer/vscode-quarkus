@@ -16,7 +16,7 @@
 import * as path from 'path';
 
 import { QUARKUS_GROUP_ID } from '../definitions/constants';
-import { ConfigurationChangeEvent, Disposable, QuickPickItem, Uri, workspace, window } from 'vscode';
+import { QuickPickItem, Uri } from 'vscode';
 import { State } from '../definitions/inputState';
 import { QExtension } from '../definitions/QExtension';
 import { QuarkusConfig } from '../QuarkusConfig';
@@ -29,6 +29,7 @@ import { getQExtensions } from '../utils/requestUtils';
  */
 interface PickExtensionsOptions {
   showLastUsed: boolean; // Set to true to show the 'last used' option
+  showRequiredExtensions: boolean; // required extensions are pre-selected and cannot be unselected
   allowZeroExtensions: boolean; // Set to true to allow user to continue with zero extensions
   step?: number; // Optional: Specify an explicit step number if desired
 }
@@ -54,27 +55,41 @@ export class ExtensionsPicker {
   private defaultExtensions: QExtension[];
   private selectedExtensions: QExtension[];
   private unselectedExtensions: QExtension[];
+  private options: PickExtensionsOptions;
 
   public static async createExtensionsPicker(input: MultiStepInput,
     state: Partial<State>,
     options: PickExtensionsOptions,
     next?: (input: MultiStepInput, state: Partial<State>) => any) {
 
-    const extensionsPicker: ExtensionsPicker = new ExtensionsPicker();
+    const extensionsPicker: ExtensionsPicker = new ExtensionsPicker(options);
     await extensionsPicker.setExtensions();
 
-    return extensionsPicker.pickExtensions(input, state, options, next);
+    return extensionsPicker.pickExtensions(input, state, next);
   }
 
-  private constructor() {
+  private constructor(options: PickExtensionsOptions) {
     this.showDescription = QuarkusConfig.getShowExtensionDescriptions();
+    this.options = options;
   }
 
   private async setExtensions() {
     try {
       this.allExtensions = await getQExtensions();
+
       this.defaultExtensions = this.getDefaultQExtensions();
       this.selectedExtensions = [];
+
+      if (this.options.showRequiredExtensions) {
+        this.allExtensions.forEach((extension: QExtension) => {
+          if (extension.isRequired) {
+            this.selectedExtensions.push(extension);
+          }
+        });
+      } else {
+        this.allExtensions = this.allExtensions.filter((extension: QExtension) => !extension.isRequired);
+      }
+
       this.unselectedExtensions = this.allExtensions;
     } catch (err) {
       throw err;
@@ -84,18 +99,17 @@ export class ExtensionsPicker {
   private async pickExtensions(
     input: MultiStepInput,
     state: Partial<State>,
-    options: PickExtensionsOptions,
     next?: (input: MultiStepInput, state: Partial<State>) => any) {
 
     let pick: QuickPickExtensionItem;
 
     do {
 
-      const quickPickItems: QuickPickExtensionItem[] = this.getItems(options);
+      const quickPickItems: QuickPickExtensionItem[] = this.getItems();
 
       pick = await input.showQuickPick<QuickPickExtensionItem, QuickPickParameters<QuickPickExtensionItem>>({
         title: 'Quarkus Tools',
-        step: options.step ? options.step : input.getStepNumber(),
+        step: this.options.step ? this.options.step : input.getStepNumber(),
         totalSteps: state.totalSteps,
         placeholder: 'Pick extensions',
         items: quickPickItems,
@@ -112,15 +126,17 @@ export class ExtensionsPicker {
         switch (pick.type) {
           case Type.Extension: {
             // unselect
-            if (this.isSelected(pick.extension)) {
-              this.selectedExtensions = this.selectedExtensions.filter((it) => it.artifactId !== pick.extension.artifactId);
-              this.unselectedExtensions.push(pick.extension);
-              this.unselectedExtensions.sort((a, b) => a.name.localeCompare(b.name));
-            } else {
-              // select
-              this.unselectedExtensions = this.unselectedExtensions.filter((it) => it.artifactId !== pick.extension.artifactId);
-              this.selectedExtensions.push(pick.extension);
-              this.selectedExtensions.sort((a, b) => a.name.localeCompare(b.name));
+            if (!pick.extension.isRequired) {
+              if (this.isSelected(pick.extension)) {
+                this.selectedExtensions = this.selectedExtensions.filter((it) => it.artifactId !== pick.extension.artifactId);
+                this.unselectedExtensions.push(pick.extension);
+                this.unselectedExtensions.sort((a, b) => a.name.localeCompare(b.name));
+              } else {
+                // select
+                this.unselectedExtensions = this.unselectedExtensions.filter((it) => it.artifactId !== pick.extension.artifactId);
+                this.selectedExtensions.push(pick.extension);
+                this.selectedExtensions.sort((a, b) => a.name.localeCompare(b.name));
+              }
             }
             break;
           }
@@ -159,7 +175,7 @@ export class ExtensionsPicker {
 
   private getDefaultQExtensions(): QExtension[] {
     const result: QExtension[] = [];
-    let defaultExtensionIds: any[] = QuarkusContext.getDefaultExtensions();
+    let defaultExtensionIds: string[] = QuarkusContext.getDefaultExtensions();
 
     defaultExtensionIds = defaultExtensionIds.filter((extensionId: any) => {
       return typeof extensionId === 'string' && extensionId.length > 0;
@@ -175,28 +191,35 @@ export class ExtensionsPicker {
     });
 
     this.allExtensions.forEach((extension: QExtension) => {
-      if (defaultExtensionIds.includes(extension.getGroupIdArtifactIdString())) {
+      if ((this.options.showRequiredExtensions && extension.isRequired) ||
+          defaultExtensionIds.includes(extension.getGroupIdArtifactIdString())) {
         result.push(extension);
       }
     });
     return result;
   }
 
-  private getItems(options: PickExtensionsOptions): QuickPickExtensionItem[] {
+  private getItems(): QuickPickExtensionItem[] {
     let items: QuickPickExtensionItem[] = [];
 
-    if (this.selectedExtensions.length === 0 && this.defaultExtensions.length > 0 && options.showLastUsed) {
-      this.addLastUsedOption(items);
+    const nothingSelectedAndDefaultsExist: boolean = this.selectedExtensions.length === 0 && this.defaultExtensions.length > 0;
+    const isSelectedAllRequired: boolean = this.selectedExtensions.length > 0 && this.selectedExtensions.every(e => e.isRequired);
+    const isDefaultAllRequired: boolean = this.defaultExtensions.length > 0 && this.defaultExtensions.every(e => e.isRequired);
+
+    if (this.options.showLastUsed) {
+      if (nothingSelectedAndDefaultsExist || (isSelectedAllRequired && !isDefaultAllRequired)) {
+        this.addLastUsedOption(items);
+      }
     }
 
-    if (options.allowZeroExtensions || this.selectedExtensions.length > 0) {
+    if (this.options.allowZeroExtensions || this.selectedExtensions.length > 0) {
       this.addContinueOption(items);
     }
 
     items = items.concat(this.selectedExtensions.concat(this.unselectedExtensions).map((it: QExtension) => {
       const quickPickItem: QuickPickExtensionItem = {
         type: Type.Extension,
-        description: it.category,
+        description: it.category + (it.isRequired ? ' - (This is a required extension)' : ''),
         label: `${this.isSelected(it) ? '$(check) ' : ''}${it.name}`,
         extension: it
       };
@@ -216,9 +239,10 @@ export class ExtensionsPicker {
   }
 
   private addContinueOption(items: QuickPickExtensionItem[]) {
+    const numSelected: number = this.selectedExtensions.length;
     items.push({
       type: Type.Stop,
-      label: `$(tasklist) ${this.selectedExtensions.length} extensions selected`,
+      label: `$(tasklist) ${numSelected} extension${numSelected > 1 ? 's' : ''} selected`,
       description: '',
       detail: 'Press <Enter>  to continue'
     });

@@ -9,7 +9,7 @@ import * as fse from 'fs-extra';
 
 import { INPUT_TITLE, BuildToolName } from '../definitions/constants';
 import { MultiStepInput } from '../utils/multiStepUtils';
-import { OpenDialogOptions, QuickPickItem, Uri, commands, window, workspace } from 'vscode';
+import { OpenDialogOptions, QuickPickItem, Uri, commands, window, workspace, extensions } from 'vscode';
 import { QuarkusContext } from '../QuarkusContext';
 import { ProjectGenState } from '../definitions/inputState';
 import { QExtension } from '../definitions/QExtension';
@@ -140,7 +140,7 @@ export async function generateProjectWizard() {
       prompt: 'Your resource name',
       validate: validateResourceName
     });
-    return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(input, state, { showLastUsed: true, allowZeroExtensions: true });
+    return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(input, state, { showLastUsed: true, showRequiredExtensions: true, allowZeroExtensions: true });
   }
 
   try {
@@ -205,6 +205,9 @@ async function showOpenFolderDialog(customOptions: OpenDialogOptions): Promise<U
 }
 
 function saveDefaults(state: ProjectGenState): void {
+
+  const optionalExtensions: QExtension[] = state.extensions.filter((extension: QExtension) => !extension.isRequired);
+
   QuarkusContext.setDefaults({
     buildTool: state.buildTool,
     groupId: state.groupId,
@@ -212,7 +215,7 @@ function saveDefaults(state: ProjectGenState): void {
     projectVersion: state.projectVersion,
     packageName: state.packageName,
     resourceName: state.resourceName,
-    extensions: state.extensions.map((extension: QExtension) => {
+    extensions: optionalExtensions.map((extension: QExtension) => {
       return extension.getGroupIdArtifactIdString();
     })
   });

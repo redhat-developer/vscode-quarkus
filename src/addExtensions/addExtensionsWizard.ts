@@ -63,7 +63,7 @@ export async function addExtensionsWizard() {
 
     state.workspaceFolder = workspace.getWorkspaceFolder(state.buildFilePath);
     state.buildSupport = await getBuildSupport(state.workspaceFolder);
-    return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(input, state, { showLastUsed: false, allowZeroExtensions: false, step: currentStep });
+    return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(input, state, { showLastUsed: false, showRequiredExtensions: false, allowZeroExtensions: false, step: currentStep });
   }
 
   try {
