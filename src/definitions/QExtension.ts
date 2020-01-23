@@ -26,6 +26,7 @@ export class QExtension {
   labels: string[];
   groupId: string;
   artifactId: string;
+  isRequired: boolean;
 
   constructor(name: string, category: string, description: string, labels: string[], groupId: string, artifactId: string) {
     this.name = name;
@@ -34,6 +35,7 @@ export class QExtension {
     this.labels = labels;
     this.groupId = groupId;
     this.artifactId = artifactId;
+    this.isRequired = name === 'RESTEasy JAX-RS'; // 'RESTEasy JAX-RS' is included in every Quarkus project
   }
 
   getGroupIdArtifactIdString() {

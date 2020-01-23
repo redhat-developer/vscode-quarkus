@@ -59,7 +59,7 @@ export namespace QuarkusContext {
     return context.globalState.get<string>(RESOURCE_NAME, DEFAULT_RESOURCE_NAME);
   }
 
-  export function getDefaultExtensions(): any[] {
+  export function getDefaultExtensions(): string[] {
     checkContext();
     return context.globalState.get<string[]>(EXTENSIONS, []);
   }
