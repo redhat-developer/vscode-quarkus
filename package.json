@@ -216,7 +216,7 @@
             "error"
           ],
           "default": "warning",
-          "description": "Validation severity for duplicate Quarkus properties.",
+          "markdownDescription": "Validation severity for duplicate properties for Quarkus/MicroProfile `*.properties` files.",
           "scope": "window"
         },
         "quarkus.tools.validation.required.severity": {
@@ -227,7 +227,7 @@
             "error"
           ],
           "default": "none",
-          "description": "Validation severity for required Quarkus properties.",
+          "markdownDescription": "Validation severity for required properties for Quarkus/MicroProfile `*.properties` files.",
           "scope": "window"
         },
         "quarkus.tools.validation.unknown.severity": {
@@ -238,7 +238,7 @@
             "error"
           ],
           "default": "warning",
-          "description": "Validation severity for unknown Quarkus properties.",
+          "markdownDescription": "Validation severity for unknown properties for Quarkus/MicroProfile `*.properties` files.",
           "scope": "window"
         },
         "quarkus.tools.validation.syntax.severity": {
@@ -249,7 +249,18 @@
             "error"
           ],
           "default": "error",
-          "description": "Validation severity for Quarkus property syntax checking.",
+          "markdownDescription": "Validation severity for property syntax checking for Quarkus/MicroProfile `*.properties` files",
+          "scope": "window"
+        },
+        "quarkus.tools.validation.value.severity": {
+          "type": "string",
+          "enum": [
+            "none",
+            "warning",
+            "error"
+          ],
+          "default": "error",
+          "markdownDescription": "Validation severity for property values for Quarkus/MicroProfile `*.properties` files.",
           "scope": "window"
         },
         "quarkus.tools.validation.unknown.excluded": {
