@@ -55,19 +55,20 @@ The following settings are supported:
 * `quarkus.tools.trace.server` : Trace the communication between VS Code and the Quarkus Language Server in the Output view.
 * `quarkus.tools.symbols.showAsTree` : Show Quarkus properties as tree (Outline). Default is `true`.
 * `quarkus.tools.validation.enabled` : Enables Quarkus validation. Default is `true`.
-* `quarkus.tools.validation.duplicate.severity` : Validation severity for duplicate Quarkus properties.
+* `quarkus.tools.validation.duplicate.severity` : Validation severity for duplicate properties for Quarkus/MicroProfile `*.properties` files.
 Default is `warning`.
-* `quarkus.tools.validation.syntax.severity` : Validation severity for Quarkus property syntax checking.
+* `quarkus.tools.validation.syntax.severity` : Validation severity for property syntax checking for Quarkus/MicroProfile `*.properties` files.
 Default is `error`.
-* `quarkus.tools.validation.required.severity` : Validation severity for required Quarkus properties.
+* `quarkus.tools.validation.required.severity` : Validation severity for required properties for Quarkus/MicroProfile `*.properties` files.
 Default is `none`.
-* `quarkus.tools.validation.unknown.severity` : Validation severity for unknown Quarkus properties. Default is `warning`.
+* `quarkus.tools.validation.unknown.severity` : Validation severity for unknown properties for Quarkus/MicroProfile `*.properties` files. Default is `warning`.
 * `quarkus.tools.validation.unknown.excluded` : Array of properties to ignore for unknown Quarkus properties validation. Patterns can be used ('*' = any string, '?' = any character). Default is `[]`.
 
 
 Since 1.3.0:
 * `quarkus.tools.codeLens.urlCodeLensEnabled` : Enable/disable the URL code lenses for REST services. Default is`true`.
 * `quarkus.tools.starter.showExtensionDescriptions`: Determines whether to show the Quarkus extension descriptions when selecting Quarkus extensions. Default is `true`.
+* `quarkus.tools.validation.value.severity`: Validation severity for property values for Quarkus/MicroProfile `*.properties` files. Default is `error`.
 
 ## Articles
 
