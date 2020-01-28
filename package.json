@@ -32,7 +32,6 @@
   ],
   "activationEvents": [
     "onCommand:quarkusTools.createProject",
-    "onCommand:quarkusTools.addExtension",
     "onCommand:quarkusTools.debugQuarkusProject",
     "onCommand:quarkusTools.welcome",
     "workspaceContains:**/src/main/resources/application.properties",
@@ -281,6 +280,14 @@
           "scope": "window"
         }
       }
+    },
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "quarkusTools.addExtension",
+          "when": "quarkusProjectExists"
+        }
+      ]
     },
     "grammars": [
       {

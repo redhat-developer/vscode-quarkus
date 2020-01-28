@@ -18,7 +18,7 @@ import { AddExtensionsState, State } from "../definitions/inputState";
 
 import { MultiStepInput } from "../utils/multiStepUtils";
 import { QExtension } from "../definitions/QExtension";
-import { QuickPickItem, Terminal, Uri, WorkspaceFolder, window, workspace } from "vscode";
+import { QuickPickItem, Terminal, Uri, window, workspace } from "vscode";
 import { ITerminalOptions, terminalCommandRunner } from "../terminal/terminalCommandRunner";
 import { getBuildSupport, searchBuildFile } from '../buildSupport/BuildSupportUtils';
 import { ExtensionsPicker } from "../generateProject/ExtensionsPicker";
@@ -34,8 +34,7 @@ export async function addExtensionsWizard() {
   }
 
   async function chooseBuildFileIfMultipleExists(input: MultiStepInput, state: Partial<AddExtensionsState>) {
-
-    const buildFileList: Uri[] = await searchBuildFile(); // TODO deal with this better
+    const buildFileList: Uri[] = await searchBuildFile();
 
     if (buildFileList.length === 0) {
       throw 'pom.xml or build.gradle could not be located.';
@@ -47,13 +46,15 @@ export async function addExtensionsWizard() {
       // show quick pick in this case
 
       const quickPickItems: QuickPickItem[] = buildFileList.map((uri: Uri) => {
-        return { label: uri.fsPath };
+        const filepath: string = uri.fsPath;
+        const parentFolder: string = path.dirname(filepath).split(path.sep).pop();
+        return { label: parentFolder, detail: uri.fsPath };
       });
 
       const selectedPomPath: string = (await input.showQuickPick({
-        title: "Multiple build files found under current directory. Choose a build file.",
+        title: "Multiple Quarkus projects were found in the following folders. Select a Quarkus project.",
         items: quickPickItems
-      })).label;
+      })).detail;
       currentStep = 2;
 
       state.buildFilePath = buildFileList.filter((uri: Uri) => {

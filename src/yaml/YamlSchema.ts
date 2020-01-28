@@ -47,7 +47,12 @@ interface JsonSchemaForProjectInfo {
 }
 
 export interface MicroProfilePropertiesChangeEvent {
-  projectURIs: Array<String>;
+  projectURIs: Array<string>;
+  type: Array<MicroProfilePropertiesScopeEnum>;
+}
+export enum MicroProfilePropertiesScopeEnum {
+  sources = 1,
+  dependencies = 2
 }
 
 // Yaml Schema cache which caches YAML Schema (in JSON format) for application.yaml files

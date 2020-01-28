@@ -16,12 +16,12 @@
 import * as requirements from './languageServer/requirements';
 
 import { VSCodeCommands, MicroProfileLS } from './definitions/constants';
-
 import { DidChangeConfigurationNotification, LanguageClientOptions, LanguageClient } from 'vscode-languageclient';
 import { ExtensionContext, commands, window, workspace } from 'vscode';
 import { QuarkusContext } from './QuarkusContext';
 import { addExtensionsWizard } from './addExtensions/addExtensionsWizard';
 import { createTerminateDebugListener } from './debugging/terminateProcess';
+import quarkusProjectListener from './QuarkusProjectListener';
 import { generateProjectWizard } from './generateProject/generationWizard';
 import { prepareExecutable } from './languageServer/javaServerStarter';
 import { tryStartDebugging } from './debugging/startDebugging';
@@ -35,8 +35,10 @@ let languageClient: LanguageClient;
 export function activate(context: ExtensionContext) {
   QuarkusContext.setContext(context);
   displayWelcomePageIfNeeded(context);
+  quarkusProjectListener.updateCacheAndContext();
 
   context.subscriptions.push(createTerminateDebugListener());
+  context.subscriptions.push(quarkusProjectListener.getQuarkusProjectListener());
 
   /**
    * Register Yaml Schema support to manage application.yaml
@@ -60,6 +62,7 @@ export function activate(context: ExtensionContext) {
     context.subscriptions.push(commands.registerCommand(MicroProfileLS.PROPERTIES_CHANGED_NOTIFICATION, (event: MicroProfilePropertiesChangeEvent) => {
       languageClient.sendNotification(MicroProfileLS.PROPERTIES_CHANGED_NOTIFICATION, event);
       yamlSchemaCache.then(cache => { if (cache) cache.evict(event); });
+      quarkusProjectListener.propertiesChange(event);
     }));
   }).catch((error) => {
     window.showErrorMessage(error.message, error.label).then((selection) => {

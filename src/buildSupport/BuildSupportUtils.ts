@@ -1,8 +1,9 @@
-import { Uri, WorkspaceFolder, workspace } from 'vscode';
-import { getFilePathsFromWorkspace } from '../utils/workspaceUtils';
+import { Uri, WorkspaceFolder } from 'vscode';
+import { getFilePathsFromWorkspace, getFilePathsFromWorkspacePath, getWorkspaceProjectLabels } from '../utils/workspaceUtils';
 import { BuildSupport } from './BuildSupport';
 import { GradleBuildSupport } from './GradleBuildSupport';
 import { MavenBuildSupport } from './MavenBuildSupport';
+import { ProjectLabel } from '../definitions/constants';
 
 const POM_XML = 'pom.xml';
 const BUILD_GRADLE = 'build.gradle';
@@ -25,20 +26,16 @@ export async function getBuildSupport(workspaceFolder: WorkspaceFolder): Promise
 }
 
 /**
- * Returns an array of Uris for pom.xml and build.gradle files located under
- * (checks subdirectories) all workspace folders
+ * Returns an array of uris for pom.xml and build.gradle files belonging to
+ * Quarkus projects located in the current workspace
  */
 export async function searchBuildFile(): Promise<Uri[]> {
-  const workspaceFolders: WorkspaceFolder[] | undefined = workspace.workspaceFolders;
+  const folders: string[] = (await getWorkspaceProjectLabels(ProjectLabel.Quarkus)).map(info => info.uri);
 
-  if (workspaceFolders === undefined) {
-    return [];
-  }
-
-  const buildFilePaths: Uri[] = await workspaceFolders.reduce(async (buildFilePaths: Promise<Uri[]>, folderToSearch: WorkspaceFolder) => {
+  const buildFilePaths: Uri[] = await folders.reduce(async (buildFilePaths: Promise<Uri[]>, pathToSearch: string) => {
     const accumulator = await buildFilePaths;
-    const buildGradleUris: Uri[] = await getFilePathsFromWorkspace(folderToSearch, `**/${BUILD_GRADLE}`);
-    const pomFileUris: Uri[] = await getFilePathsFromWorkspace(folderToSearch, `**/${POM_XML}`);
+    const buildGradleUris: Uri[] = await getFilePathsFromWorkspacePath(pathToSearch, `**/${BUILD_GRADLE}`);
+    const pomFileUris: Uri[] = await getFilePathsFromWorkspacePath(pathToSearch, `**/${POM_XML}`);
 
     return Promise.resolve(accumulator.concat(pomFileUris).concat(buildGradleUris));
   }, Promise.resolve([]));
