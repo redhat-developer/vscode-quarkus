@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { RelativePattern, Uri, WorkspaceFolder, window, workspace } from "vscode";
+import { RelativePattern, Uri, WorkspaceFolder, commands, window, workspace } from "vscode";
+import { PROJECT_LABELS_COMMAND_ID, ProjectLabel } from '../definitions/constants';
 
 /**
  * Returns a promise resolving to `true` only if the project located in `workspaceFolder`
@@ -23,14 +23,18 @@ import { RelativePattern, Uri, WorkspaceFolder, window, workspace } from "vscode
  */
 export async function containsQuarkusProject(workspaceFolder: WorkspaceFolder): Promise<boolean> {
   // TODO this function must be improved. It only checks if a file named
-  // pom.xml or build.gradle exists under the provided workspaceFolder\
+  // pom.xml or build.gradle exists under the provided workspaceFolder
 
   return (await getFilePathsFromWorkspace(workspaceFolder, '**/pom.xml')).length > 0 ||
     (await getFilePathsFromWorkspace(workspaceFolder, '**/build.gradle')).length > 0;
 }
 
 export async function getFilePathsFromWorkspace(workspaceFolder: WorkspaceFolder, glob: string): Promise<Uri[]> {
-  return await workspace.findFiles(new RelativePattern(workspaceFolder.uri.fsPath, glob));
+  return await getFilePathsFromWorkspacePath(workspaceFolder.uri.fsPath, glob);
+}
+
+export async function getFilePathsFromWorkspacePath(workspacePath: string, glob: string): Promise<Uri[]> {
+  return await workspace.findFiles(new RelativePattern(workspacePath, glob));
 }
 
 export function getTargetWorkspace(): WorkspaceFolder {
@@ -53,4 +57,31 @@ export function getTargetWorkspace(): WorkspaceFolder {
 
   // TODO maybe implement an input box to determine which workspace folder to debug in
   return workspace.workspaceFolders[0]; // dummy return statement
+}
+
+export interface ProjectLabelInfo {
+  uri: string;
+  labels: ProjectLabel[];
+}
+
+/**
+ * Returns a `Thenable` which resolves to `true` if current workspace
+ * contains a Quarkus project. Resovles to `false` otherwise.
+ */
+export async function checkQuarkusProjectExistsWorkspace(): Promise<boolean> {
+  return (await getWorkspaceProjectLabels(ProjectLabel.Quarkus)).length > 0;
+}
+
+/**
+ * Returns an array of `ProjectTypeInfo` containing information for each project
+ * in the current workspace
+ *
+ * @param projectLabel optioanlly specify what project label to retrieve
+ */
+export async function getWorkspaceProjectLabels(projectLabel?: ProjectLabel): Promise<ProjectLabelInfo[]> {
+  const result: ProjectLabelInfo[] = await commands.executeCommand("java.execute.workspaceCommand", PROJECT_LABELS_COMMAND_ID);
+  if (!projectLabel) return result;
+  return result.filter((projectLabelInfo: ProjectLabelInfo) => {
+    return projectLabelInfo.labels.includes(projectLabel);
+  });
 }

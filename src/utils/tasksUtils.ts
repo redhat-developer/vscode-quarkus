@@ -56,6 +56,7 @@ async function getTasksFromWorkspace(workspaceFolder: WorkspaceFolder): Promise<
 }
 
 function isQuarkusDevTask(task: Task, projectBuildSupport: BuildSupport): boolean {
+
   const execution: ProcessExecution | ShellExecution = task.execution;
   return 'commandLine' in execution &&
     (execution.commandLine.includes(projectBuildSupport.getDefaultExecutable()) ||
