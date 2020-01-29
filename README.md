@@ -62,13 +62,27 @@ Default is `error`.
 * `quarkus.tools.validation.required.severity` : Validation severity for required properties for Quarkus/MicroProfile `*.properties` files.
 Default is `none`.
 * `quarkus.tools.validation.unknown.severity` : Validation severity for unknown properties for Quarkus/MicroProfile `*.properties` files. Default is `warning`.
-* `quarkus.tools.validation.unknown.excluded` : Array of properties to ignore for unknown Quarkus properties validation. Patterns can be used ('*' = any string, '?' = any character). Default is `[]`.
+* `quarkus.tools.validation.unknown.excluded` : Array of properties to ignore for unknown Quarkus properties validation. Patterns can be used ('*' = any string, '?' = any character). Default is `["*/mp-rest/providers/*/priority"]`.
 
 
 Since 1.3.0:
 * `quarkus.tools.codeLens.urlCodeLensEnabled` : Enable/disable the URL code lenses for REST services. Default is`true`.
 * `quarkus.tools.starter.showExtensionDescriptions`: Determines whether to show the Quarkus extension descriptions when selecting Quarkus extensions. Default is `true`.
 * `quarkus.tools.validation.value.severity`: Validation severity for property values for Quarkus/MicroProfile `*.properties` files. Default is `error`.
+
+### **Note for MicroProfile Rest Client properties**:
+
+Due to [this issue](https://github.com/redhat-developer/quarkus-ls/issues/203), the MP Rest property: `<mp-rest-client-class>/mp-rest/providers/<mp-rest-provider-class>/priority` reports an unknown error. 
+
+To avoid having this error, you must configure the following in `settings.json`:
+
+```json
+"quarkus.tools.validation.unknown.excluded": [
+    "*/mp-rest/providers/*/priority"
+]
+```
+
+This settings is set by default.
 
 ## Articles
 
