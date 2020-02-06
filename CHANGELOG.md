@@ -1,5 +1,34 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.3.0 (February 6, 2020)
+
+### Enhancements
+
+ * Add new `quarkus.tools.validation.value.severity` preference to disable application.properties value validation. See [#201](https://github.com/redhat-developer/vscode-quarkus/issues/201)
+ * Add Qute TextMate grammar and language configuration for HTML files. See [#182](https://github.com/redhat-developer/vscode-quarkus/issues/182)
+ * Add Qute TextMate grammar and language configuration for JSON, YAML and txt files. See [#194](https://github.com/redhat-developer/vscode-quarkus/pull/194)
+ * Add support for YAML configuration files. See [#189](https://github.com/redhat-developer/vscode-quarkus/pull/189)
+ * Update language server to support microprofile-config.properties. See [#181](https://github.com/redhat-developer/vscode-quarkus/issues/181)
+ * Use API to check if tasks.json and launch.json exist. See [#180](https://github.com/redhat-developer/vscode-quarkus/pull/180)
+ * Add extension description and toggle button to extensions list. See [#164](https://github.com/redhat-developer/vscode-quarkus/issues/164)
+ * Provide option to add created new project folder to multi-root VS Code workspace. See [#157](https://github.com/redhat-developer/vscode-quarkus/issues/157)
+ * Improve the QuickPick for choosing extensions . See [#141](https://github.com/redhat-developer/vscode-quarkus/issues/141)
+ * Add support for MicroProfile REST properties. See [#104](https://github.com/redhat-developer/vscode-quarkus/issues/104)
+ * Add a progress bar / visual clue when loading completion is too long. See [#58](https://github.com/redhat-developer/vscode-quarkus/issues/58)
+
+### Bug Fixes
+
+ * Fix npm vulnerability. See [#175](https://github.com/redhat-developer/vscode-quarkus/pull/175)
+ * Overwrite existing project prompt not appearing on Windows. See [#167](https://github.com/redhat-developer/vscode-quarkus/issues/167)
+ * User is asked if Quarkus dev task should be terminated even if it has already been terminated. See [#132](https://github.com/redhat-developer/vscode-quarkus/issues/132)
+ * Kubernetes properties don't show up. See [#129](https://github.com/redhat-developer/vscode-quarkus/issues/129)
+
+### Others
+
+ * Publish sources [#177](https://github.com/redhat-developer/vscode-quarkus/pull/177). See [#187](https://github.com/redhat-developer/vscode-quarkus/pull/187)
+ * Register `quarkus.command.configuration.update` command. See [#152](https://github.com/redhat-developer/vscode-quarkus/pull/152)
+ * Remove unused npm dependencies. See [#47](https://github.com/redhat-developer/vscode-quarkus/issues/47)
+
 ## 1.2.0 (November 20, 2019)
 
 ### Enhancements
