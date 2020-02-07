@@ -2,7 +2,7 @@
   "name": "vscode-quarkus",
   "displayName": "Quarkus",
   "description": "Quarkus Tools for Visual Studio Code",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "icon": "icons/logo.png",
   "author": "Red Hat",
   "publisher": "redhat",
@@ -265,7 +265,9 @@
         },
         "quarkus.tools.validation.unknown.excluded": {
           "type": "array",
-          "default": ["*/mp-rest/providers/*/priority"],
+          "default": [
+            "*/mp-rest/providers/*/priority"
+          ],
           "items": {
             "type": "string"
           },
