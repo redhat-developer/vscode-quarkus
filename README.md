@@ -89,7 +89,8 @@ This settings is set by default.
  * [Quarkus developer joy for VS Code](https://quarkus.io/blog/quarkus-developer-joy-for-vs-code/)
  * [Quarkus Tools for Visual Studio Code - 1.1.0 release](https://quarkus.io/blog/vscode-quarkus-1.1.0/)
  * [Quarkus Tools for Visual Studio Code - 1.2.0 release](https://quarkus.io/blog/vscode-quarkus-1.2.0/)
- 
+ * [Introducing 10 new features in Quarkus Tools for Visual Studio Code 1.3.0](https://quarkus.io/blog/vscode-quarkus-1.3.0/)
+
 ## Contributing
 
 This is an open source project open to anyone. Contributions are extremely welcome!
