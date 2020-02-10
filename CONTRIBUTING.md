@@ -5,70 +5,118 @@ If you have any questions or suggestions we are happy to hear them.
 
 ## Project Structure
 For vscode-quarkus to work, it relies on the
-[Quarkus language server](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.ls)
+[MicroProfile language server](https://github.com/redhat-developer/quarkus-ls/tree/master/microprofile.ls)
 and the 
-[Quarkus jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt)
-. The Quarkus language server is responsible for providing
+[MicroProfile jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/microprofile.jdt)
+. The MicroProfile language server is responsible for providing
 [LSP language features](https://microsoft.github.io/language-server-protocol/specification)
-to VSCode, while the Quarkus jdt.ls extension is responsible for listening
+to VSCode, while the MicroProfile jdt.ls extension is responsible
+for functionalities like listening
 to Java classpath changes and generating config setting metadata for
 the `application.properties` file.
 The reason why 
 [vscode-java](https://github.com/redhat-developer/vscode-jav) 
 is required for vscode-quarkus to work, is because vscode-java
 starts the [jdt.ls](https://github.com/eclipse/eclipse.jdt.ls)
-language server, which is required to run the Quarkus jdt.ls extension.  
+language server, which is required to run the MicroProfile jdt.ls extension.  
 
 ![](images/componentDiagram.png)  
 The image above represents communication between the three components. 
-As the image implies, the Quarkus Language Server cannot directly 
-communicate with the Quarkus jdt.ls extension and vice-versa. They must 
+As the image implies, the MicroProfile language server cannot directly 
+communicate with the MicroProfile jdt.ls extension and vice-versa. They must 
 communicate via vscode-quarkus.  
 
 Here is an example of how the components work together for
-`application.properties` completion.  
+`application.properties` completion:
 
-Step 1. A Quarkus project is open is VSCode, and completion has been 
+**Step 1.** A Quarkus project is opened in VSCode, and completion has been 
 invoked inside the `application.properties` file, which sends a
-`textDocument/completion` request to the Quarkus language server.  
+`textDocument/completion` request to the MicroProfile language server.  
 
-Step 2. Quarkus language server checks its cache if completion options
+**Step 2.** MicroProfile language server checks its cache if completion options
 exist.  
-* If it exists the Quarkus language server sends them to VSCode 
+* If it exists the MicroProfile language server sends them to VSCode 
 as the response to the `textDocument/completion` request.
 Communication is complete, and does not proceed to Step 3 
 and onwards.
-* If it does not exist, the Quarkus language server sends a 
-custom request, `quarkus/projectInfo` to vscode-quarkus.  
+* If it does not exist, the MicroProfile language server sends a 
+custom request, `microprofile/projectInfo` to vscode-quarkus.  
 Proceed to Step 3.  
 
-Step 3. vscode-quarkus receives the `quarkus/projectInfo` request,
-and runs the `quarkus.java.projectInfo` command. This command was
-defined by the Quarkus jdt.ls extension.  
+**Step 3.** vscode-quarkus receives the `microprofile/projectInfo` request,
+and delegates it to the MicroProfile jdt.ls extension.  
 
-Step 4. The Quarkus jdt.ls extension receives the command, determines
-information about the currently opened Quarkus project and returns
-the information to vscode-quarkus.  
+**Step 4.** The MicroProfile jdt.ls extension receives the command, determines
+[project information](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/commons/MicroProfileProjectInfo.java)
+(project URI, configuration properties, hints etc.)
+about the currently opened (MicroProfile or Quarkus) project and returns
+the information to vscode-quarkus. The project information is then sent to
+the MicroProfile language server
 
-The information is computed by scanning all classes annotated with `@ConfigRoot` Quarkus annotation from all project classpath JARs and generating the proper Quarkus properties.
+**Step 5.** vscode-quarkus receives the project information and sends it
+to the MicroProfile language server.  
 
-For instance if the project has a `pom.xml` with this dependency:
+**Step 6.** MicroProfile language server receives the information, adds it 
+to its cache, and returns the completion options stored in the 
+project information as the response to the `textDocument/completion`
+request.
 
-```xml
-<dependency>
-    <groupId>io.quarkus</groupId>
-    <artifactId>quarkus-core-deployment</artifactId>
-</dependency>
-```
+## Implementing language features for `application.properties`
+When an `application.properties` file sends a request (e.g. textDocument/completion) to the
+MicroProfile language server, the requests are accepted in
+[ApplicationPropertiesTextDocumentService#completion](https://github.com/redhat-developer/quarkus-ls/blob/9eb7718a6e0faa300f3937e607c3bfffc25c2f1d/microprofile.ls/com.redhat.microprofile.ls/src/main/java/com/redhat/microprofile/ls/ApplicationPropertiesTextDocumentService.java#L150).
+This class receives LSP requests for `application.properties` files.
 
-The scanner will collect the [io.quarkus.deployment.ApplicationConfig](https://github.com/quarkusio/quarkus/blob/master/core/deployment/src/main/java/io/quarkus/deployment/ApplicationConfig.java) class annotated with `@ConfigRoot` and will generate a Quarkus property for each field:
+Properties collected by the MicroProfile jdt.ls extension are cached to keep response times
+fast.
+Collecting properties will not be done unless absolutely necessary
+(ie, if cache doesn't exist, if project dependencies change).
 
- * `quarkus.application.name` for the `name` field.
- * `quarkus.application.version` for the `version` field.
- 
-In addition, the Quarkus jdt.ls extension is able to manage `Quarkus deployment JAR`. 
+When the completion is triggered,
+the MicroProfile LS checks the properties cache for the given `application.properties` file.
+If the cache does not exist, it calls the `microprofile/projectInfo` request to call the JDT LS Extension [projectInfo delegate command handler ](https://github.com/redhat-developer/quarkus-ls/blob/0ff91b4d0fe4670584a3ad23fe645c8141df7f3d/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/core/ls/MicroProfileDelegateCommandHandler.java#L99) which
+uses the
+[properties manager](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/core/PropertiesManager.java)
+that collects MicroProfile and Quarkus properties for the given Java project.
 
-For instance if the project has a `pom.xml` with this dependency:
+This manager is extensible by the
+`com.redhat.microprofile.jdt.core.propertiesProviders`
+[extension point](https://github.com/redhat-developer/quarkus-ls/blob/0ff91b4d0fe4670584a3ad23fe645c8141df7f3d/microprofile.jdt/com.redhat.microprofile.jdt.quarkus/plugin.xml#L5):
+
+ * [com.redhat.microprofile.jdt.core](https://github.com/redhat-developer/quarkus-ls/blob/0ff91b4d0fe4670584a3ad23fe645c8141df7f3d/microprofile.jdt/com.redhat.microprofile.jdt.core/plugin.xml#L33) defines properties provider for MicroProfile.
+ * [com.redhat.microprofile.jdt.quarkus](https://github.com/redhat-developer/quarkus-ls/blob/0ff91b4d0fe4670584a3ad23fe645c8141df7f3d/microprofile.jdt/com.redhat.microprofile.jdt.quarkus/plugin.xml#L5) define properties provider for Quarkus.
+
+
+Here are some providers and the annotation(s) they scan for:
+
+| Class | Annotations |
+|-------|-------------|
+| [MicroProfileConfigPropertyProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/core/providers/MicroProfileConfigPropertyProvider.java) | org.eclipse.microprofile.config.inject.ConfigProperty |
+| [MicroProfileRegisterRestClientProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/core/providers/MicroProfileRegisterRestClientProvider.java) | org.eclipse.microprofile.rest.client.inject.RegisterRestClient |
+| [QuarkusConfigPropertiesProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/providers/QuarkusConfigPropertiesProvider.java) | io.quarkus.arc.config.ConfigProperties |
+| [QuarkusConfigRootProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/providers/QuarkusConfigRootProvider.java) | io.quarkus.runtime.annotations.ConfigRoot |
+| [QuarkusKubernetesProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/providers/QuarkusKubernetesProvider.java) | io.dekorate.kubernetes.annotation.KubernetesApplication<br>io.dekorate.openshift.annotation.OpenshiftApplication<br>io.dekorate.s2i.annotation.S2iBuild<br>io.dekorate.docker.annotation.DockerBuild |
+
+
+## Searching for properties in JARs not in the user's Quarkus project's classpath
+Some Quarkus properties like `quarkus.hibernate-orm.dialect` are not defined in JARs belonging
+to the current Quarkus project's classpath. Some Quarkus classpath JARs have deployment JARs.
+Generally speaking, deployment JARs are not present in the project's classpath.
+
+If classpath JARs have a deployment JAR, it will be defined in the 
+`META-INF/quarkus-extension.properties` file of the classpath JAR.
+
+For example, the `quarkus-hibernate-orm-1.2.0.Final.jar` has a deployment JAR with
+an artifactId of `quarkus-hibernate-orm-deployment`:
+![](images/deployment.png)
+
+The MicroProfile jdt.ls extension creates a "fake" Java project with the deployment
+JARs in its classpath and performs a scan for properties for this fake project, in order
+to retreive the desired properties.
+
+To make things more concrete:
+
+Consider a Quarkus project with a `pom.xml` with this dependency:
 
 ```xml
 <dependency>
@@ -77,14 +125,23 @@ For instance if the project has a `pom.xml` with this dependency:
 </dependency>
 ```
 
-this JAR doesn't contain the classes annotated with `@ConfigRoot`. The JAR which contains those classes is `quarkus-hibernate-orm-deployment*.jar`. This information comes from 
-the `META-INF/quarkus-extension.properties` of the `quarkus-hibernate-orm*.jar` as a property:
+Properties like `quarkus.hibernate-orm.dialect` and `quarkus.hibernate-orm.sql-load-script` are
+not defined (no classes annotated with `@ConfigRoot`) in the `quarkus-hibernate-orm*.jar` JAR.
+
+Those properties are located in its deployment JAR: `quarkus-hibernate-orm-deployment*.jar`.
+
+The deployment jar is listed in `META-INF/quarkus-extension.properties` from the `quarkus-hibernate-orm*.jar` as a property:
 		 
 ```
-deployment-artifact=io.quarkus\:quarkus-hibernate-orm-deployment\:0.21.1
+deployment-artifact=io.quarkus\:quarkus-hibernate-orm-deployment\:1.2.0.Final
 ```
 
-Under the hood, the quarkus jdt.ls extension delegates the resolution (i.e. download) of those deployment jars to Maven, regardless of the user project's build system. So, a project depending on:
+Note that in most cases, a Quarkus project would not have deployment JARs listed as dependencies in the project's
+`pom.xml`, which is why the deployment JARs would not be in the project's classpath.
+
+Therefore in order to scan for the properties in the deployment JAR, under the hood, the MicroProfile jdt.ls extension delegates the resolution (i.e. download) of those deployment jars to Maven, regardless of the user project's build system.
+
+In conclusion, a project depending on:
 
 ```xml
 <dependency>
@@ -93,12 +150,12 @@ Under the hood, the quarkus jdt.ls extension delegates the resolution (i.e. down
 </dependency>
 ```
 
-will generate some hibernate properties like:
+will generate the hibernate properties coming from the deployment JAR, like:
 
  * `quarkus.hibernate-orm.dialect`
  * `quarkus.hibernate-orm.sql-load-script`
- 
-despite the fact that the following dependency was not declared in the `pom.xml`:
+
+even if the deployment JAR itself, was not declared in the Quarkus project's `pom.xml` like so:
 
 ```xml
 <dependency>
@@ -106,15 +163,18 @@ despite the fact that the following dependency was not declared in the `pom.xml`
     <artifactId>quarkus-hibernate-orm-deployment</artifactId>
 </dependency>
 ```
- 
-Step 5. vscode-quarkus receives the project information and sends it
-to the Quarkus language server.  
 
-Step 6. Quarkus language server receives the information, adds it 
-to its cache, and returns the completion options stored in the 
-project information as the response to the `textDocument/completion`
-request. 
+## Implementing language features for Java files
+When a Java file sends a request (e.g. textDocument/codeLens) to the
+MicroProfile language server, the requests are accepted in
+[ApplicationPropertiesTextDocumentService#completion](https://github.com/redhat-developer/quarkus-ls/blob/9eb7718a6e0faa300f3937e607c3bfffc25c2f1d/microprofile.ls/com.redhat.microprofile.ls/src/main/java/com/redhat/microprofile/ls/JavaTextDocumentService.java#L70).
+This class receives LSP requests for Java files.
 
+Currently there is only support for textDocument/hover and textDocument/codeLens.
+Unlike application.properties features, there is no Eclipse extension point at the moment, to extend the hover or codelens feature.
+
+The MicroProfile language server currently provides language features for `*.properties` and `*.java` files. Please see
+[quarkus-ls#215](https://github.com/redhat-developer/quarkus-ls/issues/215).
 
 ## Development Setup
 
@@ -125,12 +185,12 @@ request.
   * [JDK 8+](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
 ### Setup
-Step 1. Fork and clone this repository  
+**Step 1.** Fork and clone this repository  
 
-Step 2. Fork and clone the Quarkus jdt.ls extension and Quarkus language server, both located
-in this [repository](https://github.com/redhat-developer/quarkus-ls).  
+**Step 2.** Fork and clone this [repository](https://github.com/redhat-developer/quarkus-ls), which
+contains the MicroProfile jdt.ls extension and MicroProfile language server
 
-**Note:** Ensure that the cloned repositories are siblings:
+**Note:** Ensure that the cloned repositories are under the same parent directory:
 
 ```
 YOUR_FOLDER/
@@ -138,23 +198,23 @@ YOUR_FOLDER/
          │      
          ├──── quarkus-ls/
 ```  
-Step 3. Navigate into `vscode-quarkus/`
+**Step 3.** Navigate into `vscode-quarkus/`
 ```bash
 $ cd vscode-quarkus/
 ```  
-Step 4. Install npm dependencies
+**Step 4.** Install npm dependencies
 ```bash
 $ npm install
 ```  
 
-Step 5. Build the Quarkus language server and Quarkus jdt.ls extension
+**Step 5.** Build the MicroProfile language server and MicroProfile jdt.ls extension
 ```bash
 $ npm run build
 ```
 This script does two things.
-1. Builds the Quarkus language server and places the jar in 
+1. Builds the MicroProfile language server and places the jar in 
 `vscode-quarkus/server/`.
-2. Builds the Quarkus jdt.ls extension and places the jar in 
+2. Builds the MicroProfile jdt.ls extension and places the jar in 
 `vscode-quarkus/jars/`.  
 
 In addition to `npm run build`, there are two more build scripts:  
@@ -162,42 +222,47 @@ In addition to `npm run build`, there are two more build scripts:
 `npm run build-ext` only builds the Quarkus jdt.ls extension and places the jar in `vscode-quarkus/jars/`.
 
 ### Running vscode-quarkus
-Step 1. Open `vscode-quarkus/` in VSCode.  
+**Step 1.** Open `vscode-quarkus/` in VSCode.  
 
-Step 2. Open the Debugging tab, select and run 
+**Step 2.** Open the Debugging tab, select and run 
 "Launch Extension (vscode-quarkus)" at the top left.
 ![](images/runExtension.png)
 
 ## Debugging  
-### Debugging the Quarkus language server:
+### Debugging the MicroProfile language server:
 In an IDE of your choice, set the debugger configuration to connect
-to localhost, port 1064.  
+to localhost, port 1064.
 
-If using VSCode, open `quarkus-ls/quarkus.ls/` in VSCode. The proper
+If using VSCode, open `quarkus-ls/microprofile.ls/` in VSCode. The proper
 debugger configurations are already defined in `.vscode/`.
-There should be a "Debug (Attach) - Remote (quarkus.ls)" option
+There should be a "Debug (Attach) - Remote (microprofile.ls)" option
 at the top left of the Debugging tab.
 ![](images/runDebugger.png)  
 
-The JVM arguments used to start the Quarkus language
+The JVM arguments used to start the MicroProfile language
 server are specified
 [here](https://github.com/redhat-developer/vscode-xml/blob/35c122edcce09038e853dfab112dd76813302034/src/javaServerStarter.ts#L26).
 
-### Debugging the Quarkus jdt.ls extension:
-Only Eclipse can be used to debug the Quarkus jdt.ls extension.  
+### Debugging the MicroProfile jdt.ls extension:
+Only Eclipse can be used to debug the MicroProfile jdt.ls extension.  
 
-Step 1. Open the jdt.ls source code in a new workspace in Eclipse by
+**Step 1.** Open the jdt.ls source code in a new workspace in Eclipse by
 following the setup
 steps in the jdt.ls GitHub repository 
 [here](https://github.com/eclipse/eclipse.jdt.ls#first-time-setup).  
 
-Step 2. In the same workspace, import the projects in
-`quarkus-ls/quarkus.jdt`.
+**Step 2.** In the same workspace, import the projects from
+`quarkus-ls/microprofile.jdt/`.
 
-Step 3. In the Debug dropdown menu, open "Debug Configurations...".  
+**Step 3.** In the Debug dropdown menu, open "Debug Configurations...".  
 ![](images/debugConfigMenu.png)  
 
-Step 4. Create a new "Remote Java Application" launch configuration.
-Set the following settings and click "Apply".  
+**Step 4.** Create a new "Remote Java Application" launch configuration.  
+Set the following settings and click "Apply":  
+```
+Project: com.redhat.microprofile.jdt.core
+Connection Type: Standard (Socket Attach)
+Host: localhost
+Port: 1044
+```
 ![](images/debugConfig.png)
-
