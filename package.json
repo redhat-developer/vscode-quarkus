@@ -41,7 +41,6 @@
     "workspaceContains:**/src/main/resources/application.yml",
     "onLanguage:microprofile-properties",
     "onLanguage:quarkus-properties",
-    "onLanguage:java",
     "onLanguage:qute-html",
     "onLanguage:qute-json",
     "onLanguage:qute-yaml",
