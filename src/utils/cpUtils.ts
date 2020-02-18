@@ -2,11 +2,9 @@
 // Licensed under the MIT license.
 
 import * as cp from "child_process";
-import { quarkusOutputChannel } from "../terminal/quarkusOutputChannel";
 
 export async function executeCommand(command: string, args: string[], options: cp.SpawnOptions = { shell: true }): Promise<string> {
     return new Promise((resolve: (res: string) => void, reject: (e: Error) => void): void => {
-			quarkusOutputChannel.appendLine(`${command}, [${args.join(",")}]`);
         let result: string = "";
         const childProc: cp.ChildProcess = cp.spawn(command, args, options);
         childProc.stdout.on("data", (data: string | Buffer) => {
