@@ -13,50 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { RelativePattern, Uri, WorkspaceFolder, commands, window, workspace } from "vscode";
-import { PROJECT_LABELS_COMMAND_ID, ProjectLabel } from '../definitions/constants';
-
-/**
- * Returns a promise resolving to `true` only if the project located in `workspaceFolder`
- * is a Quarkus project
- * @param workspaceFolder
- */
-export async function containsQuarkusProject(workspaceFolder: WorkspaceFolder): Promise<boolean> {
-  // TODO this function must be improved. It only checks if a file named
-  // pom.xml or build.gradle exists under the provided workspaceFolder
-
-  return (await getFilePathsFromWorkspace(workspaceFolder, '**/pom.xml')).length > 0 ||
-    (await getFilePathsFromWorkspace(workspaceFolder, '**/build.gradle')).length > 0;
-}
+import { RelativePattern, Uri, WorkspaceFolder, commands, workspace } from "vscode";
+import { PROJECT_LABELS_COMMAND_ID } from '../definitions/constants';
+import { ProjectLabel } from "../definitions/ProjectLabelInfo";
 
 export async function getFilePathsFromWorkspace(workspaceFolder: WorkspaceFolder, glob: string): Promise<Uri[]> {
-  return await getFilePathsFromWorkspacePath(workspaceFolder.uri.fsPath, glob);
+  return await getFilePathsFromFolder(workspaceFolder.uri.fsPath, glob);
 }
 
-export async function getFilePathsFromWorkspacePath(workspacePath: string, glob: string): Promise<Uri[]> {
-  return await workspace.findFiles(new RelativePattern(workspacePath, glob));
-}
-
-export function getTargetWorkspace(): WorkspaceFolder {
-
-  const workspaceFolders: WorkspaceFolder[]|undefined = workspace.workspaceFolders;
-
-  if (!workspaceFolders) {
-    throw 'No workspace folders are opened.';
-  }
-
-  if (workspaceFolders.length === 1) {
-    return workspace.workspaceFolders[0];
-  }
-
-  // try to return workspace folder containing currently opened file
-  const currentDoc = window.activeTextEditor.document.uri;
-  if (currentDoc && workspace.getWorkspaceFolder(currentDoc)) {
-    return workspace.getWorkspaceFolder(currentDoc);
-  }
-
-  // TODO maybe implement an input box to determine which workspace folder to debug in
-  return workspace.workspaceFolders[0]; // dummy return statement
+export async function getFilePathsFromFolder(folderPath: string, glob: string): Promise<Uri[]> {
+  return await workspace.findFiles(new RelativePattern(folderPath, glob));
 }
 
 export interface ProjectLabelInfo {

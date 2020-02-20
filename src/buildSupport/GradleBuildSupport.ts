@@ -16,13 +16,13 @@ export class GradleBuildSupport extends BuildSupport {
     });
   }
 
-  public async getQuarkusAddExtensionsCommand(workspaceFolder: WorkspaceFolder, extensionGAVs: string[], options?: TerminalCommandOptions): Promise<TerminalCommand> {
+  public async getQuarkusAddExtensionsCommand(folderPath: string, extensionGAVs: string[], options?: TerminalCommandOptions): Promise<TerminalCommand> {
     const addExtensions: string = `addExtension --extensions="${extensionGAVs.join(',')}"`;
     const buildGradlePath: string = `-b "${await formattedPathForTerminal(options.buildFilePath)}"`;
-    const gradle: string = await this.getCommand(workspaceFolder, options && options.buildFilePath, { windows: options && options.windows });
+    const gradle: string = await this.getCommand(folderPath, options && options.buildFilePath, { windows: options && options.windows });
     const command = [gradle, addExtensions, buildGradlePath].join(' ');
 
-    const wrapperPath: string|undefined = await this.getWrapperPathFromBuildFile(options.buildFilePath, workspaceFolder);
+    const wrapperPath: string|undefined = await this.getWrapperPathFromBuildFile(options.buildFilePath, folderPath);
 
     return {
       cwd: wrapperPath ? wrapperPath : undefined,
@@ -30,9 +30,9 @@ export class GradleBuildSupport extends BuildSupport {
     };
   }
 
-  public async getQuarkusDevCommand(workspaceFolder: WorkspaceFolder, options?: TerminalCommandOptions): Promise<TerminalCommand> {
+  public async getQuarkusDevCommand(folderPath: string, options?: TerminalCommandOptions): Promise<TerminalCommand> {
     const quarkusDev: string = `${this.getQuarkusDev()} --console=plain`;
-    const gradle: string = await this.getCommand(workspaceFolder, options.buildFilePath, { windows: options.windows });
+    const gradle: string = await this.getCommand(folderPath, options.buildFilePath, { windows: options.windows });
     return { command: [gradle, quarkusDev].join(' ') };
   }
 }

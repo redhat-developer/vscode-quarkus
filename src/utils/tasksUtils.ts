@@ -48,6 +48,16 @@ export async function getRunningQuarkusDevTasks(workspaceFolder: WorkspaceFolder
   });
 }
 
+export function getTaskExecutionWorkingDir(task: Task): string|undefined {
+  if (!task.execution) return undefined;
+
+  if (!task.execution.options || !task.execution.options.cwd) {
+    return './';
+  }
+
+  return task.execution.options.cwd;
+}
+
 async function getTasksFromWorkspace(workspaceFolder: WorkspaceFolder): Promise<Task[]> {
   const allTasks: Task[] = await tasks.fetchTasks();
   return allTasks.filter((task: Task) => {

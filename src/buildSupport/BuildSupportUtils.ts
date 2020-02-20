@@ -1,9 +1,9 @@
 import { Uri, WorkspaceFolder } from 'vscode';
-import { getFilePathsFromWorkspace, getFilePathsFromWorkspacePath, getWorkspaceProjectLabels } from '../utils/workspaceUtils';
+import { getFilePathsFromWorkspace, getFilePathsFromFolder, getWorkspaceProjectLabels } from '../utils/workspaceUtils';
 import { BuildSupport } from './BuildSupport';
 import { GradleBuildSupport } from './GradleBuildSupport';
 import { MavenBuildSupport } from './MavenBuildSupport';
-import { ProjectLabel } from '../definitions/constants';
+import { ProjectLabel } from '../definitions/ProjectLabelInfo';
 
 const POM_XML = 'pom.xml';
 const BUILD_GRADLE = 'build.gradle';
@@ -34,8 +34,8 @@ export async function searchBuildFile(): Promise<Uri[]> {
 
   const buildFilePaths: Uri[] = await folders.reduce(async (buildFilePaths: Promise<Uri[]>, pathToSearch: string) => {
     const accumulator = await buildFilePaths;
-    const buildGradleUris: Uri[] = await getFilePathsFromWorkspacePath(pathToSearch, `**/${BUILD_GRADLE}`);
-    const pomFileUris: Uri[] = await getFilePathsFromWorkspacePath(pathToSearch, `**/${POM_XML}`);
+    const buildGradleUris: Uri[] = await getFilePathsFromFolder(pathToSearch, `**/${BUILD_GRADLE}`);
+    const pomFileUris: Uri[] = await getFilePathsFromFolder(pathToSearch, `**/${POM_XML}`);
 
     return Promise.resolve(accumulator.concat(pomFileUris).concat(buildGradleUris));
   }, Promise.resolve([]));

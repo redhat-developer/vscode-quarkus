@@ -81,7 +81,7 @@ async function executeAddExtensionsCommand(state: AddExtensionsState): Promise<T
   const extensionGAVs: string[] = getExtensionGAVs(state.extensions);
   let terminalOptions: ITerminalOptions = {} as ITerminalOptions;
 
-  const terminalCommand: TerminalCommand = await state.buildSupport.getQuarkusAddExtensionsCommand(state.workspaceFolder, extensionGAVs, { buildFilePath: state.buildFilePath.fsPath });
+  const terminalCommand: TerminalCommand = await state.buildSupport.getQuarkusAddExtensionsCommand(state.workspaceFolder.uri.fsPath, extensionGAVs, { buildFilePath: state.buildFilePath.fsPath });
   if (terminalCommand.cwd) {
     terminalOptions.cwd = path.dirname(terminalCommand.cwd);
   }

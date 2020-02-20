@@ -16,7 +16,7 @@
 import { commands, workspace } from 'vscode';
 import { ProjectLabelInfo, getWorkspaceProjectLabels } from './utils/workspaceUtils';
 import { Disposable } from 'vscode-languageclient';
-import { ProjectLabel } from './definitions/constants';
+import { ProjectLabel } from './definitions/ProjectLabelInfo';
 import { MicroProfilePropertiesChangeEvent, MicroProfilePropertiesScopeEnum } from './yaml/YamlSchema';
 
 export class QuarkusProjectListener {
