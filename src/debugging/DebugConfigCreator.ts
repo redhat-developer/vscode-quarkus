@@ -26,14 +26,26 @@ import { BuildSupport } from '../buildSupport/BuildSupport';
  * Quarkus application in `workspaceFolder` when a debug session starts
  */
 export class DebugConfigCreator {
-
   private dotVSCodeDir: string;
 
-  public static async createFiles(workspaceFolder: WorkspaceFolder, projectBuildSupport: BuildSupport): Promise<void> {
+  /**
+   * Creates the necessary debug configuration and task in order to debug a Quarkus project
+   * located directly under `projectFolder`.
+   *
+   * Please note that the `workspaceFolder`'s path and the `projectFolder` path could be different.
+   *
+   * The Quarkus project could be located in any depth within the `workspaceFolder`'s path, but must
+   * be located directly within the `projectFolder` path.
+   *
+   * @param workspaceFolder     the workspace folder containing the Quarkus project
+   * @param projectFolder       the path to the project folder to debug
+   * @param projectBuildSupport the build support for the project to debug
+   */
+  public static async createFiles(workspaceFolder: WorkspaceFolder, projectFolder: string, projectBuildSupport: BuildSupport): Promise<void> {
     const debugConfigCreator: DebugConfigCreator = new DebugConfigCreator(workspaceFolder);
     debugConfigCreator.createVSCodeDirIfMissing();
-    await TaskCreator.createTask(workspaceFolder, projectBuildSupport);
-    await LaunchConfigCreator.createLaunchConfig(workspaceFolder, projectBuildSupport);
+    await TaskCreator.createTask(workspaceFolder, projectFolder, projectBuildSupport);
+    await LaunchConfigCreator.createLaunchConfig(workspaceFolder, projectFolder, projectBuildSupport);
   }
 
   private constructor(workspaceFolder: WorkspaceFolder) {

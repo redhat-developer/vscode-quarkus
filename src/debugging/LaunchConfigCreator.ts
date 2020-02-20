@@ -15,7 +15,7 @@
  */
 import * as fs from 'fs';
 
-import { ConfigurationChangeEvent, Disposable, DebugConfiguration, WorkspaceFolder, workspace } from 'vscode';
+import { ConfigurationChangeEvent, Disposable, DebugConfiguration, WorkspaceFolder, workspace, ConfigurationTarget } from 'vscode';
 import { BuildSupport } from '../buildSupport/BuildSupport';
 import { FsUtils } from '../utils/fsUtils';
 import { getQuarkusDevDebugConfig } from '../utils/launchConfigUtils';
@@ -27,6 +27,7 @@ import { getQuarkusDevDebugConfig } from '../utils/launchConfigUtils';
 export class LaunchConfigCreator {
 
   private workspaceFolder: WorkspaceFolder;
+  private projectFolder: string;
   private quarkusBuildSupport: BuildSupport;
   private launchJsonFile: string;
 
@@ -35,15 +36,16 @@ export class LaunchConfigCreator {
    * @param workspaceFolder the workspaceFolder containing the Quarkus project
    * @param quarkusBuildSupport specifies whether the project in `workspaceFolder` is a Maven project or Gradle project
    */
-  public static async createLaunchConfig(workspaceFolder: WorkspaceFolder, quarkusBuildSupport: BuildSupport): Promise<void> {
-    const launchConfigCreator: LaunchConfigCreator = new LaunchConfigCreator(workspaceFolder, quarkusBuildSupport);
+  public static async createLaunchConfig(workspaceFolder: WorkspaceFolder, projectFolder: string, quarkusBuildSupport: BuildSupport): Promise<void> {
+    const launchConfigCreator: LaunchConfigCreator = new LaunchConfigCreator(workspaceFolder, projectFolder, quarkusBuildSupport);
     await launchConfigCreator.createLaunchJsonIfMissing();
     await launchConfigCreator.addLaunchConfig();
     await launchConfigCreator.waitUntilTaskExists();
   }
 
-  private constructor(workspaceFolder: WorkspaceFolder, quarkusBuildSupport: BuildSupport) {
+  private constructor(workspaceFolder: WorkspaceFolder, projectFolder: string, quarkusBuildSupport: BuildSupport) {
     this.workspaceFolder = workspaceFolder;
+    this.projectFolder = projectFolder;
     this.quarkusBuildSupport = quarkusBuildSupport;
     this.launchJsonFile = workspaceFolder.uri.fsPath + '/.vscode/launch.json';
   }
@@ -57,7 +59,7 @@ export class LaunchConfigCreator {
     const workspaceConfiguration = workspace.getConfiguration(launchKey, this.workspaceFolder.uri);
 
     // Get all registered launch configurations and version
-    const configurations =  workspaceConfiguration.get(configurationsKey);
+    const configurations = workspaceConfiguration.get(configurationsKey);
     const version = workspaceConfiguration.get(versionKey);
 
     if (Array.isArray(configurations) && version) {
@@ -65,8 +67,8 @@ export class LaunchConfigCreator {
     }
 
     // Create launch.json file with empty list of configurations and with version 0.2.0
-    await workspaceConfiguration.update(versionKey, launchVersion);
-    await workspaceConfiguration.update(configurationsKey, []);
+    await workspaceConfiguration.update(versionKey, launchVersion, ConfigurationTarget.WorkspaceFolder);
+    await workspaceConfiguration.update(configurationsKey, [], ConfigurationTarget.WorkspaceFolder);
 
     // If launch.json was created in .vscode/ directory, add special comments on top of the file
     if (fs.existsSync(this.launchJsonFile)) {
@@ -86,13 +88,13 @@ export class LaunchConfigCreator {
     const launchJson = workspace.getConfiguration('launch', this.workspaceFolder.uri);
     const configurations: DebugConfiguration[] = launchJson.get<DebugConfiguration[]>('configurations');
     configurations.push(await this.getLaunchConfig());
-    await launchJson.update('configurations', configurations, false);
+    await launchJson.update('configurations', configurations, ConfigurationTarget.WorkspaceFolder);
   }
 
   private async getLaunchConfig(): Promise<DebugConfiguration> {
     const launchConfig: DebugConfiguration =
       {
-        preLaunchTask: this.quarkusBuildSupport.getQuarkusDev(),
+        preLaunchTask: this.quarkusBuildSupport.getQuarkusDevTaskName(this.workspaceFolder, this.projectFolder),
         type: "java",
         request: "attach",
         hostName: "localhost",
@@ -104,14 +106,14 @@ export class LaunchConfigCreator {
   }
 
   private async waitUntilTaskExists(): Promise<void> {
-    if (await getQuarkusDevDebugConfig(this.workspaceFolder, this.quarkusBuildSupport)) {
+    if (await getQuarkusDevDebugConfig(this.workspaceFolder, this.projectFolder, this.quarkusBuildSupport)) {
       return;
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const disposable: Disposable = workspace.onDidChangeConfiguration(async (event: ConfigurationChangeEvent) => {
         if (event.affectsConfiguration('launch', this.workspaceFolder.uri)) {
-          if (await getQuarkusDevDebugConfig(this.workspaceFolder, this.quarkusBuildSupport)) {
+          if (await getQuarkusDevDebugConfig(this.workspaceFolder, this.projectFolder, this.quarkusBuildSupport)) {
             disposable.dispose();
             resolve();
           }

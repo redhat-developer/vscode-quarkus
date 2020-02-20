@@ -28,13 +28,6 @@ export const enum BuildToolName {
   Gradle = 'Gradle'
 }
 
-export const enum ProjectLabel {
-  MicroProfile = 'microprofile',
-  Quarkus = 'quarkus',
-  Maven = 'maven',
-  Gradle = 'gradle'
-}
-
 // MicroProfile language server request and notifications
 export namespace MicroProfileLS {
   export const PROJECT_INFO_REQUEST = 'microprofile/projectInfo';

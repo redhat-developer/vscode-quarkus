@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import * as path from 'path';
 import * as findUp from 'find-up';
 import { Uri, WorkspaceFolder } from 'vscode';
 import { FsUtils } from '../utils/fsUtils';
 import { TaskPattern } from './TaskPattern';
 import { formattedPathForTerminal } from '../utils/shellUtils';
-import { getFilePathsFromWorkspace } from '../utils/workspaceUtils';
+import { getFilePathsFromFolder } from '../utils/workspaceUtils';
 
 interface BuildSupportData {
   buildFile: string;
@@ -63,18 +64,18 @@ export abstract class BuildSupport {
 
   /**
    * Returns a command that adds all extensions listed in `extensionGAVs`
-   * @param workspaceFolder
+   * @param folderPath
    * @param extensionGAVs
    * @param options
    */
-  public abstract getQuarkusAddExtensionsCommand(workspaceFolder: WorkspaceFolder, extensionGAVs: string[], options?: TerminalCommandOptions): Promise<TerminalCommand>;
+  public abstract getQuarkusAddExtensionsCommand(folderPath: string, extensionGAVs: string[], options?: TerminalCommandOptions): Promise<TerminalCommand>;
 
   /**
    * Returns a command that runs the Quarkus application using 'Quarkus Dev'
-   * @param workspaceFolder
+   * @param folderPath
    * @param options
    */
-  public abstract getQuarkusDevCommand(workspaceFolder: WorkspaceFolder, options?: TerminalCommandOptions): Promise<TerminalCommand>;
+  public abstract getQuarkusDevCommand(folderPath: string, options?: TerminalCommandOptions): Promise<TerminalCommand>;
 
   /**
    * Returns an appropriate build tool command depending on `options` and `buildFilePath`
@@ -87,21 +88,21 @@ export abstract class BuildSupport {
    * `./gradlew`
    * `.\\gradlew.bat`
    *
-   * @param workspaceFolder
+   * @param folderPath
    * @param buildFilePath used to help locate an appropriate wrapper file
    * @param options
    */
-  public async getCommand(workspaceFolder: WorkspaceFolder, buildFilePath?: string, options?: { windows?: boolean }): Promise<string> {
+  public async getCommand(folderPath: string, buildFilePath?: string, options?: { windows?: boolean }): Promise<string> {
     if ((options && options.windows) || ((!options || typeof options.windows === 'undefined') && process.platform === 'win32')) {
-      return await this.getWindowsCommand(workspaceFolder, buildFilePath);
+      return await this.getWindowsCommand(folderPath, buildFilePath);
     } else {
-      return await this.getUnixCommand(workspaceFolder, buildFilePath);
+      return await this.getUnixCommand(folderPath, buildFilePath);
     }
   }
 
-  private async getWindowsCommand(workspaceFolder: WorkspaceFolder, buildFilePath?: string): Promise<string> {
+  private async getWindowsCommand(folderPath: string, buildFilePath?: string): Promise<string> {
     let command: string;
-    if (await this.wrapperExistsWindows(workspaceFolder, buildFilePath)) {
+    if (await this.wrapperExistsWindows(folderPath, buildFilePath)) {
       command = `.\\${this.buildSupportData.wrapperWindows}`;
     } else {
       command = await formattedPathForTerminal(this.buildSupportData.defaultExecutable);
@@ -109,9 +110,9 @@ export abstract class BuildSupport {
     return command;
   }
 
-  private async getUnixCommand(workspaceFolder: WorkspaceFolder, buildFilePath?: string): Promise<string> {
+  private async getUnixCommand(folderPath: string, buildFilePath?: string): Promise<string> {
     let command: string;
-    if (await this.wrapperExistsUnix(workspaceFolder, buildFilePath)) {
+    if (await this.wrapperExistsUnix(folderPath, buildFilePath)) {
       command = `./${this.buildSupportData.wrapper}`;
     } else {
       command = this.buildSupportData.defaultExecutable;
@@ -122,38 +123,38 @@ export abstract class BuildSupport {
   /**
    * Determines if Windows wrapper file exists
    *
-   * If `buildFilePath` is provided, checks if wrapper file exists between root of `workspaceFolder` and
+   * If `buildFilePath` is provided, checks if wrapper file exists between root of `folderPath` and
    * directory of `buildFilePath` inclusive
    *
-   * If `buildFilePath` is not provided, checks if wrapper file exists in root of `workspaceFolder`
+   * If `buildFilePath` is not provided, checks if wrapper file exists in root of `folderPath`
    *
-   * @param workspaceFolder
+   * @param folderPath
    * @param buildFilePath
    */
-  private async wrapperExistsWindows(workspaceFolder: WorkspaceFolder, buildFilePath?: string) {
+  private async wrapperExistsWindows(folderPath: string, buildFilePath?: string) {
     if (buildFilePath) {
-      return await this.getWrapperPathFromBuildFile(buildFilePath, workspaceFolder, { windows: true }) !== undefined;
+      return await this.getWrapperPathFromBuildFile(buildFilePath, folderPath, { windows: true }) !== undefined;
     } else {
-      return (await getFilePathsFromWorkspace(workspaceFolder, this.buildSupportData.wrapperWindows)).length > 0;
+      return (await getFilePathsFromFolder(folderPath, this.buildSupportData.wrapperWindows)).length > 0;
     }
   }
 
   /**
    * Determines if Unix wrapper file exists
    *
-   * If `buildFilePath` is provided, checks if wrapper file exists between root of `workspaceFolder` and
+   * If `buildFilePath` is provided, checks if wrapper file exists between root of `folderPath` and
    * directory of `buildFilePath` inclusive
    *
-   * If `buildFilePath` is not provided, checks if wrapper file exists in root of `workspaceFolder`
+   * If `buildFilePath` is not provided, checks if wrapper file exists in root of `folderPath`
    *
-   * @param workspaceFolder
+   * @param folderPath
    * @param buildFilePath
    */
-  private async wrapperExistsUnix(workspaceFolder: WorkspaceFolder, buildFilePath?: string) {
+  private async wrapperExistsUnix(folderPath: string, buildFilePath?: string) {
     if (buildFilePath) {
-      return await this.getWrapperPathFromBuildFile(buildFilePath, workspaceFolder, { windows: false }) !== undefined;
+      return await this.getWrapperPathFromBuildFile(buildFilePath, folderPath, { windows: false }) !== undefined;
     } else {
-      return (await getFilePathsFromWorkspace(workspaceFolder, this.buildSupportData.wrapper)).length > 0;
+      return (await getFilePathsFromFolder(folderPath, this.buildSupportData.wrapper)).length > 0;
     }
   }
 
@@ -162,21 +163,25 @@ export abstract class BuildSupport {
    * wrapper file located closest to build file (pom.xml/build.gradle)
    * provided by `buildFilePath`.
    * @param buildFilePath path to build file (pom.xml/build.gradle)
-   * @param workspaceFolder workspace folder containing pom.xml specified by `buildFilePath`
+   * @param folderPath folder containing pom.xml specified by `buildFilePath`
    * @param options options for OS
    */
-  public async getWrapperPathFromBuildFile(buildFilePath: string|Uri, workspaceFolder: WorkspaceFolder, options?: { windows: boolean }): Promise<string | undefined> {
+  public async getWrapperPathFromBuildFile(buildFilePath: string|Uri, folderPath: string, options?: { windows: boolean }): Promise<string | undefined> {
     const findUpOptions = { cwd: typeof buildFilePath === 'string' ? buildFilePath : buildFilePath.fsPath };
     const wrapperFileName: string = ((options && options.windows) || process.platform === 'win32') ? this.buildSupportData.wrapperWindows : this.buildSupportData.wrapper;
 
-    const topLevelFolder: string = workspaceFolder.uri.fsPath;
     return await findUp(dir => {
-      return (!FsUtils.isSameDirectory(topLevelFolder, dir) && !FsUtils.isSubDirectory(topLevelFolder, dir)) ? findUp.stop : wrapperFileName;
+      return (!FsUtils.isSameDirectory(folderPath, dir) && !FsUtils.isSubDirectory(folderPath, dir)) ? findUp.stop : wrapperFileName;
     }, findUpOptions);
   }
 
   public getQuarkusDev(): string {
     return this.buildSupportData.quarkusDev;
+  }
+
+  public getQuarkusDevTaskName(workspaceFolder: WorkspaceFolder, projectFolder: string): string {
+    const relativePath: string =  path.relative(workspaceFolder.uri.fsPath, projectFolder);
+    return  this.buildSupportData.quarkusDev + (relativePath.length > 0 ? ` ${relativePath}` : '');
   }
 
   public getDefaultExecutable(): string {

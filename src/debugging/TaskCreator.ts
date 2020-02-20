@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 import * as fs from 'fs';
+import * as path from 'path';
 
 import { FsUtils } from '../utils/fsUtils';
 import { BuildSupport } from '../buildSupport/BuildSupport';
-import { ConfigurationChangeEvent, Disposable, TaskDefinition, WorkspaceFolder, workspace } from 'vscode';
+import { ConfigurationChangeEvent, Disposable, TaskDefinition, WorkspaceFolder, workspace, ConfigurationTarget } from 'vscode';
 import { TaskPattern } from '../buildSupport/TaskPattern';
 import { getQuarkusDevTasks } from '../utils/tasksUtils';
 
@@ -28,6 +29,7 @@ import { getQuarkusDevTasks } from '../utils/tasksUtils';
 export class TaskCreator {
 
   private workspaceFolder: WorkspaceFolder;
+  private projectFolder: string;
   private quarkusBuildSupport: BuildSupport;
   private tasksJsonFile: string;
 
@@ -36,15 +38,16 @@ export class TaskCreator {
    * @param workspaceFolder the workspaceFolder containing the Quarkus project
    * @param quarkusBuildSupport specifies whether the project in `workspaceFolder` is a Maven project or Gradle project
    */
-  public static async createTask(workspaceFolder: WorkspaceFolder, quarkusBuildSupport: BuildSupport): Promise<void> {
-    const taskCreator: TaskCreator = new TaskCreator(workspaceFolder, quarkusBuildSupport);
+  public static async createTask(workspaceFolder: WorkspaceFolder, projectFolder: string, quarkusBuildSupport: BuildSupport): Promise<void> {
+    const taskCreator: TaskCreator = new TaskCreator(workspaceFolder, projectFolder, quarkusBuildSupport);
     await taskCreator.createTasksJsonIfMissing();
     await taskCreator.addTask();
     await taskCreator.waitUntilTaskExists();
   }
 
-  private constructor(workspaceFolder: WorkspaceFolder, quarkusBuildSupport: BuildSupport) {
+  private constructor(workspaceFolder: WorkspaceFolder, projectFolder: string, quarkusBuildSupport: BuildSupport) {
     this.workspaceFolder = workspaceFolder;
+    this.projectFolder = projectFolder;
     this.quarkusBuildSupport = quarkusBuildSupport;
     this.tasksJsonFile = workspaceFolder.uri.fsPath + '/.vscode/tasks.json';
   }
@@ -69,8 +72,8 @@ export class TaskCreator {
     }
 
     // Create tasks.json file with empty list of tasks and with version 2.0.0
-    await workspaceConfiguration.update(versionKey, version);
-    await workspaceConfiguration.update(tasksKey, []);
+    await workspaceConfiguration.update(versionKey, version, ConfigurationTarget.WorkspaceFolder);
+    await workspaceConfiguration.update(tasksKey, [], ConfigurationTarget.WorkspaceFolder);
 
     // If tasks.json was created in .vscode/ directory, add special comments on top of the file
     if (fs.existsSync(this.tasksJsonFile)) {
@@ -88,13 +91,13 @@ export class TaskCreator {
     const tasksJson = workspace.getConfiguration('tasks', this.workspaceFolder.uri);
     const tasks: TaskDefinition[] = tasksJson.get<TaskDefinition[]>('tasks');
     tasks.push(await this.getTask());
-    await tasksJson.update('tasks', tasks, false);
+    await tasksJson.update('tasks', tasks, ConfigurationTarget.WorkspaceFolder);
   }
 
   private async getTask(): Promise<TaskDefinition> {
-    const taskLabel: string = this.quarkusBuildSupport.getQuarkusDev();
-    const unixCommand: string = (await this.quarkusBuildSupport.getQuarkusDevCommand(this.workspaceFolder, { windows: false })).command;
-    const windowsCommand: string = (await this.quarkusBuildSupport.getQuarkusDevCommand(this.workspaceFolder, { windows: true })).command;
+    const taskLabel: string = this.quarkusBuildSupport.getQuarkusDevTaskName(this.workspaceFolder, this.projectFolder);
+    const unixCommand: string = (await this.quarkusBuildSupport.getQuarkusDevCommand(this.projectFolder, { windows: false })).command;
+    const windowsCommand: string = (await this.quarkusBuildSupport.getQuarkusDevCommand(this.projectFolder, { windows: true })).command;
 
     const taskPatterns: TaskPattern = this.quarkusBuildSupport.getTaskPatterns();
     const task: TaskDefinition =
@@ -124,6 +127,10 @@ export class TaskCreator {
         }
       ]
     };
+
+    if (!FsUtils.isSameDirectory(this.workspaceFolder.uri.fsPath, this.projectFolder)) {
+      task.options = {cwd: path.relative(this.workspaceFolder.uri.fsPath, this.projectFolder)};
+    }
 
     return task;
   }
