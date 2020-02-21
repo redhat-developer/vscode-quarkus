@@ -55,6 +55,7 @@ export function activate(context: ExtensionContext) {
     bindRequest(MicroProfileLS.PROPERTY_DEFINITION_REQUEST);
     bindRequest(MicroProfileLS.JAVA_CODELENS_REQUEST);
     bindRequest(MicroProfileLS.JAVA_HOVER_REQUEST);
+    bindRequest(MicroProfileLS.JAVA_DIAGNOSTICS_REQUEST);
 
     /**
      * Delegate notifications from Java JDT LS to the MicroProfile LS
