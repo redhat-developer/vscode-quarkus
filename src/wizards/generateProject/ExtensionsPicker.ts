@@ -15,14 +15,14 @@
  */
 import * as path from 'path';
 
-import { QUARKUS_GROUP_ID } from '../definitions/constants';
+import { QUARKUS_GROUP_ID } from '../../definitions/constants';
 import { QuickPickItem, Uri } from 'vscode';
-import { State } from '../definitions/inputState';
-import { QExtension } from '../definitions/QExtension';
-import { QuarkusConfig } from '../QuarkusConfig';
-import { QuarkusContext } from '../QuarkusContext';
-import { MultiStepInput, QuickInputButtonWithCallback, QuickPickParameters } from '../utils/multiStepUtils';
-import { getQExtensions } from '../utils/requestUtils';
+import { State } from '../../definitions/inputState';
+import { QExtension } from '../../definitions/QExtension';
+import { QuarkusConfig } from '../../QuarkusConfig';
+import { QuarkusContext } from '../../QuarkusContext';
+import { MultiStepInput, QuickInputButtonWithCallback, QuickPickParameters } from '../../utils/multiStepUtils';
+import { getQExtensions } from '../../utils/requestUtils';
 
 /**
  * Options for the 'pick extensions' quick input

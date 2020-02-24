@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 import * as fs from 'fs';
-
+import * as path from 'path';
 import { ConfigurationChangeEvent, Disposable, DebugConfiguration, WorkspaceFolder, workspace, ConfigurationTarget } from 'vscode';
-import { BuildSupport } from '../buildSupport/BuildSupport';
-import { FsUtils } from '../utils/fsUtils';
-import { getQuarkusDevDebugConfig } from '../utils/launchConfigUtils';
+import { BuildSupport } from '../../buildSupport/BuildSupport';
+import { FsUtils } from '../../utils/fsUtils';
+import { getQuarkusDevDebugConfig } from '../../utils/launchConfigUtils';
 
 /**
  * This class is responsible for creating the debug Task that calls the
@@ -92,13 +92,16 @@ export class LaunchConfigCreator {
   }
 
   private async getLaunchConfig(): Promise<DebugConfiguration> {
+    const relativePath: string = path.relative(this.workspaceFolder.uri.fsPath, this.projectFolder);
+    const launchConfigName: string = `Debug Quarkus application${(relativePath.length > 0 ? ` (${relativePath})` : '')}`;
+
     const launchConfig: DebugConfiguration =
       {
         preLaunchTask: this.quarkusBuildSupport.getQuarkusDevTaskName(this.workspaceFolder, this.projectFolder),
-        type: "java",
-        request: "attach",
-        hostName: "localhost",
-        name: "Debug Quarkus application",
+        type: 'java',
+        request: 'attach',
+        hostName: 'localhost',
+        name: launchConfigName,
         port: 5005
       } as DebugConfiguration;
 

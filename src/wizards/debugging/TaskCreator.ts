@@ -16,11 +16,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { FsUtils } from '../utils/fsUtils';
-import { BuildSupport } from '../buildSupport/BuildSupport';
+import { FsUtils } from '../../utils/fsUtils';
+import { BuildSupport } from '../../buildSupport/BuildSupport';
 import { ConfigurationChangeEvent, Disposable, TaskDefinition, WorkspaceFolder, workspace, ConfigurationTarget } from 'vscode';
-import { TaskPattern } from '../buildSupport/TaskPattern';
-import { getQuarkusDevTasks } from '../utils/tasksUtils';
+import { TaskPattern } from '../../buildSupport/TaskPattern';
+import { getQuarkusDevTasks } from '../../utils/tasksUtils';
 
 /**
  * This class is responsible for creating the debug Task that calls the

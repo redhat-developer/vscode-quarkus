@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { RelativePattern, Uri, WorkspaceFolder, commands, workspace } from "vscode";
-import { PROJECT_LABELS_COMMAND_ID } from '../definitions/constants';
-import { ProjectLabel } from "../definitions/ProjectLabelInfo";
+import { RelativePattern, Uri, WorkspaceFolder, workspace } from "vscode";
+import { ProjectLabel, ProjectLabelInfo } from "../definitions/ProjectLabelInfo";
 
 export async function getFilePathsFromWorkspace(workspaceFolder: WorkspaceFolder, glob: string): Promise<Uri[]> {
   return await getFilePathsFromFolder(workspaceFolder.uri.fsPath, glob);
@@ -25,19 +24,6 @@ export async function getFilePathsFromFolder(folderPath: string, glob: string): 
   return await workspace.findFiles(new RelativePattern(folderPath, glob));
 }
 
-export interface ProjectLabelInfo {
-  uri: string;
-  labels: ProjectLabel[];
-}
-
-/**
- * Returns a `Thenable` which resolves to `true` if current workspace
- * contains a Quarkus project. Resovles to `false` otherwise.
- */
-export async function checkQuarkusProjectExistsWorkspace(): Promise<boolean> {
-  return (await getWorkspaceProjectLabels(ProjectLabel.Quarkus)).length > 0;
-}
-
 /**
  * Returns an array of `ProjectTypeInfo` containing information for each project
  * in the current workspace
@@ -45,7 +31,7 @@ export async function checkQuarkusProjectExistsWorkspace(): Promise<boolean> {
  * @param projectLabel optioanlly specify what project label to retrieve
  */
 export async function getWorkspaceProjectLabels(projectLabel?: ProjectLabel): Promise<ProjectLabelInfo[]> {
-  const result: ProjectLabelInfo[] = await commands.executeCommand("java.execute.workspaceCommand", PROJECT_LABELS_COMMAND_ID);
+  const result: ProjectLabelInfo[] = await ProjectLabelInfo.getWorkspaceProjectLabelInfo();
   if (!projectLabel) return result;
   return result.filter((projectLabelInfo: ProjectLabelInfo) => {
     return projectLabelInfo.labels.includes(projectLabel);

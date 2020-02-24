@@ -3,18 +3,17 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as path from 'path';
 import * as fs from 'fs';
 import * as fse from 'fs-extra';
-
-import { INPUT_TITLE, BuildToolName } from '../definitions/constants';
-import { MultiStepInput } from '../utils/multiStepUtils';
-import { OpenDialogOptions, QuickPickItem, Uri, commands, window, workspace, extensions } from 'vscode';
-import { QuarkusContext } from '../QuarkusContext';
-import { ProjectGenState } from '../definitions/inputState';
-import { QExtension } from '../definitions/QExtension';
+import * as path from 'path';
+import { commands, OpenDialogOptions, QuickPickItem, Uri, window, workspace } from 'vscode';
 import { ZipFile } from 'yauzl';
-import { downloadProject } from '../utils/requestUtils';
+import { BuildToolName, INPUT_TITLE } from '../../definitions/constants';
+import { ProjectGenState } from '../../definitions/inputState';
+import { QExtension } from '../../definitions/QExtension';
+import { QuarkusContext } from '../../QuarkusContext';
+import { MultiStepInput } from '../../utils/multiStepUtils';
+import { downloadProject } from '../../utils/requestUtils';
 import { ExtensionsPicker } from './ExtensionsPicker';
 import { validateArtifactId, validateGroupId, validatePackageName, validateResourceName, validateVersion } from './validateInput';
 
