@@ -7,7 +7,7 @@
 // Reference:
 // https://github.com/microsoft/vscode-extension-samples/blob/master/quickinput-sample/src/multiStepInput.ts
 // -------------------------------------------------------
-import { QuickPickItem, window, Disposable, InputBox, QuickInputButton, QuickInput, QuickInputButtons, QuickPick, Uri, workspace, ConfigurationChangeEvent } from 'vscode';
+import { ConfigurationChangeEvent, Disposable, InputBox, QuickInput, QuickInputButton, QuickInputButtons, QuickPick, QuickPickItem, window, workspace } from 'vscode';
 
 class InputFlowAction {
   private constructor() { }

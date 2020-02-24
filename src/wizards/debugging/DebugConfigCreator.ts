@@ -18,7 +18,7 @@ import * as fs from 'fs';
 import { WorkspaceFolder } from 'vscode';
 import { TaskCreator } from './TaskCreator';
 import { LaunchConfigCreator } from './LaunchConfigCreator';
-import { BuildSupport } from '../buildSupport/BuildSupport';
+import { BuildSupport } from '../../buildSupport/BuildSupport';
 
 /**
  * This class is responsible for creating the .vscode/ folder (if it does not

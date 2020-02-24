@@ -175,13 +175,17 @@ export abstract class BuildSupport {
     }, findUpOptions);
   }
 
+  public getBuildFile(): string {
+    return this.buildSupportData.buildFile;
+  }
+
   public getQuarkusDev(): string {
     return this.buildSupportData.quarkusDev;
   }
 
   public getQuarkusDevTaskName(workspaceFolder: WorkspaceFolder, projectFolder: string): string {
     const relativePath: string =  path.relative(workspaceFolder.uri.fsPath, projectFolder);
-    return  this.buildSupportData.quarkusDev + (relativePath.length > 0 ? ` ${relativePath}` : '');
+    return  this.buildSupportData.quarkusDev + (relativePath.length > 0 ? ` (${relativePath})` : '');
   }
 
   public getDefaultExecutable(): string {

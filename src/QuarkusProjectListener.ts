@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 import { commands, workspace } from 'vscode';
-import { ProjectLabelInfo, getWorkspaceProjectLabels } from './utils/workspaceUtils';
+import { getWorkspaceProjectLabels } from './utils/workspaceUtils';
 import { Disposable } from 'vscode-languageclient';
-import { ProjectLabel } from './definitions/ProjectLabelInfo';
+import { ProjectLabel, ProjectLabelInfo } from './definitions/ProjectLabelInfo';
 import { MicroProfilePropertiesChangeEvent, MicroProfilePropertiesScopeEnum } from './yaml/YamlSchema';
 
 export class QuarkusProjectListener {
@@ -27,10 +27,17 @@ export class QuarkusProjectListener {
   }
 
   public getQuarkusProjectListener(): Disposable {
-    return workspace.onDidChangeWorkspaceFolders(async () => {
+    const listener: Disposable = workspace.onDidChangeWorkspaceFolders(async () => {
       await new Promise((res => setTimeout(res, 100)));
       await this.updateCacheAndContext();
     });
+
+    return {
+      dispose: () => {
+        listener.dispose();
+        this.setQuarkusProjectExistsContext(false);
+      }
+    };
   }
 
   public async propertiesChange(event: MicroProfilePropertiesChangeEvent): Promise<void> {
@@ -50,16 +57,15 @@ export class QuarkusProjectListener {
    */
   public async updateCacheAndContext(): Promise<void> {
     this.quarkusProjectsCache = await getWorkspaceProjectLabels(ProjectLabel.Quarkus);
-    await this.setQuarkusProjectExistsContext();
+    await this.setQuarkusProjectExistsContext(this.quarkusProjectsCache.length > 0);
   }
 
   /**
    * Sets the `quarkusProjectExists` context to `true` if current workspace
    * contains a Quarkus project. Sets to `false` otherwise.
    */
-  private async setQuarkusProjectExistsContext(): Promise<void> {
-    const exists: boolean = this.quarkusProjectsCache.length > 0;
-    await commands.executeCommand('setContext', 'quarkusProjectExists', exists);
+  private async setQuarkusProjectExistsContext(value: boolean): Promise<void> {
+    await commands.executeCommand('setContext', 'quarkusProjectExists', value);
   }
 }
 

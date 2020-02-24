@@ -1,9 +1,23 @@
-import { Uri, WorkspaceFolder } from 'vscode';
-import { getFilePathsFromWorkspace, getFilePathsFromFolder, getWorkspaceProjectLabels } from '../utils/workspaceUtils';
+/**
+ * Copyright 2019 Red Hat, Inc. and others.
+
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+ *     http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import { WorkspaceFolder } from 'vscode';
+import { getFilePathsFromWorkspace } from '../utils/workspaceUtils';
 import { BuildSupport } from './BuildSupport';
 import { GradleBuildSupport } from './GradleBuildSupport';
 import { MavenBuildSupport } from './MavenBuildSupport';
-import { ProjectLabel } from '../definitions/ProjectLabelInfo';
 
 const POM_XML = 'pom.xml';
 const BUILD_GRADLE = 'build.gradle';
@@ -23,22 +37,4 @@ export async function getBuildSupport(workspaceFolder: WorkspaceFolder): Promise
   }
 
   throw 'Workspace folder does not contain a Maven or Gradle project';
-}
-
-/**
- * Returns an array of uris for pom.xml and build.gradle files belonging to
- * Quarkus projects located in the current workspace
- */
-export async function searchBuildFile(): Promise<Uri[]> {
-  const folders: string[] = (await getWorkspaceProjectLabels(ProjectLabel.Quarkus)).map(info => info.uri);
-
-  const buildFilePaths: Uri[] = await folders.reduce(async (buildFilePaths: Promise<Uri[]>, pathToSearch: string) => {
-    const accumulator = await buildFilePaths;
-    const buildGradleUris: Uri[] = await getFilePathsFromFolder(pathToSearch, `**/${BUILD_GRADLE}`);
-    const pomFileUris: Uri[] = await getFilePathsFromFolder(pathToSearch, `**/${POM_XML}`);
-
-    return Promise.resolve(accumulator.concat(pomFileUris).concat(buildGradleUris));
-  }, Promise.resolve([]));
-
-  return buildFilePaths;
 }

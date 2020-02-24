@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { QuarkusConfig, TerminateProcessConfig } from '../QuarkusConfig';
+import { QuarkusConfig, TerminateProcessConfig } from '../../QuarkusConfig';
 import { DebugSession, TaskExecution, debug, window } from 'vscode';
 import { Disposable } from 'vscode-languageclient';
-import { getRunningQuarkusDevTasks } from '../utils/tasksUtils';
-import { BuildSupport } from '../buildSupport/BuildSupport';
-import { getBuildSupport } from '../buildSupport/BuildSupportUtils';
+import { getRunningQuarkusDevTasks } from '../../utils/tasksUtils';
+import { BuildSupport } from '../../buildSupport/BuildSupport';
+import { getBuildSupport } from '../../buildSupport/BuildSupportUtils';
 
 export function createTerminateDebugListener(): Disposable {
 
