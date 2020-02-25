@@ -18,7 +18,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as pomParser from 'pom-parser';
 import * as g2js from 'gradle-to-js/lib/parser';
-
+import * as del from 'del';
 import { InputBox, VSBrowser, Workbench, WebDriver, WebElement, By, Key } from 'vscode-extension-tester';
 import { ProjectGenerationWizard, QuickPickItemInfo } from '../ProjectGenerationWizard';
 import { expect, use } from 'chai';
@@ -31,18 +31,33 @@ use(require('chai-fs'));
  */
 describe('Project generation tests', function() {
   this.bail(true);
+  this.retries(3);
 
   let driver: WebDriver;
   const tempDir: string = path.join(__dirname, 'temp');
 
-  before(() => {
+  before(async () => {
     driver = VSBrowser.instance.driver;
-    fs.removeSync(tempDir);
+  });
+
+  beforeEach(async function() {
+    this.timeout(10000);
+    await new Promise((res) => setTimeout(res, 3000));
+    if (fs.existsSync(tempDir)) {
+      await del(tempDir);
+    }
     fs.mkdirSync(tempDir);
   });
 
   after(async () => {
-    fs.removeSync(tempDir);
+    if (fs.existsSync(tempDir)) {
+      await del(tempDir);
+    }
+  });
+
+  afterEach(async function () {
+    this.timeout(5000);
+    await (new Workbench()).executeCommand('Close Workspace');
   });
 
   /**
@@ -168,7 +183,6 @@ describe('Project generation tests', function() {
    */
   it('should generate Maven project with extensions added', async function() {
     this.timeout(60000);
-
     const projectDestDir: string = path.join(tempDir, 'maven');
     const projectFolderName: string = 'quarkus-maven';
 
@@ -206,7 +220,6 @@ describe('Project generation tests', function() {
    */
   it('should generate Gradle project with extensions added', async function() {
     this.timeout(60000);
-
     const projectDestDir: string = path.join(tempDir, 'gradle');
     const projectFolderName: string = 'quarkus-gradle';
 
@@ -244,7 +257,6 @@ describe('Project generation tests', function() {
    */
   it('should display input values from previously generated project (with extensions)', async function() {
     this.timeout(80000);
-
     const projectDestDir: string = path.join(tempDir, 'previous-values-extensions');
 
     const buildTool: string = 'Gradle';

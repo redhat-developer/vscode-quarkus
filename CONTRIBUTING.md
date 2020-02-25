@@ -252,8 +252,8 @@ This script does two things.
 `vscode-quarkus/jars/`.  
 
 In addition to `npm run build`, there are two more build scripts:  
-`npm run build-server` only builds the Quarkus language server and places the jar in `vscode-quarkus/server/`.  
-`npm run build-ext` only builds the Quarkus jdt.ls extension and places the jar in `vscode-quarkus/jars/`.
+`npm run build-server` only builds the MicroProfile language server and places the jar in `vscode-quarkus/server/`.  
+`npm run build-ext` only builds the MicroProfile jdt.ls extension and places the jar in `vscode-quarkus/jars/`.
 
 ### Running vscode-quarkus
 **Step 1.** Open `vscode-quarkus/` in VSCode.  
@@ -293,6 +293,9 @@ the "VS Code UI Extension Tests (vscode-quarkus)" at the top left:
 When running the UI tests, it would be best to disable all other VS Code extensions
 so that they don't interfere during the testing. Also, please be sure to not do anything else with your machine. Its very important to not disturb your machine when running the UI tests, or
 else the test functions will not run properly.
+
+Additionally, please finish the [Setup](#setup) steps before running the UI tests.
+The setup is important because the debugging tests require the MicroProfile jdt.ls extension.
 
 **Note for running UI tests of macOS:**
 Due to an issue for an upstream UI testing library:

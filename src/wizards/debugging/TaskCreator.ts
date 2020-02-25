@@ -60,7 +60,6 @@ export class TaskCreator {
     const tasksKey = 'tasks';
     const versionKey = 'version';
     const version = '2.0.0';
-
     const workspaceConfiguration = workspace.getConfiguration(tasksKey, this.workspaceFolder.uri);
 
     // Get all registered tasks and current version
@@ -70,7 +69,6 @@ export class TaskCreator {
     if (Array.isArray(tasks) && currentVersion) {
       return;
     }
-
     // Create tasks.json file with empty list of tasks and with version 2.0.0
     await workspaceConfiguration.update(versionKey, version, ConfigurationTarget.WorkspaceFolder);
     await workspaceConfiguration.update(tasksKey, [], ConfigurationTarget.WorkspaceFolder);

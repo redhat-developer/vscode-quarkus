@@ -15,5 +15,9 @@
  */
 import { ExTester } from 'vscode-extension-tester';
 
-const tester: ExTester = new ExTester();
-tester.setupAndRunTests(undefined, undefined, 'out/test/vscodeUiTest/suite/*.js');
+async function runTests() {
+  const tester: ExTester = new ExTester();
+  await tester.setupAndRunTests('1.42.1', undefined, 'out/test/vscodeUiTest/suite/**/tests/multiProjectMultiWorkspaceTest.js', 'src/test/vscodeUiTest/settings.json');
+}
+
+runTests();
