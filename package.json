@@ -6,6 +6,7 @@
   "icon": "icons/logo.png",
   "author": "Red Hat",
   "publisher": "redhat",
+  "preview": true,
   "license": "Apache-2.0",
   "bugs": "https://github.com/redhat-developer/vscode-quarkus/issues",
   "engines": {
