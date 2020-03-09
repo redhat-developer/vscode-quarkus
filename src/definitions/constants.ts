@@ -34,8 +34,9 @@ export namespace MicroProfileLS {
   export const PROPERTY_DEFINITION_REQUEST = 'microprofile/propertyDefinition';
   export const JSON_SCHEMA_FOR_PROJECT_INFO_REQUEST = 'microprofile/jsonSchemaForProjectInfo';
   export const JAVA_CODELENS_REQUEST = 'microprofile/java/codeLens';
-  export const JAVA_HOVER_REQUEST = 'microprofile/java/hover';
+  export const JAVA_CODEACTION_REQUEST = 'microprofile/java/codeAction';
   export const JAVA_DIAGNOSTICS_REQUEST = 'microprofile/java/diagnostics';
+  export const JAVA_HOVER_REQUEST = 'microprofile/java/hover';
   export const PROPERTIES_CHANGED_NOTIFICATION = 'microprofile/propertiesChanged';
 }
 
