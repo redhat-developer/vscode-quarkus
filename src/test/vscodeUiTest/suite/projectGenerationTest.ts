@@ -31,13 +31,21 @@ use(require('chai-fs'));
  */
 describe('Project generation tests', function() {
   this.bail(true);
+  this.retries(3);
 
   let driver: WebDriver;
   const tempDir: string = path.join(__dirname, 'temp');
 
+  process.env['VSCODE_QUARKUS_API_URL'] = 'https://stage.code.quarkus.io/api';
+
   before(() => {
     driver = VSBrowser.instance.driver;
-    fs.removeSync(tempDir);
+  });
+
+  beforeEach(() => {
+    if (fs.existsSync(tempDir)) {
+      fs.removeSync(tempDir);
+    }
     fs.mkdirSync(tempDir);
   });
 

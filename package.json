@@ -342,7 +342,7 @@
     "build-server": "./node_modules/.bin/gulp buildServer",
     "build-ext": "./node_modules/.bin/gulp buildExtension",
     "test-ui": "npm run test-compile && npm run test-ui-run",
-    "test-ui-run": "extest setup-and-run 'out/test/vscodeUiTest/suite/*.js' -u",
+    "test-ui-run": "extest setup-and-run 'out/test/vscodeUiTest/suite/*.js' -u -c 1.42.1",
     "test-all": "npm test && npm run test-ui-run"
   },
   "devDependencies": {

@@ -32,6 +32,9 @@ export namespace QuarkusConfig {
   export const DEBUG_TERMINATE_ON_EXIT = 'quarkus.tools.debug.terminateProcessOnExit';
 
   export function getApiUrl(): string {
+    if (process.env.VSCODE_QUARKUS_API_URL) {
+      return process.env.VSCODE_QUARKUS_API_URL;
+    }
     return workspace.getConfiguration().get<string>(STARTER_API, DEFAULT_API_URL);
   }
 
