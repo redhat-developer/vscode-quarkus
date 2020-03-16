@@ -18,7 +18,6 @@
   },
   "categories": [
     "Programming Languages",
-    "Snippets",
     "Other"
   ],
   "repository": {
@@ -134,16 +133,6 @@
       {
         "command": "quarkusTools.welcome",
         "title": "Quarkus: Welcome"
-      }
-    ],
-    "snippets": [
-      {
-        "language": "java",
-        "path": "./snippets/quarkus.json"
-      },
-      {
-        "language": "quarkus-properties",
-        "path": "./snippets/properties.json"
       }
     ],
     "configuration": {
