@@ -1,0 +1,15 @@
+{
+  "fileTypes": [
+    "properties"
+  ],
+  "foldingStartMarker": "^[a-zA-Z0-9.-_]+=.*\\\n",
+  "foldingStopMarker": "^(.*(?<!\\)\n)",
+  "keyEquivalent": "^~J",
+  "patterns": [
+    {
+      "include": "source.ini"
+    }
+  ],
+  "scopeName": "source.ini.properties",
+  "uuid": "D364E829-7643-4AFF-948D-3C0D6B4EA8A4"
+}
