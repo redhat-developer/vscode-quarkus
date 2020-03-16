@@ -296,13 +296,13 @@
     "grammars": [
       {
         "language": "microprofile-properties",
-        "scopeName": "source.java-properties",
-        "path": "./language-support/properties-support/java-properties.tmLanguage"
+        "scopeName": "source.ini.properties",
+        "path": "./language-support/properties-support/java-properties.tmLanguage.json"
       },
       {
         "language": "quarkus-properties",
-        "scopeName": "source.java-properties",
-        "path": "./language-support/properties-support/java-properties.tmLanguage"
+        "scopeName": "source.ini.properties",
+        "path": "./language-support/properties-support/java-properties.tmLanguage.json"
       },
       {
         "language": "qute-html",
