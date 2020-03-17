@@ -265,7 +265,8 @@
         "quarkus.tools.validation.unknown.excluded": {
           "type": "array",
           "default": [
-            "*/mp-rest/providers/*/priority"
+            "*/mp-rest/providers/*/priority",
+            "mp.openapi.schema.*"
           ],
           "items": {
             "type": "string"

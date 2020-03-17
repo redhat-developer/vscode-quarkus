@@ -62,7 +62,8 @@ Default is `error`.
 * `quarkus.tools.validation.required.severity` : Validation severity for required properties for Quarkus/MicroProfile `*.properties` files.
 Default is `none`.
 * `quarkus.tools.validation.unknown.severity` : Validation severity for unknown properties for Quarkus/MicroProfile `*.properties` files. Default is `warning`.
-* `quarkus.tools.validation.unknown.excluded` : Array of properties to ignore for unknown Quarkus properties validation. Patterns can be used ('*' = any string, '?' = any character). Default is `["*/mp-rest/providers/*/priority"]`.
+* `quarkus.tools.validation.unknown.excluded` : Array of properties to ignore for unknown Quarkus properties validation. Patterns can be used ('*' = any string, '?' = any character).
+Default is `["*/mp-rest/providers/*/priority", "mp.openapi.schema.*"]`.
 
 
 Since 1.3.0:
