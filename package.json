@@ -286,12 +286,12 @@
     "grammars": [
       {
         "language": "microprofile-properties",
-        "scopeName": "source.ini.properties",
+        "scopeName": "source.java-properties",
         "path": "./language-support/properties-support/java-properties.tmLanguage.json"
       },
       {
         "language": "quarkus-properties",
-        "scopeName": "source.ini.properties",
+        "scopeName": "source.java-properties",
         "path": "./language-support/properties-support/java-properties.tmLanguage.json"
       },
       {

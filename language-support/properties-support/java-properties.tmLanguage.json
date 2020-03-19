@@ -1,15 +1,89 @@
 {
-  "fileTypes": [
-    "properties"
+  "information_for_contributors": [
+    "This file was referenced from https://github.com/microsoft/vscode/blob/master/extensions/ini/syntaxes/ini.tmLanguage.json",
+    "This file has been edited to fit the needs for java.properties syntax highlighting"
   ],
-  "foldingStartMarker": "^[a-zA-Z0-9.-_]+=.*\\\n",
-  "foldingStopMarker": "^(.*(?<!\\)\n)",
-  "keyEquivalent": "^~J",
+  "name": "Java Properties",
+  "scopeName": "source.java-properties",
   "patterns": [
     {
-      "include": "source.ini"
+      "comment": "Matching for comments that start with #",
+      "begin": "(^[ \\t]+)?(?=#)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.whitespace.comment.leading.java-properties"
+        }
+      },
+      "end": "(?!\\G)",
+      "patterns": [
+        {
+          "begin": "#",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.java-properties"
+            }
+          },
+          "end": "\\n",
+          "name": "comment.line.number-sign.java-properties"
+        }
+      ]
+    },
+    {
+      "comment": "Matching for property keys",
+      "captures": {
+        "1": {
+          "name": "keyword.other.definition.java-properties"
+        },
+        "4": {
+          "name": "punctuation.separator.key-value.java-properties"
+        }
+      },
+      "match": "^\\s*([\\/a-zA-Z0-9%_.-]+)\\s*(?=[=\\\\])"
+    },
+    {
+      "comment": "Matching the equals sign and property value",
+      "begin": "=",
+      "end": "(?<!\\\\)\\n",
+      "patterns": [
+        {
+          "include": "#numbers"
+        }
+      ]
+    },
+    {
+      "comment": "Matching for section (text enclosed between square brackets [])",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.entity.java-properties"
+        },
+        "4": {
+          "name": "punctuation.definition.entity.java-properties"
+        }
+      },
+      "match": "^(\\[)(.*?)(\\])",
+      "name": "entity.name.section.group-title.java-properties"
     }
   ],
-  "scopeName": "source.ini.properties",
-  "uuid": "D364E829-7643-4AFF-948D-3C0D6B4EA8A4"
+  "repository": {
+    "numbers": {
+      "patterns": [
+        {
+          "match": "(?x)\n\\b(?<!\\$)\n0(x|X)\n(\n  (?<!\\.)[0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?[Ll]?(?!\\.)\n  |\n  (\n    [0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?\\.?\n    |\n    ([0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?)?\\.[0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?\n  )\n  [Pp][+-]?[0-9]([0-9_]*[0-9])?[FfDd]?\n)\n\\b(?!\\$)",
+          "name": "constant.numeric.hex.java-properties"
+        },
+        {
+          "match": "\\b(?<!\\$)0(b|B)[01]([01_]*[01])?[Ll]?\\b(?!\\$)",
+          "name": "constant.numeric.binary.java-properties"
+        },
+        {
+          "match": "\\b(?<!\\$)0[0-7]([0-7_]*[0-7])?[Ll]?\\b(?!\\$)",
+          "name": "constant.numeric.octal.java-properties"
+        },
+        {
+          "match": "(?x)\n(?<!\\$)\n(\n  \\b[0-9]([0-9_]*[0-9])?\\.\\B(?!\\.)\n  |\n  \\b[0-9]([0-9_]*[0-9])?\\.([Ee][+-]?[0-9]([0-9_]*[0-9])?)[FfDd]?\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?\\.([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?\\.([0-9]([0-9_]*[0-9])?)([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]?\\b\n  |\n  (?<!\\.)\\B\\.[0-9]([0-9_]*[0-9])?([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]?\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?([Ee][+-]?[0-9]([0-9_]*[0-9])?)[FfDd]?\\b\n  |\n  \\b[0-9]([0-9_]*[0-9])?([Ee][+-]?[0-9]([0-9_]*[0-9])?)?[FfDd]\\b\n  |\n  \\b(0|[1-9]([0-9_]*[0-9])?)(?!\\.)[Ll]?\\b\n)\n(?!\\$)",
+          "name": "constant.numeric.decimal.java-properties"
+        }
+      ]
+    }
+  }
 }
