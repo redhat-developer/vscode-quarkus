@@ -42,7 +42,7 @@
     },
     "section_start_tag": {
       "begin": "({)(#)(else\\sif|\\w+(\\.\\w+)*)",
-      "end": "(\\/)?((?<![\\s\\\\])})",
+      "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
           "name": "support.constant.handlebars"
@@ -70,7 +70,7 @@
     },
     "section_end_tag": {
       "begin": "({)(\\/)(\\w+(\\.\\w+)*)?\\s*",
-      "end": "((?<![\\s\\\\])})",
+      "end": "((?<![\\\\])})",
       "beginCaptures": {
         "1": {
           "name": "support.constant.handlebars"
@@ -94,7 +94,7 @@
     },
     "expression": {
       "begin": "((?<!\\\\){)(?![\\s!#@\\/])",
-      "end": "((?<![\\s\\\\])})",
+      "end": "((?<![\\\\])})",
       "beginCaptures": {
         "1": {
           "name": "support.constant.handlebars"
