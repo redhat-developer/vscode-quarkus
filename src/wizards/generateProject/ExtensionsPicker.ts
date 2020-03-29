@@ -219,9 +219,16 @@ export class ExtensionsPicker {
     }
 
     items = items.concat(this.selectedExtensions.concat(this.unselectedExtensions).map((it: QExtension) => {
+      let description: string;
+      if (this.showDescription) {
+        description = (it.isRequired ? ' (This is a required extension)' : ` (${it.groupId}:${it.artifactId})`);
+      } else {
+        description = it.category;
+      }
+      
       const quickPickItem: QuickPickExtensionItem = {
         type: Type.Extension,
-        description: it.category + (it.isRequired ? ' - (This is a required extension)' : ''),
+        description,
         label: `${this.isSelected(it) ? '$(check) ' : ''}${it.name}`,
         extension: it
       };
