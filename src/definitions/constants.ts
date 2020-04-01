@@ -33,14 +33,17 @@ export namespace MicroProfileLS {
   export const PROJECT_INFO_REQUEST = 'microprofile/projectInfo';
   export const PROPERTY_DEFINITION_REQUEST = 'microprofile/propertyDefinition';
   export const JSON_SCHEMA_FOR_PROJECT_INFO_REQUEST = 'microprofile/jsonSchemaForProjectInfo';
-  export const JAVA_CODELENS_REQUEST = 'microprofile/java/codeLens';
   export const JAVA_CODEACTION_REQUEST = 'microprofile/java/codeAction';
+  export const JAVA_CODELENS_REQUEST = 'microprofile/java/codeLens';
+  export const JAVA_COMPLETION_REQUEST = 'microprofile/java/completion';
   export const JAVA_DIAGNOSTICS_REQUEST = 'microprofile/java/diagnostics';
   export const JAVA_HOVER_REQUEST = 'microprofile/java/hover';
+  export const JAVA_FILE_INFO_REQUEST = 'microprofile/java/fileInfo';
+  export const JAVA_PROJECT_LABELS_REQUEST = 'microprofile/java/projectLabels';
   export const PROPERTIES_CHANGED_NOTIFICATION = 'microprofile/propertiesChanged';
 }
 
-export const PROJECT_LABELS_COMMAND_ID = 'microprofile/java/projectLabels';
+export const WORKSPACE_LABELS_COMMAND_ID = 'microprofile/java/workspaceLabels';
 
 export const DEFAULT_API_URL: string = 'https://code.quarkus.io/api';
 export const DEFAULT_BUILD_TOOL: BuildToolName = BuildToolName.Maven;
