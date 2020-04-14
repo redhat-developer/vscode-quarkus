@@ -1,5 +1,53 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.4.0 (April 15, 2020)
+
+### Enhancements
+
+ * Show artifactId in the extensions picker. See [#197](https://github.com/redhat-developer/vscode-quarkus/issues/197)
+ * Add support for MicroProfile Fault Tolerance. See [#174](https://github.com/redhat-developer/vscode-quarkus/issues/174)
+ * Manage client snippet on server side. See [#119](https://github.com/redhat-developer/vscode-quarkus/issues/119)
+ * Determine if current project is a Quarkus project before adding Quarkus extensions. See [#45](https://github.com/redhat-developer/vscode-quarkus/issues/45)
+ * Hover support for `@ConfigProperty` name bounded to method parameters. See [LS#286](https://github.com/redhat-developer/quarkus-ls/pull/286)
+ * Filter for Java (server) snippets. See [LS#265](https://github.com/redhat-developer/quarkus-ls/issues/265)
+ * Support for `java.math.BigDecimal` values. See [LS#261](https://github.com/redhat-developer/quarkus-ls/issues/261)
+ * Support for MicroProfile RestClient CodeAction. See [LS#255](https://github.com/redhat-developer/quarkus-ls/issues/255)
+ * Manage client snippet on server side. See [LS#251](https://github.com/redhat-developer/quarkus-ls/pull/251)
+ * Code complete snippets for Open API Annotations. See [LS#246](https://github.com/redhat-developer/quarkus-ls/issues/246)
+ * Support for MicroProfile LRA properties. See [LS#243](https://github.com/redhat-developer/quarkus-ls/issues/243)
+ * Support for MicroProfile Metrics properties. See [LS#241](https://github.com/redhat-developer/quarkus-ls/issues/241)
+ * Support for MicroProfile OpenTracing properties. See [LS#240](https://github.com/redhat-developer/quarkus-ls/issues/240)
+ * CodeAction to Generate Open API Annotations. See [LS#239](https://github.com/redhat-developer/quarkus-ls/issues/239)
+ * Support for MicroProfile Health CodeAction. See [LS#236](https://github.com/redhat-developer/quarkus-ls/issues/236)
+ * Provide codeLens participant. See [LS#232](https://github.com/redhat-developer/quarkus-ls/pull/232)
+ * Provide hover participant. See [LS#231](https://github.com/redhat-developer/quarkus-ls/pull/231)
+ * Support for MicroProfile RestClient/Health Diagnostics. See [LS#217](https://github.com/redhat-developer/quarkus-ls/issues/217)
+ * Support for MicroProfile Open API properties. See [LS#216](https://github.com/redhat-developer/quarkus-ls/issues/216)
+
+### Bug Fixes
+
+ * Bad performance when working with non Quarkus/MP projects. See [#240](https://github.com/redhat-developer/vscode-quarkus/issues/240)
+ * Excluding unknown properties from validation no longer work. See [#237](https://github.com/redhat-developer/vscode-quarkus/issues/237)
+ * Improve application.properties TextMate grammar. See [#233](https://github.com/redhat-developer/vscode-quarkus/issues/233)
+ * Update application.properties TextMate grammar for multi-line properties values. See [#229](https://github.com/redhat-developer/vscode-quarkus/issues/229)
+ * Qute Syntax coloration problem with quote. See [#221](https://github.com/redhat-developer/vscode-quarkus/issues/221)
+ * When pasting, the comments gets duplicated when "editor.formatOnPaste":true. See [#220](https://github.com/redhat-developer/vscode-quarkus/issues/220)
+ * Cannot select which project to debug when multiple workspace folders are open. See [#74](https://github.com/redhat-developer/vscode-quarkus/issues/74)
+ * Remove duplicate Quarkus outputs in the "Tasks" dropdown. See [#17](https://github.com/redhat-developer/vscode-quarkus/issues/17)
+ * Duplicate static properties after saving Java files. See [LS#301](https://github.com/redhat-developer/quarkus-ls/issues/301)
+ * Hide OpenAPI source action if it is not applicable. See [LS#280](https://github.com/redhat-developer/quarkus-ls/issues/280)
+ * Parse PropertyValue when spanning multiple lines. See [LS#254](https://github.com/redhat-developer/quarkus-ls/pull/254)
+ * Classpath changed sends too many microprofile/propertiesChanged notifications. See [LS#235](https://github.com/redhat-developer/quarkus-ls/pull/235)
+ * Empty completion after an error from microprofile/projectInfo. See [LS#228](https://github.com/redhat-developer/quarkus-ls/issues/228)
+
+### Build
+
+* Fix for vulnerable minimist dependency. See [#238](https://github.com/redhat-developer/vscode-quarkus/pull/238)
+
+### Others
+
+ * Update contributing guide. See [#208](https://github.com/redhat-developer/vscode-quarkus/pull/208)
+
 ## 1.3.0 (February 6, 2020)
 
 ### Enhancements
@@ -14,7 +62,7 @@
  * Provide option to add created new project folder to multi-root VS Code workspace. See [#157](https://github.com/redhat-developer/vscode-quarkus/issues/157)
  * Improve the QuickPick for choosing extensions . See [#141](https://github.com/redhat-developer/vscode-quarkus/issues/141)
  * Add support for MicroProfile REST properties. See [#104](https://github.com/redhat-developer/vscode-quarkus/issues/104)
- * Add a progress bar / visual clue when loading completion is too long. See [#58](https://github.com/redhat-developer/vscode-quarkus/issues/58)
+ * Add a progress bar/visual clue when loading completion is too long. See [#58](https://github.com/redhat-developer/vscode-quarkus/issues/58)
 
 ### Bug Fixes
 
