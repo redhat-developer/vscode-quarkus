@@ -5,7 +5,7 @@
 
 ## Description
 
-This Visual Studio Code extension provides support for Quarkus development via:
+This Visual Studio Code extension provides support for [Quarkus](https://quarkus.io/) and [MicroProfile](https://github.com/eclipse/microprofile) development via:
 
  * a [MicroProfile language server](https://github.com/redhat-developer/quarkus-ls/tree/master/microprofile.ls).
  * a [MicroProfile jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/microprofile.jdt/com.redhat.microprofile.jdt.core).
@@ -20,25 +20,43 @@ The following commands are supported for both Maven and Gradle Quarkus projects:
   * `Quarkus: Add extensions to current project`: Add Quarkus extensions to currently opened Quarkus project
   * `Quarkus: Debug current Quarkus project`: Launches the Maven `quarkus:dev` plugin or the Gradle `quarkusDev` command and automatically attaches a debugger  
 
-## Quarkus `application.properties` Features
-  * Completion support for Quarkus properties
-  * Hover support for Quarkus properties
-  * Validation support for Quarkus properties 
+## Quarkus/MicroProfile `properties` Features
+
+In `application.properties` and `microprofile-config.properties` files, you will benefit with:
+
+  * Completion support for Quarkus/MicroProfile properties
+  * Hover support for Quarkus/MicroProfile properties
+  * Validation and Quick Fix support for Quarkus/MicroProfile properties 
   * Support for Quarkus profiles
   * Outline support (flat or tree view)
+  * Code snippets:
+    * **qds** - Configure a Quarkus datasource
+    * **qj** - Configure a Jaeger tracer
+  
+## Quarkus `yaml` Features
 
-## Quarkus code snippets
-This extension provides several code snippets, available when editing Java files:
+In `application.yaml` and `application.yml` files, you will benefit with:
 
-  * **qrc** - Create a new Quarkus resource class
-  * **qrm** - Create a new Quarkus resource method
-  * **qtrc** - Create a new Quarkus test resource class
-  * **qntrc** - Create a new Quarkus native test resource class
+  * Completion support for Quarkus/MicroProfile properties
+  * Hover support for Quarkus/MicroProfile properties
+  * Validation support for Quarkus/MicroProfile properties 
+  * Support for Quarkus profiles
+  * Outline support
 
-When editing `application.properties` files, you have access to:
+## Quarkus/MicroProfile `Java` Features
 
-  * **qds** - Configure a Quarkus datasource
-  * **qj** - Configure a Jaeger tracer
+In `Java` files, you will benefit with:
+
+  * Completion support for MicroProfile
+  * Hover support for MicroProfile
+  * Validation and Quick Fix support for MicroProfile
+  * Code Lens support for Quarkus/MicroProfile
+  * Code snippets:
+    * **qrc** - Create a new Quarkus resource class
+    * **qrm** - Create a new Quarkus resource method
+    * **qtrc** - Create a new Quarkus test resource class
+    * **qntrc** - Create a new Quarkus native test resource class
+    * snippets for MicroProfile annotations.
 
 ## Requirements
 
