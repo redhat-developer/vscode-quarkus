@@ -225,7 +225,7 @@ export class ExtensionsPicker {
       } else {
         description = it.category;
       }
-      
+
       const quickPickItem: QuickPickExtensionItem = {
         type: Type.Extension,
         description,
