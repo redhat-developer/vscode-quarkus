@@ -1,5 +1,18 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.5.0 (April 30, 2020)
+
+### Enhancements
+
+ * Code snippets for MicroProfile fault tolerance annotations. See [LS#307](https://github.com/redhat-developer/quarkus-ls/issues/307)
+ * Support for MicroProfile Context Propagation properties. See [LS#242](https://github.com/redhat-developer/quarkus-ls/issues/242)
+ * Update Quarkus datasource snippet. See [#227](https://github.com/redhat-developer/vscode-quarkus/issues/227)
+
+### Bug fixes
+
+ * `quarkus.banner.enabled` marked as error. See [#249](https://github.com/redhat-developer/vscode-quarkus/issues/249)
+ * Completion in non-Quarkus and non-MicroProfile project causes errors. See [#247](https://github.com/redhat-developer/vscode-quarkus/issues/247)
+
 ## 1.4.0 (April 15, 2020)
 
 ### Enhancements
@@ -82,7 +95,7 @@
 ### Enhancements
 
  * Support for `@ConfigProperties`. See [quarkus-ls#136](https://github.com/redhat-developer/quarkus-ls/issues/136)
- * CodeAction to fix value property by proposing similar value. See [quarkus-ls#130](https://github.com/redhat-developer/quarkus-ls/issues/130) 
+ * CodeAction to fix value property by proposing similar value. See [quarkus-ls#130](https://github.com/redhat-developer/quarkus-ls/issues/130)
  * CodeAction to add required properties. See [quarkus-ls#111](https://github.com/redhat-developer/quarkus-ls/issues/111)
  * CodeAction to fix unknown property by proposing similar name. See [quarkus-ls#80](https://github.com/redhat-developer/quarkus-ls/issues/80)
  * Provide a better support for Quarkus property value. See [quarkus-ls#69](https://github.com/redhat-developer/quarkus-ls/issues/69)
