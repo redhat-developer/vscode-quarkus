@@ -10,6 +10,7 @@
 
 ### Bug fixes
 
+ * Fix terminal not appearing when adding extensions with the Add Extensions command. See [#252](https://github.com/redhat-developer/vscode-quarkus/pull/252)
  * `quarkus.banner.enabled` marked as error. See [#249](https://github.com/redhat-developer/vscode-quarkus/issues/249)
  * Completion in non-Quarkus and non-MicroProfile project causes errors. See [#247](https://github.com/redhat-developer/vscode-quarkus/issues/247)
 

@@ -17,7 +17,7 @@ import * as requirements from './languageServer/requirements';
 
 import { VSCodeCommands, MicroProfileLS } from './definitions/constants';
 import { DidChangeConfigurationNotification, LanguageClientOptions, LanguageClient } from 'vscode-languageclient';
-import { ExtensionContext, commands, window, workspace } from 'vscode';
+import { ExtensionContext, commands, window, workspace, Terminal } from 'vscode';
 import { QuarkusContext } from './QuarkusContext';
 import { addExtensionsWizard } from './wizards/addExtensions/addExtensionsWizard';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
@@ -29,6 +29,7 @@ import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { QuarkusConfig } from './QuarkusConfig';
 import { registerConfigurationUpdateCommand, registerOpenURICommand, CommandKind } from './lsp-commands';
 import { registerYamlSchemaSupport, MicroProfilePropertiesChangeEvent } from './yaml/YamlSchema';
+import { terminalCommandRunner } from './terminal/terminalCommandRunner';
 
 let languageClient: LanguageClient;
 
@@ -39,6 +40,12 @@ export function activate(context: ExtensionContext) {
 
   context.subscriptions.push(createTerminateDebugListener());
   context.subscriptions.push(quarkusProjectListener.getQuarkusProjectListener());
+  context.subscriptions.push(terminalCommandRunner);
+  context.subscriptions.push(
+    window.onDidCloseTerminal((closedTerminal: Terminal) => {
+      terminalCommandRunner.dispose(closedTerminal.name);
+    })
+  );
 
   /**
    * Register Yaml Schema support to manage application.yaml

@@ -44,19 +44,15 @@ class TerminalCommandRunner implements Disposable {
         });
     }
 
-    public onDidCloseTerminal(closedTerminal: Terminal): void {
-        try {
-            delete this.terminals[closedTerminal.name];
-        } catch (error) {
-            // ignore it.
-        }
-    }
-
-    public dispose(id?: string): void {
-        if (id) {
-            this.terminals[id].dispose();
+    public dispose(terminalName?: string): void {
+        if (terminalName && this.terminals[terminalName] !== undefined) {
+            this.terminals[terminalName].dispose();
+            delete this.terminals[terminalName];
         } else {
-            this.closeAllTerminals();
+            Object.keys(this.terminals).forEach((id: string) => {
+                this.terminals[id].dispose();
+                delete this.terminals[id];
+            });
         }
     }
 }
