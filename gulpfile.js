@@ -15,14 +15,24 @@ const gulp = require('gulp');
 const rename = require('gulp-rename');
 const cp = require('child_process');
 
-const serverName = 'com.redhat.microprofile.ls-uber.jar';
+const microprofileServerName = 'com.redhat.microprofile.ls-uber.jar';
 const extensions = ['com.redhat.microprofile.jdt.core', 'com.redhat.microprofile.jdt.quarkus'];
-const serverDir = '../quarkus-ls/microprofile.ls/com.redhat.microprofile.ls';
+const microprofileServerDir = '../quarkus-ls/microprofile.ls/com.redhat.microprofile.ls';
 const extensionDir = '../quarkus-ls/microprofile.jdt';
 
-gulp.task('buildServer', (done) => {
-  cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: serverDir , stdio: 'inherit' });
-  gulp.src(serverDir + '/target/' + serverName)
+const quarkusServerExtName = 'com.redhat.quarkus.ls-0.0.1-SNAPSHOT.jar';
+const quarkusServerExtDir = '../quarkus-ls/quarkus.ls.ext/com.redhat.quarkus.ls'
+
+gulp.task('buildMicroProfileServer', (done) => {
+  cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: microprofileServerDir , stdio: 'inherit' });
+  gulp.src(microprofileServerDir + '/target/' + microprofileServerName)
+    .pipe(gulp.dest('./server'));
+  done();
+});
+
+gulp.task('buildQuarkusServerExt', (done) => {
+  cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: quarkusServerExtDir , stdio: 'inherit' });
+  gulp.src(quarkusServerExtDir + '/target/' + quarkusServerExtName)
     .pipe(gulp.dest('./server'));
   done();
 });
@@ -37,7 +47,7 @@ gulp.task('buildExtension', (done) => {
   done();
 });
 
-gulp.task('build', gulp.series('buildServer', 'buildExtension'));
+gulp.task('build', gulp.series('buildMicroProfileServer', 'buildQuarkusServerExt', 'buildExtension'));
 
 function mvnw() {
 	return isWin() ? 'mvnw.cmd' : './mvnw';
