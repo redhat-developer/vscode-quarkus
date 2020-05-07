@@ -20,7 +20,7 @@ const extensions = ['com.redhat.microprofile.jdt.core', 'com.redhat.microprofile
 const microprofileServerDir = '../quarkus-ls/microprofile.ls/com.redhat.microprofile.ls';
 const extensionDir = '../quarkus-ls/microprofile.jdt';
 
-const quarkusServerExtName = 'com.redhat.quarkus.ls-0.0.1-SNAPSHOT.jar';
+const quarkusServerExtGlob = 'com.redhat.quarkus.ls!(*-sources).jar';
 const quarkusServerExtDir = '../quarkus-ls/quarkus.ls.ext/com.redhat.quarkus.ls'
 
 gulp.task('buildMicroProfileServer', (done) => {
@@ -32,7 +32,7 @@ gulp.task('buildMicroProfileServer', (done) => {
 
 gulp.task('buildQuarkusServerExt', (done) => {
   cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: quarkusServerExtDir , stdio: 'inherit' });
-  gulp.src(quarkusServerExtDir + '/target/' + quarkusServerExtName)
+  gulp.src(quarkusServerExtDir + '/target/' + quarkusServerExtGlob)
     .pipe(gulp.dest('./server'));
   done();
 });

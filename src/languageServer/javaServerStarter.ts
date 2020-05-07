@@ -8,7 +8,7 @@ const glob = require('glob');
 const DEBUG = startedInDebugMode();
 const DEBUG_PORT = 1064;
 const MICROPROFILE_SERVER_NAME = 'com.redhat.microprofile.ls-uber.jar';
-const QUARKUS_SERVER_EXTENSION_NAME = 'com.redhat.quarkus.ls-0.0.1-SNAPSHOT.jar';
+const QUARKUS_SERVER_EXTENSION_GLOB = 'com.redhat.quarkus.ls*.jar';
 const MICROPROFILE_SERVER_MAIN_CLASS = 'com.redhat.microprofile.ls.MicroProfileServerLauncher';
 
 export function prepareExecutable(requirements: RequirementsData): Executable {
@@ -40,11 +40,13 @@ function prepareParams(): string[] {
   parseVMargs(params, vmargs);
   const serverHome: string = path.resolve(__dirname, '../server');
   const microprofileServerFound: Array<string> = glob.sync(`**/${MICROPROFILE_SERVER_NAME}`, { cwd: serverHome });
-  const quarkusServerExtFound: Array<string> = glob.sync(`**/${QUARKUS_SERVER_EXTENSION_NAME}`, { cwd: serverHome });
+  const quarkusServerExtFound: Array<string> = glob.sync(`**/${QUARKUS_SERVER_EXTENSION_GLOB}`, { cwd: serverHome });
   if (microprofileServerFound.length && quarkusServerExtFound.length) {
     params.push('-cp');
     params.push(`${serverHome}/*`);
     params.push(MICROPROFILE_SERVER_MAIN_CLASS);
+  } else {
+    console.error('Unable to find required Language Server JARs');
   }
   return params;
 }
