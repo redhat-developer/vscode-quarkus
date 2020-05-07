@@ -24,7 +24,7 @@ const quarkusServerExtGlob = 'com.redhat.quarkus.ls!(*-sources).jar';
 const quarkusServerExtDir = '../quarkus-ls/quarkus.ls.ext/com.redhat.quarkus.ls'
 
 gulp.task('buildMicroProfileServer', (done) => {
-  cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: microprofileServerDir , stdio: 'inherit' });
+  cp.execSync(mvnw() + ' clean install -DskipTests', { cwd: microprofileServerDir , stdio: 'inherit' });
   gulp.src(microprofileServerDir + '/target/' + microprofileServerName)
     .pipe(gulp.dest('./server'));
   done();
@@ -34,8 +34,14 @@ gulp.task('buildQuarkusServerExt', (done) => {
   cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: quarkusServerExtDir , stdio: 'inherit' });
   gulp.src(quarkusServerExtDir + '/target/' + quarkusServerExtGlob)
     .pipe(gulp.dest('./server'));
+  // copy over any dependencies not provided by mp-ls 
+  // dependencies are copied into /target/lib by the maven-dependency-plugin
+  gulp.src(quarkusServerExtDir + '/target/lib/*.jar')
+    .pipe(gulp.dest('./server'));
   done();
 });
+
+gulp.task('buildServer', gulp.series(['buildMicroProfileServer', 'buildQuarkusServerExt']))
 
 gulp.task('buildExtension', (done) => {
   cp.execSync(mvnw() + ' -pl "' + extensions.join(',') + '" clean verify -DskipTests' , { cwd: extensionDir, stdio: 'inherit' });
@@ -47,7 +53,7 @@ gulp.task('buildExtension', (done) => {
   done();
 });
 
-gulp.task('build', gulp.series('buildMicroProfileServer', 'buildQuarkusServerExt', 'buildExtension'));
+gulp.task('build', gulp.series('buildServer', 'buildExtension'));
 
 function mvnw() {
 	return isWin() ? 'mvnw.cmd' : './mvnw';

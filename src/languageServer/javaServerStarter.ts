@@ -46,7 +46,7 @@ function prepareParams(): string[] {
     params.push(`${serverHome}/*`);
     params.push(MICROPROFILE_SERVER_MAIN_CLASS);
   } else {
-    console.error('Unable to find required Language Server JARs');
+    throw new Error('Unable to find required Language Server JARs');
   }
   return params;
 }
