@@ -15,17 +15,33 @@ const gulp = require('gulp');
 const rename = require('gulp-rename');
 const cp = require('child_process');
 
-const serverName = 'com.redhat.microprofile.ls-uber.jar';
+const microprofileServerName = 'com.redhat.microprofile.ls-uber.jar';
 const extensions = ['com.redhat.microprofile.jdt.core', 'com.redhat.microprofile.jdt.quarkus'];
-const serverDir = '../quarkus-ls/microprofile.ls/com.redhat.microprofile.ls';
+const microprofileServerDir = '../quarkus-ls/microprofile.ls/com.redhat.microprofile.ls';
 const extensionDir = '../quarkus-ls/microprofile.jdt';
 
-gulp.task('buildServer', (done) => {
-  cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: serverDir , stdio: 'inherit' });
-  gulp.src(serverDir + '/target/' + serverName)
+const quarkusServerExtGlob = 'com.redhat.quarkus.ls!(*-sources).jar';
+const quarkusServerExtDir = '../quarkus-ls/quarkus.ls.ext/com.redhat.quarkus.ls'
+
+gulp.task('buildMicroProfileServer', (done) => {
+  cp.execSync(mvnw() + ' clean install -DskipTests', { cwd: microprofileServerDir , stdio: 'inherit' });
+  gulp.src(microprofileServerDir + '/target/' + microprofileServerName)
     .pipe(gulp.dest('./server'));
   done();
 });
+
+gulp.task('buildQuarkusServerExt', (done) => {
+  cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: quarkusServerExtDir , stdio: 'inherit' });
+  gulp.src(quarkusServerExtDir + '/target/' + quarkusServerExtGlob)
+    .pipe(gulp.dest('./server'));
+  // copy over any dependencies not provided by mp-ls 
+  // dependencies are copied into /target/lib by the maven-dependency-plugin
+  gulp.src(quarkusServerExtDir + '/target/lib/*.jar')
+    .pipe(gulp.dest('./server'));
+  done();
+});
+
+gulp.task('buildServer', gulp.series(['buildMicroProfileServer', 'buildQuarkusServerExt']))
 
 gulp.task('buildExtension', (done) => {
   cp.execSync(mvnw() + ' -pl "' + extensions.join(',') + '" clean verify -DskipTests' , { cwd: extensionDir, stdio: 'inherit' });
