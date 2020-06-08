@@ -26,7 +26,9 @@ In `application.properties` and `microprofile-config.properties` files, you will
 
   * Completion support for Quarkus/MicroProfile properties
   * Hover support for Quarkus/MicroProfile properties
-  * Validation and Quick Fix support for Quarkus/MicroProfile properties 
+  * Definition support for Quarkus/MicroProfile properties
+  * Format support for Quarkus/MicroProfile properties
+  * Validation and Quick Fix support for Quarkus/MicroProfile properties
   * Support for Quarkus profiles
   * Outline support (flat or tree view)
   * Code snippets:
