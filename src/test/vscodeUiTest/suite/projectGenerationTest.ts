@@ -304,7 +304,7 @@ describe('Project generation tests', function() {
     await wizard.sendKeys(Key.DOWN, Key.UP);
     const quickPickItemText: QuickPickItemInfo = await wizard.getNthQuickPickItemInfo(0);
     expect(quickPickItemText.label).to.have.string('Last used');
-    expect(quickPickItemText.detail).to.have.string('Camel Quarkus Core');
+    expect(quickPickItemText.detail).to.have.string('Camel Core');
     expect(quickPickItemText.detail).to.have.string('Eclipse Vert.x');
 
     await wizard.cancel();
