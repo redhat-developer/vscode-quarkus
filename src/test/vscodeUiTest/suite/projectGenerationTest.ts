@@ -213,7 +213,7 @@ describe('Project generation tests', function() {
    * Quarkus Gradle project with some extensions added
    */
   it('should generate Gradle project with extensions added', async function() {
-    this.timeout(60000);
+    this.timeout(80000);
 
     const projectDestDir: string = path.join(tempDir, 'gradle');
     const projectFolderName: string = 'quarkus-gradle';
@@ -251,7 +251,7 @@ describe('Project generation tests', function() {
    * the previously generated project's values
    */
   it('should display input values from previously generated project (with extensions)', async function() {
-    this.timeout(80000);
+    this.timeout(100000);
 
     const projectDestDir: string = path.join(tempDir, 'previous-values-extensions');
 
