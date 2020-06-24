@@ -60,6 +60,10 @@ export class WelcomeWebview {
         localResourceRoots: [vscode.Uri.file(path.join(this._context.extensionPath, this.RESOURCE_FOLDER))]
       }
     );
+    panel.iconPath = {
+      light: vscode.Uri.file(path.join(this._context.extensionPath, this.RESOURCE_FOLDER, 'icons', 'quarkus_icon_1color_32px_default.png')),
+      dark: vscode.Uri.file(path.join(this._context.extensionPath, this.RESOURCE_FOLDER, 'icons', 'quarkus_icon_1color_32px_reverse.png'))
+    };
     panel.onDidDispose(() => this.dispose(), null, this._disposables);
     return panel;
   }
