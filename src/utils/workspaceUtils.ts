@@ -28,7 +28,7 @@ export async function getFilePathsFromFolder(folderPath: string, glob: string): 
  * Returns an array of `ProjectTypeInfo` containing information for each project
  * in the current workspace
  *
- * @param projectLabel optioanlly specify what project label to retrieve
+ * @param projectLabel optionally specify what project label to retrieve
  */
 export async function getWorkspaceProjectLabels(projectLabel?: ProjectLabel): Promise<ProjectLabelInfo[]> {
   const result: ProjectLabelInfo[] = await ProjectLabelInfo.getWorkspaceProjectLabelInfo();
