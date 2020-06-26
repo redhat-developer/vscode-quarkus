@@ -15,7 +15,8 @@
  */
 import * as _ from 'lodash';
 
-import { InputBox, QuickPickItem, DialogHandler, Workbench, WebDriver, WebElement, By, OpenDialog, until, Key } from 'vscode-extension-tester';
+import { InputBox, QuickPickItem, Workbench, WebDriver, WebElement, By, until, Key } from 'vscode-extension-tester';
+import { DialogHandler, OpenDialog } from 'vscode-extension-tester-native';
 
 /**
  * This class represents the project generation wizard visible
@@ -37,8 +38,7 @@ export class ProjectGenerationWizard extends InputBox {
    */
   public static async openWizard(driver: WebDriver): Promise<ProjectGenerationWizard> {
     await (new Workbench()).executeCommand('Quarkus: Generate a Quarkus project');
-    await driver.wait(until.elementLocated(By.className('quick-input-widget')), 30000);
-    return (new ProjectGenerationWizard().wait());
+    return (new ProjectGenerationWizard().wait(30000));
   }
 
   /**
@@ -140,8 +140,12 @@ export class ProjectGenerationWizard extends InputBox {
    */
   public async getBackButton(): Promise<WebElement | undefined> {
     const enclosing: WebElement = this.getEnclosingElement();
+
+    // TODO: Currently, the back button's class is hardcoded here.
+    // After https://github.com/redhat-developer/vscode-extension-tester/issues/136 is fixed, remove the hardcoded class
+    const backButtonClass: string = 'codicon-quick-input-back';
     try {
-      const backButton: WebElement = await enclosing.findElement(By.className('quick-input-button-icon-1'));
+      const backButton: WebElement = await enclosing.findElement(By.className(backButtonClass));
       return backButton;
     } catch (e) {
       return undefined;
