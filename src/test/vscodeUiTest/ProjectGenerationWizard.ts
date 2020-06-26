@@ -15,7 +15,7 @@
  */
 import * as _ from 'lodash';
 
-import { InputBox, QuickPickItem, DialogHandler, Workbench, WebDriver, WebElement, By, OpenDialog, until, Key } from 'vscode-extension-tester';
+import { InputBox, QuickPickItem, Workbench, WebDriver, WebElement, By, until, Key } from 'vscode-extension-tester';
 
 /**
  * This class represents the project generation wizard visible
@@ -80,9 +80,10 @@ export class ProjectGenerationWizard extends InputBox {
     }
     await wizard.next();
 
-    const dialog: OpenDialog = await DialogHandler.getOpenDialog();
-    await dialog.selectPath(options.dest);
-    await dialog.confirm();
+    await new Workbench().executeCommand('extest open file');
+    const input = await InputBox.create();
+    await input.setText(options.dest);
+    await input.confirm();
     } catch {
       return false;
     }
