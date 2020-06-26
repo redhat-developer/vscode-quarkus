@@ -21,10 +21,12 @@ import { WORKSPACE_LABELS_COMMAND_ID } from "./constants";
 
 export class ProjectLabelInfo {
   uri: string;
+  name: string;
   labels: ProjectLabel[];
-  constructor(uri: string, labels: ProjectLabel[]) {
+  constructor(uri: string, name: string, labels: ProjectLabel[]) {
     this.uri = uri;
     this.labels = labels;
+    this.name = name;
   }
 
   public getBuildSupport(): BuildSupport|undefined {
@@ -54,9 +56,9 @@ export class ProjectLabelInfo {
   }
 
   public static async getWorkspaceProjectLabelInfo(): Promise<ProjectLabelInfo[]> {
-    const projectLabels: {uri: string, labels: ProjectLabel[]}[] = await commands.executeCommand("java.execute.workspaceCommand", WORKSPACE_LABELS_COMMAND_ID);
+    const projectLabels: {uri: string, name: string, labels: ProjectLabel[]}[] = await commands.executeCommand("java.execute.workspaceCommand", WORKSPACE_LABELS_COMMAND_ID);
     return projectLabels.map((p) => {
-      return new ProjectLabelInfo(p.uri, p.labels);
+      return new ProjectLabelInfo(p.uri, p.name, p.labels);
     });
   }
 }

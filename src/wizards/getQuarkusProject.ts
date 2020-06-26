@@ -87,7 +87,7 @@ async function getProjectQuickPickItems(quarkusProjectFolders: ProjectLabelInfo[
   return quarkusProjectFolders.map((projectInfo) => {
     return {
       detail: projectInfo.uri,
-      label: path.basename(projectInfo.uri),
+      label: projectInfo.name,
       projectLabelInfo: projectInfo
     };
   });
