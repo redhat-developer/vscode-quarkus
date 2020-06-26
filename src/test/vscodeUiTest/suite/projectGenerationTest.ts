@@ -175,7 +175,7 @@ describe('Project generation tests', function() {
    * Quarkus Maven project with some extensions added
    */
   it('should generate Maven project with extensions added', async function() {
-    this.timeout(60000);
+    this.timeout(80000);
 
     const projectDestDir: string = path.join(tempDir, 'maven');
     const projectFolderName: string = 'quarkus-maven';
@@ -213,7 +213,7 @@ describe('Project generation tests', function() {
    * Quarkus Gradle project with some extensions added
    */
   it('should generate Gradle project with extensions added', async function() {
-    this.timeout(60000);
+    this.timeout(80000);
 
     const projectDestDir: string = path.join(tempDir, 'gradle');
     const projectFolderName: string = 'quarkus-gradle';
@@ -243,7 +243,7 @@ describe('Project generation tests', function() {
     ).to.be.true;
 
     await (new Workbench()).executeCommand('Close Workspace');
-    return new Promise(res => setTimeout(res, 5000));
+    return new Promise(res => setTimeout(res, 6000));
   });
 
   /**
@@ -309,7 +309,7 @@ describe('Project generation tests', function() {
 
     await wizard.cancel();
     await (new Workbench()).executeCommand('Close Workspace');
-    return new Promise(res => setTimeout(res, 5000));
+    return new Promise(res => setTimeout(res, 6000));
   });
 
   /**
