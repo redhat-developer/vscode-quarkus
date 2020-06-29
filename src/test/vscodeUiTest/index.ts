@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import { ExTester } from 'vscode-extension-tester';
-import * as path from 'path';
 
-const tester: ExTester = new ExTester();
+const testExtensionsDir: string = 'out/test/vscodeUiTest/extensions';
+const tester: ExTester = new ExTester(undefined, undefined, testExtensionsDir);
 tester.setupAndRunTests(undefined, 'out/test/vscodeUiTest/suite/*.js');

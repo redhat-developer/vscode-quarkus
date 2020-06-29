@@ -290,8 +290,7 @@ To debug the UI tests, open the VS Code Debugging tab and select
 the "VS Code UI Extension Tests (vscode-quarkus)" at the top left:
 ![](images/runDebuggerUiTests.png)  
 
-When running the UI tests, it would be best to disable all other VS Code extensions
-so that they don't interfere during the testing. Also, please be sure to not do anything else with your machine. Its very important to not disturb your machine when running the UI tests, or
+Its very important to not disturb your machine when running the UI tests, or
 else the test functions will not run properly.
 
 **Note for running UI tests of macOS:**
