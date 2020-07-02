@@ -17,7 +17,7 @@ import { commands } from "vscode";
 import { BuildSupport } from "../buildSupport/BuildSupport";
 import { GradleBuildSupport } from "../buildSupport/GradleBuildSupport";
 import { MavenBuildSupport } from "../buildSupport/MavenBuildSupport";
-import { WORKSPACE_LABELS_COMMAND_ID } from "./constants";
+import { JavaVSCodeCommands } from "./constants";
 
 export class ProjectLabelInfo {
   uri: string;
@@ -29,7 +29,7 @@ export class ProjectLabelInfo {
     this.name = name;
   }
 
-  public getBuildSupport(): BuildSupport|undefined {
+  public getBuildSupport(): BuildSupport | undefined {
     if (this.isGradleProject()) {
       return new GradleBuildSupport();
     }
@@ -56,10 +56,21 @@ export class ProjectLabelInfo {
   }
 
   public static async getWorkspaceProjectLabelInfo(): Promise<ProjectLabelInfo[]> {
-    const projectLabels: {uri: string, name: string, labels: ProjectLabel[]}[] = await commands.executeCommand("java.execute.workspaceCommand", WORKSPACE_LABELS_COMMAND_ID);
+    const projectLabels: { uri: string, name: string, labels: ProjectLabel[] }[] = await commands.executeCommand("java.execute.workspaceCommand", JavaVSCodeCommands.WORKSPACE_LABELS_COMMAND_ID);
     return projectLabels.map((p) => {
       return new ProjectLabelInfo(p.uri, p.name, p.labels);
     });
+  }
+
+  /**
+   * Returns the label information for the given file URI.
+   * @param uri the file URI
+   * @return the label information for the given file URI.
+   */
+  public static async getProjectLabelInfo(uri: string): Promise<ProjectLabelInfo> {
+    const params = { uri };
+    const projectLabel: { uri: string, name: string, labels: ProjectLabel[] } = await commands.executeCommand("java.execute.workspaceCommand", JavaVSCodeCommands.PROJECT_LABELS_COMMAND_ID, params);
+    return new ProjectLabelInfo(projectLabel.uri, projectLabel.name, projectLabel.labels);
   }
 }
 

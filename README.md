@@ -18,7 +18,7 @@ The following commands are supported for both Maven and Gradle Quarkus projects:
 
   * `Quarkus: Generate a Quarkus project`: Generate a Quarkus project, based on https://code.quarkus.io/
   * `Quarkus: Add extensions to current project`: Add Quarkus extensions to currently opened Quarkus project
-  * `Quarkus: Debug current Quarkus project`: Launches the Maven `quarkus:dev` plugin or the Gradle `quarkusDev` command and automatically attaches a debugger  
+  * `Quarkus: Debug current Quarkus project`: Launches the Maven `quarkus:dev` plugin or the Gradle `quarkusDev` command and automatically attaches a debugger
 
 ## Quarkus/MicroProfile `properties` Features
 
@@ -34,14 +34,14 @@ In `application.properties` and `microprofile-config.properties` files, you will
   * Code snippets:
     * **qds** - Configure a Quarkus datasource
     * **qj** - Configure a Jaeger tracer
-  
+
 ## Quarkus `yaml` Features
 
 In `application.yaml` and `application.yml` files, you will benefit with:
 
   * Completion support for Quarkus/MicroProfile properties
   * Hover support for Quarkus/MicroProfile properties
-  * Validation support for Quarkus/MicroProfile properties 
+  * Validation support for Quarkus/MicroProfile properties
   * Support for Quarkus profiles
   * Outline support
 
@@ -69,7 +69,7 @@ In `Java` files, you will benefit with:
 ## Supported VS Code settings
 
 The following settings are supported:
-  
+
 * `quarkus.tools.alwaysShowWelcomePage` : Determines whether to show the welcome page on extension startup.
 * `quarkus.tools.debug.terminateProcessOnExit` : Determines whether to terminate the quarkus:dev task after closing the debug session.
 * `quarkus.tools.formatting.surroundEqualsWithSpaces` : Insert spaces around the equals sign when formatting the application.properties file. Default is `false`.
@@ -85,16 +85,16 @@ Default is `none`.
 * `quarkus.tools.validation.unknown.severity` : Validation severity for unknown properties for Quarkus/MicroProfile `*.properties` files. Default is `warning`.
 * `quarkus.tools.validation.unknown.excluded` : Array of properties to ignore for unknown Quarkus properties validation. Patterns can be used ('*' = any string, '?' = any character).
 Default is `["*/mp-rest/providers/*/priority", "mp.openapi.schema.*"]`.
-
-
-Since 1.3.0:
 * `quarkus.tools.codeLens.urlCodeLensEnabled` : Enable/disable the URL code lenses for REST services. Default is`true`.
 * `quarkus.tools.starter.showExtensionDescriptions`: Determines whether to show the Quarkus extension descriptions when selecting Quarkus extensions. Default is `true`.
 * `quarkus.tools.validation.value.severity`: Validation severity for property values for Quarkus/MicroProfile `*.properties` files. Default is `error`.
 
+Since 1.6.0:
+* `quarkus.tools.propertiesLanguageMismatch` : Action performed when detected Quarkus properties have an incorrect language. Default is `forceQuarkus`.
+
 ### **Note for MicroProfile Rest Client properties**:
 
-Due to [this issue](https://github.com/redhat-developer/quarkus-ls/issues/203), the MP Rest property: `<mp-rest-client-class>/mp-rest/providers/<mp-rest-provider-class>/priority` reports an unknown error. 
+Due to [this issue](https://github.com/redhat-developer/quarkus-ls/issues/203), the MP Rest property: `<mp-rest-client-class>/mp-rest/providers/<mp-rest-provider-class>/priority` reports an unknown error.
 
 To avoid having this error, you must configure the following in `settings.json`:
 
@@ -124,8 +124,8 @@ CI builds can be installed manually by following these instructions:
 
   1) Download the latest development VSIX archive [from here](https://download.jboss.org/jbosstools/vscode/snapshots/vscode-quarkus/?C=M;O=D). `(vscode-quarkus-XXX.vsix)`
 
-  2) Click `View/Command Palette` 
-  
+  2) Click `View/Command Palette`
+
   3) Type 'VSIX'
 
   4) Select 'Install from VSIX...' and choose the `.vsix` file.

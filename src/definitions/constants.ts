@@ -22,6 +22,11 @@ export namespace VSCodeCommands {
   export const QUARKUS_WELCOME = 'quarkusTools.welcome';
 }
 
+export namespace JavaVSCodeCommands {
+  export const WORKSPACE_LABELS_COMMAND_ID = 'microprofile/java/workspaceLabels';
+  export const PROJECT_LABELS_COMMAND_ID = 'microprofile/java/projectLabels';
+}
+
 // Constants related to project generation
 export const enum BuildToolName {
   Maven = 'Maven',
@@ -42,8 +47,6 @@ export namespace MicroProfileLS {
   export const JAVA_PROJECT_LABELS_REQUEST = 'microprofile/java/projectLabels';
   export const PROPERTIES_CHANGED_NOTIFICATION = 'microprofile/propertiesChanged';
 }
-
-export const WORKSPACE_LABELS_COMMAND_ID = 'microprofile/java/workspaceLabels';
 
 export const DEFAULT_API_URL: string = 'https://code.quarkus.io/api';
 export const DEFAULT_BUILD_TOOL: BuildToolName = BuildToolName.Maven;
