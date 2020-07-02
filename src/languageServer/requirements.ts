@@ -3,7 +3,7 @@
 import * as cp from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Uri, workspace } from 'vscode';
+import { Uri, workspace, env } from 'vscode';
 
 const expandHomeDir = require('expand-home-dir');
 const findJavaHome = require('find-java-home');
@@ -75,10 +75,9 @@ function checkJavaVersion(javaHome: string): Promise<number> {
     return new Promise((resolve, reject) => {
         cp.execFile(javaHome + '/bin/java', ['-version'], {}, (error, stdout, stderr) => {
             const javaVersion = parseMajorVersion(stderr);
-            if (javaVersion < 8) {
-                openJDKDownload(reject, 'Java 8 or more recent is required to run. Please download and install a recent JDK.');
-            }
-            else {
+            if (javaVersion < 11) {
+                openJDKDownload(reject, `Java 11 or more recent is required to run 'Quarkus Tools for ${env.appName}'. Please download and install a recent JDK.`);
+            } else {
                 resolve(javaVersion);
             }
         });
