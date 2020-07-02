@@ -15,9 +15,10 @@
  */
 import * as requirements from './languageServer/requirements';
 
+import * as path from 'path';
 import { VSCodeCommands, MicroProfileLS } from './definitions/constants';
 import { DidChangeConfigurationNotification, LanguageClientOptions, LanguageClient } from 'vscode-languageclient';
-import { ExtensionContext, commands, window, workspace, Terminal } from 'vscode';
+import { ExtensionContext, commands, window, workspace, Terminal, languages, TextDocument } from 'vscode';
 import { QuarkusContext } from './QuarkusContext';
 import { addExtensionsWizard } from './wizards/addExtensions/addExtensionsWizard';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
@@ -26,10 +27,11 @@ import { generateProjectWizard } from './wizards/generateProject/generationWizar
 import { prepareExecutable } from './languageServer/javaServerStarter';
 import { tryStartDebugging } from './wizards/debugging/startDebugging';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
-import { QuarkusConfig } from './QuarkusConfig';
+import { QuarkusConfig, PropertiesLanguageMismatch } from './QuarkusConfig';
 import { registerConfigurationUpdateCommand, registerOpenURICommand, CommandKind } from './lsp-commands';
 import { registerYamlSchemaSupport, MicroProfilePropertiesChangeEvent } from './yaml/YamlSchema';
 import { terminalCommandRunner } from './terminal/terminalCommandRunner';
+import { ProjectLabelInfo } from './definitions/ProjectLabelInfo';
 
 let languageClient: LanguageClient;
 
@@ -47,6 +49,71 @@ export function activate(context: ExtensionContext) {
     })
   );
 
+  // When extension is started, loop for each text documents which are opened to update their language ID.
+  workspace.textDocuments.forEach(document => {
+    updateLanguageId(document);
+  });
+  // When a text document is opened,  update their language ID.
+  context.subscriptions.push(
+    workspace.onDidOpenTextDocument((document) => {
+      updateLanguageId(document);
+    })
+  );
+
+  /**
+   * Update if required the language ID to 'quarkus-properties' if needed.
+   *
+   * @param document the text document.
+   */
+  async function updateLanguageId(document: TextDocument) {
+    const propertiesLanguageMismatch: PropertiesLanguageMismatch = QuarkusConfig.getPropertiesLanguageMismatch();
+    if (propertiesLanguageMismatch === PropertiesLanguageMismatch.ignore) {
+      // Do nothing
+      return;
+    }
+    const fileName: string = path.basename(document.fileName);
+    if (fileName === 'application.properties') {
+      if (document.languageId === 'quarkus-properties') {
+        // the language ID is already quarkus-properties do nothing.
+        return;
+      }
+      tryToForceLanguageId(document, fileName, propertiesLanguageMismatch, 'quarkus-properties');
+    } else if (fileName === 'application.yaml' || fileName === 'application.yml') {
+      if (document.languageId === 'yaml') {
+        // the language ID is already yaml do nothing.
+        return;
+      }
+      tryToForceLanguageId(document, fileName, propertiesLanguageMismatch, 'yaml');
+    }
+  }
+
+  /**
+   * Try to force the document language ID to the given language ID.
+   *
+   * @param document the text document.
+   * @param languageId the language ID.
+   */
+  async function tryToForceLanguageId(document: TextDocument, fileName: string, propertiesLanguageMismatch: PropertiesLanguageMismatch, languageId: string) {
+    // Get project label information for the given file URI
+    const labelInfo = ProjectLabelInfo.getProjectLabelInfo(document.uri.toString());
+    return labelInfo.then(l => {
+      if (l.isQuarkusProject()) {
+        if (propertiesLanguageMismatch === PropertiesLanguageMismatch.prompt) {
+          const YES = "Yes", NO = "No";
+          const response: Thenable<string> = window.showInformationMessage(`The language ID for '${fileName}' must be '${languageId}' to receive Quarkus support. Set the language ID to '${languageId}?'`, YES, NO);
+          response.then(result => {
+            if (result === YES) {
+              // The application.properties file belong to a Quarkus project, force to the quarkus-properties language
+              languages.setTextDocumentLanguage(document, languageId);
+            }
+          });
+        } else {
+          // The application.properties file belong to a Quarkus project, force to the quarkus-properties language
+          languages.setTextDocumentLanguage(document, languageId);
+        }
+      }
+    });
+  }
   /**
    * Register Yaml Schema support to manage application.yaml
    */

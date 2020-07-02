@@ -178,6 +178,22 @@
           "description": "Determines whether to show the Quarkus extension descriptions when selecting Quarkus extensions.",
           "scope": "window"
         },
+        "quarkus.tools.propertiesLanguageMismatch": {
+          "type": "string",
+          "enum": [
+            "ignore",
+            "forceQuarkus",
+            "prompt"
+          ],
+          "enumDescriptions": [
+            "ignore language mismatch for Quarkus properties",
+            "Automatically correct the language for mismatched Quarkus properties",
+            "Prompt correcting the language for mismatched Quarkus properties"
+          ],
+          "default": "forceQuarkus",
+          "description": "Action performed when detected Quarkus properties have an incorrect language.",
+          "scope": "window"
+        },
         "quarkus.tools.formatting.surroundEqualsWithSpaces": {
           "type": "boolean",
           "default": false,

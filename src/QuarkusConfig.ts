@@ -30,6 +30,7 @@ export namespace QuarkusConfig {
   export const STARTER_SHOW_EXT_DESC = 'quarkus.tools.starter.showExtensionDescriptions';
   export const ALWAYS_SHOW_WELCOME_PAGE = 'quarkus.tools.alwaysShowWelcomePage';
   export const DEBUG_TERMINATE_ON_EXIT = 'quarkus.tools.debug.terminateProcessOnExit';
+  export const PROPERTIES_LANGUAGE_MISMATCH = "quarkus.tools.propertiesLanguageMismatch";
 
   export function getApiUrl(): string {
     if (process.env.VSCODE_QUARKUS_API_URL) {
@@ -48,6 +49,10 @@ export namespace QuarkusConfig {
 
   export function getTerminateProcessOnDebugExit(): TerminateProcessConfig {
     return workspace.getConfiguration().get<TerminateProcessConfig>(DEBUG_TERMINATE_ON_EXIT);
+  }
+
+  export function getPropertiesLanguageMismatch(): PropertiesLanguageMismatch {
+    return workspace.getConfiguration().get<PropertiesLanguageMismatch>(PROPERTIES_LANGUAGE_MISMATCH);
   }
 
   export function setAlwaysShowWelcomePage(value: boolean): void {
@@ -71,4 +76,10 @@ export enum TerminateProcessConfig {
   Ask = "Ask",
   Terminate = "Always terminate",
   DontTerminate = "Never terminate"
+}
+
+export enum PropertiesLanguageMismatch {
+  ignore = "ignore",
+  forceQuarkus = "forceQuarkus",
+  prompt = "prompt"
 }
