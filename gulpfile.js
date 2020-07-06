@@ -16,12 +16,17 @@ const rename = require('gulp-rename');
 const cp = require('child_process');
 
 const microprofileServerName = 'com.redhat.microprofile.ls-uber.jar';
-const extensions = ['com.redhat.microprofile.jdt.core', 'com.redhat.microprofile.jdt.quarkus'];
 const microprofileServerDir = '../quarkus-ls/microprofile.ls/com.redhat.microprofile.ls';
-const extensionDir = '../quarkus-ls/microprofile.jdt';
 
 const quarkusServerExtGlob = 'com.redhat.quarkus.ls!(*-sources).jar';
 const quarkusServerExtDir = '../quarkus-ls/quarkus.ls.ext/com.redhat.quarkus.ls'
+
+const microprofileExtensionDir = '../quarkus-ls/microprofile.jdt';
+const microprofileExtension = 'com.redhat.microprofile.jdt.core';
+
+const quarkusExtensionDir = '../quarkus-ls/quarkus.jdt.ext';
+const quarkusExtension = 'com.redhat.microprofile.jdt.quarkus';
+
 
 gulp.task('buildMicroProfileServer', (done) => {
   cp.execSync(mvnw() + ' clean install -DskipTests', { cwd: microprofileServerDir , stdio: 'inherit' });
@@ -41,17 +46,25 @@ gulp.task('buildQuarkusServerExt', (done) => {
   done();
 });
 
-gulp.task('buildServer', gulp.series(['buildMicroProfileServer', 'buildQuarkusServerExt']))
+gulp.task('buildServer', gulp.series(['buildMicroProfileServer', 'buildQuarkusServerExt']));
 
-gulp.task('buildExtension', (done) => {
-  cp.execSync(mvnw() + ' -pl "' + extensions.join(',') + '" clean verify -DskipTests' , { cwd: extensionDir, stdio: 'inherit' });
-  extensions.forEach(extension => {
-    gulp.src(extensionDir + '/' + extension + '/target/' + extension + '-*.jar')
-      .pipe(rename(extension + '.jar'))
-      .pipe(gulp.dest('./jars'));
-  });
+gulp.task('buildMicroProfileExtension', (done) => {
+  cp.execSync(mvnw() + ' -pl "' + microprofileExtension + '" clean verify -DskipTests', { cwd: microprofileExtensionDir, stdio: 'inherit' });
+  gulp.src(microprofileExtensionDir + '/' + microprofileExtension + '/target/' + microprofileExtension + '-!(*sources).jar')
+    .pipe(rename(microprofileExtension + '.jar'))
+    .pipe(gulp.dest('./jars'));
   done();
 });
+
+gulp.task('buildQuarkusExtension', (done) => {
+  cp.execSync(mvnw() + ' -pl "' + quarkusExtension + '" clean verify -DskipTests', { cwd: quarkusExtensionDir, stdio: 'inherit' });
+  gulp.src(quarkusExtensionDir + '/' + quarkusExtension + '/target/' + quarkusExtension + '-!(*sources).jar')
+    .pipe(rename(quarkusExtension + '.jar'))
+    .pipe(gulp.dest('./jars'));
+  done();
+});
+
+gulp.task('buildExtension', gulp.series(['buildMicroProfileExtension', 'buildQuarkusExtension']));
 
 gulp.task('build', gulp.series('buildServer', 'buildExtension'));
 
