@@ -1,5 +1,30 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.6.0 (July 9, 2020)
+
+### Enhancements
+
+ * Add welcome page icon. See [#260](https://github.com/redhat-developer/vscode-quarkus/issues/260).
+ * Update Java version on the welcome page. See [#258](https://github.com/redhat-developer/vscode-quarkus/issues/258).
+ * Mitigate vscode-quarkus & vscode-spring-boot competing for application.properties. See [#254](https://github.com/redhat-developer/vscode-quarkus/issues/254).
+ * Display project name when adding extensions. See [#215](https://github.com/redhat-developer/vscode-quarkus/issues/215).
+
+### Bug fixes
+
+ * Fix welcome page typos. See [#259](https://github.com/redhat-developer/vscode-quarkus/pull/259).
+ * Quarkus datasource snippet creates an invalid prop. for 1.5. See [#255](https://github.com/redhat-developer/vscode-quarkus/issues/255).
+ * vscode-quarkus should not be a Java formatter. See [#166](https://github.com/redhat-developer/vscode-quarkus/issues/166).
+ * Missing support for container-image properties. See [LS#315](https://github.com/redhat-developer/quarkus-ls/issues/315).
+ * Filter properties snippet with properties instead of dependency. See [LS#312](https://github.com/redhat-developer/quarkus-ls/issues/312).
+
+### Build
+
+ * Publish releases to open-vsx.org. See [#278](https://github.com/redhat-developer/vscode-quarkus/pull/278).
+ * Provide an extension directory when running UI tests. See [#267](https://github.com/redhat-developer/vscode-quarkus/issues/267).
+ * Migrate vscode-extension-tester to 3.x. See [#266](https://github.com/redhat-developer/vscode-quarkus/issues/266).
+ * Adjusting test after naming update of 'Camel Quarkus Core' to 'Camel'. See [#263](https://github.com/redhat-developer/vscode-quarkus/pull/263).
+ * Use RHEL 8 instead for RHEL 7 to workaround bug in VS Code 1.46.0. See [#261](https://github.com/redhat-developer/vscode-quarkus/pull/261).
+
 ## 1.5.0 (April 30, 2020)
 
 ### Enhancements
