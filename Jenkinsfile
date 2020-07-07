@@ -8,7 +8,7 @@ node('rhel8'){
             sh 'mkdir quarkus-ls'
         }
         dir ('quarkus-ls') {
-            git url: 'https://github.com/redhat-developer/quarkus-ls.git' 
+            git url: 'https://github.com/redhat-developer/quarkus-ls.git'
         }
         def hasClientDir = fileExists 'vscode-quarkus'
         if (!hasClientDir) {
@@ -71,13 +71,21 @@ node('rhel8'){
             input message:'Approve deployment?', submitter: 'fbricon,azerr,dakwon'
         }
 
-        stage("Publish to Marketplace") {
+        stage("Publish to Marketplaces") {
             unstash 'vsix'
             unstash 'tgz'
+            def vsix = findFiles(glob: '**.vsix')
+            // VS Code Marketplace
             withCredentials([[$class: 'StringBinding', credentialsId: 'vscode_java_marketplace', variable: 'TOKEN']]) {
-                def vsix = findFiles(glob: '**.vsix')
                 sh 'vsce publish -p ${TOKEN} --packagePath' + " ${vsix[0].path}"
             }
+
+            // open-vsx Marketplace
+            sh "npm install -g ovsx"
+            withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
+              sh 'ovsx publish -p ${OVSX_TOKEN}' + " ${vsix[0].path}"
+            }
+
             archiveArtifacts artifacts:"**.vsix,**.tgz"
 
             stage "Promote the build to stable"
