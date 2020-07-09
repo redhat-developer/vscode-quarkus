@@ -89,7 +89,6 @@ node('rhel8'){
             archiveArtifacts artifacts:"**.vsix,**.tgz"
 
             stage "Promote the build to stable"
-            def vsix = findFiles(glob: '**.vsix')
             sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${vsix[0].path} ${UPLOAD_LOCATION}/stable/vscode-quarkus/"
             def tgz = findFiles(glob: '**.tgz')
             sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${tgz[0].path} ${UPLOAD_LOCATION}/stable/vscode-quarkus/"
