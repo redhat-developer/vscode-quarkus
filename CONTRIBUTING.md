@@ -19,9 +19,9 @@ If you have any questions or suggestions we are happy to hear them.
 
 ## Project Structure
 For vscode-quarkus to work, it relies on the
-[MicroProfile language server](https://github.com/redhat-developer/quarkus-ls/tree/master/microprofile.ls)
+[MicroProfile language server](https://github.com/eclipse/lsp4mp/tree/master/microprofile.ls)
 and the 
-[MicroProfile jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/microprofile.jdt)
+[MicroProfile jdt.ls extension](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt)
 . The MicroProfile language server is responsible for providing
 [LSP language features](https://microsoft.github.io/language-server-protocol/specification)
 to VSCode, while the MicroProfile jdt.ls extension is responsible
@@ -64,7 +64,7 @@ Proceed to Step 3.
 and delegates it to the MicroProfile jdt.ls extension.  
 
 **Step 4.** The MicroProfile jdt.ls extension receives the command, determines
-[project information](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/commons/MicroProfileProjectInfo.java)
+[project information](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/org/eclipse/lsp4mp/commons/MicroProfileProjectInfo.java)
 (project URI, configuration properties, hints etc.)
 about the currently opened (MicroProfile or Quarkus) project and returns
 the information to vscode-quarkus. The project information is then sent to
@@ -81,7 +81,7 @@ request.
 ## Implementing language features for `application.properties`
 When an `application.properties` file sends a request (e.g. textDocument/completion) to the
 MicroProfile language server, the requests are accepted in
-[ApplicationPropertiesTextDocumentService#completion](https://github.com/redhat-developer/quarkus-ls/blob/9eb7718a6e0faa300f3937e607c3bfffc25c2f1d/microprofile.ls/com.redhat.microprofile.ls/src/main/java/com/redhat/microprofile/ls/ApplicationPropertiesTextDocumentService.java#L150).
+[ApplicationPropertiesTextDocumentService#completion](https://github.com/eclipse/lsp4mp/tree/master/microprofile.ls/org.eclipse.lsp4mp.ls/src/main/java/org/eclipse/lsp4mp/ls/ApplicationPropertiesTextDocumentService.java#L150).
 This class receives LSP requests for `application.properties` files.
 
 Properties collected by the MicroProfile jdt.ls extension are cached to keep response times
@@ -91,28 +91,27 @@ Collecting properties will not be done unless absolutely necessary
 
 When the completion is triggered,
 the MicroProfile LS checks the properties cache for the given `application.properties` file.
-If the cache does not exist, it calls the `microprofile/projectInfo` request to call the JDT LS Extension [projectInfo delegate command handler](https://github.com/redhat-developer/quarkus-ls/blob/0ff91b4d0fe4670584a3ad23fe645c8141df7f3d/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/core/ls/MicroProfileDelegateCommandHandler.java#L99) which
+If the cache does not exist, it calls the `microprofile/projectInfo` request to call the JDT LS Extension [projectInfo delegate command handler](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/org/eclipse/lsp4mp/jdt/internal/core/ls/MicroProfileDelegateCommandHandler.java#L71) which
 uses the
-[properties manager](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/core/PropertiesManager.java)
+[properties manager](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/org/eclipse/lsp4mp/jdt/core/PropertiesManager.java)
 that collects MicroProfile and Quarkus properties for the given Java project.
 
 This manager is extensible by the
-`com.redhat.microprofile.jdt.core.propertiesProviders`
-[extension point](https://github.com/redhat-developer/quarkus-ls/blob/0ff91b4d0fe4670584a3ad23fe645c8141df7f3d/microprofile.jdt/com.redhat.microprofile.jdt.quarkus/plugin.xml#L5):
+`org.eclipse.lsp4mp.jdt.core.propertiesProviders`
+[extension point](https://github.com/eclipse/lsp4mp/blobl/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/plugin.xml#L5):
 
- * [com.redhat.microprofile.jdt.core](https://github.com/redhat-developer/quarkus-ls/blob/0ff91b4d0fe4670584a3ad23fe645c8141df7f3d/microprofile.jdt/com.redhat.microprofile.jdt.core/plugin.xml#L33) defines properties provider for MicroProfile.
- * [com.redhat.microprofile.jdt.quarkus](https://github.com/redhat-developer/quarkus-ls/blob/0ff91b4d0fe4670584a3ad23fe645c8141df7f3d/microprofile.jdt/com.redhat.microprofile.jdt.quarkus/plugin.xml#L5) define properties provider for Quarkus.
-
+ * [org.eclipse.lsp4mp.jdt.core](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/plugin.xml#L49-L52) defines properties provider for MicroProfile.
+* [com.redhat.microprofile.jdt.quarkus](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus/plugin.xml#L5-L10) defines properties provider for Quarkus.
 
 Here are some providers and the annotation(s) they scan for:
 
 | Class | Annotations |
 |-------|-------------|
-| [MicroProfileConfigPropertyProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/core/providers/MicroProfileConfigPropertyProvider.java) | org.eclipse.microprofile.config.inject.ConfigProperty |
-| [MicroProfileRegisterRestClientProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/core/providers/MicroProfileRegisterRestClientProvider.java) | org.eclipse.microprofile.rest.client.inject.RegisterRestClient |
-| [QuarkusConfigPropertiesProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/providers/QuarkusConfigPropertiesProvider.java) | io.quarkus.arc.config.ConfigProperties |
-| [QuarkusConfigRootProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/providers/QuarkusConfigRootProvider.java) | io.quarkus.runtime.annotations.ConfigRoot |
-| [QuarkusKubernetesProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/providers/QuarkusKubernetesProvider.java) | io.dekorate.kubernetes.annotation.KubernetesApplication<br>io.dekorate.openshift.annotation.OpenshiftApplication<br>io.dekorate.s2i.annotation.S2iBuild<br>io.dekorate.docker.annotation.DockerBuild |
+| [MicroProfileConfigPropertyProvider](https://github.com/eclipse/lsp4mp//tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/core/providers/MicroProfileConfigPropertyProvider.java) | org.eclipse.microprofile.config.inject.ConfigProperty |
+| [MicroProfileRegisterRestClientProvider](https://github.com/eclipse/lsp4mp//tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/core/providers/MicroProfileRegisterRestClientProvider.java) | org.eclipse.microprofile.rest.client.inject.RegisterRestClient |
+| [QuarkusConfigPropertiesProvider](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/providers/QuarkusConfigPropertiesProvider.java) | io.quarkus.arc.config.ConfigProperties |
+| [QuarkusConfigRootProvider](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/providers/QuarkusConfigRootProvider.java) | io.quarkus.runtime.annotations.ConfigRoot |
+| [QuarkusKubernetesProvider](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/providers/QuarkusKubernetesProvider.java) | io.dekorate.kubernetes.annotation.KubernetesApplication<br>io.dekorate.openshift.annotation.OpenshiftApplication<br>io.dekorate.s2i.annotation.S2iBuild<br>io.dekorate.docker.annotation.DockerBuild |
 
 
 ### Searching for properties in JARs not in the user's Quarkus project's classpath
@@ -184,31 +183,31 @@ even if the deployment JAR itself, was not declared in the Quarkus project's `po
 ## Implementing language features for Java files
 When a Java file sends a request (e.g. `textDocument/codeLens`) to the
 MicroProfile language server, the requests are accepted in
-[JavaTextDocumentService#completion](https://github.com/redhat-developer/quarkus-ls/blob/dddd2248474d18db1f72c048499adf32332da265/microprofile.ls/com.redhat.microprofile.ls/src/main/java/com/redhat/microprofile/ls/JavaTextDocumentService.java#L84).
+[JavaTextDocumentService#completion](https://github.com/eclipse/lsp4mp/tree/master/microprofile.ls/src/main/java/com/redhat/microprofile/ls/JavaTextDocumentService.java#L84).
 This class receives LSP requests for Java files.
 
 The `textDocument/codeLens`, `textDocument/publishDiagnostics`, `textDocument/hover` requests are delegated to
-[`MicroProfileDelegateCommandHandlerForJava`](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/core/ls/MicroProfileDelegateCommandHandlerForJava.java) which creates the `lsp4j.Hover`, 
+[`MicroProfileDelegateCommandHandlerForJava`](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/core/ls/MicroProfileDelegateCommandHandlerForJava.java) which creates the `lsp4j.Hover`, 
 `lsp4j.CodeLens` and `lsp4j.PublishDiagnosticsParams` instances for hover, codelens and diagnostics respectively.
 
 Just like how `application.properties` properties are extensible via extension point, Java codeLens, diagnostics and
 hover are also extensible via extension point.
 
 These Java features are extensible by the
-`com.redhat.microprofile.jdt.core.javaFeatureParticipants`
-[extension point](https://github.com/redhat-developer/quarkus-ls/blob/0ff91b4d0fe4670584a3ad23fe645c8141df7f3d/microprofile.jdt/com.redhat.microprofile.jdt.quarkus/plugin.xml#L5):
+`org.eclipse.lsp4mp.jdt.core.javaFeatureParticipants`
+[extension point](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/com.redhat.microprofile.jdt.core/plugin.xml#L8):
 
- * [com.redhat.microprofile.jdt.core](https://github.com/redhat-developer/quarkus-ls/blob/dddd2248474d18db1f72c048499adf32332da265/microprofile.jdt/com.redhat.microprofile.jdt.core/plugin.xml#L63-L68) defines Java feature participants for MicroProfile.
- * [com.redhat.microprofile.jdt.quarkus](https://github.com/redhat-developer/quarkus-ls/blob/dddd2248474d18db1f72c048499adf32332da265/microprofile.jdt/com.redhat.microprofile.jdt.quarkus/plugin.xml#L17-L20)  defines Java feature participants for Quarkus.
+ * [org.eclipse.lsp4mp.jdt.core](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/plugin.xml#L54-L57) defines Java feature participants for MicroProfile.
+ * [com.redhat.microprofile.jdt.quarkus](https://github.com/redhat-developer/quarkus-ls/blob/dddd2248474d18db1f72c048499adf32332da265/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus/plugin.xml#L17-L20)  defines Java feature participants for Quarkus.
 
 Here are some examples of the leveraging the extension point to provide Java codeLens, diagnostics and hover:
 | Java Feature                            | Participant                                                                                                                                                                                                                                                                         |
 |-----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| MicroProfile Health diagnostics         | [MicroProfileHealthDiagnosticsParticipant ](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/health/java/MicroProfileHealthDiagnosticsParticipant.java )             |
-| MicroProfile Rest Client diagnostics    | [MicroProfileRestClientDiagnosticsParticipant ](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/restclient/java/MicroProfileRestClientDiagnosticsParticipant.java ) |
-| MicroProfile Rest Client codeLens       | [MicroProfileRestClientCodeLensParticipant](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/restclient/java/MicroProfileRestClientCodeLensParticipant.java)         |
-| JAX-RS codelens                         | [JaxRsCodeLensParticipant ](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/jaxrs/java/JaxRsCodeLensParticipant.java )                                              |
-| MicroProfile `@ConfigProperty` name hover | [MicroProfileConfigHoverParticipant ](https://github.com/redhat-developer/quarkus-ls/blob/master/microprofile.jdt/com.redhat.microprofile.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/config/java/MicroProfileConfigHoverParticipant.java )                         |
+| MicroProfile Health diagnostics         | [MicroProfileHealthDiagnosticsParticipant ](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/org/eclipse/lsp4mp/jdt/internal/health/java/MicroProfileHealthDiagnosticsParticipant.java )             |
+| MicroProfile Rest Client diagnostics    | [MicroProfileRestClientDiagnosticsParticipant ](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/org/eclipse/lsp4mp/jdt/internal/restclient/java/MicroProfileRestClientDiagnosticsParticipant.java ) |
+| MicroProfile Rest Client codeLens       | [MicroProfileRestClientCodeLensParticipant](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/org/eclipse/lsp4mp/jdt/internal/restclient/java/MicroProfileRestClientCodeLensParticipant.java)         |
+| JAX-RS codelens                         | [JaxRsCodeLensParticipant ](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/org/eclipse/lsp4mp/jdt/internal/jaxrs/java/JaxRsCodeLensParticipant.java )                                              |
+| MicroProfile `@ConfigProperty` name hover | [MicroProfileConfigHoverParticipant ](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/org/eclipse/lsp4mp/jdt/internal/config/java/MicroProfileConfigHoverParticipant.java )                         |
 
 
 ## Development Setup
@@ -315,7 +314,7 @@ at the top left of the Debugging tab.
 
 The JVM arguments used to start the MicroProfile language
 server are specified
-[here](https://github.com/redhat-developer/vscode-xml/blob/35c122edcce09038e853dfab112dd76813302034/src/javaServerStarter.ts#L26).
+[here](https://github.com/redhat-developer/vscode-quarkus/blob/master/src/languageServer/javaServerStarter.ts#L25).
 
 ### Debugging the MicroProfile jdt.ls extension:
 Only Eclipse can be used to debug the MicroProfile jdt.ls extension.  
