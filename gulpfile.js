@@ -15,14 +15,14 @@ const gulp = require('gulp');
 const rename = require('gulp-rename');
 const cp = require('child_process');
 
-const microprofileServerName = 'com.redhat.microprofile.ls-uber.jar';
-const microprofileServerDir = '../quarkus-ls/microprofile.ls/com.redhat.microprofile.ls';
+const microprofileServerName = 'org.eclipse.lsp4mp.ls-uber.jar';
+const microprofileServerDir = '../quarkus-ls/microprofile.ls/org.eclipse.lsp4mp.ls';
 
 const quarkusServerExtGlob = 'com.redhat.quarkus.ls!(*-sources).jar';
 const quarkusServerExtDir = '../quarkus-ls/quarkus.ls.ext/com.redhat.quarkus.ls'
 
 const microprofileExtensionDir = '../quarkus-ls/microprofile.jdt';
-const microprofileExtension = 'com.redhat.microprofile.jdt.core';
+const microprofileExtension = 'org.eclipse.lsp4mp.jdt.core';
 
 const quarkusExtensionDir = '../quarkus-ls/quarkus.jdt.ext';
 const quarkusExtension = 'com.redhat.microprofile.jdt.quarkus';
