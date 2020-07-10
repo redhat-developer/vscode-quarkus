@@ -52,7 +52,7 @@
   ],
   "contributes": {
     "javaExtensions": [
-      "./jars/com.redhat.microprofile.jdt.core.jar",
+      "./jars/org.eclipse.lsp4mp.jdt.core.jar",
       "./jars/com.redhat.microprofile.jdt.quarkus.jar"
     ],
     "languages": [

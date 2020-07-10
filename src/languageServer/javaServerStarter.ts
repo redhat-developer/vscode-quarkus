@@ -7,9 +7,9 @@ const glob = require('glob');
 
 const DEBUG = startedInDebugMode();
 const DEBUG_PORT = 1064;
-const MICROPROFILE_SERVER_NAME = 'com.redhat.microprofile.ls-uber.jar';
+const MICROPROFILE_SERVER_NAME = 'org.eclipse.lsp4mp.ls-uber.jar';
 const QUARKUS_SERVER_EXTENSION_GLOB = 'com.redhat.quarkus.ls*.jar';
-const MICROPROFILE_SERVER_MAIN_CLASS = 'com.redhat.microprofile.ls.MicroProfileServerLauncher';
+const MICROPROFILE_SERVER_MAIN_CLASS = 'org.eclipse.lsp4mp.ls.MicroProfileServerLauncher';
 
 export function prepareExecutable(requirements: RequirementsData): Executable {
   const executable: Executable = Object.create(null);
