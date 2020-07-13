@@ -3,6 +3,13 @@
 node('rhel8'){
     stage('Checkout repos') {
         deleteDir()
+        def hasLsp4mpDir = fileExists 'lsp4mp'
+        if (!hasLsp4mpDir){
+            sh 'mkdir lsp4mp'
+        }
+        dir ('lsp4mp') {
+            git url: 'https://github.com/eclipse/lsp4mp.git'
+        }
         def hasServerDir = fileExists 'quarkus-ls'
         if (!hasServerDir){
             sh 'mkdir quarkus-ls'
