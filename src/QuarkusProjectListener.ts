@@ -13,11 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { commands, workspace } from 'vscode';
+import { commands, workspace, Disposable } from 'vscode';
 import { getWorkspaceProjectLabels } from './utils/workspaceUtils';
-import { Disposable } from 'vscode-languageclient';
 import { ProjectLabel, ProjectLabelInfo } from './definitions/ProjectLabelInfo';
-import { MicroProfilePropertiesChangeEvent, MicroProfilePropertiesScopeEnum } from './yaml/YamlSchema';
+
+interface MicroProfilePropertiesChangeEvent {
+  projectURIs: Array<string>;
+  type: Array<MicroProfilePropertiesScopeEnum>;
+}
+
+enum MicroProfilePropertiesScopeEnum {
+  sources = 1,
+  dependencies = 2
+}
 
 export class QuarkusProjectListener {
   private quarkusProjectsCache: ProjectLabelInfo[];

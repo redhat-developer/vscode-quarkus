@@ -13,27 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as requirements from './languageServer/requirements';
-
 import * as path from 'path';
-import { VSCodeCommands, MicroProfileLS } from './definitions/constants';
-import { DidChangeConfigurationNotification, LanguageClientOptions, LanguageClient } from 'vscode-languageclient';
+import { VSCodeCommands } from './definitions/constants';
 import { ExtensionContext, commands, window, workspace, Terminal, languages, TextDocument } from 'vscode';
 import { QuarkusContext } from './QuarkusContext';
 import { addExtensionsWizard } from './wizards/addExtensions/addExtensionsWizard';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
 import quarkusProjectListener from './QuarkusProjectListener';
 import { generateProjectWizard } from './wizards/generateProject/generationWizard';
-import { prepareExecutable } from './languageServer/javaServerStarter';
 import { tryStartDebugging } from './wizards/debugging/startDebugging';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { QuarkusConfig, PropertiesLanguageMismatch } from './QuarkusConfig';
-import { registerConfigurationUpdateCommand, registerOpenURICommand, CommandKind } from './lsp-commands';
-import { registerYamlSchemaSupport, MicroProfilePropertiesChangeEvent } from './yaml/YamlSchema';
 import { terminalCommandRunner } from './terminal/terminalCommandRunner';
 import { ProjectLabelInfo } from './definitions/ProjectLabelInfo';
-
-let languageClient: LanguageClient;
 
 export function activate(context: ExtensionContext) {
   QuarkusContext.setContext(context);
@@ -114,49 +106,6 @@ export function activate(context: ExtensionContext) {
       }
     });
   }
-  /**
-   * Register Yaml Schema support to manage application.yaml
-   */
-  const yamlSchemaCache = registerYamlSchemaSupport();
-
-  connectToLS(context).then(() => {
-    yamlSchemaCache.then(cache => { if (cache) { cache.languageClient = languageClient; } });
-
-    /**
-     * Delegate requests from MicroProfile LS to the Java JDT LS
-     */
-    bindRequest(MicroProfileLS.PROJECT_INFO_REQUEST);
-    bindRequest(MicroProfileLS.PROPERTY_DEFINITION_REQUEST);
-    bindRequest(MicroProfileLS.JAVA_CODEACTION_REQUEST);
-    bindRequest(MicroProfileLS.JAVA_CODELENS_REQUEST);
-    bindRequest(MicroProfileLS.JAVA_COMPLETION_REQUEST);
-    bindRequest(MicroProfileLS.JAVA_DIAGNOSTICS_REQUEST);
-    bindRequest(MicroProfileLS.JAVA_HOVER_REQUEST);
-    bindRequest(MicroProfileLS.JAVA_FILE_INFO_REQUEST);
-    bindRequest(MicroProfileLS.JAVA_PROJECT_LABELS_REQUEST);
-
-    /**
-     * Delegate notifications from Java JDT LS to the MicroProfile LS
-     */
-    context.subscriptions.push(commands.registerCommand(MicroProfileLS.PROPERTIES_CHANGED_NOTIFICATION, (event: MicroProfilePropertiesChangeEvent) => {
-      languageClient.sendNotification(MicroProfileLS.PROPERTIES_CHANGED_NOTIFICATION, event);
-      yamlSchemaCache.then(cache => { if (cache) cache.evict(event); });
-      quarkusProjectListener.propertiesChange(event);
-    }));
-  }).catch((error) => {
-    window.showErrorMessage(error.message, error.label).then((selection) => {
-      if (error.label && error.label === selection && error.openUrl) {
-        commands.executeCommand('vscode.open', error.openUrl);
-      }
-    });
-  });
-
-  function bindRequest(request: string) {
-    languageClient.onRequest(request, async (params: any) =>
-      <any>await commands.executeCommand("java.execute.workspaceCommand", request, params)
-    );
-  }
-
   registerVSCodeCommands(context);
 }
 
@@ -198,78 +147,4 @@ function registerVSCodeCommands(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand(VSCodeCommands.QUARKUS_WELCOME, () => {
     WelcomeWebview.createOrShow(context);
   }));
-
-  /**
-   * Register standard LSP commands
-   */
-  context.subscriptions.push(registerConfigurationUpdateCommand());
-  context.subscriptions.push(registerOpenURICommand());
-}
-
-function connectToLS(context: ExtensionContext) {
-  return requirements.resolveRequirements().then(requirements => {
-    const clientOptions: LanguageClientOptions = {
-      documentSelector: [
-        { scheme: 'file', language: 'microprofile-properties' },
-        { scheme: 'file', language: 'quarkus-properties' },
-        { scheme: 'file', language: 'java' }
-      ],
-      // wrap with key 'settings' so it can be handled same a DidChangeConfiguration
-      initializationOptions: {
-        settings: getQuarkusSettings(),
-        extendedClientCapabilities: {
-          commands: {
-            commandsKind: {
-              valueSet: [
-                CommandKind.COMMAND_CONFIGURATION_UPDATE,
-                CommandKind.COMMAND_OPEN_URI
-              ]
-            }
-          }
-        }
-      },
-      synchronize: {
-        // preferences starting with these will trigger didChangeConfiguration
-        configurationSection: ['quarkus', '[quarkus]']
-      },
-      middleware: {
-        workspace: {
-          didChangeConfiguration: () => {
-            languageClient.sendNotification(DidChangeConfigurationNotification.type, { settings: getQuarkusSettings() });
-          }
-        }
-      }
-    };
-
-    const serverOptions = prepareExecutable(requirements);
-    languageClient = new LanguageClient('quarkus.tools', 'Quarkus Tools', serverOptions, clientOptions);
-    context.subscriptions.push(languageClient.start());
-    return languageClient.onReady();
-  });
-
-  /**
-   * Returns a json object with key 'quarkus' and a json object value that
-   * holds all quarkus. settings.
-   *
-   * Returns: {
-   *            'quarkus': {...}
-   *          }
-   */
-  function getQuarkusSettings(): JSON {
-    const configQuarkus = workspace.getConfiguration().get('quarkus');
-    let quarkus;
-    if (!configQuarkus) { // Set default preferences if not provided
-      const defaultValue =
-      {
-        quarkus: {
-
-        }
-      };
-      quarkus = defaultValue;
-    } else {
-      const x = JSON.stringify(configQuarkus); // configQuarkus is not a JSON type
-      quarkus = { quarkus: JSON.parse(x) };
-    }
-    return quarkus;
-  }
 }

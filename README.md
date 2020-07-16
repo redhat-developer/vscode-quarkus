@@ -5,11 +5,8 @@
 
 ## Description
 
-This Visual Studio Code extension provides support for [Quarkus](https://quarkus.io/) and [MicroProfile](https://github.com/eclipse/microprofile) development via:
-
- * a [MicroProfile Language Server](https://github.com/eclipse/lsp4mp/tree/master/microprofile.ls).
- * a [MicroProfile jdt.ls extension](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core).
- * a [Quarkus jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus).
+This Visual Studio Code extension provides support for [Quarkus](https://quarkus.io/) and [MicroProfile](https://github.com/eclipse/microprofile) development 
+by extending [Visual Studio Code extension for MicroProfile](https://github.com/redhat-developer/vscode-microprofile) with Quarkus features.
 
 ![](images/propertiesSupport.png)
 
@@ -62,7 +59,8 @@ In `Java` files, you will benefit with:
 
 ## Requirements
 
-  * Java JDK (or JRE) 8 or more recent
+  * [Visual Studio Code extension for MicroProfile](https://github.com/redhat-developer/vscode-microprofile)
+  * Java JDK (or JRE) 11 or more recent
   * [Language Support for Java(TM) by Red Hat](https://marketplace.visualstudio.com/items?itemName=redhat.java)
   * [Debugger for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-debug)
 
@@ -70,6 +68,7 @@ In `Java` files, you will benefit with:
 
 The following settings are supported:
 
+* All [microprofile.tools.* settings](https://github.com/redhat-developer/vscode-microprofile#supported-vs-code-settings) from the [Visual Studio Code extension for MicroProfile](https://github.com/redhat-developer/vscode-microprofile)
 * `quarkus.tools.alwaysShowWelcomePage` : Determines whether to show the welcome page on extension startup.
 * `quarkus.tools.debug.terminateProcessOnExit` : Determines whether to terminate the quarkus:dev task after closing the debug session.
 * `quarkus.tools.formatting.surroundEqualsWithSpaces` : Insert spaces around the equals sign when formatting the application.properties file. Default is `false`.
@@ -91,20 +90,6 @@ Default is `["*/mp-rest/providers/*/priority", "mp.openapi.schema.*"]`.
 
 Since 1.6.0:
 * `quarkus.tools.propertiesLanguageMismatch` : Action performed when detected Quarkus properties have an incorrect language. Default is `forceQuarkus`.
-
-### **Note for MicroProfile Rest Client properties**:
-
-Due to [this issue](https://github.com/redhat-developer/quarkus-ls/issues/203), the MP Rest property: `<mp-rest-client-class>/mp-rest/providers/<mp-rest-provider-class>/priority` reports an unknown error.
-
-To avoid having this error, you must configure the following in `settings.json`:
-
-```json
-"quarkus.tools.validation.unknown.excluded": [
-    "*/mp-rest/providers/*/priority"
-]
-```
-
-This settings is set by default.
 
 ## Articles
 

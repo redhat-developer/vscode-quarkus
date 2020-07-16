@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 import { QuarkusConfig, TerminateProcessConfig } from '../../QuarkusConfig';
-import { DebugSession, TaskExecution, debug, window } from 'vscode';
-import { Disposable } from 'vscode-languageclient';
+import { DebugSession, TaskExecution, debug, window, Disposable } from 'vscode';
 import { getRunningQuarkusDevTasks } from '../../utils/tasksUtils';
 import { BuildSupport } from '../../buildSupport/BuildSupport';
 import { getBuildSupport } from '../../buildSupport/BuildSupportUtils';
