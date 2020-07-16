@@ -7,9 +7,9 @@
 
 This Visual Studio Code extension provides support for [Quarkus](https://quarkus.io/) and [MicroProfile](https://github.com/eclipse/microprofile) development via:
 
- * a [MicroProfile language server](https://github.com/redhat-developer/quarkus-ls/tree/master/microprofile.ls).
- * a [MicroProfile jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core).
- * a [Quarkus jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/microprofile.jdt/com.redhat.microprofile.jdt.quarkus).
+ * a [MicroProfile Language Server](https://github.com/eclipse/lsp4mp/tree/master/microprofile.ls).
+ * a [MicroProfile jdt.ls extension](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core).
+ * a [Quarkus jdt.ls extension](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus).
 
 ![](images/propertiesSupport.png)
 
