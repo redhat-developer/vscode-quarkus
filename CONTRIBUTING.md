@@ -18,6 +18,11 @@ If you have any questions or suggestions we are happy to hear them.
     [Debugging the MicroProfile jdt.ls extension](#debugging-the-microprofile-jdtls-extension)
 
 ## Project Structure
+vscode-quarkus extends [vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile) to benefit with 
+MicroProfile/Quarkus `properties` and `Java` files support.
+
+See [Contributing guide](https://github.com/redhat-developer/vscode-microprofile/blob/master/CONTRIBUTING.md#project-structure) for more information.
+
 For vscode-quarkus to work, it relies on the
 [MicroProfile language server](https://github.com/eclipse/lsp4mp/tree/master/microprofile.ls)
 and the 

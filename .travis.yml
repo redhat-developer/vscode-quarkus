@@ -33,4 +33,4 @@ install:
 
 script:
   - npm run tslint
-  - npm run test-all --silent
+  - npm run test --silent
