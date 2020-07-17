@@ -69,24 +69,10 @@ In `Java` files, you will benefit with:
 The following settings are supported:
 
 * All [microprofile.tools.* settings](https://github.com/redhat-developer/vscode-microprofile#supported-vs-code-settings) from the [Visual Studio Code extension for MicroProfile](https://github.com/redhat-developer/vscode-microprofile)
-* `quarkus.tools.alwaysShowWelcomePage` : Determines whether to show the welcome page on extension startup.
-* `quarkus.tools.debug.terminateProcessOnExit` : Determines whether to terminate the quarkus:dev task after closing the debug session.
-* `quarkus.tools.formatting.surroundEqualsWithSpaces` : Insert spaces around the equals sign when formatting the application.properties file. Default is `false`.
-* `quarkus.tools.trace.server` : Trace the communication between VS Code and the Quarkus Language Server in the Output view.
-* `quarkus.tools.symbols.showAsTree` : Show Quarkus properties as tree (Outline). Default is `true`.
-* `quarkus.tools.validation.enabled` : Enables Quarkus validation. Default is `true`.
-* `quarkus.tools.validation.duplicate.severity` : Validation severity for duplicate properties for Quarkus/MicroProfile `*.properties` files.
-Default is `warning`.
-* `quarkus.tools.validation.syntax.severity` : Validation severity for property syntax checking for Quarkus/MicroProfile `*.properties` files.
-Default is `error`.
-* `quarkus.tools.validation.required.severity` : Validation severity for required properties for Quarkus/MicroProfile `*.properties` files.
-Default is `none`.
-* `quarkus.tools.validation.unknown.severity` : Validation severity for unknown properties for Quarkus/MicroProfile `*.properties` files. Default is `warning`.
-* `quarkus.tools.validation.unknown.excluded` : Array of properties to ignore for unknown Quarkus properties validation. Patterns can be used ('*' = any string, '?' = any character).
-Default is `["*/mp-rest/providers/*/priority", "mp.openapi.schema.*"]`.
-* `quarkus.tools.codeLens.urlCodeLensEnabled` : Enable/disable the URL code lenses for REST services. Default is`true`.
+* `quarkus.tools.debug.terminateProcessOnExit` : Determines whether to terminate the quarkus:dev task after closing the debug session. Default is `Ask`.
+* `quarkus.tools.alwaysShowWelcomePage` : Determines whether to show the welcome page on extension startup. Default is `true`.
+* `quarkus.tools.starter.api` : Quarkus API base URL. Default is `http://code.quarkus.io/api`.
 * `quarkus.tools.starter.showExtensionDescriptions`: Determines whether to show the Quarkus extension descriptions when selecting Quarkus extensions. Default is `true`.
-* `quarkus.tools.validation.value.severity`: Validation severity for property values for Quarkus/MicroProfile `*.properties` files. Default is `error`.
 
 Since 1.6.0:
 * `quarkus.tools.propertiesLanguageMismatch` : Action performed when detected Quarkus properties have an incorrect language. Default is `forceQuarkus`.
