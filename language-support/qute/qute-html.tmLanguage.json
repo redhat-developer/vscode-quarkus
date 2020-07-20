@@ -2,6 +2,7 @@
   "name": "Qute HTML",
   "injections": {
     "L:meta.tag": {
+      "comment": "Qute patterns to inject in HTML's meta.tag scope",
       "patterns": [
         {
           "include": "grammar.qute#templates"

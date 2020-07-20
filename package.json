@@ -58,6 +58,12 @@
     "microprofile": {
       "jarExtensions": [
         "./server/com.redhat.quarkus.ls.jar"
+      ],
+      "documentSelector": [
+        {
+          "scheme": "file",
+          "language": "quarkus-properties"
+        }
       ]
     },
     "languages": [
@@ -195,8 +201,8 @@
     "grammars": [
       {
         "language": "quarkus-properties",
-        "scopeName": "source.java-properties",
-        "path": "./language-support/properties-support/java-properties.tmLanguage.json"
+        "scopeName": "source.quarkus-properties",
+        "path": "./language-support/properties-support/quarkus-properties.tmLanguage.json"
       },
       {
         "language": "qute-html",

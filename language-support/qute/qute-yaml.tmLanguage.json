@@ -2,6 +2,7 @@
   "name": "Qute YAML",
   "injections": {
     "L:entity.name.tag.yaml, L:string.unquoted, L:string.quoted": {
+      "comment": "Qute patterns to inject in the entity.name.tag.yaml, string.unquoted and string.quoted scopes",
       "patterns": [
         {
           "include": "grammar.qute#templates"
