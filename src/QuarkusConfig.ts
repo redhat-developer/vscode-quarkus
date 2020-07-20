@@ -67,8 +67,12 @@ export namespace QuarkusConfig {
     saveToQuarkusConfig(DEBUG_TERMINATE_ON_EXIT, value);
   }
 
-  export function saveToQuarkusConfig<T>(configName: string, value: T) {
-    workspace.getConfiguration().update(configName, value, ConfigurationTarget.Global);
+  export function setPropertiesLanguageMismatch(value: PropertiesLanguageMismatch): Thenable<void> {
+    return saveToQuarkusConfig(PROPERTIES_LANGUAGE_MISMATCH, value);
+  }
+
+  export function saveToQuarkusConfig<T>(configName: string, value: T): Thenable<void> {
+    return workspace.getConfiguration().update(configName, value, ConfigurationTarget.Global);
   }
 }
 
