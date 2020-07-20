@@ -1,0 +1,11 @@
+{
+  "name": "Quarkus Properties",
+  "scopeName": "source.quarkus-properties",
+  "patterns": [
+    {
+      "comment": "source.java-properties is defined in vscode-microprofile",
+      "include": "source.java-properties"
+    }
+  ],
+  "uuid": "924b3a76-ca9c-11ea-87d0-0242ac130003"
+}

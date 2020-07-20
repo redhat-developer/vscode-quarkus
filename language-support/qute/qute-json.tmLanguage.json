@@ -2,6 +2,7 @@
   "name": "Qute JSON",
   "injections": {
     "L:support.type.property-name.json, L:string.quoted.double.json": {
+      "comment": "Qute patterns to inject in the support.type.property-name.json and string.quoted.double.json scopes",
       "patterns": [
         {
           "include": "grammar.qute#templates"
@@ -12,6 +13,7 @@
       ]
     },
     "L:meta.structure.dictionary.json": {
+      "comment": "Qute patterns to inject in the meta.structure.dictionary.json scope",
       "patterns": [
         {
           "include": "grammar.qute#comment"
