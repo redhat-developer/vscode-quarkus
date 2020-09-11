@@ -1,5 +1,35 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.7.0 (September 21, 2020)
+
+Since `1.7.0`, vscode-quarkus becomes an extension of [vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile), see [CHANGELOG of vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile/CHANGELOG.md#010-september-21-2020). 
+
+[vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile) will be automatically installed alongside vscode-quarkus.
+
+### Enhancements
+
+ * Notification when the `quarkus.tools.propertiesLanguageMismatch` setting is set to `forceQuarkus`. See [#285](https://github.com/redhat-developer/vscode-quarkus/issues/285).
+ * Spawn vscode-microprofile extension out of vscode-quarkus . See [#248](https://github.com/redhat-developer/vscode-quarkus/issues/248).
+
+### Bug Fixes
+
+ * Debug quarkus project command doesn't appear on Quarkus projects after going from lightweight mode to standard mode. See [#299](https://github.com/redhat-developer/vscode-quarkus/issues/299).
+ * Generating a Gradle project without adding any extra extensions adds duplicate entry in build.gradle. See [#298](https://github.com/redhat-developer/vscode-quarkus/issues/298).
+ * Investigate why `quarkus-properties` appears twice when registering `textDocument/rangeFormatting`. See [#296](https://github.com/redhat-developer/vscode-quarkus/issues/296).
+ * Textmate grammar support for indexed properties . See [#283](https://github.com/redhat-developer/vscode-quarkus/issues/283).
+ * Quarkus container-image incorrect default value highlighting. See [quarkus-ls#351](https://github.com/redhat-developer/quarkus-ls/issues/351).
+
+### Build
+
+ * Contribute lsp4mp.ls jars. See [#290](https://github.com/redhat-developer/vscode-quarkus/issues/290).
+ * Build quarkus jdt extension. See [#276](https://github.com/redhat-developer/vscode-quarkus/pull/276).
+
+### Other
+
+ * Define Quarkus document selector and TextMate grammar. See [#294](https://github.com/redhat-developer/vscode-quarkus/pull/294).
+ * Fix links in README. See [#287](https://github.com/redhat-developer/vscode-quarkus/pull/287).
+ * Remove jax-rs snippets. See [quarkus-ls#362](https://github.com/redhat-developer/quarkus-ls/pull/362).
+
 ## 1.6.0 (July 9, 2020)
 
 ### Enhancements
