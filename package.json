@@ -190,11 +190,11 @@
       "commandPalette": [
         {
           "command": "quarkusTools.addExtension",
-          "when": "quarkusProjectExists"
+          "when": "quarkusProjectExistsOrLightWeight"
         },
         {
           "command": "quarkusTools.debugQuarkusProject",
-          "when": "quarkusProjectExists"
+          "when": "quarkusProjectExistsOrLightWeight"
         }
       ]
     },
