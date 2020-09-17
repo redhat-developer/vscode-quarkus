@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { commands, workspace, Disposable } from 'vscode';
+import { commands, workspace, Disposable, window } from 'vscode';
 import { getWorkspaceProjectLabels } from './utils/workspaceUtils';
+import { waitForStandardMode } from './utils/requestStandardMode';
 import { ProjectLabel, ProjectLabelInfo } from './definitions/ProjectLabelInfo';
 
 interface MicroProfilePropertiesChangeEvent {
@@ -34,18 +35,20 @@ export class QuarkusProjectListener {
     this.quarkusProjectsCache = [];
   }
 
-  public getQuarkusProjectListener(): Disposable {
-    const listener: Disposable = workspace.onDidChangeWorkspaceFolders(async () => {
-      await new Promise((res => setTimeout(res, 100)));
-      await this.updateCacheAndContext();
+  public async getQuarkusProjectListener(): Promise<Disposable> {
+    return waitForStandardMode().then(() => {
+      this.updateCacheAndContext();
+      const listener: Disposable = workspace.onDidChangeWorkspaceFolders(async () => {
+        await new Promise((res => setTimeout(res, 100)));
+        await this.updateCacheAndContext();
+      });
+      return {
+        dispose: () => {
+          listener.dispose();
+          this.setQuarkusProjectExistsContext(false);
+        }
+      };
     });
-
-    return {
-      dispose: () => {
-        listener.dispose();
-        this.setQuarkusProjectExistsContext(false);
-      }
-    };
   }
 
   public async propertiesChange(event: MicroProfilePropertiesChangeEvent): Promise<void> {
@@ -73,7 +76,7 @@ export class QuarkusProjectListener {
    * contains a Quarkus project. Sets to `false` otherwise.
    */
   private async setQuarkusProjectExistsContext(value: boolean): Promise<void> {
-    await commands.executeCommand('setContext', 'quarkusProjectExists', value);
+    await commands.executeCommand('setContext', 'quarkusProjectExistsOrLightWeight', value);
   }
 }
 

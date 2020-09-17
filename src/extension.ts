@@ -15,7 +15,7 @@
  */
 import * as path from 'path';
 import { VSCodeCommands } from './definitions/constants';
-import { ExtensionContext, commands, window, workspace, Terminal, languages, TextDocument, ConfigurationChangeEvent } from 'vscode';
+import { ExtensionContext, commands, window, workspace, Terminal, languages, TextDocument, ConfigurationChangeEvent, Disposable } from 'vscode';
 import { QuarkusContext } from './QuarkusContext';
 import { addExtensionsWizard } from './wizards/addExtensions/addExtensionsWizard';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
@@ -26,14 +26,17 @@ import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { QuarkusConfig, PropertiesLanguageMismatch } from './QuarkusConfig';
 import { terminalCommandRunner } from './terminal/terminalCommandRunner';
 import { ProjectLabelInfo } from './definitions/ProjectLabelInfo';
+import { requestStandardMode } from './utils/requestStandardMode';
 
 export function activate(context: ExtensionContext) {
   QuarkusContext.setContext(context);
   displayWelcomePageIfNeeded(context);
-  quarkusProjectListener.updateCacheAndContext();
+  commands.executeCommand('setContext', 'quarkusProjectExistsOrLightWeight', true);
 
   context.subscriptions.push(createTerminateDebugListener());
-  context.subscriptions.push(quarkusProjectListener.getQuarkusProjectListener());
+  quarkusProjectListener.getQuarkusProjectListener().then((disposableListener: Disposable) => {
+    context.subscriptions.push(disposableListener);
+  });
   context.subscriptions.push(terminalCommandRunner);
   context.subscriptions.push(
     window.onDidCloseTerminal((closedTerminal: Terminal) => {
@@ -151,6 +154,10 @@ function displayWelcomePageIfNeeded(context: ExtensionContext): void {
 
 function registerVSCodeCommands(context: ExtensionContext) {
 
+  const notAQuarkusProjectWarning: (ignored: any) => PromiseLike<any> = (ignored: any): PromiseLike<any> => {
+    return window.showErrorMessage('No Quarkus projects were detected in this folder', 'Ok');
+  };
+
   /**
    * Command for creating a Quarkus Maven project
    */
@@ -162,14 +169,34 @@ function registerVSCodeCommands(context: ExtensionContext) {
    * Command for adding Quarkus extensions to current Quarkus Maven project
    */
   context.subscriptions.push(commands.registerCommand(VSCodeCommands.ADD_EXTENSIONS, () => {
-    addExtensionsWizard();
+    requestStandardMode("Adding extensions").then((isStandardMode) => {
+      if (isStandardMode) {
+        ProjectLabelInfo.getWorkspaceProjectLabelInfo().then((projectLabelInfo: ProjectLabelInfo[]) => {
+          if (projectLabelInfo.filter(info => info.isQuarkusProject()).length) {
+            addExtensionsWizard();
+          } else {
+            notAQuarkusProjectWarning(null);
+          }
+        }).catch(notAQuarkusProjectWarning);
+      }
+    });
   }));
 
   /**
    * Command for debugging current Quarkus Maven project
    */
   context.subscriptions.push(commands.registerCommand(VSCodeCommands.DEBUG_QUARKUS_PROJECT, () => {
-    tryStartDebugging();
+    requestStandardMode("Debugging the project").then((isStandardMode) => {
+      if (isStandardMode) {
+        ProjectLabelInfo.getWorkspaceProjectLabelInfo().then((projectLabelInfo: ProjectLabelInfo[]) => {
+          if (projectLabelInfo.filter(info => info.isQuarkusProject()).length) {
+            tryStartDebugging();
+          } else {
+            notAQuarkusProjectWarning(null);
+          }
+        }).catch(notAQuarkusProjectWarning);
+      }
+    });
   }));
 
   /**
