@@ -2,7 +2,7 @@
 
 ## 1.7.0 (September 21, 2020)
 
-Since `1.7.0`, vscode-quarkus becomes an extension of [vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile), see [CHANGELOG of vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile/CHANGELOG.md#010-september-21-2020). 
+Since `1.7.0`, vscode-quarkus becomes an extension of [vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile), see [vscode-microprofile CHANGELOG](https://github.com/redhat-developer/vscode-microprofile/blob/master/CHANGELOG.md#010-september-21-2020). 
 
 [vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile) will be automatically installed alongside vscode-quarkus.
 
