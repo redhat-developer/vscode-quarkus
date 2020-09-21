@@ -247,7 +247,8 @@
     "test-all": "npm test && npm run test-ui-run"
   },
   "resolutions": {
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.5",
+    "yargs-parser": "^18.1.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.3",
@@ -267,16 +268,16 @@
     "gulp": "^4.0.2",
     "gulp-rename": "^1.4.0",
     "minimist": ">=1.2.5",
-    "mocha": "^6.2.1",
+    "mocha": "^8.1.3",
     "pom-parser": "^1.2.0",
     "ts-loader": "^6.0.1",
-    "tslint": "^5.20.1",
+    "tslint": "^6.1.3",
     "typescript": "^3.7.2",
     "typescript-tslint-plugin": "^0.3.1",
-    "vscode-extension-tester": "^3.0.2",
+    "vscode-extension-tester": "^3.2.0",
     "vscode-extension-tester-native": "^3.0.0",
     "vscode-test": "^1.2.3",
-    "webpack": "^4.32.2",
+    "webpack": "^4.44.2",
     "webpack-cli": "^3.3.2"
   },
   "dependencies": {
@@ -285,7 +286,7 @@
     "find-up": "^4.1.0",
     "fs-extra": "^8.0.1",
     "glob": "^7.1.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "yauzl": "^2.10.0"
