@@ -167,12 +167,13 @@ async function getTargetDirectory(projectName: string) {
   const OPTION_OVERWRITE = 'Overwrite';
   const OPTION_CHOOSE_NEW_DIR = 'Choose new directory';
 
-  let directory: Uri|undefined = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER });
+  const defaultDirectoryUri = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri : undefined;
+  let directory: Uri|undefined = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER, defaultUri: defaultDirectoryUri});
 
   while (directory && fs.existsSync(path.join(directory.fsPath, projectName))) {
     const overrideChoice: string = await window.showWarningMessage(MESSAGE_EXISTING_FOLDER, OPTION_OVERWRITE, OPTION_CHOOSE_NEW_DIR);
     if (overrideChoice === OPTION_CHOOSE_NEW_DIR) {
-      directory = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER });
+      directory = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER, defaultUri: defaultDirectoryUri});
     } else if (overrideChoice === OPTION_OVERWRITE) {
       break;
     } else { // User closed the warning window
