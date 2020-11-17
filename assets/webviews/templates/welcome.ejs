@@ -11,7 +11,12 @@
 
 <body>
   <div class="section-div">
-    <h2 class="title-header">Quarkus Tools for <%= appName %></h2>
+    <div class="title-wrapper">
+      <h2 class="title-header">Quarkus Tools for <%= appName %></h2>
+      <% if (status) { %>
+        <span class="preview"><%= status %></span>
+      <% } %>
+    </div>
     <p class="no-bottom-margin">Welcome! This extension provides tools to get you up and running with Quarkus application development in <%= appName %>.</p>
     <p class="no-bottom-margin">Both Maven and Gradle Quarkus projects are supported.</p>
   </div>
