@@ -75,6 +75,7 @@ export class WelcomeWebview {
   private async getWebviewContent(): Promise<string> {
 
     const htmlTemplatePath: string = this.getHtmlTemplateUri().fsPath;
+    const extensionStatus: string = vscode.extensions.getExtension('redhat.vscode-quarkus').packageJSON.preview ? 'Preview' : '';
 
     const data = {
       appName: vscode.env.appName,
@@ -82,6 +83,7 @@ export class WelcomeWebview {
       cssUri: this.getCssUri(),
       cspSource: this._panel.webview.cspSource,
       jsUri: this.getJsUri(),
+      status: extensionStatus,
     };
 
     return await new Promise((resolve: any, reject: any): any => {
