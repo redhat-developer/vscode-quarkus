@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-node('rhel7'){
+node('rhel8'){
     stage('Checkout repos') {
         deleteDir()
         def hasLsp4mpDir = fileExists 'lsp4mp'
