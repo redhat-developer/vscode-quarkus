@@ -1,4 +1,6 @@
 import * as vscode from "vscode";
+import { workspace } from "vscode";
+import { ProjectLabelInfo } from "../definitions/ProjectLabelInfo";
 
 const JAVA_EXTENSION_ID = "redhat.java";
 
@@ -65,7 +67,7 @@ export async function waitForStandardMode(): Promise<void> {
   return new Promise((resolve) => {
     const javaExt = vscode.extensions.getExtension(JAVA_EXTENSION_ID);
     if (javaExt) {
-      javaExt.activate().then((javaExtApi)=> {
+      javaExt.activate().then((javaExtApi) => {
         if (javaExtApi) {
           javaExtApi.onDidServerModeChange((mode: string) => {
             if (mode === ServerMode.STANDARD) {
@@ -76,4 +78,42 @@ export async function waitForStandardMode(): Promise<void> {
       });
     }
   });
+}
+
+/**
+ * Request vscode-java standard mode, then try to run the given action in standard mode. Fail gracefully if no Quarkus projects exist.
+ *
+ * @param action A function to perform that requires standard mode
+ * @param actionDescription Human legible description of what is trying to be accomplished
+ */
+export function runWithStandardMode(action: () => void, actionDescription: string) {
+  requestStandardMode(actionDescription).then((isStandardMode) => {
+    if (isStandardMode) {
+      ProjectLabelInfo.getWorkspaceProjectLabelInfo().then((projectLabelInfo: ProjectLabelInfo[]) => {
+        if (projectLabelInfo.filter(info => info.isQuarkusProject()).length) {
+          action();
+        } else {
+          notAQuarkusProjectWarning();
+        }
+      }).catch(notAQuarkusProjectWarning);
+    }
+  });
+}
+
+/**
+ * Warns the user that no Quarkus projects were detected
+ *
+ * @param ignored Ignored
+ */
+function notAQuarkusProjectWarning(ignored?: any): PromiseLike<any> {
+  const numFolders: number = workspace.workspaceFolders.length;
+  let msg: string;
+  if (numFolders === 0) {
+    msg = 'No Quarkus projects were detected since no folders are open';
+  } else if (numFolders === 1) {
+    msg = 'No Quarkus projects were detected in this folder';
+  } else {
+    msg = 'No Quarkus projects were detected in any of the open folders';
+  }
+  return vscode.window.showErrorMessage(msg);
 }

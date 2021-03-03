@@ -7,6 +7,7 @@ import { WelcomeWebview } from "../webviews/WelcomeWebview";
 import { addExtensionsWizard } from "../wizards/addExtensions/addExtensionsWizard";
 import { startDebugging } from "../wizards/debugging/startDebugging";
 import { generateProjectWizard } from "../wizards/generateProject/generationWizard";
+import { deployToOpenShift } from "../wizards/deployToOpenShift/deployToOpenShift";
 
 const NOT_A_QUARKUS_PROJECT = new Error('No Quarkus projects were detected in this folder');
 const STANDARD_MODE_REQUEST_FAILED = new Error('Error occurred while requesting standard mode from the Java language server');
@@ -38,6 +39,10 @@ export function registerVSCodeCommands(context: ExtensionContext): void {
    */
   registerCommandWithTelemetry(context, VSCodeCommands.QUARKUS_WELCOME, async () => { WelcomeWebview.createOrShow(context); });
 
+  /**
+   * Command for deploying current Quarkus project to OpenShift with OpenShift Connector
+   */
+  registerCommandWithTelemetry(context, VSCodeCommands.DEPLOY_TO_OPENSHIFT, withStandardMode(deployToOpenShift, "Deploying to OpenShift"));
 }
 
 /**
