@@ -15,7 +15,7 @@
  */
 import * as _ from 'lodash';
 
-import { tasks, ProcessExecution, ShellExecution, Task, TaskExecution, WorkspaceFolder } from 'vscode';
+import { tasks, ProcessExecution, ShellExecution, Task, TaskExecution, WorkspaceFolder, CustomExecution } from 'vscode';
 import { BuildSupport } from '../buildSupport/BuildSupport';
 
 export async function getQuarkusDevTaskNames(workspaceFolder: WorkspaceFolder, projectBuildSupport: BuildSupport) {
@@ -48,14 +48,16 @@ export async function getRunningQuarkusDevTasks(workspaceFolder: WorkspaceFolder
   });
 }
 
-export function getTaskExecutionWorkingDir(task: Task): string|undefined {
-  if (!task.execution) return undefined;
+export function getTaskExecutionWorkingDir(task: Task): string | undefined {
+  if (!task.execution || task.execution instanceof CustomExecution) return undefined;
 
-  if (!task.execution.options || !task.execution.options.cwd) {
+  const taskExecution: ProcessExecution | ShellExecution = task.execution;
+
+  if (!taskExecution.options || !taskExecution.options.cwd) {
     return './';
   }
 
-  return task.execution.options.cwd;
+  return taskExecution.options.cwd;
 }
 
 async function getTasksFromWorkspace(workspaceFolder: WorkspaceFolder): Promise<Task[]> {
@@ -67,7 +69,7 @@ async function getTasksFromWorkspace(workspaceFolder: WorkspaceFolder): Promise<
 
 function isQuarkusDevTask(task: Task, projectBuildSupport: BuildSupport): boolean {
 
-  const execution: ProcessExecution | ShellExecution = task.execution;
+  const execution: ProcessExecution | ShellExecution | CustomExecution = task.execution;
   return execution &&
     'commandLine' in execution &&
     (execution.commandLine.includes(projectBuildSupport.getDefaultExecutable()) ||
