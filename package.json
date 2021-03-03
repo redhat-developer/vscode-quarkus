@@ -138,6 +138,10 @@
       {
         "command": "quarkusTools.welcome",
         "title": "Quarkus: Welcome"
+      },
+      {
+        "command": "quarkusTools.deployToOpenShift",
+        "title": "Quarkus: Deploy current Quarkus Project to OpenShift"
       }
     ],
     "configuration": {
@@ -198,6 +202,10 @@
         },
         {
           "command": "quarkusTools.debugQuarkusProject",
+          "when": "quarkusProjectExistsOrLightWeight"
+        },
+        {
+          "command": "quarkusTools.deployToOpenShift",
           "when": "quarkusProjectExistsOrLightWeight"
         }
       ]

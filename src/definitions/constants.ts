@@ -20,6 +20,7 @@ export namespace VSCodeCommands {
   export const ADD_EXTENSIONS = 'quarkusTools.addExtension';
   export const DEBUG_QUARKUS_PROJECT = 'quarkusTools.debugQuarkusProject';
   export const QUARKUS_WELCOME = 'quarkusTools.welcome';
+  export const DEPLOY_TO_OPENSHIFT = 'quarkusTools.deployToOpenShift';
 }
 
 export namespace JavaVSCodeCommands {
