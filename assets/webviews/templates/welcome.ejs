@@ -11,6 +11,10 @@
 
 <body>
   <div class="section-div">
+    <input type="checkbox" id="showWhenUsingQuarkusTools" <% if (checkboxValue) { %> checked <% } %>>
+    <label for="showWhenUsingQuarkusTools">Show welcome page when using Quarkus Tools</label>
+  </div>
+  <div class="section-div">
     <div class="title-wrapper">
       <h2 class="title-header">Quarkus Tools for <%= appName %></h2>
       <% if (status) { %>
@@ -74,10 +78,6 @@
         <a class="section-link" href="https://github.com/quarkusio/quarkus-quickstarts">View quickstart projects</a>
       </div>
     </div>
-  </div>
-  <div class="section-div">
-    <input type="checkbox" id="showWhenUsingQuarkusTools" <% if (checkboxValue) { %> checked <% } %>>
-    <label for="showWhenUsingQuarkusTools">Show welcome page when using Quarkus Tools</label>
   </div>
 </body>
 <script src="<%= jsUri %>"></script>
