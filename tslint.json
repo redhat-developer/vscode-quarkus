@@ -74,7 +74,8 @@
   },
   "linterOptions": {
     "exclude": [
-      "test-resources"
+      "test-resources",
+      "out/**/*"
     ]
   }
 }

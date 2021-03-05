@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 import * as _ from 'lodash';
-
-import { InputBox, QuickPickItem, Workbench, WebDriver, WebElement, By, until, Key } from 'vscode-extension-tester';
+import { By, InputBox, Key, QuickPickItem, WebDriver, WebElement, Workbench } from 'vscode-extension-tester';
 import { DialogHandler, OpenDialog } from 'vscode-extension-tester-native';
 
 /**
@@ -30,7 +29,7 @@ export class ProjectGenerationWizard extends InputBox {
   /**
    * The number of steps the wizard has
    */
-  private lastStep: number = 7;
+  private lastStep: number = 8;
 
   /**
    * Opens the project generation wizard
@@ -78,6 +77,9 @@ export class ProjectGenerationWizard extends InputBox {
         await wizard.confirm();
       }
     }
+    await wizard.focusQuickPick(0);
+    await wizard.next();
+    await wizard.focusQuickPick(0);
     await wizard.next();
 
     const dialog: OpenDialog = await DialogHandler.getOpenDialog();
@@ -211,6 +213,19 @@ export class ProjectGenerationWizard extends InputBox {
    */
   public async getNthQuickPickItemLabel(n: number): Promise<string> {
     return (await this.getNthQuickPickItemInfo(n)).label;
+  }
+
+  /**
+   * Focuses on the quick pick with the given index
+   *
+   * @param n the index of the quick pick option to focus
+   * @returns when the quick pick is focused
+   */
+  public async focusQuickPick(n: number): Promise<void> {
+    const quickPickToFocus: QuickPickItem = await this.findQuickPick(n);
+    while (!(await quickPickToFocus.getAttribute('class')).includes('focused')) {
+      await this.sendKeys(Key.DOWN);
+    }
   }
 
   /**

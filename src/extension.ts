@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { TelemetryService } from '@redhat-developer/vscode-redhat-telemetry';
 import * as path from 'path';
 import { commands, ConfigurationChangeEvent, Disposable, ExtensionContext, languages, Terminal, TextDocument, window, workspace } from 'vscode';
 import { registerVSCodeCommands } from './commands/registerCommands';
-import { VSCODE_QUARKUS_EXTENSION_NAME } from './definitions/constants';
 import { ProjectLabelInfo } from './definitions/ProjectLabelInfo';
 import { PropertiesLanguageMismatch, QuarkusConfig } from './QuarkusConfig';
 import { QuarkusContext } from './QuarkusContext';
 import quarkusProjectListener from './QuarkusProjectListener';
 import { terminalCommandRunner } from './terminal/terminalCommandRunner';
+import { initTelemetryService } from './utils/telemetryUtils';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
-import { initTelemetryService } from './utils/telemetryUtils';
 
 export async function activate(context: ExtensionContext) {
 

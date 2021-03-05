@@ -12,7 +12,8 @@ import { BuildToolName, INPUT_TITLE } from '../../definitions/constants';
 import { ProjectGenState } from '../../definitions/inputState';
 import { QExtension } from '../../definitions/QExtension';
 import { QuarkusContext } from '../../QuarkusContext';
-import { MultiStepInput } from '../../utils/multiStepUtils';
+import { CodeQuarkusFunctionality, getCodeQuarkusApiFunctionality, getDefaultFunctionality } from '../../utils/codeQuarkusApiUtils';
+import { MultiStepInput, QuickPickParameters } from '../../utils/multiStepUtils';
 import { downloadProject } from '../../utils/requestUtils';
 import { ExtensionsPicker } from './ExtensionsPicker';
 import { validateArtifactId, validateGroupId, validatePackageName, validateResourceName, validateVersion } from './validateInput';
@@ -24,8 +25,15 @@ import { validateArtifactId, validateGroupId, validatePackageName, validateResou
  */
 export async function generateProjectWizard() {
 
+  let apiCapabilities: CodeQuarkusFunctionality;
+  try {
+    apiCapabilities = await getCodeQuarkusApiFunctionality();
+  } catch (e) {
+    apiCapabilities = getDefaultFunctionality();
+  }
+
   const state: Partial<ProjectGenState> = {
-    totalSteps: 7
+    totalSteps: 7 + (apiCapabilities.canExcludeSampleCode ? 1 : 0)
   };
 
   async function collectInputs(state: Partial<ProjectGenState>) {
@@ -139,7 +147,26 @@ export async function generateProjectWizard() {
       prompt: 'Your resource name',
       validate: validateResourceName
     });
-    return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(input, state, { showLastUsed: true, showRequiredExtensions: true, allowZeroExtensions: true });
+    return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(
+      input, state, { showLastUsed: true, showRequiredExtensions: true, allowZeroExtensions: true },
+      (apiCapabilities.canExcludeSampleCode ? inputGenerateSampleCode: undefined));
+  }
+
+  async function inputGenerateSampleCode(input: MultiStepInput, state: Partial<ProjectGenState>) {
+    const YES: string = 'Include sample code';
+    const NO: string = 'Do not include sample code';
+    const quickPickItems: QuickPickItem[] = [
+      {label: YES, picked: true},
+      {label: NO}
+    ];
+
+    state.isGenerateSampleCode = (await input.showQuickPick<QuickPickItem, QuickPickParameters<QuickPickItem>>({
+      title: INPUT_TITLE,
+      placeholder: 'Should sample code be included? Additional dependencies may be added along with the sample.',
+      step: input.getStepNumber(),
+      totalSteps: state.totalSteps,
+      items: quickPickItems,
+    })).label === YES;
   }
 
   await collectInputs(state);

@@ -28,14 +28,14 @@ export class QExtension {
   artifactId: string;
   isRequired: boolean;
 
-  constructor(name: string, category: string, description: string, labels: string[], groupId: string, artifactId: string) {
+  constructor(name: string, category: string, description: string, labels: string[], groupId: string, artifactId: string, isRequired: boolean) {
     this.name = name;
     this.category = category;
     this.description = description;
     this.labels = labels;
     this.groupId = groupId;
     this.artifactId = artifactId;
-    this.isRequired = name === 'RESTEasy JAX-RS'; // 'RESTEasy JAX-RS' is included in every Quarkus project
+    this.isRequired = isRequired;
   }
 
   getGroupIdArtifactIdString() {
@@ -61,7 +61,7 @@ export function convertToQExtension(extension: APIExtension): QExtension {
     artifactId = extension.id;
   }
   return new QExtension(extension.name, extension.category, extension.description,
-      extension.labels, groupId, artifactId);
+      extension.labels, groupId, artifactId, extension.default);
 }
 
 /**
@@ -76,4 +76,5 @@ export interface APIExtension {
   shortName: string;
   category: string;
   order: Number;
+  default: boolean;
 }

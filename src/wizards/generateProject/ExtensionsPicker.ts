@@ -251,7 +251,7 @@ export class ExtensionsPicker {
     const numSelected: number = this.selectedExtensions.length;
     items.push({
       type: Type.Stop,
-      label: `$(tasklist) ${numSelected} extension${numSelected > 1 ? 's' : ''} selected`,
+      label: `$(tasklist) ${numSelected} extension${numSelected !== 1 ? 's' : ''} selected`,
       description: '',
       detail: 'Press <Enter>  to continue'
     });
