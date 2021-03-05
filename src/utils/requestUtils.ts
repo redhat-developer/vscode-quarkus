@@ -75,6 +75,7 @@ export async function downloadProject(state: ProjectGenState): Promise<ZipFile> 
     `a=${state.artifactId}&` +
     `v=${state.projectVersion}&` +
     `c=${state.packageName}.${state.resourceName}&` +
+    `${(state.isGenerateSampleCode === undefined ? '' : `ne=${!state.isGenerateSampleCode}&`)}` +
     `e=${chosenIds.join('&e=')}`;
 
   const buffer: Buffer = await tryGetProjectBuffer(qProjectUrl);

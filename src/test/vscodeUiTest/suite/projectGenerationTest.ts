@@ -100,76 +100,82 @@ describe('Project generation tests', function() {
     expect(resourceName).equals('GreetingResource');
     await wizard.next();
 
-    await wizard.sendKeys(Key.DOWN, Key.UP);
-
-    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('1 extension selected');
-    await wizard.sendKeys(Key.DOWN, Key.DOWN);
-    await wizard.confirm();
-    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('2 extensions selected');
-    await wizard.sendKeys(Key.DOWN, Key.DOWN, Key.DOWN);
-    await wizard.confirm();
-    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('3 extensions selected');
-    await wizard.sendKeys(Key.DOWN);
-    await wizard.confirm();
-    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('2 extensions selected');
-    await wizard.sendKeys(Key.DOWN);
+    await wizard.focusQuickPick(0);
+    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('0 extensions selected');
+    await wizard.focusQuickPick(2);
     await wizard.confirm();
     expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('1 extension selected');
+    await wizard.focusQuickPick(3);
+    await wizard.confirm();
+    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('2 extensions selected');
+    await wizard.focusQuickPick(1);
+    await wizard.confirm();
+    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('1 extension selected');
+    await wizard.focusQuickPick(1);
+    await wizard.confirm();
+    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('0 extensions selected');
     await wizard.cancel();
   });
 
   /**
    * Tests if the project generation wizard has correct
-   * step values at the wizard's title bar: (1/7), (2/7)
+   * step values at the wizard's title bar: (1/8), (2/8)
    */
   it('should have correct step values', async function() {
     this.timeout(30000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('1/8');
     expect(await wizard.getBackButton()).to.not.be.ok;
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('2/8');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('3/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('3/8');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('4/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('4/8');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('5/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('5/8');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('6/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('6/8');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('7/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('7/8');
+    await wizard.focusQuickPick(0);
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('8/8');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('6/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('7/8');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('5/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('6/8');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('4/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('5/8');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('3/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('4/8');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('3/8');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('2/8');
+    await wizard.prev();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('1/8');
     expect(await wizard.getBackButton()).to.not.be.ok;
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('2/8');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/7');
+    expect(await wizard.getInputBoxTitle()).to.have.string('1/8');
     expect(await wizard.getBackButton()).to.not.be.ok;
 
     await wizard.cancel();
@@ -333,7 +339,7 @@ describe('Project generation tests', function() {
    * validation messages
    */
   it('should have correct input validation messages', async function() {
-    this.timeout(30000);
+    this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
     await wizard.next();
 
@@ -430,7 +436,7 @@ describe('Project generation tests', function() {
    * Tests if the extensions picker displays extensions without duplicates.
    */
   it('should display extensions without duplicates', async function() {
-    this.timeout(60000);
+    this.timeout(120000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
     await wizard.next();
     await wizard.next();

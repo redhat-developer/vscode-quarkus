@@ -7,8 +7,8 @@ import { WelcomeWebview } from "../webviews/WelcomeWebview";
 import { addExtensionsWizard } from "../wizards/addExtensions/addExtensionsWizard";
 import { buildBinary } from "../wizards/binary/buildBinary";
 import { startDebugging } from "../wizards/debugging/startDebugging";
-import { generateProjectWizard } from "../wizards/generateProject/generationWizard";
 import { deployToOpenShift } from "../wizards/deployToOpenShift/deployToOpenShift";
+import { generateProjectWizard } from "../wizards/generateProject/generationWizard";
 
 const NOT_A_QUARKUS_PROJECT = new Error('No Quarkus projects were detected in this folder');
 const STANDARD_MODE_REQUEST_FAILED = new Error('Error occurred while requesting standard mode from the Java language server');

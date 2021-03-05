@@ -267,7 +267,9 @@
   "devDependencies": {
     "@types/chai": "^4.2.3",
     "@types/chai-fs": "^2.0.2",
+    "@types/ejs": "^3.0.5",
     "@types/fs-extra": "^7.0.0",
+    "@types/js-yaml": "^4.0.0",
     "@types/lodash": "^4.14.149",
     "@types/mocha": "^5.2.6",
     "@types/node": "^10.14.16",
@@ -302,6 +304,7 @@
     "find-up": "^4.1.0",
     "fs-extra": "^8.0.1",
     "glob": "^7.1.4",
+    "js-yaml": "^4.0.0",
     "lodash": "^4.17.21",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",

@@ -34,6 +34,7 @@ export interface ProjectGenState extends State {
   packageName: string;
   resourceName: string;
   targetDir: Uri;
+  isGenerateSampleCode: boolean;
 }
 
 export interface AddExtensionsState extends State {
