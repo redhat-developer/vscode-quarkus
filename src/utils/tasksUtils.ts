@@ -68,11 +68,18 @@ async function getTasksFromWorkspace(workspaceFolder: WorkspaceFolder): Promise<
 function isQuarkusDevTask(task: Task, projectBuildSupport: BuildSupport): boolean {
 
   const execution: ProcessExecution | ShellExecution = task.execution;
-  return execution &&
-    'commandLine' in execution &&
-    (execution.commandLine.includes(projectBuildSupport.getDefaultExecutable()) ||
-    execution.commandLine.includes(projectBuildSupport.getWrapper()) ||
-    execution.commandLine.includes(projectBuildSupport.getWrapperWindows()));
+
+  if (!execution || !(execution as ShellExecution)) {
+    return false;
+  }
+
+  const shellExecution: ShellExecution = execution as ShellExecution;
+
+  return shellExecution
+    && shellExecution.commandLine
+    && (shellExecution.commandLine.includes(projectBuildSupport.getDefaultExecutable())
+      || shellExecution.commandLine.includes(projectBuildSupport.getWrapper())
+      || shellExecution.commandLine.includes(projectBuildSupport.getWrapperWindows()));
 }
 
 function isTaskFromWorkspace(workspaceFolder: WorkspaceFolder, task: Task): boolean {
