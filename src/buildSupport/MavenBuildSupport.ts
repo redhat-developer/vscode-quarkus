@@ -17,11 +17,13 @@ import { formattedPathForTerminal } from '../utils/shellUtils';
 import { BuildSupport, TerminalCommand, TerminalCommandOptions } from "./BuildSupport";
 
 export class MavenBuildSupport extends BuildSupport {
+
   constructor() {
     super({
       buildFile: 'pom.xml',
       defaultExecutable: 'mvn',
       quarkusDev: 'quarkus:dev',
+      quarkusBinary: 'package -Pnative',
       wrapper: 'mvnw',
       wrapperWindows: 'mvnw.cmd',
       taskBeginsPattern: '^.*Scanning for projects...*',
@@ -46,7 +48,12 @@ export class MavenBuildSupport extends BuildSupport {
     const pomPath: string = options.buildFilePath ? `-f ${await formattedPathForTerminal(options.buildFilePath)}` : '';
     const mvn: string = await this.getCommand(folderPath, options && options.buildFilePath, { windows: options && options.windows });
     return { command: [mvn, this.getQuarkusDev(), pomPath].join(' ') };
+  }
 
+  public async getQuarkusBinaryCommand(folderPath: string, options?: TerminalCommandOptions): Promise<TerminalCommand> {
+    const pomPath: string = options.buildFilePath ? `-f ${await formattedPathForTerminal(options.buildFilePath)}` : '';
+    const mvn: string = await this.getCommand(folderPath, options && options.buildFilePath, { windows: options && options.windows });
+    return { command: [mvn, this.getQuarkusBinary(), pomPath].join(' ') };
   }
 
 }

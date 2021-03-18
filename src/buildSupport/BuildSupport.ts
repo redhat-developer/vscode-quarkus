@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as path from 'path';
 import * as findUp from 'find-up';
+import * as path from 'path';
 import { Uri, WorkspaceFolder } from 'vscode';
 import { FsUtils } from '../utils/fsUtils';
-import { TaskPattern } from './TaskPattern';
 import { formattedPathForTerminal } from '../utils/shellUtils';
 import { getFilePathsFromFolder } from '../utils/workspaceUtils';
+import { TaskPattern } from './TaskPattern';
 
 interface BuildSupportData {
   buildFile: string;
   defaultExecutable: string;
   quarkusDev: string;
+  quarkusBinary: string;
   wrapper: string;
   wrapperWindows: string;
   taskBeginsPattern: string;
@@ -56,6 +57,7 @@ export interface TerminalCommandOptions {
 }
 
 export abstract class BuildSupport {
+
   buildSupportData: BuildSupportData;
 
   constructor(buildSupportData: BuildSupportData) {
@@ -76,6 +78,13 @@ export abstract class BuildSupport {
    * @param options
    */
   public abstract getQuarkusDevCommand(folderPath: string, options?: TerminalCommandOptions): Promise<TerminalCommand>;
+
+  /**
+   * Returns a command that builds the Quarkus application into a binary
+   * @param folderPath
+   * @param options
+   */
+  public abstract getQuarkusBinaryCommand(folderPath: string, options?: TerminalCommandOptions): Promise<TerminalCommand>;
 
   /**
    * Returns an appropriate build tool command depending on `options` and `buildFilePath`
@@ -183,9 +192,18 @@ export abstract class BuildSupport {
     return this.buildSupportData.quarkusDev;
   }
 
+  public getQuarkusBinary(): string {
+    return this.buildSupportData.quarkusBinary;
+  }
+
   public getQuarkusDevTaskName(workspaceFolder: WorkspaceFolder, projectFolder: string): string {
     const relativePath: string =  path.relative(workspaceFolder.uri.fsPath, projectFolder);
-    return  this.buildSupportData.quarkusDev + (relativePath.length > 0 ? ` (${relativePath})` : '');
+    return this.buildSupportData.quarkusDev + (relativePath.length > 0 ? ` (${relativePath})` : '');
+  }
+
+  public getQuarkusBinaryTaskName(workspaceFolder: WorkspaceFolder, projectFolder: string): string {
+    const relativePath: string =  path.relative(workspaceFolder.uri.fsPath, projectFolder);
+    return this.buildSupportData.quarkusBinary + (relativePath.length > 0 ? ` (${relativePath})` : '');
   }
 
   public getDefaultExecutable(): string {

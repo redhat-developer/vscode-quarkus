@@ -136,6 +136,10 @@
         "title": "Quarkus: Debug current Quarkus project"
       },
       {
+        "command": "quarkusTools.buildBinary",
+        "title": "Quarkus: Build executable"
+      },
+      {
         "command": "quarkusTools.welcome",
         "title": "Quarkus: Welcome"
       },
@@ -272,6 +276,7 @@
     "@types/request-promise": "^4.1.44",
     "@types/semver": "^6.2.0",
     "@types/vscode": "^1.37.0",
+    "@types/which": "^2.0.1",
     "@types/yauzl": "^2.9.1",
     "chai": "^4.2.0",
     "chai-fs": "^2.0.0",
@@ -301,6 +306,7 @@
     "lodash": "^4.17.21",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "which": "^2.0.2",
     "yauzl": "^2.10.0"
   }
 }

@@ -15,6 +15,7 @@ vscode-quarkus has opt-in telemetry collection, provided by [vscode-commons](htt
     * "Quarkus: Debug current Quarkus project"
     * "Quarkus: Generate a Quarkus project"
     * "Quarkus: Welcome"
+    * "Quarkus: Build executable"
 
 ## How to opt in or out
 

@@ -23,6 +23,7 @@ export class GradleBuildSupport extends BuildSupport {
       buildFile: 'build.gradle',
       defaultExecutable: 'gradle',
       quarkusDev: 'quarkusDev',
+      quarkusBinary: 'buildNative',
       wrapper: 'gradlew',
       wrapperWindows: 'gradlew.bat',
       taskBeginsPattern: '^.*Starting a Gradle Daemon*',
@@ -49,4 +50,11 @@ export class GradleBuildSupport extends BuildSupport {
     const gradle: string = await this.getCommand(folderPath, options.buildFilePath, { windows: options.windows });
     return { command: [gradle, quarkusDev].join(' ') };
   }
+
+  public async getQuarkusBinaryCommand(folderPath: string, options?: TerminalCommandOptions): Promise<TerminalCommand> {
+    const quarkusBinary: string = `${this.getQuarkusBinary()} --console=plain`;
+    const gradle: string = await this.getCommand(folderPath, options.buildFilePath, { windows: options.windows });
+    return { command: [gradle, quarkusBinary].join(' ') };
+  }
+
 }

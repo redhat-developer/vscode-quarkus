@@ -5,6 +5,7 @@ import { requestStandardMode } from "../utils/requestStandardMode";
 import { sendCommandFailedTelemetry, sendCommandSucceededTelemetry } from "../utils/telemetryUtils";
 import { WelcomeWebview } from "../webviews/WelcomeWebview";
 import { addExtensionsWizard } from "../wizards/addExtensions/addExtensionsWizard";
+import { buildBinary } from "../wizards/binary/buildBinary";
 import { startDebugging } from "../wizards/debugging/startDebugging";
 import { generateProjectWizard } from "../wizards/generateProject/generationWizard";
 import { deployToOpenShift } from "../wizards/deployToOpenShift/deployToOpenShift";
@@ -43,6 +44,12 @@ export function registerVSCodeCommands(context: ExtensionContext): void {
    * Command for deploying current Quarkus project to OpenShift with OpenShift Connector
    */
   registerCommandWithTelemetry(context, VSCodeCommands.DEPLOY_TO_OPENSHIFT, withStandardMode(deployToOpenShift, "Deploying to OpenShift"));
+
+  /**
+   * Command for building a binary
+   */
+  registerCommandWithTelemetry(context, VSCodeCommands.BUILD_BINARY, withStandardMode(buildBinary, "Building a binary"));
+
 }
 
 /**

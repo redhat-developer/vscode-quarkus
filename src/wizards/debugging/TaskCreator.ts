@@ -15,16 +15,38 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
-
-import { FsUtils } from '../../utils/fsUtils';
+import { ConfigurationChangeEvent, ConfigurationTarget, Disposable, TaskDefinition, workspace, WorkspaceFolder } from 'vscode';
 import { BuildSupport } from '../../buildSupport/BuildSupport';
-import { ConfigurationChangeEvent, Disposable, TaskDefinition, WorkspaceFolder, workspace, ConfigurationTarget } from 'vscode';
 import { TaskPattern } from '../../buildSupport/TaskPattern';
+import { FsUtils } from '../../utils/fsUtils';
 import { getQuarkusDevTasks } from '../../utils/tasksUtils';
 
+const TASK_DEFINITION_PROTOTYPE: TaskDefinition =
+{
+  type: "shell",
+  isBackground: true,
+  problemMatcher: [
+    {
+      pattern: [
+        {
+          regexp: "\\b\\B",
+          file: 1,
+          location: 2,
+          message: 3
+        }
+      ],
+      background: {
+        activeOnStart: true,
+      }
+    }
+  ],
+  group: "build"
+};
+
 /**
- * This class is responsible for creating the debug Task that calls the
- * Quarkus dev command.
+ * This class is responsible for creating the tasks.json, with tasks for:
+ *  * Running Quarkus dev mode
+ *  * Building a binary
  */
 export class TaskCreator {
 
@@ -34,14 +56,18 @@ export class TaskCreator {
   private tasksJsonFile: string;
 
   /**
-   * Returns a debug task that calls the Quarkus dev command
+   * Creates a tasks.json with tasks for:
+   *  * Running Quarkus dev mode
+   *  * Building a binary
+   *
    * @param workspaceFolder the workspaceFolder containing the Quarkus project
    * @param quarkusBuildSupport specifies whether the project in `workspaceFolder` is a Maven project or Gradle project
    */
   public static async createTask(workspaceFolder: WorkspaceFolder, projectFolder: string, quarkusBuildSupport: BuildSupport): Promise<void> {
     const taskCreator: TaskCreator = new TaskCreator(workspaceFolder, projectFolder, quarkusBuildSupport);
     await taskCreator.createTasksJsonIfMissing();
-    await taskCreator.addTask();
+    await taskCreator.addTask(await taskCreator.getQuarkusDevTask());
+    await taskCreator.addTask(await taskCreator.getQuarkusBinaryTask());
     await taskCreator.waitUntilTaskExists();
   }
 
@@ -87,52 +113,69 @@ export class TaskCreator {
     FsUtils.prependToFile(this.tasksJsonFile, comment);
   }
 
-  private async addTask(): Promise<void> {
+  /**
+   * Adds the given task definition to the tasks.json
+   *
+   * @param taskDefinition the TaskDefinition to add to the tasks.json
+   * @returns when the TaskDefinition has been added
+   */
+  private async addTask(taskDefinition: TaskDefinition): Promise<void> {
     const tasksJson = workspace.getConfiguration('tasks', this.workspaceFolder.uri);
     const tasks: TaskDefinition[] = tasksJson.get<TaskDefinition[]>('tasks');
-    tasks.push(await this.getTask());
+    tasks.push(taskDefinition);
     await tasksJson.update('tasks', tasks, ConfigurationTarget.WorkspaceFolder);
   }
 
-  private async getTask(): Promise<TaskDefinition> {
+  /**
+   * Returns a task definition given a label, command, and patterns to identify the beginning and end of the task
+   *
+   * @param taskLabel the label for the task
+   * @param unixCommand the command to run under unix OSs
+   * @param windowsCommand the command to run under Windows
+   * @param taskPattern the begin and end patterns for the task
+   */
+  private async getTaskFromCommandLine(taskLabel: string, unixCommand: string, windowsCommand: string,
+    taskPattern?: TaskPattern): Promise<TaskDefinition> {
+    const taskDefinition: TaskDefinition = JSON.parse(JSON.stringify(TASK_DEFINITION_PROTOTYPE));
+    taskDefinition['label'] = taskLabel;
+    taskDefinition['command'] = unixCommand;
+    taskDefinition['windows'] = { command: windowsCommand };
+
+    if (taskPattern) {
+      taskDefinition['problemMatcher'][0]['background']['beginsPattern'] = taskPattern.beginsPattern;
+      taskDefinition['problemMatcher'][0]['background']['endsPattern'] = taskPattern.endsPattern;
+    }
+
+    if (!FsUtils.isSameDirectory(this.workspaceFolder.uri.fsPath, this.projectFolder)) {
+      taskDefinition.options = { cwd: path.relative(this.workspaceFolder.uri.fsPath, this.projectFolder) };
+    }
+
+    return taskDefinition;
+  }
+
+  /**
+   * Returns the task definition for starting Quarkus development mode
+   *
+   * @returns the task definition for starting Quarkus development mode
+   */
+  private async getQuarkusDevTask(): Promise<TaskDefinition> {
     const taskLabel: string = this.quarkusBuildSupport.getQuarkusDevTaskName(this.workspaceFolder, this.projectFolder);
     const unixCommand: string = (await this.quarkusBuildSupport.getQuarkusDevCommand(this.projectFolder, { windows: false })).command;
     const windowsCommand: string = (await this.quarkusBuildSupport.getQuarkusDevCommand(this.projectFolder, { windows: true })).command;
-
     const taskPatterns: TaskPattern = this.quarkusBuildSupport.getTaskPatterns();
-    const task: TaskDefinition =
-    {
-      label: taskLabel,
-      type: "shell",
-      command: unixCommand,
-      windows: {
-        command: windowsCommand
-      },
-      isBackground: true,
-      problemMatcher: [
-        {
-          pattern: [
-            {
-              regexp: "\\b\\B",
-              file: 1,
-              location: 2,
-              message: 3
-            }
-          ],
-          background: {
-            activeOnStart: true,
-            beginsPattern: taskPatterns.beginsPattern,
-            endsPattern: taskPatterns.endsPattern,
-          }
-        }
-      ]
-    };
+    return this.getTaskFromCommandLine(taskLabel, unixCommand, windowsCommand, taskPatterns);
+  }
 
-    if (!FsUtils.isSameDirectory(this.workspaceFolder.uri.fsPath, this.projectFolder)) {
-      task.options = {cwd: path.relative(this.workspaceFolder.uri.fsPath, this.projectFolder)};
-    }
-
-    return task;
+  /**
+   * Returns the task definition for building a native image of the Quarkus app
+   *
+   * @returns the task definition for building a native image of the Quarkus app
+   */
+  private async getQuarkusBinaryTask(): Promise<TaskDefinition> {
+    const taskLabel: string = this.quarkusBuildSupport.getQuarkusBinaryTaskName(this.workspaceFolder, this.projectFolder);
+    const unixCommand: string = (await this.quarkusBuildSupport.getQuarkusBinaryCommand(this.projectFolder, { windows: false })).command;
+    const windowsCommand: string = (await this.quarkusBuildSupport.getQuarkusBinaryCommand(this.projectFolder, { windows: true })).command;
+    return this.getTaskFromCommandLine(taskLabel, unixCommand, windowsCommand);
   }
 
   private async waitUntilTaskExists(): Promise<void> {
@@ -151,4 +194,5 @@ export class TaskCreator {
       });
     });
   }
+
 }
