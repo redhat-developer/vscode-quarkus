@@ -5,7 +5,7 @@
 
 ## Description
 
-This Visual Studio Code extension provides support for [Quarkus](https://quarkus.io/) and [MicroProfile](https://github.com/eclipse/microprofile) development 
+This Visual Studio Code extension provides support for [Quarkus](https://quarkus.io/) and [MicroProfile](https://github.com/eclipse/microprofile) development
 by extending [Visual Studio Code extension for MicroProfile](https://github.com/redhat-developer/vscode-microprofile) with Quarkus features.
 
 ![](images/propertiesSupport.png)
@@ -76,6 +76,12 @@ The following settings are supported:
 
 Since 1.6.0:
 * `quarkus.tools.propertiesLanguageMismatch` : Action performed when detected Quarkus properties have an incorrect language. Default is `forceQuarkus`.
+
+## Telemetry
+
+With your approval, vscode-quarkus extension collects anonymous [usage data](USAGE_DATA.md) and sends it to Red Hat servers to help improve our products and services.
+Read our [privacy statement](https://developers.redhat.com/article/tool-data-collection) to learn more.
+This extension respects the `redhat.elemetry.enabled` setting, which you can learn more about at https://github.com/redhat-developer/vscode-commons#how-to-disable-telemetry-reporting
 
 ## Articles
 

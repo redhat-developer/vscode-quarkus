@@ -27,8 +27,13 @@ import { QuarkusConfig, PropertiesLanguageMismatch } from './QuarkusConfig';
 import { terminalCommandRunner } from './terminal/terminalCommandRunner';
 import { ProjectLabelInfo } from './definitions/ProjectLabelInfo';
 import { requestStandardMode } from './utils/requestStandardMode';
+import { getTelemetryService, TelemetryService } from '@redhat-developer/vscode-redhat-telemetry';
 
-export function activate(context: ExtensionContext) {
+export async function activate(context: ExtensionContext) {
+
+  const telemetryService: TelemetryService = await getTelemetryService("redhat.vscode-quarkus");
+  await telemetryService.sendStartupEvent();
+
   QuarkusContext.setContext(context);
   displayWelcomePageIfNeeded(context);
   commands.executeCommand('setContext', 'quarkusProjectExistsOrLightWeight', true);
