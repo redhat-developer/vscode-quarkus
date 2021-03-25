@@ -33,6 +33,8 @@ export const enum BuildToolName {
   Gradle = 'Gradle'
 }
 
+export const VSCODE_QUARKUS_EXTENSION_NAME = "redhat.vscode-quarkus";
+
 export const DEFAULT_API_URL: string = 'https://code.quarkus.io/api';
 export const DEFAULT_BUILD_TOOL: BuildToolName = BuildToolName.Maven;
 export const DEFAULT_GROUP_ID: string = 'org.acme';

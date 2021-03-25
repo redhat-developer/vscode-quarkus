@@ -13,42 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { debug, DebugConfiguration, Uri, window, workspace, WorkspaceFolder } from 'vscode';
+import { debug, DebugConfiguration, Uri, workspace, WorkspaceFolder } from 'vscode';
 import { BuildSupport } from '../../buildSupport/BuildSupport';
+import { ProjectLabelInfo } from '../../definitions/ProjectLabelInfo';
 import { getQuarkusDevDebugConfig } from '../../utils/launchConfigUtils';
 import { getQuarkusProject } from '../getQuarkusProject';
 import { DebugConfigCreator } from './DebugConfigCreator';
-import { ProjectLabelInfo } from '../../definitions/ProjectLabelInfo';
-
-export async function tryStartDebugging() {
-  try {
-    await startDebugging();
-  } catch (message) {
-    window.showErrorMessage(message);
-  }
-}
 
 /**
+ * Start debugging a Quarkus project
+ *
  * This function should only be called if there is a Quarkus project in the current workspace
+ *
+ * @returns when the debugging starts
+ * @throws if the workspace folder for the selected project could not be detected
  */
-async function startDebugging(): Promise<void> {
+export async function startDebugging(): Promise<void> {
 
   const projectToDebug: ProjectLabelInfo = (await getQuarkusProject());
-  const workspaceFolder: WorkspaceFolder|undefined = workspace.getWorkspaceFolder(Uri.file(projectToDebug.uri));
+  const workspaceFolder: WorkspaceFolder | undefined = workspace.getWorkspaceFolder(Uri.file(projectToDebug.uri));
 
   if (!workspaceFolder) {
-    // should not happen
-    return;
+    throw new Error('The workspace folder for the current project could not be detected');
   }
 
   const projectBuildSupport: BuildSupport = projectToDebug.getBuildSupport();
 
-  let debugConfig: DebugConfiguration|undefined = await getQuarkusDevDebugConfig(workspaceFolder, projectToDebug.uri, projectBuildSupport);
+  let debugConfig: DebugConfiguration | undefined = await getQuarkusDevDebugConfig(workspaceFolder, projectToDebug.uri, projectBuildSupport);
 
   if (!debugConfig) {
     await DebugConfigCreator.createFiles(workspaceFolder, projectToDebug.uri, projectBuildSupport);
     debugConfig = await getQuarkusDevDebugConfig(workspaceFolder, projectToDebug.uri, projectBuildSupport);
   }
 
-  debug.startDebugging(workspaceFolder, debugConfig);
+  await debug.startDebugging(workspaceFolder, debugConfig);
 }

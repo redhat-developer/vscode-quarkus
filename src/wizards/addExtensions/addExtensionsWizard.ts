@@ -15,7 +15,7 @@
  */
 import * as fs from "fs";
 import * as path from "path";
-import { Terminal, Uri, window, workspace, WorkspaceFolder } from "vscode";
+import { Terminal, Uri, workspace, WorkspaceFolder } from "vscode";
 import { TerminalCommand } from "../../buildSupport/BuildSupport";
 import { AddExtensionsState, State } from "../../definitions/inputState";
 import { ProjectLabelInfo } from "../../definitions/ProjectLabelInfo";
@@ -25,7 +25,7 @@ import { MultiStepInput } from "../../utils/multiStepUtils";
 import { ExtensionsPicker } from "../generateProject/ExtensionsPicker";
 import { getQuarkusProject } from "../getQuarkusProject";
 
-export async function addExtensionsWizard() {
+export async function addExtensionsWizard(): Promise<void> {
   const currentStep: number = 1;
   const state: Partial<AddExtensionsState> = {
     totalSteps: 1
@@ -34,24 +34,19 @@ export async function addExtensionsWizard() {
     await MultiStepInput.run(input => ExtensionsPicker.createExtensionsPicker(input, state, { showLastUsed: false, showRequiredExtensions: false, allowZeroExtensions: false, step: currentStep }));
   }
 
-  try {
-    const projectInfo: ProjectLabelInfo|undefined = await getQuarkusProject();
-    if (!projectInfo) return;
-    const workspaceFolder: WorkspaceFolder|undefined = workspace.getWorkspaceFolder(Uri.file(projectInfo.uri));
-    state.workspaceFolder = workspaceFolder;
-    state.buildSupport = projectInfo.getBuildSupport();
+  const projectInfo: ProjectLabelInfo | undefined = await getQuarkusProject();
+  if (!projectInfo) return;
+  const workspaceFolder: WorkspaceFolder | undefined = workspace.getWorkspaceFolder(Uri.file(projectInfo.uri));
+  state.workspaceFolder = workspaceFolder;
+  state.buildSupport = projectInfo.getBuildSupport();
 
-    const buildFilePath: string = path.join(projectInfo.uri, state.buildSupport.getBuildFile());
-    if (!fs.existsSync(buildFilePath)) {
-      throw `${state.buildSupport.getBuildFile()} does not exist under ${path.basename(projectInfo.uri)}`;
-    }
-
-    state.buildFilePath = Uri.file(buildFilePath);
-    await collectInputs(state);
-  } catch (e) {
-    window.showErrorMessage(e);
-    return;
+  const buildFilePath: string = path.join(projectInfo.uri, state.buildSupport.getBuildFile());
+  if (!fs.existsSync(buildFilePath)) {
+    throw `${state.buildSupport.getBuildFile()} does not exist under ${path.basename(projectInfo.uri)}`;
   }
+
+  state.buildFilePath = Uri.file(buildFilePath);
+  await collectInputs(state);
 
   await executeAddExtensionsCommand(state as AddExtensionsState);
 }
@@ -69,7 +64,7 @@ async function executeAddExtensionsCommand(state: AddExtensionsState): Promise<T
     ? `Quarkus-${state.workspaceFolder.name}`
     : "Quarkus";
 
-  terminalOptions =  Object.assign({ name }, terminalOptions);
+  terminalOptions = Object.assign({ name }, terminalOptions);
 
   return await terminalCommandRunner.runInTerminal(terminalCommand.command, terminalOptions);
 }
