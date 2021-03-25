@@ -40,13 +40,13 @@ export async function generateProjectWizard() {
 
     const defaultBuildTool: BuildToolName = QuarkusContext.getDefaultBuildTool();
     const quickPickItems: BuildToolPickItem[] = [
-      {label: BuildToolName.Maven, preferred: BuildToolName.Maven === defaultBuildTool},
-      {label: BuildToolName.Gradle, preferred: BuildToolName.Gradle === defaultBuildTool}
+      { label: BuildToolName.Maven, preferred: BuildToolName.Maven === defaultBuildTool },
+      { label: BuildToolName.Gradle, preferred: BuildToolName.Gradle === defaultBuildTool }
     ];
 
     // Place the preferred option first in the quick pick list
     quickPickItems.sort((x: BuildToolPickItem, y: BuildToolPickItem) => {
-      return (x.preferred === y.preferred)? 0 : x.preferred ? -1 : 1;
+      return (x.preferred === y.preferred) ? 0 : x.preferred ? -1 : 1;
     });
 
     state.buildTool = (await input.showQuickPick({
@@ -142,23 +142,14 @@ export async function generateProjectWizard() {
     return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(input, state, { showLastUsed: true, showRequiredExtensions: true, allowZeroExtensions: true });
   }
 
-  try {
-    await collectInputs(state);
-  } catch (e) {
-    window.showErrorMessage(e);
-    return;
-  }
+  await collectInputs(state);
 
-  try {
-    state.targetDir = await getTargetDirectory(state.artifactId);
+  state.targetDir = await getTargetDirectory(state.artifactId);
 
-    const projectGenState: ProjectGenState = state as ProjectGenState;
-    saveDefaults(projectGenState);
-    deleteFolderIfExists(getNewProjectDirectory(projectGenState));
-    await downloadAndSetupProject(projectGenState);
-  } catch (message) {
-    window.showErrorMessage(message);
-  }
+  const projectGenState: ProjectGenState = state as ProjectGenState;
+  saveDefaults(projectGenState);
+  deleteFolderIfExists(getNewProjectDirectory(projectGenState));
+  await downloadAndSetupProject(projectGenState);
 }
 
 async function getTargetDirectory(projectName: string) {
@@ -168,12 +159,12 @@ async function getTargetDirectory(projectName: string) {
   const OPTION_CHOOSE_NEW_DIR = 'Choose new directory';
 
   const defaultDirectoryUri = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri : undefined;
-  let directory: Uri|undefined = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER, defaultUri: defaultDirectoryUri});
+  let directory: Uri | undefined = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER, defaultUri: defaultDirectoryUri });
 
   while (directory && fs.existsSync(path.join(directory.fsPath, projectName))) {
     const overrideChoice: string = await window.showWarningMessage(MESSAGE_EXISTING_FOLDER, OPTION_OVERWRITE, OPTION_CHOOSE_NEW_DIR);
     if (overrideChoice === OPTION_CHOOSE_NEW_DIR) {
-      directory = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER, defaultUri: defaultDirectoryUri});
+      directory = await showOpenFolderDialog({ openLabel: LABEL_CHOOSE_FOLDER, defaultUri: defaultDirectoryUri });
     } else if (overrideChoice === OPTION_OVERWRITE) {
       break;
     } else { // User closed the warning window
@@ -198,9 +189,9 @@ async function showOpenFolderDialog(customOptions: OpenDialogOptions): Promise<U
 
   const result: Uri[] = await window.showOpenDialog(Object.assign(options, customOptions));
   if (result && result.length) {
-      return Promise.resolve(result[0]);
+    return Promise.resolve(result[0]);
   } else {
-      return Promise.resolve(undefined);
+    return Promise.resolve(undefined);
   }
 }
 
@@ -245,7 +236,7 @@ async function openProject(uri: Uri): Promise<void> {
   const ADD_TO_WORKSPACE: string = 'Add to current workspace';
 
   if (workspace.workspaceFolders) {
-    const input: string|undefined = await window.showInformationMessage('New project has been generated.', NEW_WINDOW, ADD_TO_WORKSPACE);
+    const input: string | undefined = await window.showInformationMessage('New project has been generated.', NEW_WINDOW, ADD_TO_WORKSPACE);
     if (!input) return;
     if (input === NEW_WINDOW) {
       commands.executeCommand('vscode.openFolder', uri, true);
@@ -253,7 +244,7 @@ async function openProject(uri: Uri): Promise<void> {
       addFolderToWorkspace(uri);
     }
   } else if (window.visibleTextEditors.length > 0) {
-    const input: string|undefined = await window.showInformationMessage('New project has been generated.', NEW_WINDOW, CURRENT_WINDOW);
+    const input: string | undefined = await window.showInformationMessage('New project has been generated.', NEW_WINDOW, CURRENT_WINDOW);
     if (!input) return;
     commands.executeCommand('vscode.openFolder', uri, NEW_WINDOW === input);
   } else {

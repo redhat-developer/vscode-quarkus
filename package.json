@@ -284,7 +284,7 @@
     "webpack-cli": "^3.3.2"
   },
   "dependencies": {
-    "@redhat-developer/vscode-redhat-telemetry": "0.0.13",
+    "@redhat-developer/vscode-redhat-telemetry": "0.0.18",
     "ejs": "^2.7.1",
     "expand-home-dir": "0.0.3",
     "find-up": "^4.1.0",
