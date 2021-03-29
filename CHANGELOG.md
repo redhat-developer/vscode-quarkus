@@ -1,5 +1,23 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.8.0 (8 April, 2021)
+
+### Enhancements
+
+ * Hover support for `@Scheduled/cron`. See [redhat-developer/quarkus-ls#376](https://github.com/redhat-developer/quarkus-ls/issues/376).
+ * Startup and shutdown telemetry. See [#342](https://github.com/redhat-developer/vscode-quarkus/issues/342).
+ * `quarkus.hibernate-orm.database.generation` values should be enumerated. See [#317](https://github.com/redhat-developer/vscode-quarkus/issues/317).
+ * Extension status is not visible when creating a project. See [#219](https://github.com/redhat-developer/vscode-quarkus/issues/219).
+
+### Bug Fixes
+
+ * Schedule properties are shown as unknown. See [#319](https://github.com/redhat-developer/vscode-quarkus/issues/319).
+ * REST endpoint codelenses should be computed from `%dev.quarkus.http.port` by default. See [#311](https://github.com/redhat-developer/vscode-quarkus/issues/311).
+ * Wrong/Missing Log Levels in application.properties. See [#315](https://github.com/redhat-developer/vscode-quarkus/issues/315).
+ * `mp.messaging` properties now work for Emitters. See [redhat-developer/quarkus-ls#369](https://github.com/redhat-developer/quarkus-ls/issues/369).
+ * Move "show welcome page" checkbox to the top of the welcome page. See [#328](https://github.com/redhat-developer/vscode-quarkus/issues/328).
+ * Set the default directory to the current workspace folder when selecting a location for generating a project. See [#310](https://github.com/redhat-developer/vscode-quarkus/pull/310).
+
 ## 1.7.0 (September 21, 2020)
 
 Since `1.7.0`, vscode-quarkus becomes an extension of [vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile), see [vscode-microprofile CHANGELOG](https://github.com/redhat-developer/vscode-microprofile/blob/master/CHANGELOG.md#010-september-21-2020). 
