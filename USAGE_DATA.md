@@ -2,7 +2,7 @@
 
 vscode-quarkus has opt-in telemetry collection, provided by [vscode-commons](https://github.com/redhat-developer/vscode-commons).
 
-## What's included in the vscode-xml telemetry data
+## What's included in the vscode-quarkus telemetry data
 
 vscode-quarkus emits telemetry events when the extension starts and stops,
 which contain the common data mentioned on the [vscode-commons page]((https://github.com/redhat-developer/vscode-commons/blob/master/USAGE_DATA.md#common-data).
