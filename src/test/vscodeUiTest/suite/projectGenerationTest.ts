@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as _ from 'lodash';
+import { expect, use } from 'chai';
 import * as fs from 'fs-extra';
+import * as g2js from 'gradle-to-js/lib/parser';
+import * as _ from 'lodash';
 import * as path from 'path';
 import * as pomParser from 'pom-parser';
-import * as g2js from 'gradle-to-js/lib/parser';
-
-import { InputBox, VSBrowser, Workbench, WebDriver, WebElement, By, Key } from 'vscode-extension-tester';
+import { By, InputBox, Key, VSBrowser, WebDriver, WebElement, Workbench } from 'vscode-extension-tester';
 import { ProjectGenerationWizard, QuickPickItemInfo } from '../ProjectGenerationWizard';
-import { expect, use } from 'chai';
 
 use(require('chai-fs'));
 
@@ -31,26 +30,31 @@ use(require('chai-fs'));
  */
 describe('Project generation tests', function() {
   this.bail(true);
-  this.retries(3);
+  this.retries(2);
 
   let driver: WebDriver;
   const tempDir: string = path.join(__dirname, 'temp');
 
   process.env['VSCODE_QUARKUS_API_URL'] = 'https://stage.code.quarkus.io/api';
 
-  before(() => {
+  before('get the driver', async function(): Promise<void> {
+    this.timeout(120000);
     driver = VSBrowser.instance.driver;
   });
 
-  beforeEach(() => {
+  // tslint:disable-next-line: only-arrow-functions
+  beforeEach('clear temp dir', async function(): Promise<void> {
     if (fs.existsSync(tempDir)) {
       fs.removeSync(tempDir);
     }
     fs.mkdirSync(tempDir);
   });
 
-  after(async () => {
-    fs.removeSync(tempDir);
+  // tslint:disable-next-line: only-arrow-functions
+  after('remove temp dir', async function(): Promise<void> {
+    if (fs.existsSync(tempDir)) {
+      fs.removeSync(tempDir);
+    }
   });
 
   /**
@@ -111,6 +115,7 @@ describe('Project generation tests', function() {
     await wizard.sendKeys(Key.DOWN);
     await wizard.confirm();
     expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('1 extension selected');
+    await wizard.cancel();
   });
 
   /**
@@ -276,6 +281,18 @@ describe('Project generation tests', function() {
       dest: projectDestDir
     });
 
+    /**
+     * HACK:
+     * vscode-java will ask if the current project should be imported/if the gradle wrapper is trusted.
+     * This blocks vscode-microprofile and vscode-quarkus from starting.
+     * This means the project generation wizard will not open.
+     * To avoid this, we first close the project workspace.
+     * The "last used extensions" should persist.
+     */
+    await (new Workbench()).executeCommand('Close Workspace');
+    // HACK: Wait for VS Code reopen in rootless mode
+    await new Promise ((resolve, _reject) => { setTimeout(resolve, 2000); });
+
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
 
     expect(await wizard.getNthQuickPickItemLabel(0)).equals(buildTool);
@@ -301,14 +318,13 @@ describe('Project generation tests', function() {
     expect(actualResourceName).equals(resourceName);
     await wizard.next();
 
-    await wizard.sendKeys(Key.DOWN, Key.UP);
+    await wizard.sendKeys(Key.DOWN, Key.DOWN, Key.UP);
     const quickPickItemText: QuickPickItemInfo = await wizard.getNthQuickPickItemInfo(0);
     expect(quickPickItemText.label).to.have.string('Last used');
     expect(quickPickItemText.detail).to.have.string('Camel Core');
     expect(quickPickItemText.detail).to.have.string('Eclipse Vert.x');
 
     await wizard.cancel();
-    await (new Workbench()).executeCommand('Close Workspace');
     return new Promise(res => setTimeout(res, 6000));
   });
 
@@ -428,6 +444,7 @@ describe('Project generation tests', function() {
     const allLabels: string[] = allQuickPickInfo.map((info) => info.label);
     const uniqueLabels = new Set(allLabels);
     expect(allLabels.length).to.equal(uniqueLabels.size);
+    await wizard.cancel();
   });
 });
 
@@ -457,7 +474,7 @@ function buildGradleToJson(pathToBuildGradle: string): Promise<any> {
   return new Promise((res, rej) => {
     g2js.parseFile(pathToBuildGradle).then((response) => {
       res(response);
-    });
+    }).catch(rej);
   });
 }
 

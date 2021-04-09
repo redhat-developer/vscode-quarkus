@@ -220,7 +220,7 @@ export class ProjectGenerationWizard extends InputBox {
   public async getNthQuickPickItemInfo(n: number): Promise<QuickPickItemInfo> {
     const quickPicks: QuickPickItem[] = await this.getQuickPicks();
     if (n < 0 || n >= quickPicks.length) {
-      throw `The index n is out of bounds. The number of quickpicks found were ${quickPicks.length}`;
+      throw new Error(`The index ${n} is out of bounds. The number of quickpicks found were ${quickPicks.length}`);
     }
 
     const quickPickItem: QuickPickItem = quickPicks[n];
