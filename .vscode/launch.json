@@ -40,7 +40,13 @@
       "request": "launch",
       "name": "VS Code UI Extension Tests",
       "program": "${workspaceFolder}/out/test/vscodeUiTest/index.js",
-      "preLaunchTask": "npm: test-compile"
+      "preLaunchTask": "npm: test-compile",
+      "outFiles": [
+        "${workspaceFolder}/out/test/vscodeUiTest/**/*.js"
+      ],
+      "args": [
+        "--unhandled-rejections=strict"
+      ]
     }
   ]
 }

@@ -34,3 +34,4 @@ install:
 script:
   - npm run tslint
   - npm run test --silent
+  - npm run test-ui
