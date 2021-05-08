@@ -220,7 +220,7 @@ Here are some examples of the leveraging the extension point to provide Java cod
 ### Installation Prerequisites
 
   * [Visual Studio Code](https://code.visualstudio.com/)
-  * [Node.js](https://nodejs.org/en/)
+  * [Node.js 14.x](https://nodejs.org/en/)
   * [JDK 8+](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
 ### Setup
