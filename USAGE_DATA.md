@@ -13,6 +13,7 @@ vscode-quarkus has opt-in telemetry collection, provided by [vscode-commons](htt
    The following commands emit these telemetry events:
     * "Quarkus: Add extensions to current project"
     * "Quarkus: Debug current Quarkus project"
+    * "Quarkus: Deploy current Quarkus project to OpenShift (odo)"
     * "Quarkus: Generate a Quarkus project"
     * "Quarkus: Welcome"
     * "Quarkus: Build executable"
