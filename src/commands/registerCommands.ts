@@ -1,13 +1,14 @@
 import { commands, ExtensionContext, window } from "vscode";
 import { VSCodeCommands } from "../definitions/constants";
 import { ProjectLabelInfo } from "../definitions/ProjectLabelInfo";
+import { installMPExtForCommand, isToolsForMicroProfileInstalled, microProfileToolsStarted } from "../requirements/toolsForMicroProfile";
 import { requestStandardMode } from "../utils/requestStandardMode";
 import { sendCommandFailedTelemetry, sendCommandSucceededTelemetry } from "../utils/telemetryUtils";
 import { WelcomeWebview } from "../webviews/WelcomeWebview";
 import { addExtensionsWizard } from "../wizards/addExtensions/addExtensionsWizard";
 import { startDebugging } from "../wizards/debugging/startDebugging";
-import { generateProjectWizard } from "../wizards/generateProject/generationWizard";
 import { deployToOpenShift } from "../wizards/deployToOpenShift/deployToOpenShift";
+import { generateProjectWizard } from "../wizards/generateProject/generationWizard";
 
 const NOT_A_QUARKUS_PROJECT = new Error('No Quarkus projects were detected in this folder');
 const STANDARD_MODE_REQUEST_FAILED = new Error('Error occurred while requesting standard mode from the Java language server');
@@ -89,6 +90,15 @@ async function registerCommandWithTelemetry(context: ExtensionContext, commandNa
  */
 function withStandardMode(commandAction: () => Promise<any>, commandDescription: string): () => Promise<void> {
   return async () => {
+    if (!isToolsForMicroProfileInstalled()) {
+      await installMPExtForCommand(commandDescription);
+      // You need to reload the window after installing Tools for MicroProfile
+      // before any of the features are available.
+      // Return early instead of attempting to run the command.
+      return;
+    } else {
+      await microProfileToolsStarted();
+    }
     let isStandardMode = false;
     try {
       isStandardMode = await requestStandardMode(commandDescription);

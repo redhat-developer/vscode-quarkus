@@ -13,20 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { commands, Disposable, Extension, extensions, ProgressLocation, Uri, window } from "vscode";
+import { commands, Extension, extensions, ProgressLocation, Uri, window } from "vscode";
+import { EXT_DOWNLOAD_TIMEOUT_ERROR, installExtension, isExtensionInstalled } from "./extensionInstallationUtils";
 
 export const OPENSHIFT_CONNECTOR_EXTENSION_ID = 'redhat.vscode-openshift-connector';
 export const OPENSHIFT_CONNECTOR = 'OpenShift Connector extension';
-const DOWNLOAD_TIMEOUT = 60000; // Timeout for downloading VSCode OpenShift Connector, in milliseconds
-
-/**
- * Returns true if the OpenShift connector extension is installed, and false otherwise
- *
- * @returns true if the OpenShift connector extension is installed, and false otherwise
- */
-export function isOpenShiftConnectorInstalled(): boolean {
-  return !!extensions.getExtension(OPENSHIFT_CONNECTOR_EXTENSION_ID);
-}
 
 /**
  * Returns the OpenShift Connector extension API
@@ -35,7 +26,7 @@ export function isOpenShiftConnectorInstalled(): boolean {
  * @returns the OpenShift Connector extension API
  */
 export async function getOpenShiftConnector(): Promise<any> {
-  if (!isOpenShiftConnectorInstalled()) {
+  if (!isExtensionInstalled(OPENSHIFT_CONNECTOR_EXTENSION_ID)) {
     throw new Error(`${OPENSHIFT_CONNECTOR} is not installed`);
   }
   const openShiftConnector: Extension<any> = extensions.getExtension(OPENSHIFT_CONNECTOR_EXTENSION_ID);
@@ -52,19 +43,14 @@ export async function getOpenShiftConnector(): Promise<any> {
  * @throws if the user refuses to install the extension, or if the extension does not get installed within a timeout period
  */
 async function installOpenShiftConnector(): Promise<void> {
-  let installListenerDisposable: Disposable;
-  return new Promise<void>((resolve, reject) => {
-    installListenerDisposable = extensions.onDidChange(() => {
-      if (isOpenShiftConnectorInstalled()) {
-        resolve();
-      }
-    });
-    commands.executeCommand("workbench.extensions.installExtension", OPENSHIFT_CONNECTOR_EXTENSION_ID)
-      .then((_unused: any) => { }, reject);
-    setTimeout(reject, DOWNLOAD_TIMEOUT, new Error(`${OPENSHIFT_CONNECTOR} installation is taking a while. Cancelling 'Deploy to OpenShift'. Please retry after the OpenShift Connector installation has finished`));
-  }).finally(() => {
-    installListenerDisposable.dispose();
-  });
+  try {
+    installExtension(OPENSHIFT_CONNECTOR_EXTENSION_ID);
+  } catch (e) {
+    if (e === EXT_DOWNLOAD_TIMEOUT_ERROR) {
+      throw new Error(`${OPENSHIFT_CONNECTOR} installation is taking a while. Cancelling 'Deploy to OpenShift'. Please retry after the OpenShift Connector installation has finished`);
+    }
+    throw e;
+  }
 }
 
 /**
