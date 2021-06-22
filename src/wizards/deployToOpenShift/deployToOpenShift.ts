@@ -15,7 +15,8 @@
  */
 import { Uri, window } from "vscode";
 import { ProjectLabelInfo } from "../../definitions/ProjectLabelInfo";
-import { deployQuarkusProject, getOpenShiftConnector, installOpenShiftConnectorWithProgress, isOpenShiftConnectorInstalled, OPENSHIFT_CONNECTOR } from "../../utils/openShiftConnectorUtils";
+import { isExtensionInstalled } from "../../utils/extensionInstallationUtils";
+import { deployQuarkusProject, getOpenShiftConnector, installOpenShiftConnectorWithProgress, OPENSHIFT_CONNECTOR, OPENSHIFT_CONNECTOR_EXTENSION_ID } from "../../utils/openShiftConnectorUtils";
 import { getQuarkusProject } from "../getQuarkusProject";
 
 /**
@@ -38,7 +39,7 @@ export async function deployToOpenShift(): Promise<void> {
  * @returns the OpenShift Connector extension API
  */
 async function installOpenShiftConnectorIfNeeded(): Promise<any> {
-  if (isOpenShiftConnectorInstalled()) {
+  if (isExtensionInstalled(OPENSHIFT_CONNECTOR_EXTENSION_ID)) {
     return getOpenShiftConnector();
   }
   return askToInstallOpenShiftConnector();
@@ -57,7 +58,7 @@ async function askToInstallOpenShiftConnector(): Promise<any> {
   if (response === YES) {
     try {
       await installOpenShiftConnectorWithProgress();
-      if (isOpenShiftConnectorInstalled()) {
+      if (isExtensionInstalled(OPENSHIFT_CONNECTOR_EXTENSION_ID)) {
         return getOpenShiftConnector();
       }
     } catch (e) {

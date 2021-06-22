@@ -22,6 +22,7 @@ import { ProjectLabelInfo } from './definitions/ProjectLabelInfo';
 import { PropertiesLanguageMismatch, QuarkusConfig } from './QuarkusConfig';
 import { QuarkusContext } from './QuarkusContext';
 import quarkusProjectListener from './QuarkusProjectListener';
+import { installMPExtOnStartup } from './requirements/toolsForMicroProfile';
 import { terminalCommandRunner } from './terminal/terminalCommandRunner';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
@@ -34,6 +35,8 @@ export async function activate(context: ExtensionContext) {
   QuarkusContext.setContext(context);
   displayWelcomePageIfNeeded(context);
   commands.executeCommand('setContext', 'quarkusProjectExistsOrLightWeight', true);
+
+  installMPExtOnStartup();
 
   context.subscriptions.push(createTerminateDebugListener());
   quarkusProjectListener.getQuarkusProjectListener().then((disposableListener: Disposable) => {
