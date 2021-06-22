@@ -51,8 +51,6 @@
   "main": "./dist/extension",
   "extensionDependencies": [
     "redhat.vscode-microprofile",
-    "redhat.java",
-    "vscjava.vscode-java-debug",
     "redhat.vscode-commons"
   ],
   "contributes": {

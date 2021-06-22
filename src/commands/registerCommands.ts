@@ -8,6 +8,7 @@ import { addExtensionsWizard } from "../wizards/addExtensions/addExtensionsWizar
 import { startDebugging } from "../wizards/debugging/startDebugging";
 import { generateProjectWizard } from "../wizards/generateProject/generationWizard";
 import { deployToOpenShift } from "../wizards/deployToOpenShift/deployToOpenShift";
+import { toolsForMicroProfileReady } from "../utils/toolsForMicroProfileUtils";
 
 const NOT_A_QUARKUS_PROJECT = new Error('No Quarkus projects were detected in this folder');
 const STANDARD_MODE_REQUEST_FAILED = new Error('Error occurred while requesting standard mode from the Java language server');
@@ -89,15 +90,7 @@ async function registerCommandWithTelemetry(context: ExtensionContext, commandNa
  */
 function withStandardMode(commandAction: () => Promise<any>, commandDescription: string): () => Promise<void> {
   return async () => {
-    let isStandardMode = false;
-    try {
-      isStandardMode = await requestStandardMode(commandDescription);
-    } catch {
-      throw STANDARD_MODE_REQUEST_FAILED;
-    }
-    if (!isStandardMode) {
-      return;
-    }
+    await toolsForMicroProfileReady();
     let projectLabelInfo: ProjectLabelInfo[] = null;
     try {
       projectLabelInfo = await ProjectLabelInfo.getWorkspaceProjectLabelInfo();
