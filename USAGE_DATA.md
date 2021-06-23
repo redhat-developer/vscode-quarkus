@@ -1,12 +1,12 @@
 # USAGE DATA
 
-vscode-quarkus has opt-in telemetry collection, provided by [vscode-commons](https://github.com/redhat-developer/vscode-commons).
+vscode-quarkus has opt-in telemetry collection, provided by [vscode-redhat-telemetry](https://github.com/redhat-developer/vscode-redhat-telemetry).
 
 ## What's included in the vscode-quarkus telemetry data
 
  * vscode-quarkus emits telemetry events when the extension starts and stops,
    which contain the common data mentioned on the
-   [vscode-commons page](https://github.com/redhat-developer/vscode-commons/blob/master/USAGE_DATA.md#common-data).
+   [vscode-redhat-telemetry page](https://github.com/redhat-developer/vscode-redhat-telemetry/blob/master/USAGE_DATA.md#common-data).
  * vscode-quarkus emits telemetry events when a vscode-quarkus command runs successfully or fails.
    The telemetry event contains the name of the command that is run, and whether it was a success or failure.
    If the command fails, it also contains the error message, with any usernames and paths removed from the error message.
