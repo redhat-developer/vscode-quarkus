@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { getTelemetryService, TelemetryService } from '@redhat-developer/vscode-redhat-telemetry';
+import { TelemetryService } from '@redhat-developer/vscode-redhat-telemetry';
 import * as path from 'path';
 import { commands, ConfigurationChangeEvent, Disposable, ExtensionContext, languages, Terminal, TextDocument, window, workspace } from 'vscode';
 import { registerVSCodeCommands } from './commands/registerCommands';
@@ -25,11 +25,11 @@ import quarkusProjectListener from './QuarkusProjectListener';
 import { terminalCommandRunner } from './terminal/terminalCommandRunner';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
+import { initTelemetryService } from './utils/telemetryUtils';
 
 export async function activate(context: ExtensionContext) {
 
-  const telemetryService: TelemetryService = await getTelemetryService(VSCODE_QUARKUS_EXTENSION_NAME);
-  await telemetryService.sendStartupEvent();
+  await initTelemetryService(context);
 
   QuarkusContext.setContext(context);
   displayWelcomePageIfNeeded(context);
