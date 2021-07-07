@@ -37,6 +37,7 @@
     "onCommand:quarkusTools.createProject",
     "onCommand:quarkusTools.welcome",
     "workspaceContains:**/src/main/resources/application.properties",
+    "workspaceContains:**/src/main/resources/application-?*.properties",
     "workspaceContains:**src/main/resources/META-INF/microprofile-config.properties",
     "workspaceContains:**/src/main/resources/application.yaml",
     "workspaceContains:**/src/main/resources/application.yml",
@@ -72,11 +73,12 @@
     "languages": [
       {
         "id": "quarkus-properties",
+        "filenamePatterns": [
+          "application.properties",
+          "application-?*.properties"
+        ],
         "aliases": [
           "Quarkus properties"
-        ],
-        "filenames": [
-          "application.properties"
         ],
         "configuration": "./language-support/properties-support/language-configuration.json"
       },
