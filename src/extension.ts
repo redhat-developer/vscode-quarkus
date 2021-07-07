@@ -124,6 +124,8 @@ function tryToForceLanguageId(document: TextDocument, fileName: string, document
   });
 }
 
+const APP_PROPERTIES_PATTERN = /^application(?:-[A-Za-z]+)\.properties$/;
+
 /**
  * Update if required the language ID to 'quarkus-properties' if needed.
  *
@@ -138,7 +140,7 @@ async function updateLanguageId(document: TextDocument, documentCache: string[],
     return;
   }
   const fileName: string = path.basename(document.fileName);
-  if (fileName === 'application.properties') {
+  if (APP_PROPERTIES_PATTERN.test(fileName)) {
     if (document.languageId === 'quarkus-properties') {
       // the language ID is already quarkus-properties do nothing.
       return;
