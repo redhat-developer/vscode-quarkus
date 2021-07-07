@@ -145,7 +145,7 @@
       },
       {
         "command": "quarkusTools.deployToOpenShift",
-        "title": "Quarkus: Deploy current Quarkus Project to OpenShift"
+        "title": "Quarkus: Deploy current Quarkus project to OpenShift (odo)"
       }
     ],
     "configuration": {
