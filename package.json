@@ -290,7 +290,7 @@
     "tslint": "^5.20.1",
     "typescript": "^3.7.2",
     "typescript-tslint-plugin": "^0.3.1",
-    "vscode-extension-tester": "^4.0.2",
+    "vscode-extension-tester": "^4.1.1",
     "vscode-extension-tester-native": "^3.0.0",
     "vscode-test": "^1.2.3",
     "webpack": "^5.28.0",
