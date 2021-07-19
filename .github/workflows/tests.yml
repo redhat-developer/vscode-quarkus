@@ -1,0 +1,40 @@
+name: Tests
+on: [push, pull_request]
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        include:
+          - os: macos-latest
+            label: 'darwin'
+          - os: ubuntu-latest
+            label: 'linux'
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12.x'
+      - name: Install vsce
+        run: npm i -g vsce
+      - name: Install dependencies
+        run: npm i
+      - name: Compile extension
+        run: npm run vscode:prepublish
+      - run: vsce package
+      - name: tslint
+        run: npm run tslint
+      - name: Tests
+        run: xvfb-run --auto-servernum npm run test --silent
+        if: runner.os == 'Linux'
+      - name: Tests
+        run: npm run test --slient
+        if: runner.os != 'Linux'
+      - name: UI Tests
+        run: xvfb-run --auto-servernum npm run test-ui
+        if: runner.os == 'Linux'
+      - name: UI Tests
+        run: npm run test-ui
+        if: runner.os != 'Linux'
