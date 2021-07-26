@@ -1,5 +1,26 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.9.0 (28 July, 2021)
+
+### Enhancements
+
+ * Drop dependency on vscode-commons by updating `@redhat-developer/vscode-redhat-telemetry` to 0.2.0. See [#365](https://github.com/redhat-developer/vscode-quarkus/issues/365).
+ * Add a command to deploy a Quarkus app to OpenShift using OpenShift Connector. See [#313](https://github.com/redhat-developer/vscode-quarkus/issues/313).
+ * Emit telemetry events for command executions. See [#344](https://github.com/redhat-developer/vscode-quarkus/issues/344).
+ * Add a command to build a binary of a Quarkus app. See [#341](https://github.com/redhat-developer/vscode-quarkus/pull/341).
+ * RESTEasy JAX-RS is no longer added by default in the project generator wizard. See [#322](https://github.com/redhat-developer/vscode-quarkus/issues/322).
+ * Add a step to the project generator to specify if example code should be generated. See [#301](https://github.com/redhat-developer/vscode-quarkus/issues/301).
+
+### Bug Fixes
+
+ * Fixed debugger start-up failure in Quarkus projects that contain a `node_modules` folder. See [#339](https://github.com/redhat-developer/vscode-quarkus/issues/339).
+
+### Build
+
+ * Consistently reference the main npm registry in `package-lock.json`. See [#355](https://github.com/redhat-developer/vscode-quarkus/pull/355).
+ * Fix the UI tests. See [#351](https://github.com/redhat-developer/vscode-quarkus/issues/351).
+ * Migrate CI to GitHub Actions. See [#375](https://github.com/redhat-developer/vscode-quarkus/issues/375).
+
 ## 1.8.0 (8 April, 2021)
 
 ### Enhancements
@@ -20,7 +41,7 @@
 
 ## 1.7.0 (September 21, 2020)
 
-Since `1.7.0`, vscode-quarkus becomes an extension of [vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile), see [vscode-microprofile CHANGELOG](https://github.com/redhat-developer/vscode-microprofile/blob/master/CHANGELOG.md#010-september-21-2020). 
+Since `1.7.0`, vscode-quarkus becomes an extension of [vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile), see [vscode-microprofile CHANGELOG](https://github.com/redhat-developer/vscode-microprofile/blob/master/CHANGELOG.md#010-september-21-2020).
 
 [vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile) will be automatically installed alongside vscode-quarkus.
 
