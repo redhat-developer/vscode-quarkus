@@ -22,8 +22,20 @@ import { QuarkusConfig } from "../QuarkusConfig";
 
 const HTTP_MATCHER = new RegExp('^http://');
 
+/**
+ * Represents the capabilities of a Code Quarkus API, such as code.quarkus.io/api or code.quarkus.redhat.com/api
+ */
 export interface CodeQuarkusFunctionality {
-  canExcludeSampleCode: boolean;
+  /**
+   * This Code Quarkus API supports the `ne=...` parameter to specify that example code should not be generated
+   *
+   * @deprecated the `ne=...` parameter will be removed in favour of the `nc=...` parameter
+   */
+  supportsNoExamplesParameter: boolean;
+  /**
+   * This Code Quarkus API supports the `nc=...` to specify that starter code should not be generated
+   */
+  supportsNoCodeParameter: boolean;
 }
 
 /**
@@ -46,7 +58,8 @@ export async function getCodeQuarkusApiFunctionality(): Promise<CodeQuarkusFunct
   const openApiData: any = yaml.load(openApiYaml);
 
   return {
-    canExcludeSampleCode: openApiData?.paths?.['/api/download']?.get?.parameters?.filter(p => p?.name === 'ne').length > 0
+    supportsNoExamplesParameter: openApiData?.paths?.['/api/download']?.get?.parameters?.filter(p => p?.name === 'ne').length > 0,
+    supportsNoCodeParameter: openApiData?.paths?.['/api/download']?.get?.parameters?.filter(p => p?.name === 'nc').length > 0,
   } as CodeQuarkusFunctionality;
 }
 
@@ -57,7 +70,8 @@ export async function getCodeQuarkusApiFunctionality(): Promise<CodeQuarkusFunct
  */
 export function getDefaultFunctionality() {
   return {
-    canExcludeSampleCode: false
+    supportsNoExamplesParameter: false,
+    supportsNoCodeParameter: false,
   } as CodeQuarkusFunctionality;
 }
 

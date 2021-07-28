@@ -33,7 +33,7 @@ export async function generateProjectWizard() {
   }
 
   const state: Partial<ProjectGenState> = {
-    totalSteps: 7 + (apiCapabilities.canExcludeSampleCode ? 1 : 0)
+    totalSteps: 7 + (apiCapabilities.supportsNoCodeParameter || apiCapabilities.supportsNoExamplesParameter ? 1 : 0)
   };
 
   async function collectInputs(state: Partial<ProjectGenState>) {
@@ -149,18 +149,18 @@ export async function generateProjectWizard() {
     });
     return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(
       input, state, { showLastUsed: true, showRequiredExtensions: true, allowZeroExtensions: true },
-      (apiCapabilities.canExcludeSampleCode ? inputGenerateSampleCode: undefined));
+      (apiCapabilities.supportsNoCodeParameter || apiCapabilities.supportsNoExamplesParameter ? inputGenerateSampleCode : undefined));
   }
 
   async function inputGenerateSampleCode(input: MultiStepInput, state: Partial<ProjectGenState>) {
-    const YES: string = 'Include sample code';
-    const NO: string = 'Do not include sample code';
+    const YES: string = `Include ${apiCapabilities.supportsNoCodeParameter ? 'starter' : 'example'} code`;
+    const NO: string = `Do not include ${apiCapabilities.supportsNoCodeParameter ? 'starter' : 'example'} code`;
     const quickPickItems: QuickPickItem[] = [
-      {label: YES, picked: true},
-      {label: NO}
+      { label: YES, picked: true },
+      { label: NO }
     ];
 
-    state.isGenerateSampleCode = (await input.showQuickPick<QuickPickItem, QuickPickParameters<QuickPickItem>>({
+    state.shouldGenerateCode = (await input.showQuickPick<QuickPickItem, QuickPickParameters<QuickPickItem>>({
       title: INPUT_TITLE,
       placeholder: 'Should sample code be included? Additional dependencies may be added along with the sample.',
       step: input.getStepNumber(),
@@ -176,7 +176,7 @@ export async function generateProjectWizard() {
   const projectGenState: ProjectGenState = state as ProjectGenState;
   saveDefaults(projectGenState);
   deleteFolderIfExists(getNewProjectDirectory(projectGenState));
-  await downloadAndSetupProject(projectGenState);
+  await downloadAndSetupProject(projectGenState, apiCapabilities);
 }
 
 async function getTargetDirectory(projectName: string) {
@@ -249,9 +249,9 @@ function getNewProjectDirectory(state: ProjectGenState): Uri {
   return Uri.file(path.join(state.targetDir.fsPath, state.artifactId));
 }
 
-async function downloadAndSetupProject(state: ProjectGenState): Promise<void> {
+async function downloadAndSetupProject(state: ProjectGenState, codeQuarkusFunctionality: CodeQuarkusFunctionality): Promise<void> {
   const projectDir: Uri = getNewProjectDirectory(state);
-  const zip: ZipFile = await downloadProject(state);
+  const zip: ZipFile = await downloadProject(state, codeQuarkusFunctionality);
   zip.on('end', () => {
     openProject(projectDir);
   });
