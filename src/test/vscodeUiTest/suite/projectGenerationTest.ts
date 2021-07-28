@@ -63,7 +63,7 @@ describe('Project generation tests', function() {
    * in the command palette
    */
   it('should open project generation wizard', async function() {
-    this.timeout(30000);
+    this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
     expect(await wizardExists(), 'wizard did not open').to.be.true;
     await wizard.cancel();

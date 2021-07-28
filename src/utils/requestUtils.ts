@@ -24,6 +24,7 @@ import { QExtension, APIExtension } from '../definitions/QExtension';
 import { Readable } from 'stream';
 import { ZipFile, fromBuffer } from 'yauzl';
 import { convertToQExtension } from '../definitions/QExtension';
+import { CodeQuarkusFunctionality } from './codeQuarkusApiUtils';
 
 const HEADERS = {
   'Client-Name': 'vscode-quarkus',
@@ -65,9 +66,12 @@ function removeDuplicateArtifactIds(extensions: QExtension[]): QExtension[] {
   }, [] as QExtension[]);
 }
 
-export async function downloadProject(state: ProjectGenState): Promise<ZipFile> {
+export async function downloadProject(state: ProjectGenState, codeQuarkusFunctionality: CodeQuarkusFunctionality): Promise<ZipFile> {
   const apiUrl: string = QuarkusConfig.getApiUrl();
   const chosenIds: string[] = state.extensions!.map((it) => `${it.groupId}:${it.artifactId}`);
+
+  const canSpecifyGenerateCode = codeQuarkusFunctionality.supportsNoCodeParameter || codeQuarkusFunctionality.supportsNoExamplesParameter;
+  const parameterToSpecifyGenerateCode = codeQuarkusFunctionality.supportsNoCodeParameter ? 'nc' : 'ne';
 
   const qProjectUrl: string = `${apiUrl}/download?` +
     `b=${state.buildTool.toUpperCase()}&` +
@@ -75,7 +79,7 @@ export async function downloadProject(state: ProjectGenState): Promise<ZipFile> 
     `a=${state.artifactId}&` +
     `v=${state.projectVersion}&` +
     `c=${state.packageName}.${state.resourceName}&` +
-    `${(state.isGenerateSampleCode === undefined ? '' : `ne=${!state.isGenerateSampleCode}&`)}` +
+    `${(canSpecifyGenerateCode ? `${parameterToSpecifyGenerateCode}=${!state.shouldGenerateCode}&` : '')}` +
     `e=${chosenIds.join('&e=')}`;
 
   const buffer: Buffer = await tryGetProjectBuffer(qProjectUrl);
@@ -109,7 +113,7 @@ function promisify(api) {
 }
 
 async function extract(content: Buffer, path: string): Promise<ZipFile> {
-  const zipfile: ZipFile = (await yauzlFromBuffer(content, {lazyEntries: true})) as ZipFile;
+  const zipfile: ZipFile = (await yauzlFromBuffer(content, { lazyEntries: true })) as ZipFile;
   const openReadStream = promisify(zipfile.openReadStream.bind(zipfile));
 
   zipfile.readEntry();
@@ -121,7 +125,7 @@ async function extract(content: Buffer, path: string): Promise<ZipFile> {
         fs.mkdirSync(mappedPath);
       } else {
         const stream: Readable = (await openReadStream(entry)) as Readable;
-        stream.pipe(fs.createWriteStream(mappedPath, {mode: entry.externalFileAttributes >>> 16}));
+        stream.pipe(fs.createWriteStream(mappedPath, { mode: entry.externalFileAttributes >>> 16 }));
       }
     }
     zipfile.readEntry();
