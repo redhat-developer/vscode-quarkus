@@ -74,7 +74,7 @@ describe('Project generation tests', function() {
    * default values for the groupId, artifactId etc.
    */
   it('should have correct default values when going through the wizard', async function() {
-    this.timeout(30000);
+    this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
 
     expect(await wizard.getNthQuickPickItemLabel(0), 'default should be Maven').equals('Maven');
@@ -122,7 +122,7 @@ describe('Project generation tests', function() {
    * step values at the wizard's title bar: (1/8), (2/8)
    */
   it('should have correct step values', async function() {
-    this.timeout(30000);
+    this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
     expect(await wizard.getInputBoxTitle()).to.have.string('1/8');
     expect(await wizard.getBackButton()).to.not.be.ok;
@@ -186,7 +186,7 @@ describe('Project generation tests', function() {
    * Quarkus Maven project with some extensions added
    */
   it('should generate Maven project with extensions added', async function() {
-    this.timeout(80000);
+    this.timeout(360000);
 
     const projectDestDir: string = path.join(tempDir, 'maven');
     const projectFolderName: string = 'quarkus-maven';
@@ -224,7 +224,7 @@ describe('Project generation tests', function() {
    * Quarkus Gradle project with some extensions added
    */
   it('should generate Gradle project with extensions added', async function() {
-    this.timeout(80000);
+    this.timeout(480000);
 
     const projectDestDir: string = path.join(tempDir, 'gradle');
     const projectFolderName: string = 'quarkus-gradle';
@@ -262,7 +262,7 @@ describe('Project generation tests', function() {
    * the previously generated project's values
    */
   it('should display input values from previously generated project (with extensions)', async function() {
-    this.timeout(80000);
+    this.timeout(360000);
 
     const projectDestDir: string = path.join(tempDir, 'previous-values-extensions');
 
