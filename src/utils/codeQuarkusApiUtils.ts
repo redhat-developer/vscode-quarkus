@@ -90,10 +90,15 @@ async function httpsGet(url: string): Promise<string> {
           .then(resolve, reject);
       } else if (res.statusCode !== 200) {
         reject(`${res.statusCode}: ${res.statusMessage}`);
+      } else {
+        let data = '';
+        res.on('data', (chunk: Buffer) => {
+          data += chunk.toString('utf8');
+        });
+        res.on('end', () => {
+          resolve(data);
+        });
       }
-      res.on('data', (d: Buffer) => {
-        resolve(d.toString('utf8'));
-      });
     })
       .on('error', reject);
   });
