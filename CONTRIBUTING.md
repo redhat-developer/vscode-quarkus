@@ -266,6 +266,11 @@ In addition to `npm run build`, there are two more build scripts:
 "Launch Extension (vscode-quarkus)" at the top left.
 ![](images/runExtension.png)
 
+To run vscode-quarkus along with changes within vscode-microprofile, select run "Run Extension with MicroProfile sources" at the top left.
+![](images/runExtensionWithMicroProfile.png)
+
+This assumes both projects are located within the same parent folder.
+
 ### Testing vscode-quarkus
 There are two types of tests written for vscode-quarkus:
 the [integration tests](https://code.visualstudio.com/api/working-with-extensions/testing-extension) and the UI tests.

@@ -22,6 +22,24 @@
       "preLaunchTask": "npm: watch"
     },
     {
+      "name": "Run Extension with MicroProfile sources",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionDevelopmentPath=${workspaceFolder}/../vscode-microprofile"
+      ],
+      "env": {
+        "VSCODE_REDHAT_TELEMETRY_DEBUG": "true"
+      },
+      "outFiles": [
+        "${workspaceFolder}/dist/**/*.js",
+        "${workspaceFolder}/../vscode-microprofile/dist/**/*.js"
+      ],
+      "preLaunchTask": "npm: watch"
+    },
+    {
       "name": "Extension Tests",
       "type": "extensionHost",
       "request": "launch",
