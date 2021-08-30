@@ -26,8 +26,8 @@ export class GradleBuildSupport extends BuildSupport {
       quarkusBinary: 'buildNative',
       wrapper: 'gradlew',
       wrapperWindows: 'gradlew.bat',
-      taskBeginsPattern: '^.*Starting a Gradle Daemon*',
-      taskEndsPattern: '^.*Quarkus .* started in .*\\. Listening on:*'
+      taskBeginsPattern: '^.*Task: ',
+      taskEndsPattern: '(^.*Quarkus .* started in .*\\.)|(^.* ERROR .* Failed to start)'
     });
   }
 

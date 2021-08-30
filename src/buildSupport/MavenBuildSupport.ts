@@ -26,8 +26,8 @@ export class MavenBuildSupport extends BuildSupport {
       quarkusBinary: 'package -Pnative',
       wrapper: 'mvnw',
       wrapperWindows: 'mvnw.cmd',
-      taskBeginsPattern: '^.*Scanning for projects...*',
-      taskEndsPattern: '^.*Quarkus .* started in .*\\. Listening on:*'
+      taskBeginsPattern: '^.*Scanning for projects...',
+      taskEndsPattern: '(^.*Quarkus .* started in .*\\.)|(^.* ERROR .* Failed to start)'
     });
   }
 
