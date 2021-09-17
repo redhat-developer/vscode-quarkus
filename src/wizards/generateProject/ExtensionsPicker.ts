@@ -63,7 +63,7 @@ export class ExtensionsPicker {
     next?: (input: MultiStepInput, state: Partial<State>) => any) {
 
     const extensionsPicker: ExtensionsPicker = new ExtensionsPicker(options);
-    await extensionsPicker.setExtensions();
+    await extensionsPicker.setExtensions(state.platformVersion);
 
     return extensionsPicker.pickExtensions(input, state, next);
   }
@@ -73,9 +73,9 @@ export class ExtensionsPicker {
     this.options = options;
   }
 
-  private async setExtensions() {
+  private async setExtensions(platform?: string) {
     try {
-      this.allExtensions = await getQExtensions();
+      this.allExtensions = await getQExtensions(platform);
 
       this.defaultExtensions = this.getDefaultQExtensions();
       this.selectedExtensions = [];

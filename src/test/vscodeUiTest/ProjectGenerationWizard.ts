@@ -29,7 +29,7 @@ export class ProjectGenerationWizard extends InputBox {
   /**
    * The number of steps the wizard has
    */
-  private lastStep: number = 8;
+  private lastStep: number = 9;
 
   /**
    * Opens the project generation wizard
@@ -48,6 +48,7 @@ export class ProjectGenerationWizard extends InputBox {
    */
   public static async generateProject(driver: WebDriver, options: {
     buildTool?: string,
+    platformVersion?: string,
     groupId?: string,
     artifactId?: string,
     projectVersion?: string,
@@ -58,33 +59,35 @@ export class ProjectGenerationWizard extends InputBox {
   }): Promise<boolean> {
     const wizard: ProjectGenerationWizard = await this.openWizard(driver);
     try {
-    if (options.buildTool) await wizard.setText(options.buildTool);
-    await wizard.next();
-    if (options.groupId) await wizard.setText(options.groupId);
-    await wizard.next();
-    if (options.artifactId) await wizard.setText(options.artifactId);
-    await wizard.next();
-    if (options.projectVersion) await wizard.setText(options.projectVersion);
-    await wizard.next();
-    if (options.packageName) await wizard.setText(options.packageName);
-    await wizard.next();
-    if (options.resourceName) await wizard.setText(options.resourceName);
-    await wizard.next();
+      if (options.buildTool) await wizard.setText(options.buildTool);
+      await wizard.next();
+      if (options.platformVersion) await wizard.setText(options.platformVersion);
+      await wizard.next();
+      if (options.groupId) await wizard.setText(options.groupId);
+      await wizard.next();
+      if (options.artifactId) await wizard.setText(options.artifactId);
+      await wizard.next();
+      if (options.projectVersion) await wizard.setText(options.projectVersion);
+      await wizard.next();
+      if (options.packageName) await wizard.setText(options.packageName);
+      await wizard.next();
+      if (options.resourceName) await wizard.setText(options.resourceName);
+      await wizard.next();
 
-    if (options.extensions) {
-      for (const extensionName of options.extensions) {
-        await wizard.setText(extensionName);
-        await wizard.confirm();
+      if (options.extensions) {
+        for (const extensionName of options.extensions) {
+          await wizard.setText(extensionName);
+          await wizard.confirm();
+        }
       }
-    }
-    await wizard.focusQuickPick(0);
-    await wizard.next();
-    await wizard.focusQuickPick(0);
-    await wizard.next();
+      await wizard.focusQuickPick(0);
+      await wizard.next();
+      await wizard.focusQuickPick(0);
+      await wizard.next();
 
-    const dialog: OpenDialog = await DialogHandler.getOpenDialog();
-    await dialog.selectPath(options.dest);
-    await dialog.confirm();
+      const dialog: OpenDialog = await DialogHandler.getOpenDialog();
+      await dialog.selectPath(options.dest);
+      await dialog.confirm();
     } catch {
       return false;
     }
