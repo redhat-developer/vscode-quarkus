@@ -21,6 +21,7 @@ import { BuildSupport } from '../buildSupport/BuildSupport';
 export interface State {
   totalSteps: number;
   extensions: QExtension[];
+  platformVersion: string;
 }
 
 /**

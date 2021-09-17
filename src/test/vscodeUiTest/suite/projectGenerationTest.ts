@@ -28,7 +28,7 @@ use(require('chai-fs'));
  * This file contains tests for the project generation wizard
  * from the 'Quarkus: Generate a new Quarkus project' command
  */
-describe('Project generation tests', function() {
+describe('Project generation tests', function () {
   this.bail(true);
   this.retries(2);
 
@@ -37,13 +37,13 @@ describe('Project generation tests', function() {
 
   process.env['VSCODE_QUARKUS_API_URL'] = 'https://stage.code.quarkus.io/api';
 
-  before('get the driver', async function(): Promise<void> {
+  before('get the driver', async function (): Promise<void> {
     this.timeout(120000);
     driver = VSBrowser.instance.driver;
   });
 
   // tslint:disable-next-line: only-arrow-functions
-  beforeEach('clear temp dir', async function(): Promise<void> {
+  beforeEach('clear temp dir', async function (): Promise<void> {
     if (fs.existsSync(tempDir)) {
       fs.removeSync(tempDir);
     }
@@ -51,7 +51,7 @@ describe('Project generation tests', function() {
   });
 
   // tslint:disable-next-line: only-arrow-functions
-  after('remove temp dir', async function(): Promise<void> {
+  after('remove temp dir', async function (): Promise<void> {
     if (fs.existsSync(tempDir)) {
       fs.removeSync(tempDir);
     }
@@ -62,7 +62,7 @@ describe('Project generation tests', function() {
    * calling the 'Quarkus: Generate a Quarkus project command'
    * in the command palette
    */
-  it('should open project generation wizard', async function() {
+  it('should open project generation wizard', async function () {
     this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
     expect(await wizardExists(), 'wizard did not open').to.be.true;
@@ -73,11 +73,14 @@ describe('Project generation tests', function() {
    * Tests if the project generation wizard contains correct
    * default values for the groupId, artifactId etc.
    */
-  it('should have correct default values when going through the wizard', async function() {
+  it('should have correct default values when going through the wizard', async function () {
     this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
 
     expect(await wizard.getNthQuickPickItemLabel(0), 'default should be Maven').equals('Maven');
+    await wizard.next();
+
+    expect(await wizard.getNthQuickPickItemLabel(0), 'default should be 2.2 (recommended)').equals('2.2 (recommended)');
     await wizard.next();
 
     const groupId = await wizard.getText();
@@ -121,61 +124,67 @@ describe('Project generation tests', function() {
    * Tests if the project generation wizard has correct
    * step values at the wizard's title bar: (1/8), (2/8)
    */
-  it('should have correct step values', async function() {
+  it('should have correct step values', async function () {
     this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('1/9');
     expect(await wizard.getBackButton()).to.not.be.ok;
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('2/9');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('3/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('3/9');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('4/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('4/9');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('5/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('5/9');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('6/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('6/9');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('7/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('7/9');
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('8/9');
     await wizard.focusQuickPick(0);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('8/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('9/9');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('7/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('8/9');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('6/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('7/9');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('5/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('6/9');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('4/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('5/9');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('3/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('4/9');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('3/9');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('2/9');
+    await wizard.prev();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('1/9');
     expect(await wizard.getBackButton()).to.not.be.ok;
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('2/9');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('1/9');
     expect(await wizard.getBackButton()).to.not.be.ok;
 
     await wizard.cancel();
@@ -185,7 +194,7 @@ describe('Project generation tests', function() {
    * Tests if the project generation wizard correctly creates a new
    * Quarkus Maven project with some extensions added
    */
-  it('should generate Maven project with extensions added', async function() {
+  it('should generate Maven project with extensions added', async function () {
     this.timeout(360000);
 
     const projectDestDir: string = path.join(tempDir, 'maven');
@@ -223,7 +232,7 @@ describe('Project generation tests', function() {
    * Tests if the project generation wizard correctly creates a new
    * Quarkus Gradle project with some extensions added
    */
-  it('should generate Gradle project with extensions added', async function() {
+  it('should generate Gradle project with extensions added', async function () {
     this.timeout(480000);
 
     const projectDestDir: string = path.join(tempDir, 'gradle');
@@ -261,12 +270,13 @@ describe('Project generation tests', function() {
    * Tests if default values throughout the wizard are updated to match
    * the previously generated project's values
    */
-  it('should display input values from previously generated project (with extensions)', async function() {
+  it('should display input values from previously generated project (with extensions)', async function () {
     this.timeout(360000);
 
     const projectDestDir: string = path.join(tempDir, 'previous-values-extensions');
 
     const buildTool: string = 'Gradle';
+    const platformVersion: string = '2.2 (recommended)';
     const groupId: string = 'testgroupid';
     const artifactId: string = 'testartifactid';
     const projectVersion: string = 'testprojectVersion';
@@ -278,6 +288,7 @@ describe('Project generation tests', function() {
 
     await ProjectGenerationWizard.generateProject(driver, {
       buildTool,
+      platformVersion,
       groupId,
       artifactId,
       projectVersion,
@@ -297,11 +308,14 @@ describe('Project generation tests', function() {
      */
     await (new Workbench()).executeCommand('Close Workspace');
     // HACK: Wait for VS Code reopen in rootless mode
-    await new Promise ((resolve, _reject) => { setTimeout(resolve, 2000); });
+    await new Promise((resolve, _reject) => { setTimeout(resolve, 2000); });
 
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
 
     expect(await wizard.getNthQuickPickItemLabel(0)).equals(buildTool);
+    await wizard.next();
+
+    expect(await wizard.getNthQuickPickItemLabel(0)).equals(platformVersion);
     await wizard.next();
 
     const actualGroupId = await wizard.getText();
@@ -338,9 +352,10 @@ describe('Project generation tests', function() {
    * Tests if the project generation wizard displays correct
    * validation messages
    */
-  it('should have correct input validation messages', async function() {
+  it('should have correct input validation messages', async function () {
     this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
+    await wizard.next();
     await wizard.next();
 
     // groupId input validation
@@ -435,9 +450,10 @@ describe('Project generation tests', function() {
   /**
    * Tests if the extensions picker displays extensions without duplicates.
    */
-  it('should display extensions without duplicates', async function() {
+  it('should display extensions without duplicates', async function () {
     this.timeout(120000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
+    await wizard.next();
     await wizard.next();
     await wizard.next();
     await wizard.next();
@@ -467,7 +483,7 @@ async function wizardExists(): Promise<boolean> {
 
 function pomToJson(pathToPom: string): Promise<any> {
   return new Promise((res, rej) => {
-    pomParser.parse({filePath: pathToPom}, (err, response) => {
+    pomParser.parse({ filePath: pathToPom }, (err, response) => {
       if (err) {
         rej(err);
       }

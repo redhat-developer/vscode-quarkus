@@ -18,6 +18,7 @@ import * as https from "https";
 import * as yaml from "js-yaml";
 import * as path from "path";
 import { URL } from "url";
+import { QuickPickItem } from "vscode";
 import { QuarkusConfig } from "../QuarkusConfig";
 
 const HTTP_MATCHER = new RegExp('^http://');
@@ -36,6 +37,16 @@ export interface CodeQuarkusFunctionality {
    * This Code Quarkus API supports the `nc=...` to specify that starter code should not be generated
    */
   supportsNoCodeParameter: boolean;
+}
+
+/**
+ * Represents the the response object from the `/streams` endpoint from the Code Quarkus API
+ */
+ export interface PlatformVersionPickItem extends QuickPickItem {
+  label: string;
+  key: string;
+  quarkusCoreVersion: string;
+  recommended: boolean;
 }
 
 /**
@@ -74,6 +85,27 @@ export function getDefaultFunctionality() {
     supportsNoCodeParameter: false,
   } as CodeQuarkusFunctionality;
 }
+
+/**
+ * Returns the available platform(s) for a Quarkus project from Code Quarkus API
+ *
+ * @returns the available platform(s) for a Quarkus project from Code Quarkus API
+ */
+ export async function getCodeQuarkusApiPlatforms() {
+    const platformApiRes = await httpsGet((QuarkusConfig.getApiUrl() + '/streams').replace(HTTP_MATCHER, "https://"));
+    const availablePlatformsParsed = <Array<object>> yaml.load(platformApiRes);
+    const availablePlatforms = availablePlatformsParsed.map(platform => {
+      const version = `${platform["key"].split(":")[1]}${(platform["recommended"] ? ` (recommended)` : ``)}`;
+      const cast: PlatformVersionPickItem = {
+        label: version,
+        key: platform["key"],
+        quarkusCoreVersion: platform["quarkusCoreVersion"],
+        recommended: platform["recommended"]
+      };
+      return cast;
+    });
+    return availablePlatforms;
+  }
 
 /**
  * Returns the GET response body if the code is 200 and rejects otherwise

@@ -12,7 +12,7 @@ import { BuildToolName, INPUT_TITLE } from '../../definitions/constants';
 import { ProjectGenState } from '../../definitions/inputState';
 import { QExtension } from '../../definitions/QExtension';
 import { QuarkusContext } from '../../QuarkusContext';
-import { CodeQuarkusFunctionality, getCodeQuarkusApiFunctionality, getDefaultFunctionality } from '../../utils/codeQuarkusApiUtils';
+import { CodeQuarkusFunctionality, PlatformVersionPickItem, getCodeQuarkusApiFunctionality, getDefaultFunctionality, getCodeQuarkusApiPlatforms } from '../../utils/codeQuarkusApiUtils';
 import { MultiStepInput, QuickPickParameters } from '../../utils/multiStepUtils';
 import { downloadProject } from '../../utils/requestUtils';
 import { ExtensionsPicker } from './ExtensionsPicker';
@@ -33,7 +33,7 @@ export async function generateProjectWizard() {
   }
 
   const state: Partial<ProjectGenState> = {
-    totalSteps: 7 + (apiCapabilities.supportsNoCodeParameter || apiCapabilities.supportsNoExamplesParameter ? 1 : 0)
+    totalSteps: 8 + (apiCapabilities.supportsNoCodeParameter || apiCapabilities.supportsNoExamplesParameter ? 1 : 0)
   };
 
   async function collectInputs(state: Partial<ProjectGenState>) {
@@ -58,13 +58,35 @@ export async function generateProjectWizard() {
     });
 
     state.buildTool = (await input.showQuickPick({
-      title: 'Quarkus Tools',
+      title: INPUT_TITLE,
       step: input.getStepNumber(),
       totalSteps: state.totalSteps,
       placeholder: 'Pick build tool',
       items: quickPickItems,
       activeItem: quickPickItems[0]
     })).label;
+
+    return (input: MultiStepInput) => inputPlatformVersion(input, state);
+  }
+
+  async function inputPlatformVersion(input: MultiStepInput, state: Partial<ProjectGenState>) {
+
+    const quickPickItems: PlatformVersionPickItem[] = await getCodeQuarkusApiPlatforms();
+
+    // Sort by recommended and version number in case of tie in the quick pick list
+    quickPickItems.sort((x: PlatformVersionPickItem, y: PlatformVersionPickItem) => {
+      return (x.recommended === y.recommended) ? (parseFloat(x.label) > parseFloat(y.label) ? -1 : 1) : x.recommended ? -1 : 1;
+    });
+
+    const platformVersionOption = (await input.showQuickPick({
+      title: INPUT_TITLE,
+      step: input.getStepNumber(),
+      totalSteps: state.totalSteps,
+      placeholder: 'Pick io.quarkus.platform version',
+      items: quickPickItems,
+      activeItem: quickPickItems[0]
+    })).label;
+    state.platformVersion = (quickPickItems.filter(platformInfo => platformInfo["label"] === platformVersionOption))[0]["key"];
 
     return (input: MultiStepInput) => inputGroupId(input, state);
   }

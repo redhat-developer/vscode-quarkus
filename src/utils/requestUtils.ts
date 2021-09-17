@@ -31,8 +31,8 @@ const HEADERS = {
   'Client-Contact-Email': 'fbricon@redhat.com,azerr@redhat.com,dakwon@redhat.com'
 };
 
-export async function getQExtensions(): Promise<QExtension[]> {
-  const apiUrl: string = QuarkusConfig.getApiUrl();
+export async function getQExtensions(platform?: string): Promise<QExtension[]> {
+  const apiUrl: string = `${QuarkusConfig.getApiUrl()}/extensions${platform === undefined ? `` : `/stream/${platform}`}`;
   const extensions: string = await tryGetExtensionsJSON(apiUrl);
   const qExtensions: QExtension[] = JSON.parse(extensions).map((ext: APIExtension) => {
     return convertToQExtension(ext);
@@ -43,14 +43,14 @@ export async function getQExtensions(): Promise<QExtension[]> {
 
 async function tryGetExtensionsJSON(apiUrl: string): Promise<string> {
   const requestOptions: request.OptionsWithUri = {
-    uri: `${apiUrl}/extensions`,
+    uri: `${apiUrl}`,
     headers: HEADERS,
     timeout: 30000
   };
   try {
     return await request(requestOptions);
   } catch (err) {
-    throw `Unable to reach ${apiUrl}/extensions`;
+    throw `Unable to reach ${apiUrl}`;
   }
 }
 
@@ -75,6 +75,7 @@ export async function downloadProject(state: ProjectGenState, codeQuarkusFunctio
 
   const qProjectUrl: string = `${apiUrl}/download?` +
     `b=${state.buildTool.toUpperCase()}&` +
+    `S=${state.platformVersion}&` +
     `g=${state.groupId}&` +
     `a=${state.artifactId}&` +
     `v=${state.projectVersion}&` +
