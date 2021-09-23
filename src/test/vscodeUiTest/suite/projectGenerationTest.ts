@@ -80,7 +80,9 @@ describe('Project generation tests', function () {
     expect(await wizard.getNthQuickPickItemLabel(0), 'default should be Maven').equals('Maven');
     await wizard.next();
 
-    expect(await wizard.getNthQuickPickItemLabel(0), 'default should be 2.2 (recommended)').equals('2.2 (recommended)');
+    await wizard.sendKeys(Key.DOWN, Key.UP);
+    const quickPickPlatform: QuickPickItemInfo = await wizard.getNthQuickPickItemInfo(0);
+    expect(quickPickPlatform.label).to.have.string('(recommended)');
     await wizard.next();
 
     const groupId = await wizard.getText();
