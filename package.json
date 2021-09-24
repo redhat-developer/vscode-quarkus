@@ -300,7 +300,7 @@
     "webpack-cli": "^3.3.2"
   },
   "dependencies": {
-    "@redhat-developer/vscode-redhat-telemetry": "^0.2.0",
+    "@redhat-developer/vscode-redhat-telemetry": "^0.4.2",
     "ejs": "^2.7.1",
     "expand-home-dir": "0.0.3",
     "find-up": "^4.1.0",
