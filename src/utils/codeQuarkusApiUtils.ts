@@ -21,8 +21,6 @@ import { URL } from "url";
 import { QuickPickItem } from "vscode";
 import { QuarkusConfig } from "../QuarkusConfig";
 
-const HTTP_MATCHER = new RegExp('^http://');
-
 /**
  * Represents the capabilities of a Code Quarkus API, such as code.quarkus.io/api or code.quarkus.redhat.com/api
  */
@@ -56,10 +54,8 @@ export interface CodeQuarkusFunctionality {
  * @throws if something goes wrong when getting the functionality from OpenAPI
  */
 export async function getCodeQuarkusApiFunctionality(): Promise<CodeQuarkusFunctionality> {
-  let oldOpenApiUrl: string = path.dirname(QuarkusConfig.getApiUrl()) + '/openapi';
-  let newOpenApiUrl: string = path.dirname(QuarkusConfig.getApiUrl()) + '/q/openapi';
-  oldOpenApiUrl = oldOpenApiUrl.replace(HTTP_MATCHER, "https://");
-  newOpenApiUrl = newOpenApiUrl.replace(HTTP_MATCHER, "https://");
+  const oldOpenApiUrl: string = path.dirname(QuarkusConfig.getApiUrl()) + '/openapi';
+  const newOpenApiUrl: string = path.dirname(QuarkusConfig.getApiUrl()) + '/q/openapi';
   let openApiYaml: string;
   try {
     openApiYaml = await httpsGet(newOpenApiUrl);
@@ -92,7 +88,7 @@ export function getDefaultFunctionality() {
  * @returns the available platform(s) for a Quarkus project from Code Quarkus API
  */
  export async function getCodeQuarkusApiPlatforms() {
-    const platformApiRes = await httpsGet((QuarkusConfig.getApiUrl() + '/streams').replace(HTTP_MATCHER, "https://"));
+    const platformApiRes = await httpsGet((QuarkusConfig.getApiUrl() + '/streams'));
     const availablePlatformsParsed = <Array<object>> yaml.load(platformApiRes);
     const availablePlatforms = availablePlatformsParsed.map(platform => {
       const version = `${platform["key"].split(":")[1]}${(platform["recommended"] ? ` (recommended)` : ``)}`;

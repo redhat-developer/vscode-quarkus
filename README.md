@@ -73,7 +73,7 @@ The following settings are supported:
 * All [microprofile.tools.* settings](https://github.com/redhat-developer/vscode-microprofile#supported-vs-code-settings) from the [Visual Studio Code extension for MicroProfile](https://github.com/redhat-developer/vscode-microprofile)
 * `quarkus.tools.debug.terminateProcessOnExit` : Determines whether to terminate the quarkus:dev task after closing the debug session. Default is `Ask`.
 * `quarkus.tools.alwaysShowWelcomePage` : Determines whether to show the welcome page on extension startup. Default is `true`.
-* `quarkus.tools.starter.api` : Quarkus API base URL. Default is `http://code.quarkus.io/api`.
+* `quarkus.tools.starter.api` : Quarkus API base URL. Default is `https://code.quarkus.io/api`.
 * `quarkus.tools.starter.showExtensionDescriptions`: Determines whether to show the Quarkus extension descriptions when selecting Quarkus extensions. Default is `true`.
 
 Since 1.6.0:
