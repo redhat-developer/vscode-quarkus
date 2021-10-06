@@ -278,7 +278,6 @@ describe('Project generation tests', function () {
     const projectDestDir: string = path.join(tempDir, 'previous-values-extensions');
 
     const buildTool: string = 'Gradle';
-    const platformVersion: string = '2.2 (recommended)';
     const groupId: string = 'testgroupid';
     const artifactId: string = 'testartifactid';
     const projectVersion: string = 'testprojectVersion';
@@ -290,7 +289,6 @@ describe('Project generation tests', function () {
 
     await ProjectGenerationWizard.generateProject(driver, {
       buildTool,
-      platformVersion,
       groupId,
       artifactId,
       projectVersion,
@@ -317,7 +315,7 @@ describe('Project generation tests', function () {
     expect(await wizard.getNthQuickPickItemLabel(0)).equals(buildTool);
     await wizard.next();
 
-    expect(await wizard.getNthQuickPickItemLabel(0)).equals(platformVersion);
+    expect(await wizard.getNthQuickPickItemLabel(0)).contains("(recommended)");
     await wizard.next();
 
     const actualGroupId = await wizard.getText();
