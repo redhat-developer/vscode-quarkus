@@ -22,6 +22,7 @@ export interface State {
   totalSteps: number;
   extensions: QExtension[];
   platformVersion: string;
+  shouldGenerateCode: boolean;
 }
 
 /**
@@ -35,7 +36,6 @@ export interface ProjectGenState extends State {
   packageName: string;
   resourceName: string;
   targetDir: Uri;
-  shouldGenerateCode: boolean;
 }
 
 export interface AddExtensionsState extends State {

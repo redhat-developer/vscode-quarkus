@@ -71,6 +71,8 @@ export class ProjectGenerationWizard extends InputBox {
       await wizard.next();
       if (options.packageName) await wizard.setText(options.packageName);
       await wizard.next();
+      await wizard.focusQuickPick(0);
+      await wizard.next();
       if (options.resourceName) await wizard.setText(options.resourceName);
       await wizard.next();
 
@@ -80,8 +82,6 @@ export class ProjectGenerationWizard extends InputBox {
           await wizard.confirm();
         }
       }
-      await wizard.focusQuickPick(0);
-      await wizard.next();
       await wizard.focusQuickPick(0);
       await wizard.next();
 

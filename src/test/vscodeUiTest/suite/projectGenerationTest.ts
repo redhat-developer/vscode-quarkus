@@ -101,6 +101,11 @@ describe('Project generation tests', function () {
     expect(packageName).equals('org.acme');
     await wizard.next();
 
+    const shouldGenerateCode = await wizard.getNthQuickPickItemInfo(0);
+    // expect(shouldGenerateCode).equals('Include starter code');
+    await wizard.focusQuickPick(0);
+    await wizard.next();
+
     const resourceName = await wizard.getText();
     expect(resourceName).equals('GreetingResource');
     await wizard.next();
@@ -149,10 +154,10 @@ describe('Project generation tests', function () {
     await wizard.next();
 
     expect(await wizard.getInputBoxTitle()).to.have.string('7/9');
+    await wizard.focusQuickPick(0);
     await wizard.next();
 
     expect(await wizard.getInputBoxTitle()).to.have.string('8/9');
-    await wizard.focusQuickPick(0);
     await wizard.next();
 
     expect(await wizard.getInputBoxTitle()).to.have.string('9/9');
@@ -191,6 +196,52 @@ describe('Project generation tests', function () {
 
     await wizard.cancel();
   });
+
+  /**
+   * Tests if the project generation wizard has correct
+   * step values at if generate starter code is skipped:
+   * (8/8) for extensions step
+   */
+   it('should have correct step value when starter code skipped', async function () {
+    this.timeout(60000);
+    const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
+    expect(await wizard.getInputBoxTitle()).to.have.string('1/9');
+    expect(await wizard.getBackButton()).to.not.be.ok;
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('2/9');
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('3/9');
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('4/9');
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('5/9');
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('6/9');
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('7/9');
+    await wizard.focusQuickPick(1);
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('8/8');
+    await wizard.prev();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('7/9');
+    await wizard.focusQuickPick(0);
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('8/9');
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('9/9');
+
+    await wizard.cancel();
+   });
 
   /**
    * Tests if the project generation wizard correctly creates a new
@@ -283,6 +334,7 @@ describe('Project generation tests', function () {
     const projectVersion: string = 'testprojectVersion';
     const packageName: string = groupId;
     const resourceName: string = 'testresourcename';
+    const shouldGenerateCode: string = "Include starter code";
     const extensions: string[] = ['Camel Core', 'Eclipse Vert.x'];
 
     fs.mkdirSync(projectDestDir);
@@ -332,6 +384,11 @@ describe('Project generation tests', function () {
 
     const actualPackageName = await wizard.getText();
     expect(actualPackageName).equals(packageName);
+    await wizard.next();
+
+    const actualShouldGenerateCode = await wizard.getNthQuickPickItemLabel(0);
+    expect(actualShouldGenerateCode).equals(shouldGenerateCode);
+    await wizard.focusQuickPick(0);
     await wizard.next();
 
     const actualResourceName = await wizard.getText();
@@ -425,6 +482,7 @@ describe('Project generation tests', function () {
     await wizard.setText('org.acme');
 
     await wizard.next();
+    await wizard.next();
 
     // resource name input validation
     const resourceNameError1: string = 'Invalid resource name: A valid resource name can only contain characters from A to z, numbers, and underscores';
@@ -459,8 +517,9 @@ describe('Project generation tests', function () {
     await wizard.next();
     await wizard.next();
     await wizard.next();
-    await wizard.next();
     await wizard.sendKeys(Key.DOWN, Key.UP);
+    await wizard.next();
+    await wizard.next();
 
     const allQuickPickInfo: QuickPickItemInfo[] = await wizard.getAllQuickPickInfo();
     const allLabels: string[] = allQuickPickInfo.map((info) => info.label);

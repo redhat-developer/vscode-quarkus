@@ -112,7 +112,7 @@ export class ExtensionsPicker {
       pick = await input.showQuickPick<QuickPickExtensionItem, QuickPickParameters<QuickPickExtensionItem>>({
         title: 'Quarkus Tools',
         step: this.options.step ? this.options.step : input.getStepNumber(),
-        totalSteps: state.totalSteps,
+        totalSteps: state.shouldGenerateCode ? state.totalSteps : state.totalSteps - 1,
         placeholder: 'Pick extensions',
         items: quickPickItems,
         buttons: [ this.getInfoButton() ],
