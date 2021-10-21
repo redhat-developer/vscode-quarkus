@@ -153,25 +153,7 @@ export async function generateProjectWizard() {
       prompt: 'Your package name',
       validate: validatePackageName
     });
-    return (input: MultiStepInput) => inputResourceName(input, state);
-  }
-
-  async function inputResourceName(input: MultiStepInput, state: Partial<ProjectGenState>) {
-
-    const defaultInputBoxValue: string = QuarkusContext.getDefaultResourceName();
-    const inputBoxValue: string = state.resourceName ? state.resourceName : defaultInputBoxValue;
-
-    state.resourceName = await input.showInputBox({
-      title: INPUT_TITLE,
-      step: input.getStepNumber(),
-      totalSteps: state.totalSteps,
-      value: inputBoxValue,
-      prompt: 'Your resource name',
-      validate: validateResourceName
-    });
-    return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(
-      input, state, { showLastUsed: true, showRequiredExtensions: true, allowZeroExtensions: true },
-      (apiCapabilities.supportsNoCodeParameter || apiCapabilities.supportsNoExamplesParameter ? inputGenerateSampleCode : undefined));
+    return (input: MultiStepInput) => inputGenerateSampleCode(input, state);
   }
 
   async function inputGenerateSampleCode(input: MultiStepInput, state: Partial<ProjectGenState>) {
@@ -189,6 +171,30 @@ export async function generateProjectWizard() {
       totalSteps: state.totalSteps,
       items: quickPickItems,
     })).label === YES;
+
+    if (state.shouldGenerateCode) {
+      return (input: MultiStepInput) => inputResourceName(input, state);
+    } else {
+      return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(
+        input, state, { showLastUsed: true, showRequiredExtensions: true, allowZeroExtensions: true });
+    }
+  }
+
+  async function inputResourceName(input: MultiStepInput, state: Partial<ProjectGenState>) {
+
+    const defaultInputBoxValue: string = QuarkusContext.getDefaultResourceName();
+    const inputBoxValue: string = state.resourceName ? state.resourceName : defaultInputBoxValue;
+
+    state.resourceName = await input.showInputBox({
+      title: INPUT_TITLE,
+      step: input.getStepNumber(),
+      totalSteps: state.totalSteps,
+      value: inputBoxValue,
+      prompt: 'Your resource name',
+      validate: validateResourceName
+    });
+    return (input: MultiStepInput) => ExtensionsPicker.createExtensionsPicker(
+      input, state, { showLastUsed: true, showRequiredExtensions: true, allowZeroExtensions: true });
   }
 
   await collectInputs(state);
