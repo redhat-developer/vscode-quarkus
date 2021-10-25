@@ -34,6 +34,7 @@ export function registerVSCodeCommands(context: ExtensionContext): void {
    * Command for debugging current Quarkus Maven project
    */
   registerCommandWithTelemetry(context, VSCodeCommands.DEBUG_QUARKUS_PROJECT, withStandardMode(startDebugging, "Debugging the extension"));
+  registerCommandWithTelemetry(context, VSCodeCommands.DEBUG_QUARKUS_PROJECT + VSCodeCommands.SHORT_SUFFIX, withStandardMode(startDebugging, "Debugging the extension"));
 
   /**
    * Command for displaying welcome page
@@ -44,6 +45,7 @@ export function registerVSCodeCommands(context: ExtensionContext): void {
    * Command for deploying current Quarkus project to OpenShift with OpenShift Connector
    */
   registerCommandWithTelemetry(context, VSCodeCommands.DEPLOY_TO_OPENSHIFT, withStandardMode(deployToOpenShift, "Deploying to OpenShift"));
+  registerCommandWithTelemetry(context, VSCodeCommands.DEPLOY_TO_OPENSHIFT + VSCodeCommands.SHORT_SUFFIX, withStandardMode(deployToOpenShift, "Deploying to OpenShift"));
 
   /**
    * Command for building a binary

@@ -137,6 +137,10 @@
         "title": "Quarkus: Debug current Quarkus project"
       },
       {
+        "command": "quarkusTools.debugQuarkusProject.short",
+        "title": "Debug Quarkus"
+      },
+      {
         "command": "quarkusTools.buildBinary",
         "title": "Quarkus: Build executable"
       },
@@ -147,6 +151,11 @@
       {
         "command": "quarkusTools.deployToOpenShift",
         "title": "Quarkus: Deploy current Quarkus project to OpenShift (odo)"
+      },
+      {
+        "command": "quarkusTools.deployToOpenShift.short",
+        "title": "Deploy to OpenShift",
+        "icon": "$(rocket)"
       }
     ],
     "configuration": {
@@ -212,6 +221,27 @@
         {
           "command": "quarkusTools.deployToOpenShift",
           "when": "quarkusProjectExistsOrLightWeight"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "quarkusTools.deployToOpenShift.short",
+          "when": "quarkusProjectExistsOrLightWeight && resourceExtname == .java",
+          "group": "navigation@10"
+        }
+      ],
+      "editor/title/run": [
+        {
+          "command": "quarkusTools.debugQuarkusProject.short",
+          "when": "quarkusProjectExistsOrLightWeight && resourceExtname == .java",
+          "group": "quarkus@1"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "quarkusTools.deployToOpenShift.short",
+          "when": "quarkusProjectExistsOrLightWeight",
+          "group": "quarkus@1"
         }
       ]
     },
