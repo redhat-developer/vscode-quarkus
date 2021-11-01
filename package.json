@@ -297,7 +297,7 @@
     "vscode-extension-tester-native": "^3.0.0",
     "vscode-test": "^1.2.3",
     "webpack": "^5.28.0",
-    "webpack-cli": "^3.3.2"
+    "webpack-cli": "^4.9.1"
   },
   "dependencies": {
     "@redhat-developer/vscode-redhat-telemetry": "^0.4.2",
