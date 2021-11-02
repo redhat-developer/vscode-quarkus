@@ -138,7 +138,8 @@
       },
       {
         "command": "quarkusTools.debugQuarkusProject.short",
-        "title": "Debug Quarkus"
+        "title": "Debug Quarkus",
+        "icon": "$(debug-alt-small)"
       },
       {
         "command": "quarkusTools.buildBinary",
