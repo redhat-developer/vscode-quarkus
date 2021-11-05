@@ -29,7 +29,7 @@ node('rhel8'){
     stage('Install requirements') {
         def nodeHome = tool 'nodejs-12.13.1'
         env.PATH="${env.PATH}:${nodeHome}/bin"
-        sh "npm install -g typescript vsce"
+        sh 'npm install -g typescript "vsce@<2"'
     }
 
     stage('Build') {
