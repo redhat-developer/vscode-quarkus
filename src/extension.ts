@@ -20,6 +20,7 @@ import { ProjectLabelInfo } from './definitions/ProjectLabelInfo';
 import { PropertiesLanguageMismatch, QuarkusConfig } from './QuarkusConfig';
 import { QuarkusContext } from './QuarkusContext';
 import quarkusProjectListener from './QuarkusProjectListener';
+import { connectToQuteLS } from './qute/languageServer/client';
 import { terminalCommandRunner } from './terminal/terminalCommandRunner';
 import { initTelemetryService } from './utils/telemetryUtils';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
@@ -64,6 +65,14 @@ export async function activate(context: ExtensionContext) {
   );
 
   registerVSCodeCommands(context);
+
+  connectToQuteLS(context).catch((error) => {
+    window.showErrorMessage(error.message, error.label).then((selection) => {
+      if (error.label && error.label === selection && error.openUrl) {
+        commands.executeCommand('vscode.open', error.openUrl);
+      }
+    });
+  });
 }
 
 export function deactivate() {

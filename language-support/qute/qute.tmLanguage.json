@@ -5,6 +5,12 @@
       "include": "#comment"
     },
     {
+      "include": "#cdata"
+    },
+    {
+      "include": "#cdata_old"
+    },
+    {
       "include": "#parameter_declaration"
     },
     {
@@ -40,6 +46,36 @@
       "end": "!}",
       "name": "comment.block.qute"
     },
+    "cdata":{
+			"begin": "{\\|",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.qute"
+				}
+			},
+			"end": "\\|}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.qute"
+				}
+			},
+			"name": "string.unquoted.cdata.qute"
+		},
+    "cdata_old":{
+			"begin": "{\\[",
+			"beginCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.begin.qute"
+				}
+			},
+			"end": "\\]}",
+			"endCaptures": {
+				"0": {
+					"name": "punctuation.definition.string.end.qute"
+				}
+			},
+			"name": "string.unquoted.cdata.qute"
+		},
     "section_start_tag": {
       "begin": "({)(#)(else\\sif|\\w+(\\.\\w+)*)",
       "end": "(\\/)?((?<![\\\\])})",

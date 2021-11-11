@@ -57,11 +57,13 @@
   ],
   "contributes": {
     "javaExtensions": [
-      "./jars/com.redhat.microprofile.jdt.quarkus.jar"
+      "./jars/com.redhat.microprofile.jdt.quarkus.jar",
+      "./jars/com.redhat.qute.jdt.jar"
     ],
     "microprofile": {
       "jarExtensions": [
-        "./server/com.redhat.quarkus.ls.jar"
+        "./server/com.redhat.quarkus.ls.jar",
+        "./server/com.redhat.qute.ls.jar"
       ],
       "documentSelector": [
         {
@@ -206,6 +208,12 @@
           "default": "forceQuarkus",
           "description": "Action performed when detected Quarkus properties have an incorrect language.",
           "scope": "window"
+        },
+        "quarkus.tools.qute.validation.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Enable/disable all Qute validation. Default is `true`.",
+          "scope": "window"
         }
       }
     },
@@ -290,6 +298,8 @@
     "build": "./node_modules/.bin/gulp build",
     "build-server": "./node_modules/.bin/gulp buildServer",
     "build-ext": "./node_modules/.bin/gulp buildExtension",
+    "build-qute-server": "./node_modules/.bin/gulp buildQuteServer",
+    "build-qute-ext": "./node_modules/.bin/gulp buildQuteExtension",
     "test-ui": "rm -rf out && npm run test-compile && npm run test-ui-run",
     "test-ui-run": "extest setup-and-run 'out/test/vscodeUiTest/suite/*.js' -u -e 'out/test/vscodeUiTest/extensions' -o src/test/vscodeUiTest/settings.json",
     "test-all": "npm test && npm run test-ui-run"
@@ -334,6 +344,7 @@
     "@redhat-developer/vscode-redhat-telemetry": "^0.4.2",
     "ejs": "^2.7.1",
     "expand-home-dir": "0.0.3",
+    "find-java-home": "^1.2.2",
     "find-up": "^4.1.0",
     "fs-extra": "^8.0.1",
     "glob": "^7.1.4",
@@ -341,6 +352,7 @@
     "lodash": "^4.17.21",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "vscode-languageclient": "^7.0.0",
     "which": "^2.0.2",
     "yauzl": "^2.10.0"
   }
