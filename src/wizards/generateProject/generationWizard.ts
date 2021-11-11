@@ -291,7 +291,12 @@ async function openProject(uri: Uri): Promise<void> {
   const ADD_TO_WORKSPACE: string = 'Add to current workspace';
 
   if (workspace.workspaceFolders) {
-    const input: string | undefined = await window.showInformationMessage('New project has been generated.', NEW_WINDOW, ADD_TO_WORKSPACE);
+    let input: string | undefined;
+    if (!workspace.workspaceFolders.some(workspace => workspace.uri.toString() === path.dirname(uri.toString()))) {
+      input = await window.showInformationMessage('New project has been generated.', NEW_WINDOW, ADD_TO_WORKSPACE);
+    } else {
+      input = await window.showInformationMessage('New project has been generated.', NEW_WINDOW);
+    }
     if (!input) return;
     if (input === NEW_WINDOW) {
       commands.executeCommand('vscode.openFolder', uri, true);
