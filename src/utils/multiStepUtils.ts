@@ -122,7 +122,7 @@ export class MultiStepInput {
           disposables.forEach(d => d.dispose());
           if (buttons && buttons.includes(item as QuickInputButtonWithCallback)) {
             (item as QuickInputButtonWithCallback).callback();
-            resolve();
+            resolve(undefined);
           } else if (item === QuickInputButtons.Back) {
             reject(InputFlowAction.back);
           } else {
@@ -148,7 +148,7 @@ export class MultiStepInput {
           configChanges.forEach((configChange: ConfigChangeCallback) => {
             if (configChange.configName === configName) {
               configChange.callback();
-              resolve();
+              resolve(undefined);
             }
           });
         }));
@@ -188,7 +188,7 @@ export class MultiStepInput {
           disposables.forEach(d => d.dispose());
           if (buttons && buttons.includes(item as QuickInputButtonWithCallback)) {
             (item as QuickInputButtonWithCallback).callback();
-            resolve();
+            resolve(undefined);
           } else if (item === QuickInputButtons.Back) {
             reject(InputFlowAction.back);
           } else {
@@ -228,7 +228,7 @@ export class MultiStepInput {
           configChanges.forEach((configChange: ConfigChangeCallback) => {
             if (configChange.configName === configName) {
               configChange.callback();
-              resolve();
+              resolve(undefined);
             }
           });
         }));

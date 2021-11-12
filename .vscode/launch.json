@@ -54,16 +54,22 @@
       "preLaunchTask": "npm: watch"
     },
     {
+      "name": "VS Code UI Extension Tests",
       "type": "node",
       "request": "launch",
-      "name": "VS Code UI Extension Tests",
-      "program": "${workspaceFolder}/out/test/vscodeUiTest/index.js",
+      "program": "${workspaceFolder}/node_modules/.bin/extest",
       "preLaunchTask": "npm: test-compile",
+      "args": [
+        "setup-and-run",
+        "${workspaceFolder}/out/test/vscodeUiTest/suite/*.js",
+        "-u",
+        "-e",
+        "${workspaceFolder}/out/test/vscodeUiTest/extensions",
+        "-o",
+        "${workspaceFolder}/src/test/vscodeUiTest/settings.json"
+      ],
       "outFiles": [
         "${workspaceFolder}/out/test/vscodeUiTest/**/*.js"
-      ],
-      "args": [
-        "--unhandled-rejections=strict"
       ]
     }
   ]

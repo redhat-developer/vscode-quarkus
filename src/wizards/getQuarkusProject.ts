@@ -71,7 +71,7 @@ export async function chooseQuarkusProject(quarkusProjectInfo: ProjectLabelInfo[
       }),
       input.onDidAccept(async () => {
         disposables.forEach(d => d.dispose());
-        resolve();
+        resolve(undefined);
       })
     );
     input.show();

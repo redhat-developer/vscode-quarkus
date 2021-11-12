@@ -291,7 +291,7 @@
     "build-server": "./node_modules/.bin/gulp buildServer",
     "build-ext": "./node_modules/.bin/gulp buildExtension",
     "test-ui": "rm -rf out && npm run test-compile && npm run test-ui-run",
-    "test-ui-run": "extest setup-and-run 'out/test/vscodeUiTest/suite/*.js' -u -e 'out/test/vscodeUiTest/extensions' -c 1.61.2",
+    "test-ui-run": "extest setup-and-run 'out/test/vscodeUiTest/suite/*.js' -u -e 'out/test/vscodeUiTest/extensions' -o src/test/vscodeUiTest/settings.json",
     "test-all": "npm test && npm run test-ui-run"
   },
   "resolutions": {
@@ -322,9 +322,9 @@
     "pom-parser": "^1.2.0",
     "ts-loader": "^6.0.1",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.2",
+    "typescript": "^4.1.0",
     "typescript-tslint-plugin": "^0.3.1",
-    "vscode-extension-tester": "^4.1.2",
+    "vscode-extension-tester": "^4.2.3",
     "vscode-extension-tester-native": "^3.0.0",
     "vscode-test": "^1.2.3",
     "webpack": "^5.28.0",
