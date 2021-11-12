@@ -85,9 +85,9 @@ export class ProjectGenerationWizard extends InputBox {
       await wizard.focusQuickPick(0);
       await wizard.next();
 
-      const dialog: OpenDialog = await DialogHandler.getOpenDialog();
-      await dialog.selectPath(options.dest);
-      await dialog.confirm();
+      await wizard.setText(options.dest);
+      await wizard.confirm();
+
     } catch {
       return false;
     }
