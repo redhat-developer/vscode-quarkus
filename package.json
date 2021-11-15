@@ -291,7 +291,7 @@
     "build-server": "./node_modules/.bin/gulp buildServer",
     "build-ext": "./node_modules/.bin/gulp buildExtension",
     "test-ui": "rm -rf out && npm run test-compile && npm run test-ui-run",
-    "test-ui-run": "extest setup-and-run 'out/test/vscodeUiTest/suite/*.js' -u -e 'out/test/vscodeUiTest/extensions'",
+    "test-ui-run": "extest setup-and-run 'out/test/vscodeUiTest/suite/*.js' -u -e 'out/test/vscodeUiTest/extensions' -c 1.61.2",
     "test-all": "npm test && npm run test-ui-run"
   },
   "resolutions": {
