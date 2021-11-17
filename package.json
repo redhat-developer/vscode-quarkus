@@ -282,7 +282,7 @@
     "preinstall": "npx npm-force-resolutions",
     "vscode:prepublish": "webpack --mode production",
     "compile": "webpack --mode none",
-    "watch": "webpack --mode development --watch --info-verbosity verbose",
+    "watch": "webpack --mode development --watch",
     "test-compile": "tsc -p ./",
     "pretest": "npm run test-compile",
     "test": "node ./out/test/vscodeTest/runTest.js",
