@@ -156,7 +156,7 @@
       {
         "command": "quarkusTools.deployToOpenShift.short",
         "title": "Deploy to OpenShift",
-        "icon": "$(rocket)"
+        "icon": "icons/openshift.png"
       }
     ],
     "configuration": {
