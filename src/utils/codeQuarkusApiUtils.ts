@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { IncomingMessage } from "http";
+import * as http from "http";
 import * as https from "https";
 import * as yaml from "js-yaml";
 import * as path from "path";
@@ -54,13 +54,13 @@ export interface CodeQuarkusFunctionality {
  * @throws if something goes wrong when getting the functionality from OpenAPI
  */
 export async function getCodeQuarkusApiFunctionality(): Promise<CodeQuarkusFunctionality> {
-  const oldOpenApiUrl: string = path.dirname(QuarkusConfig.getApiUrl()) + '/openapi';
-  const newOpenApiUrl: string = path.dirname(QuarkusConfig.getApiUrl()) + '/q/openapi';
   let openApiYaml: string;
   try {
-    openApiYaml = await httpsGet(newOpenApiUrl);
+    const newOpenApiUrl: string = path.dirname(QuarkusConfig.getApiUrl()) + '/q/openapi';
+    openApiYaml = await fetch(newOpenApiUrl);
   } catch {
-    openApiYaml = await httpsGet(oldOpenApiUrl);
+    const oldOpenApiUrl: string = path.dirname(QuarkusConfig.getApiUrl()) + '/openapi';
+    openApiYaml = await fetch(oldOpenApiUrl);
   }
   const openApiData: any = yaml.load(openApiYaml);
 
@@ -88,7 +88,7 @@ export function getDefaultFunctionality() {
  * @returns the available platform(s) for a Quarkus project from Code Quarkus API
  */
  export async function getCodeQuarkusApiPlatforms() {
-    const platformApiRes = await httpsGet((QuarkusConfig.getApiUrl() + '/streams'));
+    const platformApiRes = await fetch((QuarkusConfig.getApiUrl() + '/streams'));
     const availablePlatformsParsed = <Array<object>> yaml.load(platformApiRes);
     const availablePlatforms = availablePlatformsParsed.map(platform => {
       const version = `${platform["key"].split(":")[1]}${(platform["recommended"] ? ` (recommended)` : ``)}`;
@@ -110,14 +110,15 @@ export function getDefaultFunctionality() {
  * @returns the response body if the code is 200 and rejects otherwise
  * @throws if anything goes wrong (not 200 response, any other errors during get)
  */
-async function httpsGet(url: string): Promise<string> {
+async function fetch(url: string): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    https.get(url, (res: IncomingMessage) => {
+    const protocol = url.startsWith('https') ? https : http;
+    protocol.get(url, (res: http.IncomingMessage) => {
       if (res.statusCode === 301 || res.statusCode === 302) {
-        httpsGet(new URL(url).origin + res.headers.location) //
+        fetch(new URL(url).origin + res.headers.location) //
           .then(resolve, reject);
       } else if (res.statusCode !== 200) {
-        reject(`${res.statusCode}: ${res.statusMessage}`);
+        reject(`${url} returned status code ${res.statusCode}: ${res.statusMessage}`);
       } else {
         let data = '';
         res.on('data', (chunk: Buffer) => {
