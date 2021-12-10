@@ -70,10 +70,7 @@ async function registerCommandWithTelemetry(context: ExtensionContext, commandNa
       await commandAction();
       sendCommandSucceededTelemetry(commandName);
     } catch (e) {
-      let msg = e;
-      if (e instanceof Error) {
-        msg = e.message;
-      }
+      const msg = (e instanceof Error) ? e.message : e;
       window.showErrorMessage(msg);
       sendCommandFailedTelemetry(commandName, msg);
     }
