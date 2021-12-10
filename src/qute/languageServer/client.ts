@@ -2,12 +2,13 @@ import * as requirements from './requirements';
 
 import { DidChangeConfigurationNotification, LanguageClientOptions } from 'vscode-languageclient';
 import { LanguageClient } from 'vscode-languageclient/node';
-import { ExtensionContext, commands, window, workspace, Uri } from 'vscode';
+import { ExtensionContext, commands, workspace } from 'vscode';
 import { prepareExecutable } from './javaServerStarter';
-import { TextEncoder } from 'util';
+import { registerVSCodeQuteCommands } from '../commands/registerCommands';
+import { QuteClientCommandConstants } from '../commands/commandConstants';
 
 export function connectToQuteLS(context: ExtensionContext) {
-  registerVSCodeCommands(context);
+  registerVSCodeQuteCommands(context);
 
   return requirements.resolveRequirements().then(requirements => {
     const clientOptions: LanguageClientOptions = {
@@ -24,6 +25,15 @@ export function connectToQuteLS(context: ExtensionContext) {
       initializationOptions: {
         settings: getQuteSettings(),
         extendedClientCapabilities: {
+          commands: {
+            commandsKind: {
+              valueSet: [
+                QuteClientCommandConstants.OPEN_URI,
+                QuteClientCommandConstants.JAVA_DEFINTION,
+         //       CommandKind.COMMAND_OPEN_URI
+              ]
+            }
+          },
           shouldLanguageServerExitOnShutdown: true
         }
       },
@@ -94,25 +104,4 @@ function getQuteSettings(): JSON {
     quarkus = { quarkus: JSON.parse(x) };
   }
   return quarkus;
-}
-
-function registerVSCodeCommands(context: ExtensionContext) {
-  registerOpenUriCommand(context);
-  registerGenerateTemplateFileCommand(context);
-}
-
-function registerOpenUriCommand(context: ExtensionContext) {
-  context.subscriptions.push(commands.registerCommand('qute.command.open.uri', async (uri?: string) => {
-    commands.executeCommand('vscode.open', Uri.parse(uri));
-  }));
-}
-
-function registerGenerateTemplateFileCommand(context: ExtensionContext) {
-  context.subscriptions.push(commands.registerCommand('qute.command.generate.template.file', async (info?) => {
-    const templateContent: string = await commands.executeCommand('qute.command.generate.template.content', info);
-    const uri = info.templateFileUri;
-    const fileUri = Uri.parse(uri);
-    await workspace.fs.writeFile(fileUri, new TextEncoder().encode(templateContent));
-    window.showTextDocument(fileUri, { preview: false });
-  }));
 }
