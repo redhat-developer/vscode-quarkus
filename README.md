@@ -75,6 +75,7 @@ The following settings are supported:
 * `quarkus.tools.alwaysShowWelcomePage` : Determines whether to show the welcome page on extension startup. Default is `true`.
 * `quarkus.tools.starter.api` : Quarkus API base URL. Default is `https://code.quarkus.io/api`.
 * `quarkus.tools.starter.showExtensionDescriptions`: Determines whether to show the Quarkus extension descriptions when selecting Quarkus extensions. Default is `true`.
+* `qute.trace.server`: Trace the communication between VS Code and the Qute language server in the Output view. Default is `off`.
 
 Since 1.6.0:
 * `quarkus.tools.propertiesLanguageMismatch` : Action performed when detected Quarkus properties have an incorrect language. Default is `forceQuarkus`.

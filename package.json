@@ -214,6 +214,17 @@
           "default": true,
           "markdownDescription": "Enable/disable all Qute validation. Default is `true`.",
           "scope": "window"
+        },
+        "qute.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "markdownDescription": "Traces the communication between VS Code and the Qute language server in the Output view. Default is `off`.",
+          "scope": "window"
         }
       }
     },
