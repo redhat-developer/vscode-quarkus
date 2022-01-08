@@ -5,11 +5,17 @@
 
 ## Description
 
-This Visual Studio Code extension provides support for [Quarkus](https://quarkus.io/) and [MicroProfile](https://github.com/eclipse/microprofile) development
+This Visual Studio Code extension provides support for :
+
+ * [Quarkus](https://quarkus.io/) and [MicroProfile](https://github.com/eclipse/microprofile) development
 by extending [Visual Studio Code extension for MicroProfile](https://github.com/redhat-developer/vscode-microprofile) with Quarkus features.
 
 ![](images/propertiesSupport.png)
 
+ * [Qute support](docs/qute/README.md) to provide completion, validation, etc. for the [Qute template engine](https://quarkus.io/guides/qute-reference) inside Java and template files.
+
+![](images/quteSupport.png)
+ 
 ## Quarkus VS Code Commands
 The following commands are supported for both Maven and Gradle Quarkus projects:
 
@@ -75,10 +81,9 @@ The following settings are supported:
 * `quarkus.tools.alwaysShowWelcomePage` : Determines whether to show the welcome page on extension startup. Default is `true`.
 * `quarkus.tools.starter.api` : Quarkus API base URL. Default is `https://code.quarkus.io/api`.
 * `quarkus.tools.starter.showExtensionDescriptions`: Determines whether to show the Quarkus extension descriptions when selecting Quarkus extensions. Default is `true`.
-* `qute.trace.server`: Trace the communication between VS Code and the Qute language server in the Output view. Default is `off`.
-
-Since 1.6.0:
 * `quarkus.tools.propertiesLanguageMismatch` : Action performed when detected Quarkus properties have an incorrect language. Default is `forceQuarkus`.
+
+For `Qute settings`, please see [here](docs/qute/README.md#settings)
 
 ## Telemetry
 
