@@ -10,3 +10,4 @@
  ## Settings
  
  * `qute.trace.server`: Trace the communication between VS Code and the Qute language server in the Output view. Default is `off`.
+ * `quarkus.tools.qute.validation.enabled` : Enable/disable all Qute validation. Default is `true`.
