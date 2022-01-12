@@ -16,9 +16,15 @@ export namespace QuteClientCommandConstants {
   export const GENERATE_TEMPLATE_FILE = 'qute.command.generate.template.file';
 
   /**
-   * Client command to go to the definition of Java data model (field, method, method invokation of "data" method).
+   * Client command to go to the definition of Java data model (field, method, method invocation of "data" method).
    */
   export const JAVA_DEFINTION = 'qute.command.java.definition';
+
+  /**
+   * Client command to update client configuration settings.
+   */
+  export const COMMAND_CONFIGURATION_UPDATE = 'qute.command.configuration.update';
+
 }
 
 /**

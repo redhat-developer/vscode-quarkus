@@ -30,7 +30,7 @@ export function connectToQuteLS(context: ExtensionContext) {
               valueSet: [
                 QuteClientCommandConstants.OPEN_URI,
                 QuteClientCommandConstants.JAVA_DEFINTION,
-         //       CommandKind.COMMAND_OPEN_URI
+                QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE
               ]
             }
           },
