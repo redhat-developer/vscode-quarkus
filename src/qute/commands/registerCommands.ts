@@ -1,5 +1,5 @@
 import { TextEncoder } from "util";
-import { commands, ExtensionContext, Position, Range, Selection, Uri, window, workspace } from "vscode";
+import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selection, Uri, window, workspace } from "vscode";
 import { Location } from "vscode-languageclient";
 import { QuteClientCommandConstants, QuteJdtLsServerCommandConstants, QuteServerCommandConstants } from "./commandConstants";
 
@@ -12,8 +12,14 @@ export function registerVSCodeQuteCommands(context: ExtensionContext) {
   registerOpenUriCommand(context);
   registerGenerateTemplateFileCommand(context);
   registerJavaDefinitionCommand(context);
+  registerConfigurationUpdateCommand(context);
 }
 
+/**
+ * Open a Qute template by file Uri.
+ *
+ * @param context the extension context.
+ */
 function registerOpenUriCommand(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.OPEN_URI, async (uri?: string) => {
     commands.executeCommand('vscode.open', Uri.parse(uri));
@@ -60,4 +66,48 @@ function registerJavaDefinitionCommand(context: ExtensionContext) {
       }
     }
   }));
+}
+
+/**
+ * Update a given setting from the Qute language server.
+ *
+ * @param context the extension context.
+ */
+export function registerConfigurationUpdateCommand(context: ExtensionContext) {
+  context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE, async (configItemEdit: ConfigurationItemEdit) => {
+    switch (configItemEdit.editType) {
+      case ConfigurationItemEditType.Add:
+        addToPreferenceArray(configItemEdit.section, configItemEdit.value);
+        break;
+      case ConfigurationItemEditType.Delete: {
+        workspace.getConfiguration().update(configItemEdit.section, undefined, ConfigurationTarget.Workspace);
+        break;
+      }
+      case ConfigurationItemEditType.Update: {
+        workspace.getConfiguration().update(configItemEdit.section, configItemEdit.value, ConfigurationTarget.Workspace);
+        break;
+      }
+    }
+  }));
+}
+
+function addToPreferenceArray<T>(key: string, value: T): void {
+  const configArray: T[] = workspace.getConfiguration().get<T[]>(key, []);
+  if (configArray.includes(value)) {
+    return;
+  }
+  configArray.push(value);
+  workspace.getConfiguration().update(key, configArray, ConfigurationTarget.Workspace);
+}
+
+interface ConfigurationItemEdit {
+  section: string;
+  value: any;
+  editType: ConfigurationItemEditType;
+}
+
+enum ConfigurationItemEditType {
+  Add = 0,
+  Delete = 1,
+  Update = 2
 }
