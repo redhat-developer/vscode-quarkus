@@ -8,13 +8,14 @@ import * as fse from 'fs-extra';
 import * as path from 'path';
 import { commands, OpenDialogOptions, QuickPickItem, Uri, window, workspace } from 'vscode';
 import { ZipFile } from 'yauzl';
-import { BuildToolName, INPUT_TITLE } from '../../definitions/constants';
+import { BuildToolName, INPUT_TITLE, VSCodeCommands } from '../../definitions/constants';
 import { ProjectGenState } from '../../definitions/inputState';
 import { QExtension } from '../../definitions/QExtension';
 import { QuarkusContext } from '../../QuarkusContext';
 import { CodeQuarkusFunctionality, PlatformVersionPickItem, getCodeQuarkusApiFunctionality, getDefaultFunctionality, getCodeQuarkusApiPlatforms } from '../../utils/codeQuarkusApiUtils';
 import { MultiStepInput, QuickPickParameters } from '../../utils/multiStepUtils';
 import { downloadProject } from '../../utils/requestUtils';
+import { CMD_SUCCEED_VALUE, sendTelemetry } from '../../utils/telemetryUtils';
 import { ExtensionsPicker } from './ExtensionsPicker';
 import { validateArtifactId, validateGroupId, validatePackageName, validateResourceName, validateVersion } from './validateInput';
 
@@ -23,7 +24,7 @@ import { validateArtifactId, validateGroupId, validatePackageName, validateResou
  *
  * This first part uses the helper class `MultiStepInput` that wraps the API for the multi-step case.
  */
-export async function generateProjectWizard() {
+export async function generateProjectWizard(): Promise<any> {
 
   let apiCapabilities: CodeQuarkusFunctionality;
   try {
@@ -281,7 +282,12 @@ async function downloadAndSetupProject(state: ProjectGenState, codeQuarkusFuncti
   const projectDir: Uri = getNewProjectDirectory(state);
   const zip: ZipFile = await downloadProject(state, codeQuarkusFunctionality);
   zip.on('end', () => {
-    openProject(projectDir);
+    sendTelemetry(VSCodeCommands.CREATE_PROJECT, {
+      status: CMD_SUCCEED_VALUE,
+      buildTool: state.buildTool,
+      shouldGenerateCode: state.shouldGenerateCode,
+      extensions: state.extensions.map(e => `${e.groupId}:${e.artifactId}`).join(',')
+    }).then(() => openProject(projectDir));
   });
 }
 

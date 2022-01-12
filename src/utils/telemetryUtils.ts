@@ -1,7 +1,7 @@
 import { getRedHatService, TelemetryService } from "@redhat-developer/vscode-redhat-telemetry/lib";
 import { ExtensionContext } from "vscode";
 
-const CMD_SUCCEED_VALUE = "succeeded";
+export const CMD_SUCCEED_VALUE = "succeeded";
 const CMD_FAIL_VALUE = "failed";
 
 let telemetryService: TelemetryService;
@@ -43,7 +43,6 @@ export async function sendCommandFailedTelemetry(commandName: string, msg?: stri
  * Send a telemetry event related to a given vscode-quarkus command
  *
  * @param commandName the name of the command that was run
- * @param suffix the suffix to add to the command to get the event name
  * @throws if the telemetry service has not been initialized yet
  * @returns when the telemetry event has been sent
  */
@@ -57,5 +56,22 @@ async function sendCommandTelemetry(commandName: string, succeeded: boolean, msg
       status: succeeded ? CMD_SUCCEED_VALUE : CMD_FAIL_VALUE,
       error_message: msg
     }
+  });
+}
+
+/**
+ * Send a telemetry event related to a given vscode-quarkus command
+ *
+ * @param commandName the name of the command that was run
+ * @throws if the telemetry service has not been initialized yet
+ * @returns when the telemetry event has been sent
+ */
+ export async function sendTelemetry(commandName: string, data: any): Promise<void> {
+  if (!isTelemetryInit) {
+    throw new Error('Telemetry has not been initialized yet');
+  }
+  await telemetryService.send({
+    name: commandName,
+    properties: data
   });
 }

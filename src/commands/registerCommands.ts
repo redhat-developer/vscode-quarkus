@@ -2,7 +2,7 @@ import { commands, ExtensionContext, window } from "vscode";
 import { VSCodeCommands } from "../definitions/constants";
 import { ProjectLabelInfo } from "../definitions/ProjectLabelInfo";
 import { requestStandardMode } from "../utils/requestStandardMode";
-import { sendCommandFailedTelemetry, sendCommandSucceededTelemetry } from "../utils/telemetryUtils";
+import { sendCommandFailedTelemetry, sendCommandSucceededTelemetry, sendTelemetry } from "../utils/telemetryUtils";
 import { WelcomeWebview } from "../webviews/WelcomeWebview";
 import { addExtensionsWizard } from "../wizards/addExtensions/addExtensionsWizard";
 import { buildBinary } from "../wizards/binary/buildBinary";
@@ -23,7 +23,7 @@ export function registerVSCodeCommands(context: ExtensionContext): void {
   /**
    * Command for creating a Quarkus project
    */
-  registerCommandWithTelemetry(context, VSCodeCommands.CREATE_PROJECT, generateProjectWizard);
+  registerCommandWithTelemetry(context, VSCodeCommands.CREATE_PROJECT, generateProjectWizard, true);
 
   /**
    * Command for adding Quarkus extensions to current Quarkus Maven project
@@ -63,12 +63,15 @@ export function registerVSCodeCommands(context: ExtensionContext): void {
  * @param context the extension context
  * @param commandName the name of the command to register
  * @param commandAction the async function to run when the command is called
+ * @param skipSuccess whether the success of the command should be reported
  */
-async function registerCommandWithTelemetry(context: ExtensionContext, commandName: string, commandAction: () => Promise<any>): Promise<void> {
+async function registerCommandWithTelemetry(context: ExtensionContext, commandName: string, commandAction: () => Promise<any>, skipSuccess?: boolean): Promise<void> {
   context.subscriptions.push(commands.registerCommand(commandName, async () => {
     try {
       await commandAction();
-      sendCommandSucceededTelemetry(commandName);
+      if (!skipSuccess) {
+        sendCommandSucceededTelemetry(commandName);
+      }
     } catch (e) {
       const msg = (e instanceof Error) ? e.message : e;
       window.showErrorMessage(msg);
