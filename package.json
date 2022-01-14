@@ -215,6 +215,15 @@
           "markdownDescription": "Enable/disable all Qute validation. Default is `true`.",
           "scope": "window"
         },
+        "quarkus.tools.qute.validation.excluded": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "markdownDescription": "Disable Qute validation for the given file name patterns.\n\nExample:\n```\n[\n \"**/*items.qute.*\"\n]```.",
+          "scope": "window"
+        },
         "qute.trace.server": {
           "type": "string",
           "enum": [
