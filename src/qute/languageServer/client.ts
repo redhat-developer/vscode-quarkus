@@ -2,10 +2,11 @@ import * as requirements from './requirements';
 
 import { DidChangeConfigurationNotification, LanguageClientOptions } from 'vscode-languageclient';
 import { LanguageClient } from 'vscode-languageclient/node';
-import { ExtensionContext, commands, workspace } from 'vscode';
+import { ExtensionContext, commands, workspace, window, ConfigurationTarget } from 'vscode';
 import { prepareExecutable } from './javaServerStarter';
 import { registerVSCodeQuteCommands } from '../commands/registerCommands';
 import { QuteClientCommandConstants } from '../commands/commandConstants';
+import { QuteSettings } from './settings';
 
 export function connectToQuteLS(context: ExtensionContext) {
   registerVSCodeQuteCommands(context);
@@ -65,7 +66,7 @@ export function connectToQuteLS(context: ExtensionContext) {
     const serverOptions = prepareExecutable(requirements);
     const quteLanguageClient = new LanguageClient('qute', 'Qute Support', serverOptions, clientOptions);
     context.subscriptions.push(quteLanguageClient.start());
-    return quteLanguageClient.onReady().then(() => {
+    return quteLanguageClient.onReady().then(async() => {
       bindQuteRequest('qute/template/project');
       bindQuteRequest('qute/template/projectDataModel');
       bindQuteRequest('qute/template/javaTypes');
@@ -75,6 +76,9 @@ export function connectToQuteLS(context: ExtensionContext) {
       bindQuteRequest('qute/java/diagnostics');
       bindQuteRequest('qute/java/documentLink');
       bindQuteNotification('qute/dataModelChanged');
+      if (!hasShownQuteValidationPopUp(context)) {
+        await showQuteValidationPopUp(context);
+      }
     }
     );
   });
@@ -104,4 +108,20 @@ function getQuteSettings(): JSON {
     quarkus = { quarkus: JSON.parse(x) };
   }
   return quarkus;
+}
+
+function hasShownQuteValidationPopUp(context: ExtensionContext): boolean {
+  return context.globalState.get(QuteSettings.EXPERIMENTAL_QUTE_VALIDATION_FLAG, false);
+}
+
+async function showQuteValidationPopUp(context: ExtensionContext) {
+  const EXPERIMENTAL_QUTE_VALIDATION_ADVERTISEMENT = 'Enable experimental validation for Qute files? ' + //
+        '(You may change this setting, `quarkus.tools.qute.validation.enabled`, later)';
+  const ENABLE_MESSAGE = `Enable`;
+  const DONT_SHOW_AGAIN_MESSAGE = "Don't show this again";
+  const input = await window.showInformationMessage(EXPERIMENTAL_QUTE_VALIDATION_ADVERTISEMENT, ENABLE_MESSAGE, DONT_SHOW_AGAIN_MESSAGE);
+  if (input === ENABLE_MESSAGE) {
+    workspace.getConfiguration().update(QuteSettings.QUTE_VALIDATION_ENABLED, true, ConfigurationTarget.Global);
+  }
+  context.globalState.update(QuteSettings.EXPERIMENTAL_QUTE_VALIDATION_FLAG, 'true');
 }
