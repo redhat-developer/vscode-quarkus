@@ -211,8 +211,8 @@
         },
         "quarkus.tools.qute.validation.enabled": {
           "type": "boolean",
-          "default": true,
-          "markdownDescription": "Enable/disable all Qute validation. Default is `true`.",
+          "default": false,
+          "markdownDescription": "Enable/disable all Qute validation. Default is `false`.",
           "scope": "window"
         },
         "qute.trace.server": {

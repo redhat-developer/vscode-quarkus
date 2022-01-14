@@ -66,13 +66,14 @@ export async function activate(context: ExtensionContext) {
 
   registerVSCodeCommands(context);
 
-  connectToQuteLS(context).catch((error) => {
+  await connectToQuteLS(context).catch((error) => {
     window.showErrorMessage(error.message, error.label).then((selection) => {
       if (error.label && error.label === selection && error.openUrl) {
         commands.executeCommand('vscode.open', error.openUrl);
       }
     });
   });
+
 }
 
 export function deactivate() {
