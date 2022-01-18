@@ -40,7 +40,7 @@ export function connectToQuteLS(context: ExtensionContext) {
       },
       synchronize: {
         // preferences starting with these will trigger didChangeConfiguration
-        configurationSection: ['quarkus', '[qute]']
+        configurationSection: ['qute', '[qute]']
       },
       middleware: {
         workspace: {
@@ -66,7 +66,7 @@ export function connectToQuteLS(context: ExtensionContext) {
     const serverOptions = prepareExecutable(requirements);
     const quteLanguageClient = new LanguageClient('qute', 'Qute Support', serverOptions, clientOptions);
     context.subscriptions.push(quteLanguageClient.start());
-    return quteLanguageClient.onReady().then(async() => {
+    return quteLanguageClient.onReady().then(async () => {
       bindQuteRequest('qute/template/project');
       bindQuteRequest('qute/template/projectDataModel');
       bindQuteRequest('qute/template/javaTypes');
@@ -93,21 +93,21 @@ export function connectToQuteLS(context: ExtensionContext) {
  *          }
  */
 function getQuteSettings(): JSON {
-  const configQuarkus = workspace.getConfiguration().get('quarkus');
-  let quarkus;
-  if (!configQuarkus) { // Set default preferences if not provided
+  const configQute = workspace.getConfiguration().get('qute');
+  let qute;
+  if (!configQute) { // Set default preferences if not provided
     const defaultValue =
     {
       qute: {
 
       }
     };
-    quarkus = defaultValue;
+    qute = defaultValue;
   } else {
-    const x = JSON.stringify(configQuarkus); // configQuarkus is not a JSON type
-    quarkus = { quarkus: JSON.parse(x) };
+    const x = JSON.stringify(configQute); // configQute is not a JSON type
+    qute = { qute: JSON.parse(x) };
   }
-  return quarkus;
+  return qute;
 }
 
 function hasShownQuteValidationPopUp(context: ExtensionContext): boolean {
@@ -115,8 +115,8 @@ function hasShownQuteValidationPopUp(context: ExtensionContext): boolean {
 }
 
 async function showQuteValidationPopUp(context: ExtensionContext) {
-  const EXPERIMENTAL_QUTE_VALIDATION_ADVERTISEMENT = 'Enable experimental validation for Qute files? ' + //
-        '(You may change this setting, `quarkus.tools.qute.validation.enabled`, later)';
+  const EXPERIMENTAL_QUTE_VALIDATION_ADVERTISEMENT = `Enable experimental validation for Qute files?
+  (You may change this setting, \`${QuteSettings.QUTE_VALIDATION_ENABLED}}\`, later)`;
   const ENABLE_MESSAGE = `Enable`;
   const DONT_SHOW_AGAIN_MESSAGE = "Don't show this again";
   const input = await window.showInformationMessage(EXPERIMENTAL_QUTE_VALIDATION_ADVERTISEMENT, ENABLE_MESSAGE, DONT_SHOW_AGAIN_MESSAGE);

@@ -11,6 +11,6 @@
   /**
    * Enable/disable all Qute validation settings.
    */
-  export const QUTE_VALIDATION_ENABLED = 'quarkus.tools.qute.validation.enabled';
+  export const QUTE_VALIDATION_ENABLED = 'qute.validation.enabled';
 
 }

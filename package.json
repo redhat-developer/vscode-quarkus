@@ -209,12 +209,6 @@
           "description": "Action performed when detected Quarkus properties have an incorrect language.",
           "scope": "window"
         },
-        "quarkus.tools.qute.validation.enabled": {
-          "type": "boolean",
-          "default": false,
-          "markdownDescription": "Enable/disable all Qute validation. Default is `false`.",
-          "scope": "window"
-        },
         "qute.trace.server": {
           "type": "string",
           "enum": [
@@ -224,6 +218,12 @@
           ],
           "default": "off",
           "markdownDescription": "Traces the communication between VS Code and the Qute language server in the Output view. Default is `off`.",
+          "scope": "window"
+        },
+        "qute.validation.enabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable/disable all Qute validation. Default is `false`.",
           "scope": "window"
         }
       }
