@@ -1,6 +1,6 @@
 import { TextEncoder } from "util";
-import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selection, Uri, window, workspace } from "vscode";
-import { Location } from "vscode-languageclient";
+import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selection, Uri, window, workspace, WorkspaceConfiguration } from "vscode";
+import { ConfigurationItem, Location } from "vscode-languageclient";
 import { QuteClientCommandConstants, QuteJdtLsServerCommandConstants, QuteServerCommandConstants } from "./commandConstants";
 
 /**
@@ -75,33 +75,56 @@ function registerJavaDefinitionCommand(context: ExtensionContext) {
  */
 export function registerConfigurationUpdateCommand(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE, async (configItemEdit: ConfigurationItemEdit) => {
+    const { section, value } = configItemEdit;
+    const config = getConfiguration(configItemEdit.scopeUri);
     switch (configItemEdit.editType) {
       case ConfigurationItemEditType.Add:
-        addToPreferenceArray(configItemEdit.section, configItemEdit.value);
+        addToPreferenceArray(config, section, value);
         break;
       case ConfigurationItemEditType.Delete: {
-        workspace.getConfiguration().update(configItemEdit.section, undefined, ConfigurationTarget.Workspace);
+        config.workspaceConfiguration.update(section, undefined, config.target);
         break;
       }
       case ConfigurationItemEditType.Update: {
-        workspace.getConfiguration().update(configItemEdit.section, configItemEdit.value, ConfigurationTarget.Workspace);
+        config.workspaceConfiguration.update(section, value, config.target);
         break;
       }
     }
   }));
 }
 
-function addToPreferenceArray<T>(key: string, value: T): void {
-  const configArray: T[] = workspace.getConfiguration().get<T[]>(key, []);
+interface IConfiguration {
+  workspaceConfiguration: WorkspaceConfiguration;
+  target: ConfigurationTarget;
+}
+
+function getConfiguration(scopeUri: string): IConfiguration {
+  if (scopeUri) {
+    const workspaceFolder = workspace.getWorkspaceFolder(Uri.parse(scopeUri));
+    if (workspaceFolder) {
+      return {
+        workspaceConfiguration: workspace.getConfiguration(undefined, workspaceFolder),
+        target: ConfigurationTarget.WorkspaceFolder
+      };
+    }
+  }
+  return {
+    workspaceConfiguration: workspace.getConfiguration(),
+    target: ConfigurationTarget.Workspace
+  };
+}
+
+function addToPreferenceArray<T>(config: IConfiguration, key: string, value: T): void {
+  const workspaceConfiguration = config.workspaceConfiguration;
+  const configArray: T[] = workspaceConfiguration.get<T[]>(key, []);
   if (configArray.includes(value)) {
     return;
   }
   configArray.push(value);
-  workspace.getConfiguration().update(key, configArray, ConfigurationTarget.Workspace);
+  workspaceConfiguration.update(key, configArray, config.target);
 }
 
-interface ConfigurationItemEdit {
-  section: string;
+interface ConfigurationItemEdit extends ConfigurationItem {
   value: any;
   editType: ConfigurationItemEditType;
 }
