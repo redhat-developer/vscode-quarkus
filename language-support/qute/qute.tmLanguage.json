@@ -368,6 +368,14 @@
         {
           "match": "\\b(const|goto)\\b",
           "name": "keyword.reserved.java"
+        },
+        {
+          "match": "\\b(is|as|eq|ne|gt|ge|lt|le)\\b",
+          "name": "keyword.control.operator"
+        },
+        {
+          "match": "(?<=({#for\\s(\\w)*\\s))in",
+          "name": "keyword.control.flow"
         }
       ]
     },
@@ -388,10 +396,6 @@
         {
           "match": "\\bthis\\b",
           "name": "variable.language.this.java"
-        },
-        {
-          "match": "\\b(in|is|as|eq|ne|gt|ge|lt|le)\\b",
-          "name": "keyword.operator"
         }
       ]
     },
