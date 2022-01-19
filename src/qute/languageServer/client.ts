@@ -2,7 +2,7 @@ import * as requirements from './requirements';
 
 import { DidChangeConfigurationNotification, LanguageClientOptions } from 'vscode-languageclient';
 import { LanguageClient } from 'vscode-languageclient/node';
-import { ExtensionContext, commands, workspace, window, ConfigurationTarget } from 'vscode';
+import { ExtensionContext, commands, workspace, window, ConfigurationTarget, WorkspaceConfiguration } from 'vscode';
 import { prepareExecutable } from './javaServerStarter';
 import { registerVSCodeQuteCommands } from '../commands/registerCommands';
 import { QuteClientCommandConstants } from '../commands/commandConstants';
@@ -40,7 +40,7 @@ export function connectToQuteLS(context: ExtensionContext) {
       },
       synchronize: {
         // preferences starting with these will trigger didChangeConfiguration
-        configurationSection: ['qute', '[qute]']
+        configurationSection: ['qute']
       },
       middleware: {
         workspace: {
@@ -85,29 +85,60 @@ export function connectToQuteLS(context: ExtensionContext) {
 }
 
 /**
- * Returns a json object with key 'quarkus' and a json object value that
- * holds all quarkus. settings.
+ * Returns a json object with key 'qute' and a json object value that
+ * holds all qute. settings.
  *
  * Returns: {
- *            'quarkus': {...}
+ *            'qute': {...}
  *          }
  */
-function getQuteSettings(): JSON {
-  const configQute = workspace.getConfiguration().get('qute');
-  let qute;
-  if (!configQute) { // Set default preferences if not provided
-    const defaultValue =
-    {
-      qute: {
+function getQuteSettings(): any {
+  if (workspace.workspaceFolders && workspace.workspaceFolders.length > 1) {
+    // There are several workspace folders, returns the JSON qute settings per workspace folder:
+    //
+    /**
+     * "qute": {
+            "workspaceFolders": {
+                "file:///c%3A/Users/azerr/git/quarkus-ls/qute.jdt/com.redhat.qute.jdt.test/projects/maven/qute-quickstart": {
+                    "validation": {
+                        "enabled": true
+                    }
+                },
+                "file:///c%3A/Users/azerr/git/quarkus-ls/qute.jdt/com.redhat.qute.jdt.test/projects/maven/qute-java17": {
+                    "validation": {
+                        "enabled": true
+                    }
+                }
+            }
+        }
+     */
 
-      }
-    };
-    qute = defaultValue;
-  } else {
-    const x = JSON.stringify(configQute); // configQute is not a JSON type
-    qute = { qute: JSON.parse(x) };
+    const foldersSettings = {};
+    workspace.workspaceFolders.forEach(folder => {
+      const folderConfigQute = workspace.getConfiguration(undefined, folder).get('qute');
+      foldersSettings[folder.uri.toString()] = toJSONObject(folderConfigQute);
+    });
+    const qute = { qute: { workspaceFolders: foldersSettings } };
+    return qute;
   }
+
+  // One workspace folder or none folder, return a single settings:
+  //
+  /**
+   * "qute": {
+         "validation": {
+              "enabled": true
+          }
+      }
+   */
+  const configQute = workspace.getConfiguration().get('qute');
+  const qute = { qute: toJSONObject(configQute) };
   return qute;
+}
+
+function toJSONObject(configQute: unknown): any {
+  const x = JSON.stringify(configQute); // configQute is not a JSON type
+  return JSON.parse(x);
 }
 
 function hasShownQuteValidationPopUp(context: ExtensionContext): boolean {

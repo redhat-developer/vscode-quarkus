@@ -224,7 +224,7 @@
           "type": "boolean",
           "default": false,
           "markdownDescription": "Enable/disable all Qute validation. Default is `false`.",
-          "scope": "window"
+          "scope": "resource"
         }
       }
     },
