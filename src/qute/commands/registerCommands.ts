@@ -1,6 +1,7 @@
 import { TextEncoder } from "util";
 import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selection, Uri, window, workspace, WorkspaceConfiguration } from "vscode";
 import { ConfigurationItem, Location } from "vscode-languageclient";
+import { QuteSettings } from "../languageServer/settings";
 import { QuteClientCommandConstants, QuteJdtLsServerCommandConstants, QuteServerCommandConstants } from "./commandConstants";
 
 /**
@@ -75,7 +76,8 @@ function registerJavaDefinitionCommand(context: ExtensionContext) {
  */
 export function registerConfigurationUpdateCommand(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE, async (configItemEdit: ConfigurationItemEdit) => {
-    const { section, value } = configItemEdit;
+    const section = configItemEdit.section;
+    const value = getSettingsValue(configItemEdit.value, configItemEdit.section);
     const config = getConfiguration(configItemEdit.scopeUri);
     switch (configItemEdit.editType) {
       case ConfigurationItemEditType.Add:
@@ -91,6 +93,15 @@ export function registerConfigurationUpdateCommand(context: ExtensionContext) {
       }
     }
   }));
+}
+
+function getSettingsValue(value: any, section: string) {
+  switch (section) {
+    case QuteSettings.QUTE_VALIDATION_EXCLUDED:
+      return workspace.asRelativePath(Uri.parse(value), false);
+    default:
+      return value;
+  }
 }
 
 interface IConfiguration {
