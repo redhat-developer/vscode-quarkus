@@ -27,6 +27,9 @@
           "include": "#section_end_tag"
         },
         {
+          "include": "#double_bracket"
+        },
+        {
           "include": "#expression"
         }
       ]
@@ -128,8 +131,11 @@
       "match": "((\\s+[^}\\/]+)*)\\s*",
       "name": "variable.parameter.function.qute"
     },
+    "double_bracket": {
+      "match": "{{"
+    },
     "expression": {
-      "begin": "((?<!\\\\){)(?![\\s!#@\\/])",
+      "begin": "((?<!\\\\){)(?=\\w)",
       "end": "((?<![\\\\])})",
       "beginCaptures": {
         "1": {
