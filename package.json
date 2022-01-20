@@ -225,6 +225,17 @@
           "default": false,
           "markdownDescription": "Enable/disable all Qute validation. Default is `false`.",
           "scope": "window"
+        },
+        "qute.validation.undefinedVariable.severity": {
+          "type": "string",
+          "enum": [
+            "none",
+            "warning",
+            "error"
+          ],
+          "default": "warning",
+          "markdownDescription": "Validation severity for undefined variable from Qute template files.",
+          "scope": "window"
         }
       }
     },
