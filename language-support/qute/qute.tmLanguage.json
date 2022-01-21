@@ -77,7 +77,7 @@
 			"name": "string.unquoted.cdata.qute"
 		},
     "section_start_tag": {
-      "begin": "({)(#)(else\\sif|\\w+(\\.\\w+)*)",
+      "begin": "({)(#)(else\\sif|(\\w+(\\.\\w+)*)^(?!.*(return|break|case|continue|default|do|while|for|switch|if|else|include)))?",
       "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
@@ -362,6 +362,10 @@
         {
           "match": "\\b(const|goto)\\b",
           "name": "keyword.reserved.java"
+        },
+        {
+          "match": "\\b(include)\\b",
+          "name": "keyword.control.import"
         }
       ]
     },
