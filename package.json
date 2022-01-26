@@ -75,6 +75,7 @@
     "languages": [
       {
         "id": "quarkus-properties",
+        
         "filenamePatterns": [
           "application.properties",
           "application-?*.properties"

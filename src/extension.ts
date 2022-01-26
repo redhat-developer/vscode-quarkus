@@ -53,7 +53,7 @@ export async function activate(context: ExtensionContext) {
   // When a text document is opened,  update their language ID.
   context.subscriptions.push(
     workspace.onDidOpenTextDocument((document) => {
-      updateLanguageId(document, updatedDocumentsCache, true);
+      updateLanguageId(document, updatedDocumentsCache, false /* need the confirmation popup to STFU */);
     })
   );
   context.subscriptions.push(
@@ -100,7 +100,8 @@ function tryToForceLanguageId(document: TextDocument, fileName: string, document
     if (l.isQuarkusProject()) {
       if (propertiesLanguageMismatch === PropertiesLanguageMismatch.prompt) {
         const YES = "Yes", NO = "No";
-        const response: Thenable<string> = window.showInformationMessage(`The language ID for '${fileName}' must be '${languageId}' to receive Quarkus support. Set the language ID to '${languageId}?'`, YES, NO);
+        const supportType = languageId.indexOf('qute') > -1 ? 'Qute' : 'Quarkus';
+        const response: Thenable<string> = window.showInformationMessage(`The language ID for '${fileName}' must be '${languageId}' to receive ${supportType} support. Set the language ID to '${languageId}?'`, YES, NO);
         response.then(result => {
           if (result === YES) {
             // The application.properties file belong to a Quarkus project, force to the quarkus-properties language
@@ -112,6 +113,7 @@ function tryToForceLanguageId(document: TextDocument, fileName: string, document
         const oldLanguageId: string = document.languageId;
         languages.setTextDocumentLanguage(document, languageId);
         if (notifyUser && !documentCache.includes(document.fileName)) {
+          // TODO need an option to not show again, or to show only once
           const CONFIGURE_IN_SETTINGS = "Configure in Settings";
           const DISABLE_IN_SETTINGS = "Disable Language Updating";
           const response: Thenable<string> = window.showInformationMessage(
@@ -135,6 +137,13 @@ function tryToForceLanguageId(document: TextDocument, fileName: string, document
 }
 
 const APP_PROPERTIES_PATTERN = /^application(?:-[A-Za-z]+)\.properties$/;
+
+const LANGUAGE_MAP = new Map<string, string>([
+  ["html", "qute-html"],
+  ["plaintext", "qute-txt"],
+  ["yaml", "qute-yaml"],
+  ["json", "qute-json"]
+]);
 
 /**
  * Update if required the language ID to 'quarkus-properties' if needed.
@@ -162,5 +171,13 @@ async function updateLanguageId(document: TextDocument, documentCache: string[],
       return;
     }
     tryToForceLanguageId(document, fileName, documentCache, propertiesLanguageMismatch, 'yaml', onExtensionLoad);
+  } else if (document.fileName.includes(`resources${path.sep}templates${path.sep}`)) {// TODO not confident this is robust enough, cross-platform way to detect templates folder
+    for (const originalLanguage of LANGUAGE_MAP.keys()) {// TODO might be better to check for file extension? eg. What if you previously set a .json file as yaml?
+      if (document.languageId === originalLanguage) {
+        const quteLanguageId = LANGUAGE_MAP.get(originalLanguage);
+        tryToForceLanguageId(document, fileName, documentCache, propertiesLanguageMismatch, quteLanguageId, onExtensionLoad);
+        break;
+      }
+    }
   }
 }
