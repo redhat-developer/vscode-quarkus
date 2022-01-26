@@ -31,6 +31,7 @@ export namespace QuarkusConfig {
   export const ALWAYS_SHOW_WELCOME_PAGE = 'quarkus.tools.alwaysShowWelcomePage';
   export const DEBUG_TERMINATE_ON_EXIT = 'quarkus.tools.debug.terminateProcessOnExit';
   export const PROPERTIES_LANGUAGE_MISMATCH = "quarkus.tools.propertiesLanguageMismatch";
+  export const QUARKUS_OVERRIDE_LANGUAGE_ID = 'quarkus.tools.override.languageId';
 
   export function getApiUrl(): string {
     if (process.env.VSCODE_QUARKUS_API_URL) {
