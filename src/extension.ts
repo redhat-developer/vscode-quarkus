@@ -100,7 +100,8 @@ function tryToForceLanguageId(document: TextDocument, fileName: string, document
     if (l.isQuarkusProject()) {
       if (propertiesLanguageMismatch === PropertiesLanguageMismatch.prompt) {
         const YES = "Yes", NO = "No";
-        const response: Thenable<string> = window.showInformationMessage(`The language ID for '${fileName}' must be '${languageId}' to receive Quarkus support. Set the language ID to '${languageId}?'`, YES, NO);
+        const supportType = languageId.indexOf('qute') > -1 ? 'Qute' : 'Quarkus';
+        const response: Thenable<string> = window.showInformationMessage(`The language ID for '${fileName}' must be '${languageId}' to receive ${supportType} support. Set the language ID to '${languageId}?'`, YES, NO);
         response.then(result => {
           if (result === YES) {
             // The application.properties file belong to a Quarkus project, force to the quarkus-properties language
@@ -112,29 +113,44 @@ function tryToForceLanguageId(document: TextDocument, fileName: string, document
         const oldLanguageId: string = document.languageId;
         languages.setTextDocumentLanguage(document, languageId);
         if (notifyUser && !documentCache.includes(document.fileName)) {
-          const CONFIGURE_IN_SETTINGS = "Configure in Settings";
-          const DISABLE_IN_SETTINGS = "Disable Language Updating";
-          const response: Thenable<string> = window.showInformationMessage(
-            `Quarkus Tools for Visual Studio Code automatically switched the language ID of '${fileName}' `
-            + `to be '${languageId}' in order to provide language support. `
-            + `This behavior can be configured in settings.`, DISABLE_IN_SETTINGS, CONFIGURE_IN_SETTINGS);
-          response.then(result => {
-            if (result === CONFIGURE_IN_SETTINGS) {
-              commands.executeCommand('workbench.action.openSettings', QuarkusConfig.PROPERTIES_LANGUAGE_MISMATCH);
-            } else if (result === DISABLE_IN_SETTINGS) {
-              QuarkusConfig.setPropertiesLanguageMismatch(PropertiesLanguageMismatch.ignore).then(() => {
-                languages.setTextDocumentLanguage(document, oldLanguageId);
-              });
-            }
-          });
-          documentCache.push(document.fileName);
+          const context = QuarkusContext.getExtensionContext();
+          if (!hasShownSetLanguagePopUp(context)) {
+            const CONFIGURE_IN_SETTINGS = "Configure in Settings";
+            const DISABLE_IN_SETTINGS = "Disable Language Updating";
+            const response: Thenable<string> = window.showInformationMessage(
+              `Quarkus Tools for Visual Studio Code automatically switched the language ID of '${fileName}' `
+              + `to be '${languageId}' in order to provide language support. `
+              + `This behavior can be configured in settings.`, DISABLE_IN_SETTINGS, CONFIGURE_IN_SETTINGS);
+            response.then(result => {
+              if (result === CONFIGURE_IN_SETTINGS) {
+                commands.executeCommand('workbench.action.openSettings', QuarkusConfig.PROPERTIES_LANGUAGE_MISMATCH);
+              } else if (result === DISABLE_IN_SETTINGS) {
+                QuarkusConfig.setPropertiesLanguageMismatch(PropertiesLanguageMismatch.ignore).then(() => {
+                  languages.setTextDocumentLanguage(document, oldLanguageId);
+                });
+                context.globalState.update(QuarkusConfig.QUARKUS_OVERRIDE_LANGUAGE_ID, 'true');
+              }
+            });
+            documentCache.push(document.fileName);
+          }
         }
       }
     }
   });
 }
 
+function hasShownSetLanguagePopUp(context: ExtensionContext): boolean {
+  return context.globalState.get(QuarkusConfig.QUARKUS_OVERRIDE_LANGUAGE_ID, false);
+}
+
 const APP_PROPERTIES_PATTERN = /^application(?:-[A-Za-z]+)\.properties$/;
+
+const LANGUAGE_MAP = new Map<string, string>([
+  [".html", "qute-html"],
+  [".txt", "qute-txt"],
+  [".yaml", "qute-yaml"],
+  [".json", "qute-json"]
+]);
 
 /**
  * Update if required the language ID to 'quarkus-properties' if needed.
@@ -162,5 +178,13 @@ async function updateLanguageId(document: TextDocument, documentCache: string[],
       return;
     }
     tryToForceLanguageId(document, fileName, documentCache, propertiesLanguageMismatch, 'yaml', onExtensionLoad);
+  } else if (document.fileName.includes(`resources${path.sep}templates${path.sep}`)) {
+    for (const extension of LANGUAGE_MAP.keys()) {
+      if (path.extname(document.fileName) === extension) {
+        const quteLanguageId = LANGUAGE_MAP.get(extension);
+        tryToForceLanguageId(document, fileName, documentCache, propertiesLanguageMismatch, quteLanguageId, onExtensionLoad);
+        break;
+      }
+    }
   }
 }
