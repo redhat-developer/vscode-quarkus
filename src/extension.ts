@@ -45,22 +45,14 @@ export async function activate(context: ExtensionContext) {
     })
   );
 
-  let updatedDocumentsCache: string[] = [];
   // When extension is started, loop for each text documents which are opened to update their language ID.
   workspace.textDocuments.forEach(document => {
-    updateLanguageId(document, updatedDocumentsCache, false);
+    updateLanguageId(document, false);
   });
   // When a text document is opened,  update their language ID.
   context.subscriptions.push(
     workspace.onDidOpenTextDocument((document) => {
-      updateLanguageId(document, updatedDocumentsCache, true);
-    })
-  );
-  context.subscriptions.push(
-    workspace.onDidChangeConfiguration((e: ConfigurationChangeEvent) => {
-      if (e.affectsConfiguration(QuarkusConfig.QUARKUS_CONFIG_NAME)) {
-        updatedDocumentsCache = [];
-      }
+      updateLanguageId(document, true);
     })
   );
 
@@ -89,11 +81,10 @@ function displayWelcomePageIfNeeded(context: ExtensionContext): void {
  * Try to force the document language ID to the given language ID.
  *
  * @param document the text document.
- * @param documentCache Cache of files that the user has already been prompted for
  * @param languageId the language ID.
  * @param notifyUser if a notification should appear when the language ID is updated
  */
-function tryToForceLanguageId(document: TextDocument, fileName: string, documentCache: string[], propertiesLanguageMismatch: PropertiesLanguageMismatch, languageId: string, notifyUser: boolean): Promise<void> {
+function tryToForceLanguageId(document: TextDocument, fileName: string, propertiesLanguageMismatch: PropertiesLanguageMismatch, languageId: string, notifyUser: boolean): Promise<void> {
   // Get project label information for the given file URI
   const labelInfo = ProjectLabelInfo.getProjectLabelInfo(document.uri.toString());
   return labelInfo.then(l => {
@@ -112,7 +103,7 @@ function tryToForceLanguageId(document: TextDocument, fileName: string, document
         // The application.properties file belong to a Quarkus project, force to the quarkus-properties language
         const oldLanguageId: string = document.languageId;
         languages.setTextDocumentLanguage(document, languageId);
-        if (notifyUser && !documentCache.includes(document.fileName)) {
+        if (notifyUser) {
           const context = QuarkusContext.getExtensionContext();
           if (!hasShownSetLanguagePopUp(context)) {
             const CONFIGURE_IN_SETTINGS = "Configure in Settings";
@@ -128,10 +119,9 @@ function tryToForceLanguageId(document: TextDocument, fileName: string, document
                 QuarkusConfig.setPropertiesLanguageMismatch(PropertiesLanguageMismatch.ignore).then(() => {
                   languages.setTextDocumentLanguage(document, oldLanguageId);
                 });
-                context.globalState.update(QuarkusConfig.QUARKUS_OVERRIDE_LANGUAGE_ID, 'true');
               }
             });
-            documentCache.push(document.fileName);
+            context.globalState.update(QuarkusConfig.QUARKUS_OVERRIDE_LANGUAGE_ID, 'true');
           }
         }
       }
@@ -156,10 +146,9 @@ const LANGUAGE_MAP = new Map<string, string>([
  * Update if required the language ID to 'quarkus-properties' if needed.
  *
  * @param document the text document.
- * @param documentCache cache of documents for which the user has already been notified about the
  * @param onExtensionLoad if the user manually changed the language id.
  */
-async function updateLanguageId(document: TextDocument, documentCache: string[], onExtensionLoad: boolean) {
+async function updateLanguageId(document: TextDocument, onExtensionLoad: boolean) {
   const propertiesLanguageMismatch: PropertiesLanguageMismatch = QuarkusConfig.getPropertiesLanguageMismatch();
   if (propertiesLanguageMismatch === PropertiesLanguageMismatch.ignore) {
     // Do nothing
@@ -171,18 +160,18 @@ async function updateLanguageId(document: TextDocument, documentCache: string[],
       // the language ID is already quarkus-properties do nothing.
       return;
     }
-    tryToForceLanguageId(document, fileName, documentCache, propertiesLanguageMismatch, 'quarkus-properties', onExtensionLoad);
+    tryToForceLanguageId(document, fileName, propertiesLanguageMismatch, 'quarkus-properties', onExtensionLoad);
   } else if (fileName === 'application.yaml' || fileName === 'application.yml') {
     if (document.languageId === 'yaml') {
       // the language ID is already yaml do nothing.
       return;
     }
-    tryToForceLanguageId(document, fileName, documentCache, propertiesLanguageMismatch, 'yaml', onExtensionLoad);
+    tryToForceLanguageId(document, fileName, propertiesLanguageMismatch, 'yaml', onExtensionLoad);
   } else if (document.fileName.includes(`resources${path.sep}templates${path.sep}`)) {
     for (const extension of LANGUAGE_MAP.keys()) {
       if (path.extname(document.fileName) === extension) {
         const quteLanguageId = LANGUAGE_MAP.get(extension);
-        tryToForceLanguageId(document, fileName, documentCache, propertiesLanguageMismatch, quteLanguageId, onExtensionLoad);
+        tryToForceLanguageId(document, fileName, propertiesLanguageMismatch, quteLanguageId, onExtensionLoad);
         break;
       }
     }
