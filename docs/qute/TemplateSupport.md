@@ -1,8 +1,8 @@
 # Qute Template support
 
-Qute support provides `completions`, `validation`, `hover`, `definition`, `highlight`, `linked editing` in Qute template.
+Qute support provides `completions`, `validation`, `hover`, `definition`, `highlight`, `linked editing` in Qute templates.
 
-To benefit with this support, we recommend your template files to follow the `*.qute.*` naming pattern (ex: `items.qute.html`, `items.qute.txt`, `items.qute.yaml`, etc.).
+To benefit from this support, HTML, Text, YAML and JSON files in `**/resources/templates/**` are automatically opened as Qute templates. You can disable that behavior by setting the `quarkus.tools.propertiesLanguageMismatch` property to `ignore`, or `prompt` if you prefer being asked to change the type when opening the file. 
 
 ## Parameter declaration support
 
