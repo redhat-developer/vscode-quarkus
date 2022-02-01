@@ -4,7 +4,7 @@ import { DidChangeConfigurationNotification, LanguageClientOptions } from 'vscod
 import { LanguageClient } from 'vscode-languageclient/node';
 import { ExtensionContext, commands, workspace, window, ConfigurationTarget, WorkspaceConfiguration } from 'vscode';
 import { prepareExecutable } from './javaServerStarter';
-import { registerVSCodeQuteCommands } from '../commands/registerCommands';
+import { registerVSCodeQuteCommands, updateQuteContext } from '../commands/registerCommands';
 import { QuteClientCommandConstants } from '../commands/commandConstants';
 import { QuteSettings } from './settings';
 
@@ -66,6 +66,7 @@ export function connectToQuteLS(context: ExtensionContext) {
     const serverOptions = prepareExecutable(requirements);
     const quteLanguageClient = new LanguageClient('qute', 'Qute Support', serverOptions, clientOptions);
     context.subscriptions.push(quteLanguageClient.start());
+
     return quteLanguageClient.onReady().then(async () => {
       bindQuteRequest('qute/template/project');
       bindQuteRequest('qute/template/projectDataModel');
@@ -76,11 +77,24 @@ export function connectToQuteLS(context: ExtensionContext) {
       bindQuteRequest('qute/java/diagnostics');
       bindQuteRequest('qute/java/documentLink');
       bindQuteNotification('qute/dataModelChanged');
+
+      // When an editor is changed, check the qute validation context.
+      context.subscriptions.push(
+        window.onDidChangeActiveTextEditor(async editor => {
+          if (editor) {
+            await updateQuteContext(editor.document);
+          }
+      }));
+
+      if (window.activeTextEditor && window.activeTextEditor.document) {
+        await updateQuteContext(window.activeTextEditor.document);
+      }
+
       if (!hasShownQuteValidationPopUp(context)) {
         await showQuteValidationPopUp(context);
       }
-    }
-    );
+      await setQuteValidationEnabledContext();
+    });
   });
 }
 
@@ -155,4 +169,12 @@ async function showQuteValidationPopUp(context: ExtensionContext) {
     workspace.getConfiguration().update(QuteSettings.QUTE_VALIDATION_ENABLED, true, ConfigurationTarget.Global);
   }
   context.globalState.update(QuteSettings.EXPERIMENTAL_QUTE_VALIDATION_FLAG, 'true');
+}
+
+/**
+   * Sets the `editorQuteValidationEnabled` context to `true` if the `qute.validation.enabled`
+   * setting is set to true. Sets to `false` otherwise.
+   */
+export async function setQuteValidationEnabledContext() {
+  await commands.executeCommand('setContext', 'editorQuteValidationEnabled', workspace.getConfiguration().get(QuteSettings.QUTE_VALIDATION_ENABLED));
 }

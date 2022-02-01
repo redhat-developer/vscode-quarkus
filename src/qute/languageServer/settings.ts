@@ -14,7 +14,7 @@ export namespace QuteSettings {
   export const QUTE_VALIDATION_ENABLED = 'qute.validation.enabled';
 
   /**
- * Disable Qute validation for the given file name patterns settings.
- */
+   * Disable Qute validation for the given file name patterns settings.
+   */
   export const QUTE_VALIDATION_EXCLUDED = 'qute.validation.excluded';
 }
