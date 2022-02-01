@@ -159,6 +159,16 @@
         "command": "quarkusTools.deployToOpenShift.short",
         "title": "Deploy to OpenShift",
         "icon": "icons/openshift.png"
+      },
+      {
+        "command": "qute.validation.enabled.toggle.off",
+        "title": "Disable Qute Validation",
+        "icon": "$(eye-watch)"
+      },
+      {
+        "command": "qute.validation.enabled.toggle.on",
+        "title": "Enable Qute Validation",
+        "icon": "$(eye-closed)"
       }
     ],
     "configuration": {
@@ -250,6 +260,14 @@
         {
           "command": "quarkusTools.deployToOpenShift",
           "when": "quarkusProjectExistsOrLightWeight"
+        },
+        {
+          "command": "qute.validation.enabled.toggle.off",
+          "when": "false"
+        },
+        {
+          "command": "qute.validation.enabled.toggle.on",
+          "when": "false"
         }
       ],
       "editor/title": [
@@ -257,6 +275,16 @@
           "command": "quarkusTools.deployToOpenShift.short",
           "when": "quarkusProjectExistsOrLightWeight && resourceExtname == .java",
           "group": "navigation@10"
+        },
+        {
+          "command": "qute.validation.enabled.toggle.off",
+          "when": "quarkusProjectExistsOrLightWeight && editorLangIdSupportsQute && editorQuteValidationEnabled",
+          "group": "navigation@9"
+        },
+        {
+          "command": "qute.validation.enabled.toggle.on",
+          "when": "quarkusProjectExistsOrLightWeight && editorLangIdSupportsQute && !editorQuteValidationEnabled",
+          "group": "navigation@9"
         }
       ],
       "editor/title/run": [
