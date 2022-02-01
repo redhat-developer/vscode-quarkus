@@ -36,6 +36,7 @@
   "activationEvents": [
     "onCommand:quarkusTools.createProject",
     "onCommand:quarkusTools.welcome",
+    "onCommand:qute.validation.enabled.toggle",
     "workspaceContains:**/src/main/resources/application.properties",
     "workspaceContains:**/src/main/resources/application-?*.properties",
     "workspaceContains:**src/main/resources/META-INF/microprofile-config.properties",
@@ -159,6 +160,11 @@
         "command": "quarkusTools.deployToOpenShift.short",
         "title": "Deploy to OpenShift",
         "icon": "icons/openshift.png"
+      },
+      {
+        "command": "qute.validation.enabled.toggle",
+        "title": "Qute validation",
+        "icon": "icons/openshift.png"
       }
     ],
     "configuration": {
@@ -256,6 +262,11 @@
         {
           "command": "quarkusTools.deployToOpenShift.short",
           "when": "quarkusProjectExistsOrLightWeight && resourceExtname == .java",
+          "group": "navigation@10"
+        },
+        {
+          "command": "qute.validation.enabled.toggle",
+          "when": "editorLangId == qute-html",
           "group": "navigation@10"
         }
       ],

@@ -1,4 +1,4 @@
-import { commands, ExtensionContext, window } from "vscode";
+import { commands, ExtensionContext, Uri, window } from "vscode";
 import { VSCodeCommands } from "../definitions/constants";
 import { ProjectLabelInfo } from "../definitions/ProjectLabelInfo";
 import { requestStandardMode } from "../utils/requestStandardMode";
@@ -51,7 +51,6 @@ export function registerVSCodeCommands(context: ExtensionContext): void {
    * Command for building a binary
    */
   registerCommandWithTelemetry(context, VSCodeCommands.BUILD_BINARY, withStandardMode(buildBinary, "Building a binary"));
-
 }
 
 /**

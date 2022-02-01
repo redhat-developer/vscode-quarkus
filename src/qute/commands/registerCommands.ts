@@ -14,6 +14,22 @@ export function registerVSCodeQuteCommands(context: ExtensionContext) {
   registerGenerateTemplateFileCommand(context);
   registerJavaDefinitionCommand(context);
   registerConfigurationUpdateCommand(context);
+  registerVal(context);
+}
+
+function registerVal(context: ExtensionContext) {
+  context.subscriptions.push(commands.registerCommand('qute.validation.enabled.toggle', async (uri?: Uri) => {
+    const templateUri =   uri.toString();
+
+    const result = await commands.executeCommand('qute.command.validation.template.status', templateUri);
+    const validationEnabled = (result as any).validationEnabled;
+
+    const edit = {value : !validationEnabled} as ConfigurationItemEdit;
+    edit.section = QuteSettings.QUTE_VALIDATION_ENABLED;
+    edit.editType  = ConfigurationItemEditType.Update;
+    edit.scopeUri = templateUri;
+    await commands.executeCommand(QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE, edit);
+  }));
 }
 
 /**
