@@ -49,10 +49,12 @@ export async function activate(context: ExtensionContext) {
   workspace.textDocuments.forEach(document => {
     updateLanguageId(document, false);
   });
-  // When a text document is opened,  update their language ID.
+  // When a text document is opened, update their language ID.
   context.subscriptions.push(
-    workspace.onDidOpenTextDocument((document) => {
-      updateLanguageId(document, true);
+    workspace.onDidOpenTextDocument(async (document) => {
+      if (!(document.uri.scheme === 'git')) {
+        await updateLanguageId(document, true);
+      }
     })
   );
 
