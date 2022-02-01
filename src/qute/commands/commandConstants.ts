@@ -25,6 +25,20 @@ export namespace QuteClientCommandConstants {
    */
   export const COMMAND_CONFIGURATION_UPDATE = 'qute.command.configuration.update';
 
+  /**
+   * Toggle on extension for Qute validation setting.
+   */
+  export const QUTE_VALIDATION_ENABLED_TOGGLE_ON = 'qute.validation.enabled.toggle.on';
+
+  /**
+   * Toggle off extension for Qute validation setting.
+   */
+  export const QUTE_VALIDATION_ENABLED_TOGGLE_OFF = 'qute.validation.enabled.toggle.off';
+
+  /**
+  * Client command to execute an XML command on XML Language Server side.
+  */
+  export const EXECUTE_WORKSPACE_COMMAND = 'qute.workspace.executeCommand';
 }
 
 /**
@@ -36,6 +50,11 @@ export namespace QuteServerCommandConstants {
    * Qute LS Server command to generate template content on the Qute Language Server
    */
   export const GENERATE_TEMPLATE_CONTENT = 'qute.command.generate.template.content';
+
+  /**
+   * Check if a Qute template is excluded from validation.
+   */
+  export const QUTE_VALIDATION_TEMPLATE_STATUS = 'qute.command.validation.template.status';
 
 }
 
