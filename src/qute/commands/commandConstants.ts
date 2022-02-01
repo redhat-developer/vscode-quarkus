@@ -37,6 +37,11 @@ export namespace QuteServerCommandConstants {
    */
   export const GENERATE_TEMPLATE_CONTENT = 'qute.command.generate.template.content';
 
+    /**
+   * Check if a Qute template is excluded from validation.
+   */
+     export const QUTE_VALIDATION_TEMPLATE_STATUS = 'qute.command.validation.template.status';
+
 }
 
 /**

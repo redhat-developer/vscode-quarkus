@@ -21,6 +21,7 @@ import { PropertiesLanguageMismatch, QuarkusConfig } from './QuarkusConfig';
 import { QuarkusContext } from './QuarkusContext';
 import quarkusProjectListener from './QuarkusProjectListener';
 import { connectToQuteLS } from './qute/languageServer/client';
+import { checkQuteLanguageSupportedContext, checkQuteValidationFromExclusionContext } from './qute/commands/registerCommands';
 import { terminalCommandRunner } from './terminal/terminalCommandRunner';
 import { initTelemetryService } from './utils/telemetryUtils';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
@@ -49,10 +50,14 @@ export async function activate(context: ExtensionContext) {
   workspace.textDocuments.forEach(document => {
     updateLanguageId(document, false);
   });
-  // When a text document is opened,  update their language ID.
+  // When a text document is opened, update their language ID.
   context.subscriptions.push(
-    workspace.onDidOpenTextDocument((document) => {
-      updateLanguageId(document, true);
+    workspace.onDidOpenTextDocument(async (document) => {
+      if (!(document.uri.scheme === 'git')) {
+        await updateLanguageId(document, true);
+        await checkQuteLanguageSupportedContext(document);
+        await checkQuteValidationFromExclusionContext(document.uri);
+      }
     })
   );
 

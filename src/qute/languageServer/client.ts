@@ -66,6 +66,7 @@ export function connectToQuteLS(context: ExtensionContext) {
     const serverOptions = prepareExecutable(requirements);
     const quteLanguageClient = new LanguageClient('qute', 'Qute Support', serverOptions, clientOptions);
     context.subscriptions.push(quteLanguageClient.start());
+
     return quteLanguageClient.onReady().then(async () => {
       bindQuteRequest('qute/template/project');
       bindQuteRequest('qute/template/projectDataModel');
@@ -79,8 +80,8 @@ export function connectToQuteLS(context: ExtensionContext) {
       if (!hasShownQuteValidationPopUp(context)) {
         await showQuteValidationPopUp(context);
       }
-    }
-    );
+      await setQuteValidationEnabledContext();
+    });
   });
 }
 
@@ -155,4 +156,12 @@ async function showQuteValidationPopUp(context: ExtensionContext) {
     workspace.getConfiguration().update(QuteSettings.QUTE_VALIDATION_ENABLED, true, ConfigurationTarget.Global);
   }
   context.globalState.update(QuteSettings.EXPERIMENTAL_QUTE_VALIDATION_FLAG, 'true');
+}
+
+/**
+   * Sets the `quteValidationEnabled` context to `true` if the `qute.validation.enabled`
+   * setting is set to true. Sets to `false` otherwise.
+   */
+export async function setQuteValidationEnabledContext() {
+  await commands.executeCommand('setContext', 'quteValidationEnabled', workspace.getConfiguration().get(QuteSettings.QUTE_VALIDATION_ENABLED));
 }
