@@ -207,16 +207,32 @@
           "type": "string",
           "enum": [
             "ignore",
-            "forceQuarkus",
+            "force",
             "prompt"
           ],
           "enumDescriptions": [
-            "ignore language mismatch for Quarkus properties",
+            "Ignore language mismatch for Quarkus properties",
             "Automatically correct the language for mismatched Quarkus properties",
             "Prompt correcting the language for mismatched Quarkus properties"
           ],
-          "default": "forceQuarkus",
+          "default": "force",
           "description": "Action performed when detected Quarkus properties have an incorrect language.",
+          "scope": "window"
+        },
+        "qute.templates.languageMismatch": {
+          "type": "string",
+          "enum": [
+            "ignore",
+            "force",
+            "prompt"
+          ],
+          "enumDescriptions": [
+            "Ignore language mismatch for Qute templates",
+            "Automatically correct the language for mismatched Qute templates",
+            "Prompt correcting the language for mismatched Qute templates"
+          ],
+          "default": "force",
+          "description": "Action performed when detected Qute templates have an incorrect language.",
           "scope": "window"
         },
         "qute.trace.server": {
