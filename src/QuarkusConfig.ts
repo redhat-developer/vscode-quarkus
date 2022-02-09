@@ -17,6 +17,7 @@ import {
   DEFAULT_API_URL,
 } from './definitions/constants';
 import { ConfigurationTarget, workspace } from 'vscode';
+import { LanguageMismatch } from './utils/languageMismatch';
 
 /**
  * This class manages the extension's interaction with
@@ -30,7 +31,7 @@ export namespace QuarkusConfig {
   export const STARTER_SHOW_EXT_DESC = 'quarkus.tools.starter.showExtensionDescriptions';
   export const ALWAYS_SHOW_WELCOME_PAGE = 'quarkus.tools.alwaysShowWelcomePage';
   export const DEBUG_TERMINATE_ON_EXIT = 'quarkus.tools.debug.terminateProcessOnExit';
-  export const PROPERTIES_LANGUAGE_MISMATCH = "quarkus.tools.propertiesLanguageMismatch";
+  export const QUARKUS_PROPERTIES_LANGUAGE_MISMATCH = "quarkus.tools.propertiesLanguageMismatch";
   export const QUARKUS_OVERRIDE_LANGUAGE_ID = 'quarkus.tools.override.languageId';
 
   export function getApiUrl(): string {
@@ -52,8 +53,8 @@ export namespace QuarkusConfig {
     return workspace.getConfiguration().get<TerminateProcessConfig>(DEBUG_TERMINATE_ON_EXIT);
   }
 
-  export function getPropertiesLanguageMismatch(): PropertiesLanguageMismatch {
-    return workspace.getConfiguration().get<PropertiesLanguageMismatch>(PROPERTIES_LANGUAGE_MISMATCH);
+  export function getPropertiesLanguageMismatch(): QuarkusPropertiesLanguageMismatch {
+    return workspace.getConfiguration().get<QuarkusPropertiesLanguageMismatch>(QUARKUS_PROPERTIES_LANGUAGE_MISMATCH);
   }
 
   export function setAlwaysShowWelcomePage(value: boolean): void {
@@ -68,8 +69,8 @@ export namespace QuarkusConfig {
     saveToQuarkusConfig(DEBUG_TERMINATE_ON_EXIT, value);
   }
 
-  export function setPropertiesLanguageMismatch(value: PropertiesLanguageMismatch): Thenable<void> {
-    return saveToQuarkusConfig(PROPERTIES_LANGUAGE_MISMATCH, value);
+  export function setPropertiesLanguageMismatch(value: QuarkusPropertiesLanguageMismatch): Thenable<void> {
+    return saveToQuarkusConfig(QUARKUS_PROPERTIES_LANGUAGE_MISMATCH, value);
   }
 
   export function saveToQuarkusConfig<T>(configName: string, value: T): Thenable<void> {
@@ -83,8 +84,4 @@ export enum TerminateProcessConfig {
   DontTerminate = "Never terminate"
 }
 
-export enum PropertiesLanguageMismatch {
-  ignore = "ignore",
-  forceQuarkus = "forceQuarkus",
-  prompt = "prompt"
-}
+export class QuarkusPropertiesLanguageMismatch extends LanguageMismatch {}

@@ -17,11 +17,12 @@ import * as path from 'path';
 import { commands, ConfigurationChangeEvent, Disposable, ExtensionContext, extensions, languages, Terminal, TextDocument, window, workspace } from 'vscode';
 import { registerVSCodeCommands } from './commands/registerCommands';
 import { ProjectLabelInfo } from './definitions/ProjectLabelInfo';
-import { PropertiesLanguageMismatch, QuarkusConfig } from './QuarkusConfig';
+import { QuarkusPropertiesLanguageMismatch, QuarkusConfig } from './QuarkusConfig';
 import { QuarkusContext } from './QuarkusContext';
 import quarkusProjectListener from './QuarkusProjectListener';
 import { connectToQuteLS } from './qute/languageServer/client';
 import { terminalCommandRunner } from './terminal/terminalCommandRunner';
+import { tryToForceLanguageId } from './utils/languageMismatch';
 import { JAVA_EXTENSION_ID } from './utils/requestStandardMode';
 import { initTelemetryService } from './utils/telemetryUtils';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
@@ -51,13 +52,13 @@ export async function activate(context: ExtensionContext) {
 
   // When extension is started, loop for each text documents which are opened to update their language ID.
   workspace.textDocuments.forEach(document => {
-    updateLanguageId(document, false);
+    updateLanguageId(context, document, false);
   });
   // When a text document is opened, update their language ID.
   context.subscriptions.push(
     workspace.onDidOpenTextDocument(async (document) => {
       if (!(document.uri.scheme === 'git')) {
-        await updateLanguageId(document, true);
+        await updateLanguageId(context, document, true);
       }
     })
   );
@@ -84,80 +85,18 @@ function displayWelcomePageIfNeeded(context: ExtensionContext): void {
   }
 }
 
-/**
- * Try to force the document language ID to the given language ID.
- *
- * @param document the text document.
- * @param languageId the language ID.
- * @param notifyUser if a notification should appear when the language ID is updated
- */
-function tryToForceLanguageId(document: TextDocument, fileName: string, propertiesLanguageMismatch: PropertiesLanguageMismatch, languageId: string, notifyUser: boolean): Promise<void> {
-  // Get project label information for the given file URI
-  const labelInfo = ProjectLabelInfo.getProjectLabelInfo(document.uri.toString());
-  return labelInfo.then(l => {
-    if (l.isQuarkusProject()) {
-      if (propertiesLanguageMismatch === PropertiesLanguageMismatch.prompt) {
-        const YES = "Yes", NO = "No";
-        const supportType = languageId.indexOf('qute') > -1 ? 'Qute' : 'Quarkus';
-        const response: Thenable<string> = window.showInformationMessage(`The language ID for '${fileName}' must be '${languageId}' to receive ${supportType} support. Set the language ID to '${languageId}?'`, YES, NO);
-        response.then(result => {
-          if (result === YES) {
-            // The application.properties file belong to a Quarkus project, force to the quarkus-properties language
-            languages.setTextDocumentLanguage(document, languageId);
-          }
-        });
-      } else {
-        // The application.properties file belong to a Quarkus project, force to the quarkus-properties language
-        const oldLanguageId: string = document.languageId;
-        languages.setTextDocumentLanguage(document, languageId);
-        if (notifyUser) {
-          const context = QuarkusContext.getExtensionContext();
-          if (!hasShownSetLanguagePopUp(context)) {
-            const CONFIGURE_IN_SETTINGS = "Configure in Settings";
-            const DISABLE_IN_SETTINGS = "Disable Language Updating";
-            const response: Thenable<string> = window.showInformationMessage(
-              `Quarkus Tools for Visual Studio Code automatically switched the language ID of '${fileName}' `
-              + `to be '${languageId}' in order to provide language support. `
-              + `This behavior can be configured in settings.`, DISABLE_IN_SETTINGS, CONFIGURE_IN_SETTINGS);
-            response.then(result => {
-              if (result === CONFIGURE_IN_SETTINGS) {
-                commands.executeCommand('workbench.action.openSettings', QuarkusConfig.PROPERTIES_LANGUAGE_MISMATCH);
-              } else if (result === DISABLE_IN_SETTINGS) {
-                QuarkusConfig.setPropertiesLanguageMismatch(PropertiesLanguageMismatch.ignore).then(() => {
-                  languages.setTextDocumentLanguage(document, oldLanguageId);
-                });
-              }
-            });
-            context.globalState.update(QuarkusConfig.QUARKUS_OVERRIDE_LANGUAGE_ID, 'true');
-          }
-        }
-      }
-    }
-  });
-}
-
-function hasShownSetLanguagePopUp(context: ExtensionContext): boolean {
-  return context.globalState.get(QuarkusConfig.QUARKUS_OVERRIDE_LANGUAGE_ID, false);
-}
-
 const APP_PROPERTIES_PATTERN = /^application(?:-[A-Za-z]+)\.properties$/;
-
-const LANGUAGE_MAP = new Map<string, string>([
-  [".html", "qute-html"],
-  [".txt", "qute-txt"],
-  [".yaml", "qute-yaml"],
-  [".json", "qute-json"]
-]);
 
 /**
  * Update if required the language ID to 'quarkus-properties' if needed.
  *
+ * @param context the extension context
  * @param document the text document.
  * @param onExtensionLoad if the user manually changed the language id.
  */
-async function updateLanguageId(document: TextDocument, onExtensionLoad: boolean) {
-  const propertiesLanguageMismatch: PropertiesLanguageMismatch = QuarkusConfig.getPropertiesLanguageMismatch();
-  if (propertiesLanguageMismatch === PropertiesLanguageMismatch.ignore) {
+async function updateLanguageId(context: ExtensionContext, document: TextDocument, onExtensionLoad: boolean) {
+  const propertiesLanguageMismatch: QuarkusPropertiesLanguageMismatch = QuarkusConfig.getPropertiesLanguageMismatch();
+  if (propertiesLanguageMismatch === QuarkusPropertiesLanguageMismatch.ignore) {
     // Do nothing
     return;
   }
@@ -167,21 +106,13 @@ async function updateLanguageId(document: TextDocument, onExtensionLoad: boolean
       // the language ID is already quarkus-properties do nothing.
       return;
     }
-    tryToForceLanguageId(document, fileName, propertiesLanguageMismatch, 'quarkus-properties', onExtensionLoad);
+    tryToForceLanguageId(context, document, fileName, propertiesLanguageMismatch, 'quarkus-properties', onExtensionLoad, QuarkusConfig.QUARKUS_OVERRIDE_LANGUAGE_ID, QuarkusConfig.QUARKUS_PROPERTIES_LANGUAGE_MISMATCH);
   } else if (fileName === 'application.yaml' || fileName === 'application.yml') {
     if (document.languageId === 'yaml') {
       // the language ID is already yaml do nothing.
       return;
     }
-    tryToForceLanguageId(document, fileName, propertiesLanguageMismatch, 'yaml', onExtensionLoad);
-  } else if (document.fileName.includes(`resources${path.sep}templates${path.sep}`)) {
-    for (const extension of LANGUAGE_MAP.keys()) {
-      if (path.extname(document.fileName) === extension) {
-        const quteLanguageId = LANGUAGE_MAP.get(extension);
-        tryToForceLanguageId(document, fileName, propertiesLanguageMismatch, quteLanguageId, onExtensionLoad);
-        break;
-      }
-    }
+    tryToForceLanguageId(context, document, fileName, propertiesLanguageMismatch, 'yaml', onExtensionLoad, QuarkusConfig.QUARKUS_OVERRIDE_LANGUAGE_ID, QuarkusConfig.QUARKUS_PROPERTIES_LANGUAGE_MISMATCH);
   }
 }
 

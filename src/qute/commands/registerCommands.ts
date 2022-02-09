@@ -1,10 +1,12 @@
+import * as path from 'path';
 import { TextEncoder } from "util";
-import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selection, TextDocument, TextEditor, Uri, window, workspace, WorkspaceConfiguration } from "vscode";
+import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selection, TextDocument, TextEditor, Uri, window, workspace, WorkspaceConfiguration, languages } from "vscode";
 import { ConfigurationItem, Location } from "vscode-languageclient";
-import { QuteSettings } from "../languageServer/settings";
+import { QuteSettings, QuteTemplateLanguageMismatch } from "../languageServer/settings";
 import { QuteClientCommandConstants, QuteJdtLsServerCommandConstants, QuteServerCommandConstants } from "./commandConstants";
 import { CancellationToken, ExecuteCommandParams, ExecuteCommandRequest } from "vscode-languageclient";
 import { LanguageClient } from "vscode-languageclient/node";
+import { tryToForceLanguageId } from '../../utils/languageMismatch';
 
 /**
  * Register custom vscode command for Qute support.
@@ -17,6 +19,17 @@ export function registerVSCodeQuteCommands(context: ExtensionContext) {
   registerJavaDefinitionCommand(context);
   registerConfigurationUpdateCommand(context);
   registerQuteValidationToggleCommand(context);
+  context.subscriptions.push(
+    workspace.onDidOpenTextDocument((document) => {
+      if (!(document.uri.scheme === 'git')) {
+        updateQuteLanguageId(context, document, true);
+      }
+    })
+  );
+  // When extension is started, loop for each text documents which are opened to update their language ID.
+  workspace.textDocuments.forEach(document => {
+    updateQuteLanguageId(context, document, false);
+  });
 }
 
 export function registerQuteExecuteWorkspaceCommand(context: ExtensionContext, languageClient: LanguageClient) {
@@ -212,6 +225,42 @@ function getSettingsValue(value: any, section: string, editType: ConfigurationIt
       break;
   }
   return value;
+}
+
+const LANGUAGE_MAP = new Map<string, string>([
+  [".html", "qute-html"],
+  [".htm", "qute-html"],
+  [".txt", "qute-txt"],
+  [".yaml", "qute-yaml"],
+  [".yml", "qute-yaml"],
+  [".json", "qute-json"]
+]);
+
+/**
+ * Update the language ID to a supported Qute language id if needed.
+ *
+ * @param context the extension context
+ * @param document the text document.
+ * @param onExtensionLoad if the user manually changed the language id.
+ */
+ async function updateQuteLanguageId(context: ExtensionContext, document: TextDocument, onExtensionLoad: boolean) {
+  const propertiesLanguageMismatch: QuteTemplateLanguageMismatch = QuteSettings.getQuteTemplatesLanguageMismatch();
+  // Check if the setting is set to ignore or if the language ID is already set to Qute
+  if (propertiesLanguageMismatch === QuteTemplateLanguageMismatch.ignore || document.languageId.startsWith('qute-')) {
+    // Do nothing
+    return;
+  }
+  const fileName: string = path.basename(document.fileName);
+  if (document.fileName.includes(`resources${path.sep}templates${path.sep}`)) {
+    for (const extension of LANGUAGE_MAP.keys()) {
+      if (path.extname(document.fileName) === extension) {
+        const quteLanguageId = LANGUAGE_MAP.get(extension);
+
+        tryToForceLanguageId(context, document, fileName, propertiesLanguageMismatch, quteLanguageId, onExtensionLoad, QuteSettings.QUTE_OVERRIDE_LANGUAGE_ID, QuteSettings.QUTE_TEMPLATES_LANGUAGE_MISMATCH);
+        break;
+      }
+    }
+  }
 }
 
 interface IConfiguration {
