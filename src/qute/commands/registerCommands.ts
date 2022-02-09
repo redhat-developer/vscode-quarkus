@@ -93,16 +93,28 @@ function registerQuteValidationToggleCommand(context: ExtensionContext) {
     await commands.executeCommand('setContext', 'quteValidationEnabled', false);
   }));
 
-  // Toggle off (inverse effect when clicked - disable validation for file)
+  // Toggle off (inverse effect when clicked - enable validation for file)
   context.subscriptions.push(commands.registerCommand(QuteSettings.QUTE_VALIDATION_ENABLED + QuteSettings.TOGGLE_OFF, async (uri?: Uri) => {
     const templateUri = uri.toString();
-    const edit = {
-      scopeUri: templateUri,
-      value: templateUri,
-      editType: ConfigurationItemEditType.Remove,
-      section: QuteSettings.QUTE_VALIDATION_EXCLUDED
-    } as ConfigurationItemEdit;
-    await commands.executeCommand(QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE, edit);
+    const result: TemplateValidationStatus = await commands.executeCommand(QuteServerCommandConstants.QUTE_VALIDATION_TEMPLATE_STATUS, templateUri);
+    if (!result.validationEnabled) {
+      const edit = {
+        scopeUri: templateUri,
+        value: true,
+        editType: ConfigurationItemEditType.Update,
+        section: QuteSettings.QUTE_VALIDATION_ENABLED
+      } as ConfigurationItemEdit;
+      await commands.executeCommand(QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE, edit);
+    }
+    if(result.excluded.length > 0) {
+      const edit = {
+        scopeUri: templateUri,
+        value: result.excluded,
+        editType: ConfigurationItemEditType.RemoveMany,
+        section: QuteSettings.QUTE_VALIDATION_EXCLUDED
+      } as ConfigurationItemEdit;
+      await commands.executeCommand(QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE, edit);
+    }
     await commands.executeCommand('setContext', 'quteValidationEnabled', true);
   }));
 }
@@ -115,7 +127,7 @@ function registerQuteValidationToggleCommand(context: ExtensionContext) {
 export function registerConfigurationUpdateCommand(context: ExtensionContext) {
   context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE, async (configItemEdit: ConfigurationItemEdit) => {
     const section = configItemEdit.section;
-    const value = getSettingsValue(configItemEdit.value, configItemEdit.section);
+    const value = getSettingsValue(configItemEdit.value, configItemEdit.section, configItemEdit.editType);
     const config = getConfiguration(configItemEdit.scopeUri);
     switch (configItemEdit.editType) {
       case ConfigurationItemEditType.Add:
@@ -140,7 +152,7 @@ export function registerConfigurationUpdateCommand(context: ExtensionContext) {
         break;
       }
       case ConfigurationItemEditType.RemoveMany: {
-        value.array.forEach(item => {
+        <string[]>value.forEach(item => {
           removeFromPreferenceArray(config, section, item)
         });
         break;
@@ -149,30 +161,32 @@ export function registerConfigurationUpdateCommand(context: ExtensionContext) {
   }));
 }
 
-/**
-   * Sets the `quteLanguageSupported` context to `true` if the editor language id
-   * is a qute template. Sets to `false` otherwise.
-   */
- export async function checkQuteLanguageSupportedContext(document: TextDocument) {
-  await commands.executeCommand('setContext', 'quteLanguageSupported', document.languageId.includes('qute'));
+export async function updateQuteContext(document: TextDocument) {
+  const documentQute = document.languageId.includes('qute');
+  await commands.executeCommand('setContext', 'quteLanguageSupported', documentQute);
+  if (documentQute) {
+    await checkQuteValidationFromExclusionContext(document.uri)
+  }
 }
 
 /**
    * Sets the `quteValidationEnabled` based on qute.command.validation.template.status.
    */
- export async function checkQuteValidationFromExclusionContext(uri: Uri) {
+ async function checkQuteValidationFromExclusionContext(uri: Uri) {
   const templateUri = uri.toString();
-  const excludedArray = workspace.getConfiguration().get(QuteSettings.QUTE_VALIDATION_EXCLUDED, []);
-  await commands.executeCommand('setContext', 'quteValidationEnabled', excludedArray.includes(templateUri));
+  const result: TemplateValidationStatus = await commands.executeCommand(QuteServerCommandConstants.QUTE_VALIDATION_TEMPLATE_STATUS, templateUri);
+  const validationEnabled= (result.validationEnabled && (!result.excluded || result.excluded.length === 0));
+  await commands.executeCommand('setContext', 'quteValidationEnabled', validationEnabled);
 }
 
-function getSettingsValue(value: any, section: string) {
+function getSettingsValue(value: any, section: string, editType: ConfigurationItemEditType) {
   switch (section) {
     case QuteSettings.QUTE_VALIDATION_EXCLUDED:
-      return workspace.asRelativePath(Uri.parse(value), false);
-    default:
-      return value;
+      if (editType == ConfigurationItemEditType.Add) {
+        return workspace.asRelativePath(Uri.parse(value), false);
+      }
   }
+  return value;
 }
 
 interface IConfiguration {
@@ -232,5 +246,5 @@ enum ConfigurationItemEditType {
 
 interface TemplateValidationStatus {
 	validationEnabled: boolean;
-	excluded: [string];
+	excluded: string[];
 }
