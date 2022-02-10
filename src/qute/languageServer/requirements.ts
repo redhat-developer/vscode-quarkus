@@ -7,10 +7,13 @@ import { Uri, workspace } from 'vscode';
 
 import * as expandHomeDir from 'expand-home-dir';
 import * as findJavaHome from 'find-java-home';
+import { JavaExtensionAPI } from '../../extension';
 const isWindows = process.platform.indexOf('win') === 0;
 const JAVA_FILENAME = 'java' + (isWindows?'.exe': '');
 
 export interface RequirementsData {
+    tooling_jre: string;
+    tooling_jre_version: number;
     java_home: string;
     java_version: number;
 }
@@ -22,10 +25,15 @@ export interface RequirementsData {
  * if any of the requirements fails to resolve.
  *
  */
-export async function resolveRequirements(): Promise<RequirementsData> {
+export async function resolveRequirements(api: JavaExtensionAPI): Promise<RequirementsData> {
+    // Use the embedded JRE from 'redhat.java' if it exists
+    if (api && api.javaRequirement) {
+        return Promise.resolve(api.javaRequirement);
+    }
+
     const javaHome = await checkJavaRuntime();
     const javaVersion = await checkJavaVersion(javaHome);
-    return Promise.resolve({ java_home: javaHome, java_version: javaVersion});
+    return Promise.resolve({tooling_jre: javaHome, tooling_jre_version: javaVersion, java_home: javaHome, java_version: javaVersion});
 }
 
 function checkJavaRuntime(): Promise<string> {
