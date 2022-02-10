@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
 import { workspace } from "vscode";
 import { ProjectLabelInfo } from "../definitions/ProjectLabelInfo";
+import { getJavaExtensionAPI } from "../extension";
 
-const JAVA_EXTENSION_ID = "redhat.java";
+export const JAVA_EXTENSION_ID = "redhat.java";
 
 export enum ServerMode {
   STANDARD = "Standard",
@@ -23,7 +24,7 @@ export async function requestStandardMode(opName: string): Promise<boolean> {
   if (!extension) {
     return false;
   }
-  const api = await extension.activate();
+  const api = await getJavaExtensionAPI();
   if (api && api.serverMode === ServerMode.LIGHTWEIGHT) {
     const answer = await vscode.window.showInformationMessage(`${opName} requires the Java language server to run in Standard mode. ` +
       "Do you want to switch it to Standard mode now?", "Yes", "Cancel");
@@ -64,19 +65,13 @@ export async function requestStandardMode(opName: string): Promise<boolean> {
  * This promise never rejects.
  */
 export async function waitForStandardMode(): Promise<void> {
-  return new Promise((resolve) => {
-    const javaExt = vscode.extensions.getExtension(JAVA_EXTENSION_ID);
-    if (javaExt) {
-      javaExt.activate().then((javaExtApi) => {
-        if (javaExtApi) {
-          javaExtApi.onDidServerModeChange((mode: string) => {
-            if (mode === ServerMode.STANDARD) {
-              resolve();
-            }
-          });
-        }
-      });
-    }
+  return new Promise(async (resolve) => {
+    const javaExtApi = await getJavaExtensionAPI();
+    javaExtApi.onDidServerModeChange((mode: string) => {
+      if (mode === ServerMode.STANDARD) {
+        resolve();
+      }
+    });
   });
 }
 

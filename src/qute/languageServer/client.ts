@@ -7,11 +7,12 @@ import { prepareExecutable } from './javaServerStarter';
 import { registerVSCodeQuteCommands } from '../commands/registerCommands';
 import { QuteClientCommandConstants } from '../commands/commandConstants';
 import { QuteSettings } from './settings';
+import { JavaExtensionAPI } from '../../extension';
 
-export function connectToQuteLS(context: ExtensionContext) {
+export function connectToQuteLS(context: ExtensionContext, api: JavaExtensionAPI) {
   registerVSCodeQuteCommands(context);
 
-  return requirements.resolveRequirements().then(requirements => {
+  return requirements.resolveRequirements(api).then(requirements => {
     const clientOptions: LanguageClientOptions = {
       documentSelector: [
         { scheme: 'file', language: 'qute-html' },

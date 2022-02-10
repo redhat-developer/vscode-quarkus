@@ -15,7 +15,7 @@ export function prepareExecutable(requirements: RequirementsData): Executable {
   const options: ExecutableOptions = Object.create(null);
   options.env = process.env;
   executable.options = options;
-  executable.command = path.resolve(requirements.java_home + '/bin/java');
+  executable.command = path.resolve(requirements.tooling_jre + '/bin/java');
   executable.args = prepareParams();
   return executable;
 }

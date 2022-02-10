@@ -68,7 +68,7 @@ In `Java` files, you will benefit with:
 ## Requirements
 
   * [Visual Studio Code extension for MicroProfile](https://github.com/redhat-developer/vscode-microprofile)
-  * Java JDK (or JRE) 11 or more recent
+  * Java JDK (or JRE) 11 or more recent is required **except** on the following platforms : `win32-x64`, `linux-x64`, `linux-arm64`, `darwin-x64`, `darwin-arm64`. See [JDK Tooling](https://github.com/redhat-developer/vscode-java/#java-tooling-jdk) for details.
   * [Language Support for Java(TM) by Red Hat](https://marketplace.visualstudio.com/items?itemName=redhat.java)
   * [Debugger for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-debug)
 
