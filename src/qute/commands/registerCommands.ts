@@ -3,7 +3,8 @@ import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selec
 import { ConfigurationItem, Location } from "vscode-languageclient";
 import { QuteSettings } from "../languageServer/settings";
 import { QuteClientCommandConstants, QuteJdtLsServerCommandConstants, QuteServerCommandConstants } from "./commandConstants";
-
+import { CancellationToken, ExecuteCommandParams, ExecuteCommandRequest } from "vscode-languageclient";
+import { LanguageClient } from "vscode-languageclient/node";
 /**
  * Register custom vscode command for Qute support.
  *
@@ -15,6 +16,28 @@ export function registerVSCodeQuteCommands(context: ExtensionContext) {
   registerJavaDefinitionCommand(context);
   registerConfigurationUpdateCommand(context);
   registerQuteValidationToggleCommand(context);
+}
+
+export function registerQuteExecuteWorkspaceCommand(context: ExtensionContext, languageClient: LanguageClient) {
+  // Register client command to execute custom Qute Language Server command
+  context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.EXECUTE_WORKSPACE_COMMAND, (command, ...rest) => {
+    let token: CancellationToken;
+    let commandArgs: any[] = rest;
+    if (rest && rest.length && CancellationToken.is(rest[rest.length - 1])) {
+      token = rest[rest.length - 1];
+      commandArgs = rest.slice(0, rest.length - 1);
+    }
+    const params: ExecuteCommandParams = {
+      command,
+      arguments: commandArgs
+    };
+    if (token) {
+      return languageClient.sendRequest(ExecuteCommandRequest.type, params, token);
+    }
+    else {
+      return languageClient.sendRequest(ExecuteCommandRequest.type, params);
+    }
+  }));
 }
 
 /**
@@ -153,8 +176,8 @@ export function registerConfigurationUpdateCommand(context: ExtensionContext) {
    * Sets the `editorLangIdSupportsQute` context to `true` if the editor language id
    * is a qute template. Sets to `false` otherwise.
    */
- export async function updateQuteContext(document: TextDocument) {
-   const quteSupported = document.languageId.includes('qute');
+export async function updateQuteContext(document: TextDocument) {
+  const quteSupported = document.languageId.includes('qute');
   await commands.executeCommand('setContext', 'editorLangIdSupportsQute', quteSupported);
   if (quteSupported) {
     await checkQuteValidationFromExclusionContext(document.uri);
@@ -166,7 +189,7 @@ export function registerConfigurationUpdateCommand(context: ExtensionContext) {
    */
 async function checkQuteValidationFromExclusionContext(uri: Uri) {
   const templateUri = uri.toString();
-  const result: TemplateValidationStatus = await commands.executeCommand(QuteServerCommandConstants.QUTE_VALIDATION_TEMPLATE_STATUS, templateUri);
+  const result: TemplateValidationStatus = await commands.executeCommand(QuteClientCommandConstants.EXECUTE_WORKSPACE_COMMAND, QuteServerCommandConstants.QUTE_VALIDATION_TEMPLATE_STATUS, templateUri);
   await commands.executeCommand('setContext', 'editorQuteValidationEnabled', (result.validationEnabled && (!result.excluded || result.excluded.length === 0)));
 }
 
@@ -251,6 +274,6 @@ enum ConfigurationItemEditType {
 }
 
 interface TemplateValidationStatus {
-	validationEnabled: boolean;
-	excluded: string[];
+  validationEnabled: boolean;
+  excluded: string[];
 }

@@ -35,6 +35,10 @@ export namespace QuteClientCommandConstants {
    */
   export const QUTE_VALIDATION_ENABLED_TOGGLE_OFF = 'qute.validation.enabled.toggle.off';
 
+  /**
+  * Client command to execute an XML command on XML Language Server side.
+  */
+  export const EXECUTE_WORKSPACE_COMMAND = 'qute.workspace.executeCommand';
 }
 
 /**
@@ -47,10 +51,10 @@ export namespace QuteServerCommandConstants {
    */
   export const GENERATE_TEMPLATE_CONTENT = 'qute.command.generate.template.content';
 
-    /**
-   * Check if a Qute template is excluded from validation.
-   */
-     export const QUTE_VALIDATION_TEMPLATE_STATUS = 'qute.command.validation.template.status';
+  /**
+ * Check if a Qute template is excluded from validation.
+ */
+  export const QUTE_VALIDATION_TEMPLATE_STATUS = 'qute.command.validation.template.status';
 
 }
 

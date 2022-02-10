@@ -4,7 +4,7 @@ import { DidChangeConfigurationNotification, LanguageClientOptions } from 'vscod
 import { LanguageClient } from 'vscode-languageclient/node';
 import { ExtensionContext, commands, workspace, window, ConfigurationTarget, WorkspaceConfiguration } from 'vscode';
 import { prepareExecutable } from './javaServerStarter';
-import { registerVSCodeQuteCommands, updateQuteContext } from '../commands/registerCommands';
+import { registerQuteExecuteWorkspaceCommand, registerVSCodeQuteCommands, updateQuteContext } from '../commands/registerCommands';
 import { QuteClientCommandConstants } from '../commands/commandConstants';
 import { QuteSettings } from './settings';
 
@@ -77,6 +77,8 @@ export function connectToQuteLS(context: ExtensionContext) {
       bindQuteRequest('qute/java/diagnostics');
       bindQuteRequest('qute/java/documentLink');
       bindQuteNotification('qute/dataModelChanged');
+
+      registerQuteExecuteWorkspaceCommand(context, quteLanguageClient);
 
       // When an editor is changed, check the qute validation context.
       context.subscriptions.push(
@@ -178,3 +180,4 @@ async function showQuteValidationPopUp(context: ExtensionContext) {
 export async function setQuteValidationEnabledContext() {
   await commands.executeCommand('setContext', 'editorQuteValidationEnabled', workspace.getConfiguration().get(QuteSettings.QUTE_VALIDATION_ENABLED));
 }
+
