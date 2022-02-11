@@ -4,7 +4,7 @@ import { DidChangeConfigurationNotification, LanguageClientOptions } from 'vscod
 import { LanguageClient } from 'vscode-languageclient/node';
 import { ExtensionContext, commands, workspace, window, ConfigurationTarget, WorkspaceConfiguration } from 'vscode';
 import { prepareExecutable } from './javaServerStarter';
-import { registerQuteExecuteWorkspaceCommand, registerVSCodeQuteCommands, updateQuteContext } from '../commands/registerCommands';
+import { registerQuteExecuteWorkspaceCommand, registerVSCodeQuteCommands, synchronizeQuteValidationButton } from '../commands/registerCommands';
 import { QuteClientCommandConstants } from '../commands/commandConstants';
 import { QuteSettings } from './settings';
 
@@ -44,8 +44,12 @@ export function connectToQuteLS(context: ExtensionContext) {
       },
       middleware: {
         workspace: {
-          didChangeConfiguration: () => {
+          didChangeConfiguration: async () => {
+            // A settings.json is updated:
+            // 1. send the new Quet settings to the Qute language server
             quteLanguageClient.sendNotification(DidChangeConfigurationNotification.type, { settings: getQuteSettings() });
+            // 2. synchronize the Qute toggle button for validation
+            await synchronizeQuteValidationButton(window.activeTextEditor);
           }
         }
       }
@@ -80,19 +84,27 @@ export function connectToQuteLS(context: ExtensionContext) {
 
       registerQuteExecuteWorkspaceCommand(context, quteLanguageClient);
 
-      // When an editor is changed, check the qute validation context.
+      // Refresh the Qute context when editor tab has the focus
       context.subscriptions.push(
         window.onDidChangeActiveTextEditor(async editor => {
-          if (editor) {
-            await updateQuteContext(editor.document);
+          await synchronizeQuteValidationButton(editor);
+        })
+      );
+
+      // Refresh the Qute context when the language id changed (HTML -> Qute HTML or Qute HTML -> HTML)
+      context.subscriptions.push(
+        workspace.onDidOpenTextDocument(async (document) => {
+          // when settings.json is updated, onDidOpenTextDocument is called,
+          // the Qute context must be refreshed only for the activate text editor.
+          if (window.activeTextEditor?.document == document) {
+            await synchronizeQuteValidationButton(window.activeTextEditor);
           }
-        }));
+        })
+      );
 
       await setQuteValidationEnabledContext();
 
-      if (window.activeTextEditor && window.activeTextEditor.document) {
-        await updateQuteContext(window.activeTextEditor.document);
-      }
+      await synchronizeQuteValidationButton(window.activeTextEditor);
 
       if (!hasShownQuteValidationPopUp(context)) {
         await showQuteValidationPopUp(context);

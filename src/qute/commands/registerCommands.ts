@@ -1,5 +1,5 @@
 import { TextEncoder } from "util";
-import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selection, TextDocument, Uri, window, workspace, WorkspaceConfiguration } from "vscode";
+import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selection, TextDocument, TextEditor, Uri, window, workspace, WorkspaceConfiguration } from "vscode";
 import { ConfigurationItem, Location } from "vscode-languageclient";
 import { QuteSettings } from "../languageServer/settings";
 import { QuteClientCommandConstants, QuteJdtLsServerCommandConstants, QuteServerCommandConstants } from "./commandConstants";
@@ -174,13 +174,22 @@ export function registerConfigurationUpdateCommand(context: ExtensionContext) {
 }
 
 /**
-   * Sets the `editorLangIdSupportsQute` context to `true` if the editor language id
-   * is a qute template. Sets to `false` otherwise.
+   * Synchronize Qute validation button from the activated editor:
+   *
+   * - the button can be hidden (when file is not a Qute template file).
+   * - the button can be shown with eye-closed (when file is a Qute template file and validation is enabled).
+   * - the button can be shown with eye-opened (when file is a Qute template file and validation is disabled)
    */
-export async function updateQuteContext(document: TextDocument) {
+export async function synchronizeQuteValidationButton(editor: TextEditor) {
+  const document = editor?.document;
+  if (!document) {
+    return;
+  }
+  // Is the document is a Qute template file?
   const quteSupported = document.languageId.includes('qute');
   await commands.executeCommand('setContext', 'editorLangIdSupportsQute', quteSupported);
   if (quteSupported) {
+    // Here the button will be visible, we should display it with eye-closed icon (validation is enabled) or with eye-opened icon (validation is disabled).
     await checkQuteValidationFromExclusionContext(document.uri);
   }
 }
