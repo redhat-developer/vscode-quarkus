@@ -21,9 +21,7 @@ export function registerVSCodeQuteCommands(context: ExtensionContext) {
   registerQuteValidationToggleCommand(context);
   context.subscriptions.push(
     workspace.onDidOpenTextDocument((document) => {
-      if (!(document.uri.scheme === 'git')) {
-        updateQuteLanguageId(context, document, true);
-      }
+      updateQuteLanguageId(context, document, true);
     })
   );
   // When extension is started, loop for each text documents which are opened to update their language ID.
@@ -202,7 +200,7 @@ async function checkQuteValidationFromExclusionContext(uri: Uri) {
    * - the button can be shown with eye-closed (when file is a Qute template file and validation is enabled).
    * - the button can be shown with eye-opened (when file is a Qute template file and validation is disabled)
    */
- export async function synchronizeQuteValidationButton(editor: TextEditor) {
+export async function synchronizeQuteValidationButton(editor: TextEditor) {
   const document = editor?.document;
   if (!document) {
     return;
@@ -243,24 +241,38 @@ const LANGUAGE_MAP = new Map<string, string>([
  * @param document the text document.
  * @param onExtensionLoad if the user manually changed the language id.
  */
- async function updateQuteLanguageId(context: ExtensionContext, document: TextDocument, onExtensionLoad: boolean) {
+async function updateQuteLanguageId(context: ExtensionContext, document: TextDocument, onExtensionLoad: boolean) {
+  if (document.uri.scheme === 'git') {
+    return;
+  }
   const propertiesLanguageMismatch: QuteTemplateLanguageMismatch = QuteSettings.getQuteTemplatesLanguageMismatch();
   // Check if the setting is set to ignore or if the language ID is already set to Qute
   if (propertiesLanguageMismatch === QuteTemplateLanguageMismatch.ignore || document.languageId.startsWith('qute-')) {
     // Do nothing
     return;
   }
-  const fileName: string = path.basename(document.fileName);
-  if (document.fileName.includes(`resources${path.sep}templates${path.sep}`)) {
+  if (isInTemplates(document)) {
     for (const extension of LANGUAGE_MAP.keys()) {
       if (path.extname(document.fileName) === extension) {
         const quteLanguageId = LANGUAGE_MAP.get(extension);
-
+        const fileName: string = path.basename(document.fileName);
         tryToForceLanguageId(context, document, fileName, propertiesLanguageMismatch, quteLanguageId, onExtensionLoad, QuteSettings.QUTE_OVERRIDE_LANGUAGE_ID, QuteSettings.QUTE_TEMPLATES_LANGUAGE_MISMATCH);
         break;
       }
     }
   }
+}
+
+function isInTemplates(document: TextDocument): boolean {
+  if (document.fileName.includes(`resources${path.sep}templates${path.sep}`)) {
+    // HTML, etc file is included in src/main/resources/templates
+    return true;
+  }
+  if (document.uri.scheme === 'jdt' && document.uri.path.startsWith(`/templates`)) {
+    // HTML, etc file is included in a JAR in templates JAR entry
+    return true;
+  }
+  return false;
 }
 
 interface IConfiguration {

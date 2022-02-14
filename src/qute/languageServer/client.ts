@@ -75,6 +75,7 @@ export function connectToQuteLS(context: ExtensionContext, api: JavaExtensionAPI
     return quteLanguageClient.onReady().then(async () => {
       bindQuteRequest('qute/template/project');
       bindQuteRequest('qute/template/projectDataModel');
+      bindQuteRequest('qute/template/userTags');
       bindQuteRequest('qute/template/javaTypes');
       bindQuteRequest('qute/template/resolvedJavaType');
       bindQuteRequest('qute/template/javaDefinition');
