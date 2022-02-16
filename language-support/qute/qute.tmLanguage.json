@@ -21,10 +21,16 @@
     "templates": {
       "patterns": [
         {
-          "include": "#section_start_tag"
+          "include": "#section_start_default_tag"
         },
         {
-          "include": "#section_end_tag"
+          "include": "#section_end_default_tag"
+        },
+        {
+          "include": "#section_start_user_tag"
+        },
+        {
+          "include": "#section_end_user_tag"
         },
         {
           "include": "#double_bracket"
@@ -79,8 +85,8 @@
 			},
 			"name": "string.unquoted.cdata.qute"
 		},
-    "section_start_tag": {
-      "begin": "({)(#)(else\\sif|\\w+(\\.\\w+)*)",
+    "section_start_default_tag": {
+      "begin": "({)(#)((each|else|else\\sif|eval|for|if|include|insert|set|let|with|switch|case|is|when)\\b)",
       "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
@@ -107,8 +113,8 @@
         }
       ]
     },
-    "section_end_tag": {
-      "begin": "({)(\\/)(\\w+(\\.\\w+)*)?\\s*",
+    "section_end_default_tag": {
+      "begin": "({)(\\/)((each|else|else\\sif|eval|for|if|include|insert|set|let|with|switch|case|is|when)\\b)",
       "end": "((?<![\\\\])})",
       "beginCaptures": {
         "1": {
@@ -127,9 +133,53 @@
         }
       }
     },
-    "section_start_tag_content": {
-      "match": "((\\s+[^}\\/]+)*)\\s*",
-      "name": "variable.parameter.function.qute"
+    "section_start_user_tag": {
+      "begin": "({)(#)(\\w+(\\.\\w+)*)",
+      "end": "(\\/)?((?<![\\\\])})",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "entity.name.function.hash"
+        },
+        "3": {
+          "name": "entity.name.function.identifier"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "keyword.control"
+        },
+        "2": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "section_end_user_tag": {
+      "begin": "({)(\\/)(\\w+(\\.\\w+)*)?\\s*",
+      "end": "((?<![\\\\])})",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "entity.name.function.slash"
+        },
+        "3": {
+          "name": "entity.name.function.identifier"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      }
     },
     "double_bracket": {
       "match": "{{"
@@ -322,14 +372,6 @@
           "name": "keyword.control.ternary.java"
         },
         {
-          "match": "\\b(return|break|case|continue|default|do|while|for|switch|if|else)\\b",
-          "name": "keyword.control.java"
-        },
-        {
-          "match": "\\b(instanceof)\\b",
-          "name": "keyword.operator.instanceof.java"
-        },
-        {
           "match": "(<<|>>>?|~|\\^)",
           "name": "keyword.operator.bitwise.java"
         },
@@ -364,10 +406,6 @@
         {
           "match": "(\\||&)",
           "name": "keyword.operator.bitwise.java"
-        },
-        {
-          "match": "\\b(const|goto)\\b",
-          "name": "keyword.reserved.java"
         },
         {
           "match": "\\b(is|as|eq|ne|gt|ge|lt|le)\\b",
