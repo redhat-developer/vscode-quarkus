@@ -21,6 +21,12 @@
     "templates": {
       "patterns": [
         {
+          "include": "#section_core_start_tag"
+        },
+        {
+          "include": "#section_core_end_tag"
+        },
+        {
           "include": "#section_start_tag"
         },
         {
@@ -79,18 +85,66 @@
 			},
 			"name": "string.unquoted.cdata.qute"
 		},
-    "section_start_tag": {
-      "begin": "({)(#)(else\\sif|\\w+(\\.\\w+)*)",
+    "section_core_start_tag": {
+      "begin": "({)(#)(each|else|else\\sif|eval|for|if|include|insert|set|let|with|switch|case|is|when)",
       "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
           "name": "support.constant.handlebars"
         },
         "2": {
-          "name": "keyword.control"
+          "name": "entity.name.tag.hash"
         },
         "3": {
+          "name": "entity.name.tag.identifier"
+        }
+      },
+      "endCaptures": {
+        "1": {
           "name": "keyword.control"
+        },
+        "2": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "section_core_end_tag": {
+      "begin": "({)(\\/)(each|else|else\\sif|eval|for|if|include|insert|set|let|with|switch|case|is|when)?\\s*",
+      "end": "((?<![\\\\])})",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "entity.name.tag.slash"
+        },
+        "3": {
+          "name": "entity.name.tag.identifier"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        }
+      }
+    },
+    "section_start_tag": {
+      "begin": "({)(#)(\\w+(\\.\\w+)*)",
+      "end": "(\\/)?((?<![\\\\])})",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "entity.name.function.hash"
+        },
+        "3": {
+          "name": "entity.name.function.identifier"
         }
       },
       "endCaptures": {
@@ -115,10 +169,10 @@
           "name": "support.constant.handlebars"
         },
         "2": {
-          "name": "keyword.control"
+          "name": "entity.name.function.slash"
         },
         "3": {
-          "name": "keyword.control"
+          "name": "entity.name.function.identifier"
         }
       },
       "endCaptures": {
