@@ -116,13 +116,17 @@ For information on getting started, refer to the [CONTRIBUTING instructions](CON
 
 CI builds can be installed manually by following these instructions:
 
-  1) Download the latest development VSIX archive [from here](https://download.jboss.org/jbosstools/vscode/snapshots/vscode-quarkus/?C=M;O=D). `(vscode-quarkus-XXX.vsix)`
+  1) Download and unzip the `vscode-microprofile` artifact [from the latest build](https://github.com/redhat-developer/vscode-microprofile/actions/workflows/release.yml?query=branch%3Amaster). 
 
-  2) Click `View/Command Palette`
+  2) Download and unzip the `vscode-quarkus` artifact [from the latest build](https://github.com/redhat-developer/vscode-quarkus/actions/workflows/release.yml?query=branch%3Amaster). 
 
-  3) Type 'VSIX'
+  3) Click `View/Command Palette`
 
-  4) Select 'Install from VSIX...' and choose the `.vsix` file.
+  4) Type 'VSIX'
+
+  5) Select 'Extensions: Install from VSIX...' and choose the `.vsix` file.
+
+Alternatively, you can install the latest pre-releases of `Tools for MicroProfile` and `Quarkus` from the Marketplace (published daily).
 
 ## Feedback
 
