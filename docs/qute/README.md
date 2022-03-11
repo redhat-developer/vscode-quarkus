@@ -9,8 +9,11 @@
 
  ## Settings
 
- * `qute.codeLens.enabled`: Enable/disable Qute CodeLens. Default is `true`.
  * `qute.trace.server`: Trace the communication between VS Code and the Qute language server in the Output view. Default is `off`.
+ * `qute.codeLens.enabled`: Enable/disable Qute CodeLens. Default is `true`.
+ * `qute.inlayHint.enabled`: Enable/disable Inlay Hint. Default is `true`.
+ * `qute.inlayHint.showSectionParameterType`: Show section parameter type. Default is `true`.
+ * `qute.inlayHint.showMethodParameterType`: Show method parameter type. Default is `true`. 
  * `qute.validation.enabled`: Enable/disable all Qute validation. Default is `false`.
  * `qute.validation.excluded`: Disable Qute validation for the given file name patterns.\n\nExample:\n```\n[\n \"**/*items.qute.*\"\n]```.
  * `qute.validation.undefinedObject.severity`: Validation severity for undefined object in Qute template files. Default is `warning`.

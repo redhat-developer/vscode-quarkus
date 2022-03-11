@@ -10,7 +10,7 @@
   "license": "Apache-2.0",
   "bugs": "https://github.com/redhat-developer/vscode-quarkus/issues",
   "engines": {
-    "vscode": "^1.37.0"
+    "vscode": "^1.65.0"
   },
   "galleryBanner": {
     "color": "#d8ebff",
@@ -218,11 +218,6 @@
           "description": "Action performed when detected Quarkus properties have an incorrect language.",
           "scope": "window"
         },
-        "qute.codeLens.enabled": {
-          "type": "boolean",
-          "default": true,
-          "markdownDescription": "Enable/disable Qute CodeLens. Default is `true`."
-        },
         "qute.templates.languageMismatch": {
           "type": "string",
           "enum": [
@@ -249,6 +244,21 @@
           "default": "off",
           "markdownDescription": "Traces the communication between VS Code and the Qute language server in the Output view. Default is `off`.",
           "scope": "window"
+        },
+        "qute.codeLens.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Enable/disable Qute CodeLens. Default is `true`."
+        },
+        "qute.inlayHint.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Enable/disable Qute Inlay Hint. Default is `true`."
+        },
+        "qute.inlayHint.showSectionParameterType": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Show section parameter type. Default is `true`."
         },
         "qute.validation.enabled": {
           "type": "boolean",
@@ -409,7 +419,7 @@
     "@types/request": "^2.48.3",
     "@types/request-promise": "^4.1.44",
     "@types/semver": "^6.2.0",
-    "@types/vscode": "^1.37.0",
+    "@types/vscode": "^1.65.0",
     "@types/which": "^2.0.1",
     "@types/yauzl": "^2.9.1",
     "chai": "^4.2.0",
