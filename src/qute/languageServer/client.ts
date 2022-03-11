@@ -2,12 +2,13 @@ import * as requirements from './requirements';
 
 import { DidChangeConfigurationNotification, LanguageClientOptions } from 'vscode-languageclient';
 import { LanguageClient } from 'vscode-languageclient/node';
-import { ExtensionContext, commands, workspace, window, ConfigurationTarget, WorkspaceConfiguration } from 'vscode';
+import { ExtensionContext, commands, workspace, window, ConfigurationTarget, WorkspaceConfiguration, InlayHintsProvider, CancellationToken, Event, InlayHint, ProviderResult, Range, TextDocument, languages } from 'vscode';
 import { prepareExecutable } from './javaServerStarter';
 import { registerQuteExecuteWorkspaceCommand, registerVSCodeQuteCommands, synchronizeQuteValidationButton } from '../commands/registerCommands';
 import { QuteClientCommandConstants } from '../commands/commandConstants';
 import { QuteSettings } from './settings';
 import { JavaExtensionAPI } from '../../extension';
+import { QuteInlayHintsProvider } from './inlayHintsProvider';
 
 export function connectToQuteLS(context: ExtensionContext, api: JavaExtensionAPI) {
   registerVSCodeQuteCommands(context);
@@ -106,6 +107,10 @@ export function connectToQuteLS(context: ExtensionContext, api: JavaExtensionAPI
 
       if (!hasShownQuteValidationPopUp(context)) {
         showQuteValidationPopUp(context);
+      }
+      const supportRegisterInlayHintsProvider = (languages as any).registerInlayHintsProvider;
+      if (supportRegisterInlayHintsProvider) {
+        context.subscriptions.push(languages.registerInlayHintsProvider(clientOptions.documentSelector, new QuteInlayHintsProvider(quteLanguageClient)));
       }
     });
   });
