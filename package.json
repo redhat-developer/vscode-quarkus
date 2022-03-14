@@ -270,6 +270,17 @@
           "default": "warning",
           "markdownDescription": "Validation severity for undefined object in Qute template files.",
           "scope": "resource"
+        },
+        "qute.validation.undefinedNamespace.severity": {
+          "type": "string",
+          "enum": [
+            "ignore",
+            "warning",
+            "error"
+          ],
+          "default": "warning",
+          "markdownDescription": "Validation severity for undefined namespace in Qute template files.",
+          "scope": "resource"
         }
       }
     },
