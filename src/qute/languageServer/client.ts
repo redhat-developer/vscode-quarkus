@@ -105,7 +105,7 @@ export function connectToQuteLS(context: ExtensionContext, api: JavaExtensionAPI
       await synchronizeQuteValidationButton(window.activeTextEditor);
 
       if (!hasShownQuteValidationPopUp(context)) {
-        await showQuteValidationPopUp(context);
+        showQuteValidationPopUp(context);
       }
     });
   });
