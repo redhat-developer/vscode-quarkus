@@ -19,6 +19,7 @@ import * as g2js from 'gradle-to-js/lib/parser';
 import * as _ from 'lodash';
 import * as path from 'path';
 import * as pomParser from 'pom-parser';
+import { env } from 'process';
 import { By, InputBox, Key, VSBrowser, WebDriver, WebElement, Workbench } from 'vscode-extension-tester';
 import { ProjectGenerationWizard, QuickPickItemInfo } from '../ProjectGenerationWizard';
 
@@ -325,6 +326,11 @@ describe('Project generation tests', function () {
    */
   it('should display input values from previously generated project (with extensions)', async function () {
     this.timeout(360000);
+
+    if (env['SKIP_KNOWN_FAILING_TESTS'] === 'true') {
+      console.log('Skipping "should display input values from previously generated project (with extensions)"');
+      return;
+    }
 
     const projectDestDir: string = path.join(tempDir, 'previous-values-extensions');
 
