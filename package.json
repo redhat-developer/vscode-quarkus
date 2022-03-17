@@ -218,6 +218,11 @@
           "description": "Action performed when detected Quarkus properties have an incorrect language.",
           "scope": "window"
         },
+        "qute.codeLens.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Enable/disable Qute CodeLens. Default is `true`."
+        },
         "qute.templates.languageMismatch": {
           "type": "string",
           "enum": [
