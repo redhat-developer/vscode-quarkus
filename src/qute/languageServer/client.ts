@@ -100,14 +100,23 @@ export function connectToQuteLS(context: ExtensionContext, api: JavaExtensionAPI
           if (window.activeTextEditor?.document === document) {
             await synchronizeQuteValidationButton(window.activeTextEditor);
           }
+          // Display the experimental Qute validation pop-up if it hasn't been displayed and a Qute file is open
+          if (!hasShownQuteValidationPopUp(context) && document.languageId.includes('qute')) {
+            showQuteValidationPopUp(context);
+          }
         })
       );
+      // Display the experimental Qute validation pop-up if it hasn't been displayed and a Qute file is open
+      if (!hasShownQuteValidationPopUp(context)) {
+        for (let textDocument of workspace.textDocuments) {
+          if (textDocument.languageId.includes('qute')) {
+            showQuteValidationPopUp(context);
+          }
+        }
+      }
       await setQuteValidationEnabledContext();
       await synchronizeQuteValidationButton(window.activeTextEditor);
 
-      if (!hasShownQuteValidationPopUp(context)) {
-        showQuteValidationPopUp(context);
-      }
       const supportRegisterInlayHintsProvider = (languages as any).registerInlayHintsProvider;
       if (supportRegisterInlayHintsProvider) {
         context.subscriptions.push(languages.registerInlayHintsProvider(clientOptions.documentSelector, new QuteInlayHintsProvider(quteLanguageClient)));
