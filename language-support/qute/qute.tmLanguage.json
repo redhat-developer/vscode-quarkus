@@ -21,6 +21,12 @@
     "templates": {
       "patterns": [
         {
+          "include": "#section_start_if_tag"
+        },
+        {
+          "include": "#section_start_for_tag"
+        },
+        {
           "include": "#section_start_default_tag"
         },
         {
@@ -86,7 +92,7 @@
 			"name": "string.unquoted.cdata.qute"
 		},
     "section_start_default_tag": {
-      "begin": "({)(#)((each|else|else\\sif|eval|for|if|include|insert|set|let|with|switch|case|is|when)\\b)",
+      "begin": "({)(#)((each|else|else\\sif|eval|include|insert|set|let|with|switch|case|is|when)\\b)",
       "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
@@ -132,6 +138,74 @@
           "name": "support.constant.handlebars"
         }
       }
+    },
+    "section_start_if_tag": {
+      "begin": "({)(#)((if)\\b)",
+      "end": "(\\/)?((?<![\\\\])})",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "keyword.control"
+        },
+        "3": {
+          "name": "keyword.control"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "keyword.control"
+        },
+        "2": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "match": "\\b(gt|ge|lt|le|eq|is|ne|and|or)\\b",
+          "name": "keyword.control.qute"
+        },
+        {
+          "match": "\\b(!|>|>=|<|<=|==|!=|&&|\\|\\|)\\b",
+          "name": "keyword.operator.qute"
+        },
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "section_start_for_tag": {
+      "begin": "({)(#)((for)\\b)",
+      "end": "(\\/)?((?<![\\\\])})",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "keyword.control"
+        },
+        "3": {
+          "name": "keyword.control"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "keyword.control"
+        },
+        "2": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "match": "\\bin\\b",
+          "name": "keyword.control.flow"
+        },
+        {
+          "include": "#code"
+        }
+      ]
     },
     "section_start_user_tag": {
       "begin": "({)(#)(\\w+(\\.\\w+)*)",
@@ -199,13 +273,17 @@
       },
       "patterns": [
         {
+          "match": "\\b(or|orEmpty)\\b",
+          "name": "keyword.control.qute"
+        },
+        {
+          "match": "\\b(&&|\\|\\||\\?:|\\?|:)\\b",
+          "name": "keyword.operator.qute"
+        },
+        {
           "include": "#code"
         }
       ]
-    },
-    "expression_content": {
-      "match": "[a-zA-Z_\\(][\\w\\(\\)+-\/\\*]+(\\.?[\\w\\(\\)+-\/\\*]+)*",
-      "name": "variable.other.readwrite.local.qute"
     },
     "code": {
       "patterns": [
@@ -220,9 +298,6 @@
         },
         {
           "include": "#lambda-expression"
-        },
-        {
-          "include": "#keywords"
         },
         {
           "include": "#method-call"
@@ -358,62 +433,6 @@
       "patterns": [
         {
           "include": "#code"
-        }
-      ]
-    },
-    "keywords": {
-      "patterns": [
-        {
-          "match": "\\bthrow\\b",
-          "name": "keyword.control.throw.java"
-        },
-        {
-          "match": "\\?|:",
-          "name": "keyword.control.ternary.java"
-        },
-        {
-          "match": "(<<|>>>?|~|\\^)",
-          "name": "keyword.operator.bitwise.java"
-        },
-        {
-          "match": "((&|\\^|\\||<<|>>>?)=)",
-          "name": "keyword.operator.assignment.bitwise.java"
-        },
-        {
-          "match": "(===?|!=|<=|>=|<>|<|>)",
-          "name": "keyword.operator.comparison.java"
-        },
-        {
-          "match": "([+*/%-]=)",
-          "name": "keyword.operator.assignment.arithmetic.java"
-        },
-        {
-          "match": "(=)",
-          "name": "keyword.operator.assignment.java"
-        },
-        {
-          "match": "(\\-\\-|\\+\\+)",
-          "name": "keyword.operator.increment-decrement.java"
-        },
-        {
-          "match": "(\\-|\\+|\\*|\\/|%)",
-          "name": "keyword.operator.arithmetic.java"
-        },
-        {
-          "match": "(!|&&|\\|\\|)",
-          "name": "keyword.operator.logical.java"
-        },
-        {
-          "match": "(\\||&)",
-          "name": "keyword.operator.bitwise.java"
-        },
-        {
-          "match": "\\b(is|as|eq|ne|gt|ge|lt|le)\\b",
-          "name": "keyword.control.operator"
-        },
-        {
-          "match": "(?<=({#for\\s(\\w)*\\s))in",
-          "name": "keyword.control.flow"
         }
       ]
     },
