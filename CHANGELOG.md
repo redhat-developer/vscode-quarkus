@@ -4,49 +4,49 @@
 
 ### Enhancements
 
- * enhancement - Make the "Deploy to OpenShift" command more discoverable. See [#406](https://github.com/redhat-developer/vscode-quarkus/issues/406).
- * enhancement - Add language support for Qute templates. See [#178](https://github.com/redhat-developer/vscode-quarkus/issues/178).
- * enhancement - Create a Qute Language Server. See [quarkus-ls#176](https://github.com/redhat-developer/quarkus-ls/issues/176).
- * enhancement - Promote experimental Qute validation. See [#438](https://github.com/redhat-developer/vscode-quarkus/issues/438).
- * enhancement - Create separate setting for configuring language mismatch behaviour for Qute templates. See [#457](https://github.com/redhat-developer/vscode-quarkus/issues/457).
- * enhancement - Automatically force Qute language for files under `src/main/resources/templates` of Quarkus projects. See [#450](https://github.com/redhat-developer/vscode-quarkus/issues/450).
- * enhancement - When generating a project without starter code, the Resource name step should be skipped. See [#396](https://github.com/redhat-developer/vscode-quarkus/issues/396).
- * enhancement - Provide completion for cache name in configuration file. See [quarkus-ls#404](https://github.com/redhat-developer/quarkus-ls/issues/404).
- * enhancement - Definition & Validation support for `@Scheduled/cron`. See [quarkus-ls#377](https://github.com/redhat-developer/quarkus-ls/issues/377) & [quarkus-ls#378](https://github.com/redhat-developer/quarkus-ls/issues/378).
- * enhancement - Support for `@ConfigMapping`. See [quarkus-ls#413](https://github.com/redhat-developer/quarkus-ls/issues/413) & [quarkus-ls#424](https://github.com/redhat-developer/quarkus-ls/issues/424).
- * enhancement - Support `application-${profile}.properties`. See [quarkus-ls#411](https://github.com/redhat-developer/quarkus-ls/pull/411).
- * enhancement - Support validation and code actions for `@ConfigProperty`. See [eclipse/lsp4mp#90](https://github.com/eclipse/lsp4mp/issues/90), [eclipse/lsp4mp#176](https://github.com/eclipse/lsp4mp/issues/176) and [eclipse/lsp4mp#147](https://github.com/eclipse/lsp4mp/issues/147).
- * enhancement - Completion for properties defined using `@ConfigProperties`. See [eclipse/lsp4mp#80](https://github.com/eclipse/lsp4mp/issues/80).
- * enhancement - Support validation for `@Retry` annotation and its member values. See [eclipse/lsp4mp#191](https://github.com/eclipse/lsp4mp/pull/191) and [eclipse/lsp4mp#196](https://github.com/eclipse/lsp4mp/issues/196).
- * enhancement - Diagnostics for `@Asynchronous`, `@Bulkhead` & `@Timeout` annotations. See [eclipse/lsp4mp#74](https://github.com/eclipse/lsp4mp/issues/74), [eclipse/lsp4mp#184](https://github.com/eclipse/lsp4mp/pull/184), [eclipse/lsp4mp#185](https://github.com/eclipse/lsp4mp/pull/185).
- * enhancement - Support the `@ApplicationPath` annotation to handle the project URL. See [eclipse/lsp4mp#179](https://github.com/eclipse/lsp4mp/issues/179).
- * enhancement - Diagnostics for invalid annotation parameter values. See [eclipse/lsp4mp#77](https://github.com/eclipse/lsp4mp/issues/77).
- * enhancement - Use redhat.java embedded JRE to launch the language servers. See [vscode-microprofile#84](https://github.com/redhat-developer/vscode-microprofile/issues/84), [#461](https://github.com/redhat-developer/vscode-quarkus/pull/461).
- * enhancement - Add settings to disable CodeLens. See [quarkus-ls#472](https://github.com/redhat-developer/quarkus-ls/issues/472).
+ * Make the "Deploy to OpenShift" command more discoverable. See [#406](https://github.com/redhat-developer/vscode-quarkus/issues/406).
+ * Add language support for Qute templates. See [#178](https://github.com/redhat-developer/vscode-quarkus/issues/178).
+ * Create a Qute Language Server. See [quarkus-ls#176](https://github.com/redhat-developer/quarkus-ls/issues/176).
+ * Promote experimental Qute validation. See [#438](https://github.com/redhat-developer/vscode-quarkus/issues/438).
+ * Create separate setting for configuring language mismatch behaviour for Qute templates. See [#457](https://github.com/redhat-developer/vscode-quarkus/issues/457).
+ * Automatically force Qute language for files under `src/main/resources/templates` of Quarkus projects. See [#450](https://github.com/redhat-developer/vscode-quarkus/issues/450).
+ * When generating a project without starter code, the Resource name step should be skipped. See [#396](https://github.com/redhat-developer/vscode-quarkus/issues/396).
+ * Provide completion for cache name in configuration file. See [quarkus-ls#404](https://github.com/redhat-developer/quarkus-ls/issues/404).
+ * Definition & Validation support for `@Scheduled/cron`. See [quarkus-ls#377](https://github.com/redhat-developer/quarkus-ls/issues/377) & [quarkus-ls#378](https://github.com/redhat-developer/quarkus-ls/issues/378).
+ * Support for `@ConfigMapping`. See [quarkus-ls#413](https://github.com/redhat-developer/quarkus-ls/issues/413) & [quarkus-ls#424](https://github.com/redhat-developer/quarkus-ls/issues/424).
+ * Support `application-${profile}.properties`. See [quarkus-ls#411](https://github.com/redhat-developer/quarkus-ls/pull/411).
+ * Support validation and code actions for `@ConfigProperty`. See [eclipse/lsp4mp#90](https://github.com/eclipse/lsp4mp/issues/90), [eclipse/lsp4mp#176](https://github.com/eclipse/lsp4mp/issues/176) and [eclipse/lsp4mp#147](https://github.com/eclipse/lsp4mp/issues/147).
+ * Completion for properties defined using `@ConfigProperties`. See [eclipse/lsp4mp#80](https://github.com/eclipse/lsp4mp/issues/80).
+ * Support validation for `@Retry` annotation and its member values. See [eclipse/lsp4mp#191](https://github.com/eclipse/lsp4mp/pull/191) and [eclipse/lsp4mp#196](https://github.com/eclipse/lsp4mp/issues/196).
+ * Diagnostics for `@Asynchronous`, `@Bulkhead` & `@Timeout` annotations. See [eclipse/lsp4mp#74](https://github.com/eclipse/lsp4mp/issues/74), [eclipse/lsp4mp#184](https://github.com/eclipse/lsp4mp/pull/184), [eclipse/lsp4mp#185](https://github.com/eclipse/lsp4mp/pull/185).
+ * Support the `@ApplicationPath` annotation to handle the project URL. See [eclipse/lsp4mp#179](https://github.com/eclipse/lsp4mp/issues/179).
+ * Diagnostics for invalid annotation parameter values. See [eclipse/lsp4mp#77](https://github.com/eclipse/lsp4mp/issues/77).
+ * Use redhat.java embedded JRE to launch the language servers. See [vscode-microprofile#84](https://github.com/redhat-developer/vscode-microprofile/issues/84), [#461](https://github.com/redhat-developer/vscode-quarkus/pull/461).
+ * Add settings to disable CodeLens. See [quarkus-ls#472](https://github.com/redhat-developer/quarkus-ls/issues/472).
 
 ### Bug Fixes
 
- * bug fix - CodeLens URL does not respect `quarkus.http.root-path property`. See [quarkus-ls#368](https://github.com/redhat-developer/quarkus-ls/issues/368) & [quarkus-ls#414](https://github.com/redhat-developer/quarkus-ls/pull/414).
- * bug fix - Quarkus API URL should use HTTPS. See [#402](https://github.com/redhat-developer/vscode-quarkus/issues/402).
- * bug fix - Fix support for HTTP for code.quarkus.io API endpoints. See [#422](https://github.com/redhat-developer/vscode-quarkus/pull/422).
- * bug fix - Support for default value inside property expression. See [#392](https://github.com/redhat-developer/vscode-quarkus/issues/392).
- * bug fix - Debugging no-starter code projects fails. See [#389](https://github.com/redhat-developer/vscode-quarkus/issues/389).
- * bug fix - "Add to current workspace" creates duplicate project. See [#380](https://github.com/redhat-developer/vscode-quarkus/issues/380).
- * bug fix - Use SafeConstructor for Yaml parser instantation. See [quarkus-ls#527](https://github.com/redhat-developer/quarkus-ls/pull/527).
+ * CodeLens URL does not respect `quarkus.http.root-path property`. See [quarkus-ls#368](https://github.com/redhat-developer/quarkus-ls/issues/368) & [quarkus-ls#414](https://github.com/redhat-developer/quarkus-ls/pull/414).
+ * Quarkus API URL should use HTTPS. See [#402](https://github.com/redhat-developer/vscode-quarkus/issues/402).
+ * Fix support for HTTP for code.quarkus.io API endpoints. See [#422](https://github.com/redhat-developer/vscode-quarkus/pull/422).
+ * Support for default value inside property expression. See [#392](https://github.com/redhat-developer/vscode-quarkus/issues/392).
+ * Debugging no-starter code projects fails. See [#389](https://github.com/redhat-developer/vscode-quarkus/issues/389).
+ * "Add to current workspace" creates duplicate project. See [#380](https://github.com/redhat-developer/vscode-quarkus/issues/380).
+ * Use SafeConstructor for Yaml parser instantation. See [quarkus-ls#527](https://github.com/redhat-developer/quarkus-ls/pull/527).
 
 ### Build
 
- * build - Tests time out on macOS on GitHub Actions. See [#379](https://github.com/redhat-developer/vscode-quarkus/issues/379).
- * build - Run vscode-quarkus build & test suite at fixed intervals. See [#429](https://github.com/redhat-developer/vscode-quarkus/pull/429).
+ * Tests time out on macOS on GitHub Actions. See [#379](https://github.com/redhat-developer/vscode-quarkus/issues/379).
+ * Run vscode-quarkus build & test suite at fixed intervals. See [#429](https://github.com/redhat-developer/vscode-quarkus/pull/429).
 
 ### Other
 
- * other - Provide more telemetry granularity for the create project event. See [#405](https://github.com/redhat-developer/vscode-quarkus/issues/405).
- * other - Fix the npm-watch task. See [#417](https://github.com/redhat-developer/vscode-quarkus/pull/417).
- * other - Add launch configuration for also debugging MicroProfile extension. See [#388](https://github.com/redhat-developer/vscode-quarkus/pull/388).
- * other - Add documentation for Qute support. See [#427](https://github.com/redhat-developer/vscode-quarkus/issues/427).
- * other - Add `qute.trace.server` as setting in package.json. See [#425](https://github.com/redhat-developer/vscode-quarkus/issues/425).
- * other - Mention required NodeJS 14.x in CONTRIBUTING.md. See [#357](https://github.com/redhat-developer/vscode-quarkus/pull/357).
+ * Provide more telemetry granularity for the create project event. See [#405](https://github.com/redhat-developer/vscode-quarkus/issues/405).
+ * Fix the npm-watch task. See [#417](https://github.com/redhat-developer/vscode-quarkus/pull/417).
+ * Add launch configuration for also debugging MicroProfile extension. See [#388](https://github.com/redhat-developer/vscode-quarkus/pull/388).
+ * Add documentation for Qute support. See [#427](https://github.com/redhat-developer/vscode-quarkus/issues/427).
+ * Add `qute.trace.server` as setting in package.json. See [#425](https://github.com/redhat-developer/vscode-quarkus/issues/425).
+ * Mention required NodeJS 14.x in CONTRIBUTING.md. See [#357](https://github.com/redhat-developer/vscode-quarkus/pull/357).
 
 ## 1.9.0 (28 July, 2021)
 
