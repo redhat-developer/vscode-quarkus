@@ -1,3 +1,4 @@
+
 {
   "name": "Qute",
   "patterns": [
@@ -20,6 +21,9 @@
   "repository": {
     "templates": {
       "patterns": [
+        {
+          "include": "#section_start_if_tag"
+        },
         {
           "include": "#section_start_default_tag"
         },
@@ -85,8 +89,40 @@
 			},
 			"name": "string.unquoted.cdata.qute"
 		},
+    "section_start_if_tag": {
+      "begin": "({)(#)((if)\\b)",
+      "end": "(\\/)?((?<![\\\\])})",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.handlebars"
+        },
+        "2": {
+          "name": "keyword.control"
+        },
+        "3": {
+          "name": "keyword.control"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "keyword.control"
+        },
+        "2": {
+          "name": "support.constant.handlebars"
+        }
+      },
+      "patterns": [
+        {
+          "match": "(gt|ge|lt|le|eq|is|ne|and|or)",
+          "name": "keyword.control.qute"
+        },
+        {
+          "include": "#code"
+        }
+      ]
+    },
     "section_start_default_tag": {
-      "begin": "({)(#)((each|else|else\\sif|eval|for|if|include|insert|set|let|with|switch|case|is|when)\\b)",
+      "begin": "({)(#)((each|else|else\\sif|eval|for|include|insert|set|let|with|switch|case|is|when)\\b)",
       "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
@@ -361,7 +397,7 @@
         }
       ]
     },
-    "keywords": {
+    "keywordsToRemove": {
       "patterns": [
         {
           "match": "\\bthrow\\b",
@@ -380,7 +416,7 @@
           "name": "keyword.operator.assignment.bitwise.java"
         },
         {
-          "match": "(===?|!=|<=|>=|<>|<|>)",
+          "match": "(===?)",
           "name": "keyword.operator.comparison.java"
         },
         {
@@ -400,7 +436,7 @@
           "name": "keyword.operator.arithmetic.java"
         },
         {
-          "match": "(!|&&|\\|\\|)",
+          "match": "(!)",
           "name": "keyword.operator.logical.java"
         },
         {
@@ -408,8 +444,12 @@
           "name": "keyword.operator.bitwise.java"
         },
         {
-          "match": "\\b(is|as|eq|ne|gt|ge|lt|le)\\b",
-          "name": "keyword.control.operator"
+          "match": "(?<=({#if\\s(\\w)*\\s))(gt|ge|lt|le|eq|is|ne|and|or)",
+          "name": "keyword.control.qute"
+        },
+        {
+          "match": "(?<=({#if\\s(\\w)*\\s))(>|>=|<|<=|==|!=|&&|\\|\\|)",
+          "name": "keyword.operator.qute"
         },
         {
           "match": "(?<=({#for\\s(\\w)*\\s))in",
