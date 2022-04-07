@@ -47,9 +47,43 @@
       ]
     },
     "parameter_declaration": {
-      "begin": "(?<!\\\\){@",
-      "end": "(?<!\\\\)}",
-      "name": "keyword.other.qute"
+      "begin": "({)(@)",
+      "beginCaptures": {
+				"1": {
+					"name": "support.constant.qute"
+				},
+        "2": {
+					"name": "keyword.other.qute"
+				}
+			},
+      "end": "((?<![\\\\])})",
+      "endCaptures": {
+        "0": {
+          "name": "support.constant.qute"
+        }
+      },
+      "patterns": [
+        {
+          "match": "(?<=\\s)([a-zA-Z0-9_-]+)(?=})",
+          "name": "variable.other.qute"
+        },
+        {
+          "match": "[a-zA-Z0-9_-]+",
+          "name": "entity.name.namespace"
+        },
+        {
+          "match": "(?<=\\w)[<>]",
+          "name": "punctuation.bracket.angle.java"
+        },
+        {
+          "match": "(?<=\\w)\\.",
+          "name": "punctuation.separator.java"
+        },
+        {
+          "match": "(?<=[\\s]*),",
+          "name": "punctuation.separator.java"
+        }
+      ]
     },
     "comment": {
       "begin": "{!",
@@ -96,7 +130,7 @@
       "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         },
         "2": {
           "name": "keyword.control"
@@ -110,7 +144,7 @@
           "name": "keyword.control"
         },
         "2": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         }
       },
       "patterns": [
@@ -124,7 +158,7 @@
       "end": "((?<![\\\\])})",
       "beginCaptures": {
         "1": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         },
         "2": {
           "name": "keyword.control"
@@ -135,7 +169,7 @@
       },
       "endCaptures": {
         "1": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         }
       }
     },
@@ -144,7 +178,7 @@
       "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         },
         "2": {
           "name": "keyword.control"
@@ -158,7 +192,7 @@
           "name": "keyword.control"
         },
         "2": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         }
       },
       "patterns": [
@@ -184,7 +218,7 @@
       "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         },
         "2": {
           "name": "keyword.control"
@@ -198,7 +232,7 @@
           "name": "keyword.control"
         },
         "2": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         }
       },
       "patterns": [
@@ -216,7 +250,7 @@
       "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         },
         "2": {
           "name": "entity.name.function.hash"
@@ -230,7 +264,7 @@
           "name": "keyword.control"
         },
         "2": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         }
       },
       "patterns": [
@@ -244,7 +278,7 @@
       "end": "((?<![\\\\])})",
       "beginCaptures": {
         "1": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         },
         "2": {
           "name": "entity.name.function.slash"
@@ -255,7 +289,7 @@
       },
       "endCaptures": {
         "1": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         }
       }
     },
@@ -267,12 +301,12 @@
       "end": "((?<![\\\\])})",
       "beginCaptures": {
         "1": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         }
       },
       "endCaptures": {
         "1": {
-          "name": "support.constant.handlebars"
+          "name": "support.constant.qute"
         }
       },
       "patterns": [
