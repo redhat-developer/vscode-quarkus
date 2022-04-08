@@ -92,7 +92,7 @@
 			"name": "string.unquoted.cdata.qute"
 		},
     "section_start_default_tag": {
-      "begin": "({)(#)((each|else|else\\sif|eval|include|insert|set|let|with|switch|case|is|when)\\b)",
+      "begin": "({)(#)((each|else|eval|include|insert|set|let|with|switch|case|is|when)\\b)",
       "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
@@ -140,7 +140,7 @@
       }
     },
     "section_start_if_tag": {
-      "begin": "({)(#)((if)\\b)",
+      "begin": "({)(#)((if|else\\sif)\\b)",
       "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
@@ -162,6 +162,10 @@
         }
       },
       "patterns": [
+        {
+          "match": "[\\(\\)]",
+          "name": "punctuation.bracket.round.qute"
+        },
         {
           "match": "\\b(gt|ge|lt|le|eq|is|ne|and|or)\\b",
           "name": "keyword.control.qute"
