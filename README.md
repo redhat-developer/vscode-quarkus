@@ -93,6 +93,8 @@ This extension respects the `redhat.telemetry.enabled` setting, which you can le
 
 ## Articles
 
+ * [Qute Templating Engine Support - Now Available for Quarkus Tools for Visual Studio Code](https://quarkus.io/blog/vscode-quarkus-1.10.0-qute/)
+ * [Quarkus Tools for Visual Studio Code - 1.10.0 release](https://quarkus.io/blog/vscode-quarkus-1.10.0/)
  * [Quarkus Tools for Visual Studio Code - 1.4.0 release](https://quarkus.io/blog/vscode-quarkus-1.4.0/)
  * [Introducing 10 new features in Quarkus Tools for Visual Studio Code 1.3.0](https://quarkus.io/blog/vscode-quarkus-1.3.0/)
  * [Quarkus Tools for Visual Studio Code - 1.2.0 release](https://quarkus.io/blog/vscode-quarkus-1.2.0/)
