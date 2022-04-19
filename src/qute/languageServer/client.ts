@@ -108,7 +108,7 @@ export function connectToQuteLS(context: ExtensionContext, api: JavaExtensionAPI
       );
       // Display the experimental Qute validation pop-up if it hasn't been displayed and a Qute file is open
       if (!hasShownQuteValidationPopUp(context)) {
-        for (let textDocument of workspace.textDocuments) {
+        for (const textDocument of workspace.textDocuments) {
           if (textDocument.languageId.includes('qute')) {
             showQuteValidationPopUp(context);
           }
