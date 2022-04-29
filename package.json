@@ -260,6 +260,12 @@
           "default": true,
           "markdownDescription": "Show section parameter type. Default is `true`."
         },
+        "qute.native.enabled": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Enable/disable Qute native image mode. Default is `false`.",
+          "scope": "resource"
+        },
         "qute.validation.enabled": {
           "type": "boolean",
           "default": false,
