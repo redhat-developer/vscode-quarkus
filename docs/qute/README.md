@@ -10,7 +10,7 @@
  ## Settings
 
  * `qute.trace.server`: Trace the communication between VS Code and the Qute language server in the Output view. Default is `off`.
- * `qute.native.enabled`: Enable/disable Qute native image mode. Default is `false`.
+ * `qute.native.enabled`: Enable/disable Qute validation/completion for native image mode. Default is `false`.
  * `qute.codeLens.enabled`: Enable/disable Qute CodeLens. Default is `true`.
  * `qute.inlayHint.enabled`: Enable/disable Inlay Hint. Default is `true`.
  * `qute.inlayHint.showSectionParameterType`: Show section parameter type. Default is `true`.

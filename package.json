@@ -263,7 +263,7 @@
         "qute.native.enabled": {
           "type": "boolean",
           "default": false,
-          "markdownDescription": "Enable/disable Qute native image mode. Default is `false`.",
+          "markdownDescription": "Enable/disable Qute validation/completion for native image mode. Default is `false`.",
           "scope": "resource"
         },
         "qute.validation.enabled": {
