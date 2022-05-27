@@ -48,7 +48,7 @@ gulp.task('buildExtension', (done) => {
 });
 
 gulp.task('buildQuteServer', (done) => {
-  cp.execSync(mvnw() + ' clean install -DskipTests', { cwd: quteServerDir , stdio: 'inherit' });
+  cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: quteServerDir , stdio: 'inherit' });
   gulp.src(quteServerDir + '/target/' + quteServer)
     .pipe(gulp.dest('./server'));
   done();
