@@ -13,9 +13,11 @@
 		{ "open": "[", "close": "]"},
 		{ "open": "(", "close": ")" },
 		{ "open": "'", "close": "'" },
+		{ "open": "<", "close": ">" },
 		{ "open": "\"", "close": "\"" },
 		{ "open": "{!", "close": "!", "notIn": [ "comment", "string" ]}
 	],
+	"autoCloseBefore": ";:.,=}])<> \n\t",
 	"surroundingPairs": [
 		{ "open": "'", "close": "'" },
 		{ "open": "\"", "close": "\"" },
@@ -29,5 +31,5 @@
 			"start": "^\\s*{!\\s*#region\\b.*!}",
 			"end": "^\\s*{!\\s*#endregion\\b.*!}"
 		}
-    }
+	}
 }

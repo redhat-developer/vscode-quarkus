@@ -38,22 +38,22 @@ may declare nested section blocks: {#if item.valid} Valid. {#else} Invalid. {/if
 
 {! 2.1.1.1. Current Context !}
 {#each items}
-  {count}. {it.name} 
+  {count}. {it.name}
 {/each}
 
 {! Another form of iteration... !}
 {#for item in items}
-  {count}. {item.name} 
+  {count}. {item.name}
 {/for}
 
 <html>
-{item.name} 
+{item.name}
 <ul>
-{#for item in item.getDerivedItems()} 
+{#for item in item.getDerivedItems()}
   <li>
-  {item.name} 
+  {item.name}
   is derived from
-  {data:item.name} 
+  {data:item.name}
   </li>
 {/for}
 </ul>
@@ -72,7 +72,7 @@ may declare nested section blocks: {#if item.valid} Valid. {#else} Invalid. {/if
 
 {! 2.1.2.1. Loop Section !}
 {#each items}
-  {it.name} 
+  {it.name}
 {/each}
 
 {#for item in items}
@@ -80,7 +80,7 @@ may declare nested section blocks: {#if item.valid} Valid. {#else} Invalid. {/if
 {/for}
 
 {#each items}
-  {count}. {it.name} 
+  {count}. {it.name}
 {/each}
 
 
@@ -130,7 +130,7 @@ may declare nested section blocks: {#if item.valid} Valid. {#else} Invalid. {/if
 
 {! 2.1.2.3. With Section !}
 {#with item.parent}
-  {name}  
+  {name}
 {/with}
 
 {#with item.parent as myParent}
@@ -149,8 +149,8 @@ may declare nested section blocks: {#if item.valid} Valid. {#else} Invalid. {/if
 </body>
 </html>
 
-{#include base} 
-  {#title}My Title{/title} 
+{#include base}
+  {#title}My Title{/title}
   {#body}
     <div>
       My body.
@@ -166,14 +166,14 @@ may declare nested section blocks: {#if item.valid} Valid. {#else} Invalid. {/if
 <ul>
 {#each items}
   <li>
-  {#item this showImage=true /} 
+  {#item this showImage=true /}
   </li>
 {/each}
 </ul>
 
 
 {! 3.1. Injecting Beans Directly In Templates !}
-{inject:foo.price} 
+{inject:foo.price}
 
 
 {! 3.2. Parameter Declarations !}
@@ -192,7 +192,7 @@ may declare nested section blocks: {#if item.valid} Valid. {#else} Invalid. {/if
 
 {! Qute grammar highlighting works in html tags and strings !}
 <body>
-  <div 
+  <div
   {! Comment highlighting works inside html tags too !}
   class='myClass'>
     First name: <input type="text" name="fname" value='{person.name}'>
