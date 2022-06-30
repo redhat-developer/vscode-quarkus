@@ -27,12 +27,15 @@ const TASK_DEFINITION_PROTOTYPE: TaskDefinition =
   isBackground: true,
   problemMatcher: [
     {
+      owner: "quarkus",
+      fileLocation: ["relative", "${workspaceFolder}/src/main/resources/templates"],
       pattern: [
         {
-          regexp: "\\b\\B",
-          file: 1,
-          location: 2,
-          message: 3
+          "regexp": "\\[(\\d+)\\]\\s(.*):(\\d+):(\\d+)\\s\\-\\s{(.*)}:\\s(.*)$",
+          "file": 2,
+          "line": 3,
+          "column": 4,
+          "message": 6
         }
       ],
       background: {
