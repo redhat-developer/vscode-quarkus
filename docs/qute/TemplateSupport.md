@@ -103,3 +103,11 @@ When the template is used in a Quarkus application and it is bound with a Java T
 In this case, you don't need to declare parameter declaration to benefit from Qute completion, validation, etc. of the Java data model.
 
 CodeLens are clickable to jump to the proper Java type, method or field.
+
+## Inlay Hint for Qute
+
+Qute support displays the Java type of the parameter names as an inlay hint.
+
+![Inlay Hints for Qute](images/QuteTemplateInlayHint.gif)
+
+All inlay hints can be turned off by disabling `qute.inlayHints.enabled` in settings. To remove inlay hints on section parameter types only, disable `qute.inlayHints.showSectionParameterType` in settings.
