@@ -80,6 +80,7 @@ export function connectToQuteLS(context: ExtensionContext, api: JavaExtensionAPI
       bindQuteRequest('qute/template/javaTypes');
       bindQuteRequest('qute/template/resolvedJavaType');
       bindQuteRequest('qute/template/javaDefinition');
+      bindQuteRequest('qute/template/generateMissingJavaMember');
       bindQuteRequest('qute/java/codeLens');
       bindQuteRequest('qute/java/diagnostics');
       bindQuteRequest('qute/java/documentLink');
