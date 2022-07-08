@@ -43,11 +43,12 @@ export async function getCDCommand(cwd: string): Promise<string> {
       switch (currentWindowsShell()) {
           case WindowsShellType.GIT_BASH:
               return `cd "${cwd.replace(/\\+$/, "")}"`; // Git Bash: remove trailing '\'
-          case WindowsShellType.POWER_SHELL:
+          case WindowsShellType.POWER_SHELL: {
               // Escape '[' and ']' in PowerShell
               // See: https://github.com/microsoft/vscode-maven/issues/324
-              const escaped: string = cwd.replace(/([\[\]])/g, "``$1");
+              const escaped: string = cwd.replace(/([[]])/g, "``$1");
               return `cd "${escaped}"`; // PowerShell
+          }
           case WindowsShellType.CMD:
               return `cd /d "${cwd}"`; // CMD
           case WindowsShellType.WSL:

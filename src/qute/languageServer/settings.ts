@@ -1,4 +1,4 @@
-import { ConfigurationTarget, workspace } from 'vscode';
+import { workspace } from 'vscode';
 import { LanguageMismatch } from '../../utils/languageMismatch';
 /**
  * VScode Qute settings.

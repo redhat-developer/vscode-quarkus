@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 import * as path from 'path';
-import { commands, ConfigurationChangeEvent, Disposable, ExtensionContext, extensions, languages, Terminal, TextDocument, window, workspace } from 'vscode';
+import { commands, Disposable, ExtensionContext, extensions, Terminal, TextDocument, window, workspace } from 'vscode';
 import { registerVSCodeCommands } from './commands/registerCommands';
-import { ProjectLabelInfo } from './definitions/ProjectLabelInfo';
 import { QuarkusPropertiesLanguageMismatch, QuarkusConfig } from './QuarkusConfig';
 import { QuarkusContext } from './QuarkusContext';
 import quarkusProjectListener from './QuarkusProjectListener';

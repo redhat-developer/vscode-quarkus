@@ -2,7 +2,7 @@ import * as requirements from './requirements';
 
 import { DidChangeConfigurationNotification, LanguageClientOptions } from 'vscode-languageclient';
 import { LanguageClient } from 'vscode-languageclient/node';
-import { ExtensionContext, commands, workspace, window, ConfigurationTarget, WorkspaceConfiguration, InlayHintsProvider, CancellationToken, Event, InlayHint, ProviderResult, Range, TextDocument, languages } from 'vscode';
+import { ExtensionContext, commands, workspace, window, ConfigurationTarget, languages } from 'vscode';
 import { prepareExecutable } from './javaServerStarter';
 import { registerQuteExecuteWorkspaceCommand, registerVSCodeQuteCommands, synchronizeQuteValidationButton } from '../commands/registerCommands';
 import { QuteClientCommandConstants } from '../commands/commandConstants';

@@ -65,8 +65,8 @@ export async function requestStandardMode(opName: string): Promise<boolean> {
  * This promise never rejects.
  */
 export async function waitForStandardMode(): Promise<void> {
-  return new Promise(async (resolve) => {
-    const javaExtApi = await getJavaExtensionAPI();
+  const javaExtApi = await getJavaExtensionAPI();
+  return new Promise((resolve) => {
     javaExtApi.onDidServerModeChange((mode: string) => {
       if (mode === ServerMode.STANDARD) {
         resolve();
@@ -98,9 +98,9 @@ export function runWithStandardMode(action: () => void, actionDescription: strin
 /**
  * Warns the user that no Quarkus projects were detected
  *
- * @param ignored Ignored
+ * @param _ignored Ignored
  */
-function notAQuarkusProjectWarning(ignored?: any): PromiseLike<any> {
+function notAQuarkusProjectWarning(_ignored?: any): PromiseLike<any> {
   const numFolders: number = workspace.workspaceFolders.length;
   let msg: string;
   if (numFolders === 0) {

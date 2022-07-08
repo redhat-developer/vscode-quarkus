@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { TextEncoder } from "util";
-import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selection, TextDocument, TextEditor, Uri, window, workspace, WorkspaceConfiguration, languages } from "vscode";
+import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selection, TextDocument, TextEditor, Uri, window, workspace, WorkspaceConfiguration } from "vscode";
 import { ConfigurationItem, Location } from "vscode-languageclient";
 import { QuteSettings, QuteTemplateLanguageMismatch } from "../languageServer/settings";
 import { QuteClientCommandConstants, QuteJdtLsServerCommandConstants, QuteServerCommandConstants } from "./commandConstants";

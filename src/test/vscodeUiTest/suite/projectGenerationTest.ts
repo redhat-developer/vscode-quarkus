@@ -23,7 +23,7 @@ import { env } from 'process';
 import { By, InputBox, Key, VSBrowser, WebDriver, WebElement, Workbench } from 'vscode-extension-tester';
 import { ProjectGenerationWizard, QuickPickItemInfo } from '../ProjectGenerationWizard';
 
-use(require('chai-fs'));
+use(require('chai-fs')); // eslint-disable-line
 
 /**
  * This file contains tests for the project generation wizard
@@ -102,7 +102,7 @@ describe('Project generation tests', function () {
     expect(packageName).equals('org.acme');
     await wizard.next();
 
-    const shouldGenerateCode = await wizard.getNthQuickPickItemInfo(0);
+    await wizard.getNthQuickPickItemInfo(0);
     // expect(shouldGenerateCode).equals('Include starter code');
     await wizard.focusQuickPick(0);
     await wizard.next();

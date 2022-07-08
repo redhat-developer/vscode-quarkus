@@ -49,7 +49,7 @@ export namespace Settings {
         return customEnv;
     }
 
-    function _getJavaHomeEnvIfAvailable(): {} {
+    function _getJavaHomeEnvIfAvailable() {
         // Look for the java.home setting from the redhat.java extension.  We can reuse it
         // if it exists to avoid making the user configure it in two places.
         const useJavaHome: boolean = Terminal.useJavaHome();
