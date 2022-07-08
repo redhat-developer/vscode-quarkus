@@ -28,8 +28,8 @@ jobs:
       - name: Compile extension
         run: npm run vscode:prepublish
       - run: vsce package
-      - name: tslint
-        run: npm run tslint
+      - name: eslint
+        run: npm run lint
       - name: Tests
         run: xvfb-run --auto-servernum npm run test --silent
         if: runner.os == 'Linux'

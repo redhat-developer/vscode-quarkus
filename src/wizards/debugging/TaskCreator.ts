@@ -183,7 +183,7 @@ export class TaskCreator {
       return;
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _reject) => {
       const disposable: Disposable = workspace.onDidChangeConfiguration(async (event: ConfigurationChangeEvent) => {
         if (event.affectsConfiguration('tasks', this.workspaceFolder.uri)) {
           if ((await getQuarkusDevTasks(this.workspaceFolder, this.quarkusBuildSupport)).length > 0) {

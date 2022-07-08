@@ -60,7 +60,7 @@ async function installOpenShiftConnector(): Promise<void> {
       }
     });
     commands.executeCommand("workbench.extensions.installExtension", OPENSHIFT_CONNECTOR_EXTENSION_ID)
-      .then((_unused: any) => { }, reject);
+      .then((_unused: any) => {}, reject);
     setTimeout(reject, DOWNLOAD_TIMEOUT, new Error(`${OPENSHIFT_CONNECTOR} installation is taking a while. Cancelling 'Deploy to OpenShift'. Please retry after the OpenShift Connector installation has finished`));
   }).finally(() => {
     installListenerDisposable.dispose();
@@ -74,7 +74,7 @@ async function installOpenShiftConnector(): Promise<void> {
  * @throws if the extension installation fails or times out
  */
 export async function installOpenShiftConnectorWithProgress(): Promise<void> {
-  await window.withProgress({ location: ProgressLocation.Notification, title: `Installing ${OPENSHIFT_CONNECTOR}...` }, progress => {
+  await window.withProgress({ location: ProgressLocation.Notification, title: `Installing ${OPENSHIFT_CONNECTOR}...` }, _progress => {
     const openShiftConnectorInstall: Promise<void> = installOpenShiftConnector();
     openShiftConnectorInstall.catch((e) => {
       window.showErrorMessage(`${e}`);

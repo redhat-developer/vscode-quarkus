@@ -15,7 +15,6 @@
  */
 import * as _ from 'lodash';
 import { By, InputBox, Key, QuickPickItem, WebDriver, WebElement, Workbench } from 'vscode-extension-tester';
-import { DialogHandler, OpenDialog } from 'vscode-extension-tester-native';
 
 /**
  * This class represents the project generation wizard visible
@@ -33,9 +32,9 @@ export class ProjectGenerationWizard extends InputBox {
 
   /**
    * Opens the project generation wizard
-   * @param driver
+   * @param _driver
    */
-  public static async openWizard(driver: WebDriver): Promise<ProjectGenerationWizard> {
+  public static async openWizard(_driver: WebDriver): Promise<ProjectGenerationWizard> {
     await (new Workbench()).executeCommand('Quarkus: Generate a Quarkus project');
     return (new ProjectGenerationWizard().wait(30000));
   }

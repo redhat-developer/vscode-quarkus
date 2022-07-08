@@ -42,7 +42,7 @@ export async function validateArtifactId(userInput: string): Promise<string | un
   return undefined;
 }
 
-export async function validateVersion(userInput: string): Promise<string | undefined> {
+export async function validateVersion(_userInput: string): Promise<string | undefined> {
   return undefined;
 }
 

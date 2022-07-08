@@ -74,27 +74,23 @@ export class ExtensionsPicker {
   }
 
   private async setExtensions(platform?: string) {
-    try {
-      this.allExtensions = await getQExtensions(platform);
+    this.allExtensions = await getQExtensions(platform);
 
-      this.defaultExtensions = this.getDefaultQExtensions();
-      this.selectedExtensions = [];
-      this.unselectedExtensions = [];
+    this.defaultExtensions = this.getDefaultQExtensions();
+    this.selectedExtensions = [];
+    this.unselectedExtensions = [];
 
-      if (this.options.showRequiredExtensions) {
-        this.allExtensions.forEach((extension: QExtension) => {
-          if (extension.isRequired) {
-            this.selectedExtensions.push(extension);
-          } else {
-            this.unselectedExtensions.push(extension);
-          }
-        });
-      } else {
-        this.allExtensions = this.allExtensions.filter((extension: QExtension) => !extension.isRequired);
-        this.unselectedExtensions = this.allExtensions;
-      }
-    } catch (err) {
-      throw err;
+    if (this.options.showRequiredExtensions) {
+      this.allExtensions.forEach((extension: QExtension) => {
+        if (extension.isRequired) {
+          this.selectedExtensions.push(extension);
+        } else {
+          this.unselectedExtensions.push(extension);
+        }
+      });
+    } else {
+      this.allExtensions = this.allExtensions.filter((extension: QExtension) => !extension.isRequired);
+      this.unselectedExtensions = this.allExtensions;
     }
   }
 

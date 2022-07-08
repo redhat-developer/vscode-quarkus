@@ -2,7 +2,7 @@ import { commands, ExtensionContext, window } from "vscode";
 import { VSCodeCommands } from "../definitions/constants";
 import { ProjectLabelInfo } from "../definitions/ProjectLabelInfo";
 import { requestStandardMode } from "../utils/requestStandardMode";
-import { sendCommandFailedTelemetry, sendCommandSucceededTelemetry, sendTelemetry } from "../utils/telemetryUtils";
+import { sendCommandFailedTelemetry, sendCommandSucceededTelemetry } from "../utils/telemetryUtils";
 import { WelcomeWebview } from "../webviews/WelcomeWebview";
 import { addExtensionsWizard } from "../wizards/addExtensions/addExtensionsWizard";
 import { buildBinary } from "../wizards/binary/buildBinary";

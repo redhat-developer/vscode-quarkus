@@ -163,26 +163,30 @@ export class MultiStepInput {
     const disposables: Disposable[] = [];
     const displaySteps: boolean = typeof step !== 'undefined' && typeof totalSteps !== 'undefined';
 
-    return await new Promise<string | (P extends { buttons: (infer I)[] } ? I : never)>(async (resolve, reject) => {
-      const input: InputBox = window.createInputBox();
-      input.title = title;
+    const input: InputBox = window.createInputBox();
+    input.title = title;
 
-      if (displaySteps) {
-        input.step = step;
-        input.totalSteps = totalSteps;
-      }
-      input.value = value;
-      input.prompt = prompt;
+    if (displaySteps) {
+      input.step = step;
+      input.totalSteps = totalSteps;
+    }
+    input.value = value;
+    input.prompt = prompt;
 
-      input.buttons = [
-        ...(this.steps.length > 1 ? [QuickInputButtons.Back] : []),
-        ...(buttons || [])
-      ];
-      input.ignoreFocusOut = true;
-      const validationMessage: string = await validate(input.value);
-      if (validationMessage) {
-        input.validationMessage = validationMessage;
-      }
+    input.buttons = [
+      ...(this.steps.length > 1 ? [QuickInputButtons.Back] : []),
+      ...(buttons || [])
+    ];
+
+    const validationMessage: string = await validate(input.value);
+
+    input.ignoreFocusOut = true;
+    if (validationMessage) {
+      input.validationMessage = validationMessage;
+    }
+
+    return await new Promise<string | (P extends { buttons: (infer I)[] } ? I : never)>((resolve, reject) => {
+
       disposables.push(
         input.onDidTriggerButton((item: QuickInputButton) => {
           disposables.forEach(d => d.dispose());

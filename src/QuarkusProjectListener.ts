@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { commands, workspace, Disposable, window } from 'vscode';
+import { commands, workspace, Disposable } from 'vscode';
 import { getWorkspaceProjectLabels } from './utils/workspaceUtils';
 import { waitForStandardMode } from './utils/requestStandardMode';
 import { ProjectLabel, ProjectLabelInfo } from './definitions/ProjectLabelInfo';

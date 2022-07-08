@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { debug, DebugConfiguration, Uri, window, workspace, WorkspaceFolder, extensions } from 'vscode';
+import { debug, DebugConfiguration, Uri, window, workspace, WorkspaceFolder } from 'vscode';
 import { BuildSupport } from '../../buildSupport/BuildSupport';
 import { ProjectLabelInfo } from '../../definitions/ProjectLabelInfo';
 import { getQuarkusDevDebugConfig } from '../../utils/launchConfigUtils';
 import { getQuarkusProject } from '../getQuarkusProject';
 import { DebugConfigCreator } from './DebugConfigCreator';
-import { VSCodeCommands } from '../../definitions/constants';
 import { QuarkusContext } from '../../QuarkusContext';
 
 /**

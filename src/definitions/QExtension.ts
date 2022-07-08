@@ -75,6 +75,6 @@ export interface APIExtension {
   description: string;
   shortName: string;
   category: string;
-  order: Number;
+  order: number;
   default: boolean;
 }
