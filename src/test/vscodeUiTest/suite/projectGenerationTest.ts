@@ -30,7 +30,7 @@ use(require('chai-fs')); // eslint-disable-line
  * from the 'Quarkus: Generate a new Quarkus project' command
  */
 describe('Project generation tests', function () {
-  this.bail(true);
+  // this.bail(true);
   this.retries(2);
 
   let driver: WebDriver;
@@ -64,7 +64,7 @@ describe('Project generation tests', function () {
    * calling the 'Quarkus: Generate a Quarkus project command'
    * in the command palette
    */
-  it('should open project generation wizard', async function () {
+  it.skip('should open project generation wizard', async function () {
     this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
     expect(await wizardExists(), 'wizard did not open').to.be.true;
