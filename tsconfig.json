@@ -1,19 +1,18 @@
 {
-	"compilerOptions": {
-		"target": "es6",
-		"lib": [
-            "es6"
-        ],
-		"module": "commonjs",
-		"moduleResolution": "node",
-		"outDir": "out",
-		"sourceMap": true,
-		"plugins": [{ "name": "typescript-tslint-plugin" }]
-	},
-	"exclude": [
-		"node_modules",
-		"server",
-		"test-resources",
-		".vscode-test"
-	]
+  "compilerOptions": {
+    "target": "es6",
+    "lib": [
+      "es6"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "out",
+    "sourceMap": true
+  },
+  "exclude": [
+    "node_modules",
+    "server",
+    "test-resources",
+    ".vscode-test"
+  ]
 }

@@ -44,7 +44,7 @@ describe('Project generation tests', function () {
   });
 
   // tslint:disable-next-line: only-arrow-functions
-  beforeEach('clear temp dir', async function (): Promise<void> {
+  beforeEach('clear temp dir', function () {
     if (fs.existsSync(tempDir)) {
       fs.removeSync(tempDir);
     }
@@ -52,7 +52,8 @@ describe('Project generation tests', function () {
   });
 
   // tslint:disable-next-line: only-arrow-functions
-  after('remove temp dir', async function (): Promise<void> {
+  after('remove temp dir', function () {
+    this.timeout(6000);
     if (fs.existsSync(tempDir)) {
       fs.removeSync(tempDir);
     }
