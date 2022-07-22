@@ -1,5 +1,54 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.11.0 (25 July, 2022)
+
+### Enhancements
+
+ * Support for `@TemplateGlobal` annotation. See [quarkus-ls#605](https://github.com/redhat-developer/quarkus-ls/issues/605).
+ * Support CodeLens for parameter names (that are Java types) in Qute templates. See [#474](https://github.com/redhat-developer/vscode-quarkus/pull/474).
+ * Improve syntax colouration for logical operators and bracket precedence. See [#478](https://github.com/redhat-developer/vscode-quarkus/issues/478), [#490](https://github.com/redhat-developer/vscode-quarkus/issues/490).
+ * Improve Qute parameter declaration syntax colouration. See [#488](https://github.com/redhat-developer/vscode-quarkus/issues/488).
+ * TextMate grammar support for property expressions. See [#272](https://github.com/redhat-developer/vscode-quarkus/issues/272).
+ * Suppress undefined variable errors in certain contexts. See [quarkus-ls#548](https://github.com/redhat-developer/quarkus-ls/issues/548).
+ * Add Rename support within Qute templates. See [quarkus-ls#492](https://github.com/redhat-developer/quarkus-ls/issues/492).
+ * Support missing attributes for `@TemplateData` / `@RegisterForReflection`. See [quarkus-ls#631](https://github.com/redhat-developer/quarkus-ls/pull/631).
+ * Provide `qute.native.enabled` setting. See [quarkus-ls#629](https://github.com/redhat-developer/quarkus-ls/issues/629).
+ * Code action to add `??` at the end of the object part for `UndefinedObject`. See [quarkus-ls#613](https://github.com/redhat-developer/quarkus-ls/issues/613).
+ * Completion for nested block section. See [quarkus-ls#497](https://github.com/redhat-developer/quarkus-ls/issues/497).
+ * Display error when Quarkus application is built for Qute. See [#508](https://github.com/redhat-developer/vscode-quarkus/issues/508).
+
+### Performance
+ * Delay revalidation of Java files, Qute template files, and improve cancel checking. See [quarkus-ls#659](https://github.com/redhat-developer/quarkus-ls/pull/659), [quarkus-ls#666](https://github.com/redhat-developer/quarkus-ls/pull/666).
+ * Improve memory and performance of Qute language server. See [quarkus-ls#654](https://github.com/redhat-developer/quarkus-ls/issues/654).
+
+### Bug Fixes
+
+ * Linked editing doesn't work if variable is used as a parameter into a section. See [#500](https://github.com/redhat-developer/vscode-quarkus/issues/500).
+ * Auto-closing of curly brace fails under certain circumstances. See [#502](https://github.com/redhat-developer/vscode-quarkus/issues/502).
+ * Update native mode setting description. See [#501](https://github.com/redhat-developer/vscode-quarkus/pull/501).
+ * Changed Qute validation pop-up to appear only when a Qute template is opened. See [#479](https://github.com/redhat-developer/vscode-quarkus/pull/479).
+ * Fix NPE with data model template. See [quarkus-ls#664](https://github.com/redhat-developer/quarkus-ls/pull/664).
+ * Template validation complains about strings containing spaces. See [quarkus-ls#639](https://github.com/redhat-developer/quarkus-ls/issues/639).
+ * Expression indexes are wrong. See [quarkus-ls#627](https://github.com/redhat-developer/quarkus-ls/issues/627).
+ * Simplify the resolve signature logic. See [quarkus-ls#652](https://github.com/redhat-developer/quarkus-ls/pull/652).
+ * `QuarkusConfigPropertiesProvider` void return type check doesn't work. See [quarkus-ls#650](https://github.com/redhat-developer/quarkus-ls/issues/650).
+
+### Build
+
+ * Migrate from TSLint to ESLint. See [#337](https://github.com/redhat-developer/vscode-quarkus/issues/337).
+ * Avoid use of 'install' in favour of 'verify' in packaging scripts. See [#507](https://github.com/redhat-developer/vscode-quarkus/pull/507).
+ * Bump EJS from 2.7.4 to 3.1.7. See [#498](https://github.com/redhat-developer/vscode-quarkus/pull/498).
+ * Adapt to new version of m2e in JDT-LS. See [quarkus-ls#668](https://github.com/redhat-developer/quarkus-ls/pull/668).
+ * Remove unnecessary Gson dependency in pom files. See [quarkus-ls#672](https://github.com/redhat-developer/quarkus-ls/pull/672).
+ * Move to LSP4J 0.14.0. See [quarkus-ls#644](https://github.com/redhat-developer/quarkus-ls/issues/644).
+ * Update Quarkus LS to use LSP4MP 0.5.0 Snapshots. See [quarkus-ls#621](https://github.com/redhat-developer/quarkus-ls/pull/621).
+
+### Documentation
+
+ * Added list of supported Qute default value resolvers to documentation. See [#521](https://github.com/redhat-developer/vscode-quarkus/pull/521).
+ * Add inlay hint documentation. See [#516](https://github.com/redhat-developer/vscode-quarkus/pull/516).
+ * Add DCO documentation. See [quarkus-ls#512](https://github.com/redhat-developer/vscode-quarkus/pull/512).
+
 ## 1.10.0 (24 March, 2022)
 
 ### Enhancements
