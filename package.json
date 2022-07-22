@@ -53,7 +53,8 @@
   "extensionDependencies": [
     "redhat.vscode-microprofile",
     "redhat.java",
-    "vscjava.vscode-java-debug"
+    "vscjava.vscode-java-debug",
+    "vscode.html-language-features"
   ],
   "contributes": {
     "javaExtensions": [
@@ -122,6 +123,12 @@
           "qute.txt"
         ],
         "configuration": "./language-support/qute/language-configuration.json"
+      }
+    ],
+    "htmlLanguageParticipants": [
+      {
+        "languageId": "qute-html",
+        "autoInsert": true
       }
     ],
     "commands": [
