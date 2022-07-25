@@ -14,6 +14,7 @@
 const gulp = require('gulp');
 const rename = require('gulp-rename');
 const cp = require('child_process');
+const fs = require('fs');
 
 const quarkusServerExtDir = '../quarkus-ls/quarkus.ls.ext/com.redhat.quarkus.ls'
 const quarkusServerExt = 'com.redhat.quarkus.ls';
