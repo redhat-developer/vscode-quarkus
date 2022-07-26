@@ -20,7 +20,7 @@ import * as _ from 'lodash';
 import * as path from 'path';
 import * as pomParser from 'pom-parser';
 import { env } from 'process';
-import { By, InputBox, Key, VSBrowser, WebDriver, WebElement, Workbench } from 'vscode-extension-tester';
+import { By, InputBox, Key, VSBrowser, WebDriver, WebElement, Workbench } from 'datho7561-vscode-extension-tester';
 import { ProjectGenerationWizard, QuickPickItemInfo } from '../ProjectGenerationWizard';
 
 use(require('chai-fs')); // eslint-disable-line

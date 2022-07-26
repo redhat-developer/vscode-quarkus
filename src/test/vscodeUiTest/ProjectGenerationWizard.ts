@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import * as _ from 'lodash';
-import { By, InputBox, Key, QuickPickItem, WebDriver, WebElement, Workbench } from 'vscode-extension-tester';
+import { By, InputBox, Key, QuickPickItem, WebDriver, WebElement, Workbench } from 'datho7561-vscode-extension-tester';
 
 /**
  * This class represents the project generation wizard visible

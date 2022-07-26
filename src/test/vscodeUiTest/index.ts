@@ -13,8 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ExTester } from 'vscode-extension-tester';
+import { ExTester, SetupOptions } from 'datho7561-vscode-extension-tester';
+import { RunOptions } from 'datho7561-vscode-extension-tester/out/util/codeUtil';
+import { FAILSAFE_SCHEMA } from 'js-yaml';
+
+const setupOptions: SetupOptions = {
+  installDependencies: true,
+  useYarn: false,
+};
+const runOptions: RunOptions = {
+  settings: "./settings.json"
+};
 
 const testExtensionsDir: string = 'out/test/vscodeUiTest/extensions';
 const tester: ExTester = new ExTester(undefined, undefined, testExtensionsDir);
-tester.setupAndRunTests(testExtensionsDir);
+tester.setupAndRunTests(testExtensionsDir, 'latest', setupOptions, runOptions);

@@ -1,3 +1,4 @@
 {
-    "http.systemCertificates": false
+    "http.systemCertificates": false,
+    "qute.validation.enabled": true
 }
