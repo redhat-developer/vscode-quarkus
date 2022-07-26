@@ -1,7 +1,9 @@
-[![Tests workflow](https://github.com/redhat-developer/vscode-quarkus/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/redhat-developer/vscode-quarkus/actions)
-[![Marketplace Version](https://vsmarketplacebadge.apphb.com/version/redhat.vscode-quarkus.svg "Current Release")](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-quarkus)
-
 # Quarkus Tools for Visual Studio Code
+
+[![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/redhat.vscode-quarkus?style=for-the-badge&label=VS%20Marketplace&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-quarkus)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/redhat.vscode-quarkus?style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-quarkus)
+[![Build Status](https://img.shields.io/github/workflow/status/redhat-developer/vscode-quarkus/Tests/master?style=for-the-badge)](https://github.com/redhat-developer/vscode-quarkus/actions?query=branch%3Amaster)
+[![License](https://img.shields.io/github/license/redhat-developer/vscode-quarkus?style=for-the-badge)](https://github.com/redhat-developer/vscode-quarkus/blob/master/LICENSE)
 
 ## Description
 
@@ -15,7 +17,7 @@ by extending [Visual Studio Code extension for MicroProfile](https://github.com/
  * [Qute support](docs/qute/README.md) to provide completion, validation, etc. for the [Qute template engine](https://quarkus.io/guides/qute-reference) inside Java and template files.
 
 ![](images/quteSupport.png)
- 
+
 ## Quarkus VS Code Commands
 The following commands are supported for both Maven and Gradle Quarkus projects:
 
