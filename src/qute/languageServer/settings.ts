@@ -30,6 +30,11 @@ export namespace QuteSettings {
    */
   export const QUTE_OVERRIDE_LANGUAGE_ID = 'qute.templates.override.languageId';
 
+  /**
+  * Qute inlay hint setting.
+  */
+  export const QUTE_INLAY_HINT = 'qute.inlayHint.enabled';
+
   export function getQuteTemplatesLanguageMismatch(): QuteTemplateLanguageMismatch {
     return workspace.getConfiguration().get<QuteTemplateLanguageMismatch>(QUTE_TEMPLATES_LANGUAGE_MISMATCH);
   }

@@ -39,6 +39,11 @@ export namespace QuteClientCommandConstants {
   * Client command to execute an XML command on XML Language Server side.
   */
   export const EXECUTE_WORKSPACE_COMMAND = 'qute.workspace.executeCommand';
+
+  /**
+  * Bind Qute inlay hint setting to editor inlay hint setting.
+  */
+  export const BIND_QUTE_INLAY_HINT = 'bind.qute.inlayHint.enabled';
 }
 
 /**

@@ -19,6 +19,7 @@ export function registerVSCodeQuteCommands(context: ExtensionContext) {
   registerJavaDefinitionCommand(context);
   registerConfigurationUpdateCommand(context);
   registerQuteValidationToggleCommand(context);
+  registerQuteInlayHintBindToEditorSetting(context);
   context.subscriptions.push(
     workspace.onDidOpenTextDocument((document) => {
       updateQuteLanguageId(context, document, true);
@@ -180,6 +181,20 @@ export function registerConfigurationUpdateCommand(context: ExtensionContext) {
         removeFromPreferenceArray(config, section, value);
         break;
       }
+    }
+  }));
+}
+
+export function registerQuteInlayHintBindToEditorSetting(context: ExtensionContext) {
+  context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.BIND_QUTE_INLAY_HINT, async () => {
+    const editorInlayHintSetting = workspace.getConfiguration().get<string>(`editor.inlayHints.enabled`, "on");
+    if (editorInlayHintSetting === "off") {
+      const edit = {
+        value: false,
+        editType: ConfigurationItemEditType.Add,
+        section: QuteSettings.QUTE_INLAY_HINT
+      } as ConfigurationItemEdit;
+      await commands.executeCommand(QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE, edit);
     }
   }));
 }
