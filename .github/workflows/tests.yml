@@ -9,20 +9,23 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [
+          ubuntu-latest,
+          # macos-latest
+        ]
         include:
           - os: ubuntu-latest
             label: 'linux'
-          - os: macos-latest
-            label: 'darwin'
+          # - os: macos-latest
+          #   label: 'darwin'
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '12.x'
+          node-version: '14.x'
       - name: Install vsce
-        run: npm i -g "vsce@<2"
+        run: npm i -g vsce
       - name: Install dependencies
         run: npm i
       - name: Compile extension
