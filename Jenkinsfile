@@ -27,9 +27,9 @@ node('rhel8'){
     }
 
     stage('Install requirements') {
-        def nodeHome = tool 'nodejs-12.13.1'
+        def nodeHome = tool 'nodejs-14.19.1'
         env.PATH="${env.PATH}:${nodeHome}/bin"
-        sh 'npm install -g typescript "vsce@<2"'
+        sh 'npm install -g typescript vsce'
     }
 
     stage('Build') {
@@ -88,7 +88,7 @@ node('rhel8'){
             }
 
             // open-vsx Marketplace
-            sh 'npm install -g "ovsx@<0.3.0"'
+            sh 'npm install -g ovsx'
             withCredentials([[$class: 'StringBinding', credentialsId: 'open-vsx-access-token', variable: 'OVSX_TOKEN']]) {
               sh 'ovsx publish -p ${OVSX_TOKEN}' + " ${vsix[0].path}"
             }
