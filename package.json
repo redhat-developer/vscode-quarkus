@@ -380,6 +380,13 @@
         "path": "./language-support/properties-support/quarkus-properties.tmLanguage.json"
       },
       {
+        "injectTo": [
+          "source.quarkus-properties"
+        ],
+        "scopeName": "quarkus-value.injection",
+        "path": "./language-support/properties-support/quarkus-properties-injection.tmLanguage.json"
+      },
+      {
         "language": "qute-html",
         "scopeName": "text.html.qute",
         "path": "./language-support/qute/qute-html.tmLanguage.json"
