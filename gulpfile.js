@@ -28,7 +28,7 @@ const quteExtensionDir = '../quarkus-ls/qute.jdt';
 const quteExtension = 'com.redhat.qute.jdt';
 
 gulp.task('buildServer', (done) => {
-  cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: quarkusServerExtDir , stdio: 'inherit' });
+  cp.execSync(mvnw() + ' clean verify -B -DskipTests', { cwd: quarkusServerExtDir , stdio: 'inherit' });
   gulp.src(quarkusServerExtDir + '/target/' + quarkusServerExt + '-!(*sources).jar')
     .pipe(rename(quarkusServerExt + '.jar'))
     .pipe(gulp.dest('./server'));
@@ -40,7 +40,7 @@ gulp.task('buildServer', (done) => {
 });
 
 gulp.task('buildExtension', (done) => {
-  cp.execSync(mvnw() + ' -pl "' + quarkusExtension + '" clean verify -DskipTests', { cwd: quarkusExtensionDir, stdio: 'inherit' });
+  cp.execSync(mvnw() + ' -pl "' + quarkusExtension + '" clean verify -B -DskipTests', { cwd: quarkusExtensionDir, stdio: 'inherit' });
   gulp.src(quarkusExtensionDir + '/' + quarkusExtension + '/target/' + quarkusExtension + '-!(*sources).jar')
     .pipe(rename(quarkusExtension + '.jar'))
     .pipe(gulp.dest('./jars'));
@@ -48,14 +48,14 @@ gulp.task('buildExtension', (done) => {
 });
 
 gulp.task('buildQuteServer', (done) => {
-  cp.execSync(mvnw() + ' clean verify -DskipTests', { cwd: quteServerDir , stdio: 'inherit' });
+  cp.execSync(mvnw() + ' clean verify -B -DskipTests', { cwd: quteServerDir , stdio: 'inherit' });
   gulp.src(quteServerDir + '/target/' + quteServer)
     .pipe(gulp.dest('./server'));
   done();
 });
 
 gulp.task('buildQuteExtension', (done) => {
-  cp.execSync(mvnw() + ' -pl "' + quteExtension + '" clean verify -DskipTests', { cwd: quteExtensionDir, stdio: 'inherit' });
+  cp.execSync(mvnw() + ' -pl "' + quteExtension + '" clean verify -B -DskipTests', { cwd: quteExtensionDir, stdio: 'inherit' });
   gulp.src(quteExtensionDir + '/' + quteExtension + '/target/' + quteExtension + '-!(*sources).jar')
     .pipe(rename(quteExtension + '.jar'))
     .pipe(gulp.dest('./jars'));
