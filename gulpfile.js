@@ -14,6 +14,7 @@
 const gulp = require('gulp');
 const rename = require('gulp-rename');
 const cp = require('child_process');
+const fse = require('fs-extra');
 
 const quarkusServerExtDir = '../quarkus-ls/quarkus.ls.ext/com.redhat.quarkus.ls'
 const quarkusServerExt = 'com.redhat.quarkus.ls';
@@ -62,6 +63,23 @@ gulp.task('buildQuteExtension', (done) => {
   done();
 });
 
+gulp.task('prepare_pre_release', function (done) {
+  const json = JSON.parse(fse.readFileSync("./package.json").toString());
+  const stableVersion = json.version.match(/(\d+)\.(\d+)\.(\d+)/);
+  const major = stableVersion[1];
+  const minor = stableVersion[2];
+  const date = new Date();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hours = date.getHours();
+  const patch = `${date.getFullYear()}${prependZero(month)}${prependZero(day)}${prependZero(hours)}`;
+  const insiderPackageJson = Object.assign(json, {
+    version: `${major}.${minor}.${patch}`,
+  });
+  fse.writeFileSync("./package.json", JSON.stringify(insiderPackageJson, null, 2));
+  done();
+});
+
 gulp.task('build', gulp.series('buildServer', 'buildExtension','buildQuteServer', 'buildQuteExtension'));
 
 function mvnw() {
@@ -70,4 +88,11 @@ function mvnw() {
 
 function isWin() {
 	return /^win/.test(process.platform);
+}
+
+function prependZero(number) {
+  if (number > 99) {
+    throw "Unexpected value to prepend with zero";
+  }
+  return `${number < 10 ? "0" : ""}${number}`;
 }
