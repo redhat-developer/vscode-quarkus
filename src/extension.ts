@@ -15,8 +15,8 @@
  */
 import * as path from 'path';
 import { commands, Disposable, ExtensionContext, extensions, Terminal, TextDocument, window, workspace } from 'vscode';
-import { registerVSCodeCommands } from './commands/registerCommands';
-import { QuarkusPropertiesLanguageMismatch, QuarkusConfig } from './QuarkusConfig';
+import { registerVSCodeClientCommands, registerVSCodeCommands } from './commands/registerCommands';
+import { QuarkusConfig, QuarkusPropertiesLanguageMismatch } from './QuarkusConfig';
 import { QuarkusContext } from './QuarkusContext';
 import quarkusProjectListener from './QuarkusProjectListener';
 import { connectToQuteLS } from './qute/languageServer/client';
@@ -24,6 +24,7 @@ import { terminalCommandRunner } from './terminal/terminalCommandRunner';
 import { tryToForceLanguageId } from './utils/languageMismatch';
 import { JAVA_EXTENSION_ID } from './utils/requestStandardMode';
 import { initTelemetryService } from './utils/telemetryUtils';
+import { getFilePathsFromWorkspace } from './utils/workspaceUtils';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
 
@@ -35,6 +36,24 @@ export async function activate(context: ExtensionContext) {
   await initTelemetryService(context);
 
   QuarkusContext.setContext(context);
+
+  registerVSCodeClientCommands(context);
+  // Check if activation occured due to a 'java' language document
+  const onLanguageJavaWasActivated = workspace.textDocuments.some(doc => doc.languageId === 'java');
+  if (onLanguageJavaWasActivated) {
+    /* Consider duplicating activationEvents above to avoid re-checking when
+    an activation event should be sufficient */
+    // Check if Java project is also a Quarkus project
+    const shouldActivate = await isQuarkusProject();
+    if (shouldActivate) {
+      doActivate(context);
+    }
+  } else {
+    doActivate(context);
+  }
+}
+
+async function doActivate(context: ExtensionContext) {
   displayWelcomePageIfNeeded(context);
   commands.executeCommand('setContext', 'quarkusProjectExistsOrLightWeight', true);
 
@@ -123,4 +142,16 @@ export async function getJavaExtensionAPI(): Promise<JavaExtensionAPI> {
 
   const api = await vscodeJava.activate();
   return Promise.resolve(api);
+}
+async function isQuarkusProject(): Promise<boolean> {
+  for (const ws of workspace.workspaceFolders) {
+    const buildFileUris = await getFilePathsFromWorkspace(ws, "**/{pom.xml,build.gradle}");
+    for (const uri of buildFileUris) {
+      const doc = await workspace.openTextDocument(uri);
+      if (doc.getText().search("io.quarkus") > 0) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
