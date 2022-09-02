@@ -13,17 +13,25 @@ import { generateProjectWizard } from "../wizards/generateProject/generationWiza
 const NOT_A_QUARKUS_PROJECT = new Error('No Quarkus projects were detected in this folder');
 const STANDARD_MODE_REQUEST_FAILED = new Error('Error occurred while requesting standard mode from the Java language server');
 
+
+export function registerVSCodeClientCommands(context: ExtensionContext): void {
+  /**
+   * Command for creating a Quarkus project
+   */
+  registerCommandWithTelemetry(context, VSCodeCommands.CREATE_PROJECT, generateProjectWizard, true);
+
+  /**
+   * Command for displaying welcome page
+   */
+  registerCommandWithTelemetry(context, VSCodeCommands.QUARKUS_WELCOME, async () => { WelcomeWebview.createOrShow(context); });
+}
+
 /**
  * Register the vscode-quarkus commands
  *
  * @param context the extension context
  */
 export function registerVSCodeCommands(context: ExtensionContext): void {
-
-  /**
-   * Command for creating a Quarkus project
-   */
-  registerCommandWithTelemetry(context, VSCodeCommands.CREATE_PROJECT, generateProjectWizard, true);
 
   /**
    * Command for adding Quarkus extensions to current Quarkus Maven project
@@ -35,11 +43,6 @@ export function registerVSCodeCommands(context: ExtensionContext): void {
    */
   registerCommandWithTelemetry(context, VSCodeCommands.DEBUG_QUARKUS_PROJECT, withStandardMode(startDebugging, "Debugging the extension"));
   registerCommandWithTelemetry(context, VSCodeCommands.DEBUG_QUARKUS_PROJECT + VSCodeCommands.SHORT_SUFFIX, withStandardMode(startDebugging, "Debugging the extension"));
-
-  /**
-   * Command for displaying welcome page
-   */
-  registerCommandWithTelemetry(context, VSCodeCommands.QUARKUS_WELCOME, async () => { WelcomeWebview.createOrShow(context); });
 
   /**
    * Command for deploying current Quarkus project to OpenShift with OpenShift Connector
