@@ -27,6 +27,9 @@
           "include": "#section_start_for_tag"
         },
         {
+          "include": "#section_start_case_is_tag"
+        },
+        {
           "include": "#section_start_default_tag"
         },
         {
@@ -239,6 +242,35 @@
         {
           "match": "\\bin\\b",
           "name": "keyword.control.flow"
+        },
+        {
+          "include": "#code"
+        }
+      ]
+    },
+    "section_start_case_is_tag": {
+      "begin": "({)(#)((case|is)\\b)",
+      "end": "(})",
+      "beginCaptures": {
+        "1": {
+          "name": "support.constant.qute"
+        },
+        "2": {
+          "name": "keyword.control"
+        },
+        "3": {
+          "name": "keyword.control"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "support.constant.qute"
+        }
+      },
+      "patterns": [
+        {
+          "match": "(?<={(#case|#is)\\s+)(gt|ge|lt|le|not|ne|in|ni|!in|>|>=|<|<=|!=)(?=\\s+\\w+)",
+          "name": "keyword.operator.qute"
         },
         {
           "include": "#code"
