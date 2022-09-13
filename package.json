@@ -47,7 +47,9 @@
     "onLanguage:qute-html",
     "onLanguage:qute-json",
     "onLanguage:qute-yaml",
-    "onLanguage:qute-txt"
+    "onLanguage:qute-txt",
+    "onNotebook:qbook",
+    "workspaceContains:**/*.qbook"
   ],
   "main": "./dist/extension",
   "extensionDependencies": [
@@ -396,6 +398,18 @@
       {
         "scopeName": "grammar.qute",
         "path": "./language-support/qute/qute.tmLanguage.json"
+      }
+    ],
+    "notebooks": [
+      {
+        "id": "qbook",
+        "type": "qbook",
+        "displayName": "Qute NoteBook",
+        "selector": [
+          {
+            "filenamePattern": "*.qbook"
+          }
+        ]
       }
     ]
   },
