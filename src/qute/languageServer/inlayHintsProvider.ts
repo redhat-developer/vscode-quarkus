@@ -25,6 +25,9 @@ export class QuteInlayHintsProvider implements InlayHintsProvider {
       }
       return asInlayHints(values, this.client);
     } catch (error) {
+      if (token.isCancellationRequested) {
+        return [];
+      }
       return this.client.handleFailedRequest(InlayHintRequest.type, token, error);
     }
   }
