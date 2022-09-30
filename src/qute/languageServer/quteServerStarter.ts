@@ -30,12 +30,18 @@ function prepareParams(): string[] {
     }
   }
 
-  const vmargs = workspace.getConfiguration("quarkus.tools").get("server.vmargs", '');
+  const vmargs = workspace.getConfiguration("qute").get("server.vmargs", '');
   if (os.platform() === 'win32') {
     const watchParentProcess = '-DwatchParentProcess=';
     if (vmargs.indexOf(watchParentProcess) < 0) {
       params.push(watchParentProcess + 'false');
     }
+  }
+  // Disable logging unless the user specifically sets it to a different value.
+  // Logging can cause issues, since sometimes it writes to standard out.
+  // See https://github.com/redhat-developer/vscode-java/issues/2577.
+  if (vmargs.indexOf("-Xlog:") < 0) {
+    params.push("-Xlog:disable");
   }
   parseVMargs(params, vmargs);
   const serverHome: string = path.resolve(__dirname, '../server');

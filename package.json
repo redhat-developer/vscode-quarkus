@@ -225,6 +225,12 @@
           "description": "Action performed when detected Quarkus properties have an incorrect language.",
           "scope": "window"
         },
+        "qute.server.vmargs": {
+          "type": "string",
+          "scope": "application",
+          "markdownDescription": "The vmargs to use when launching the Qute language server",
+          "default": "-Xmx100M -XX:+UseG1GC -XX:+UseStringDeduplication -Xlog:disable"
+        },
         "qute.templates.languageMismatch": {
           "type": "string",
           "enum": [
