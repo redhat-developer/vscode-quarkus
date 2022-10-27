@@ -61,11 +61,10 @@ In `Java` files, you will benefit with:
   * Validation and Quick Fix support for MicroProfile
   * Code Lens support for Quarkus/MicroProfile
   * Code snippets:
-    * **qrc** - Create a new Quarkus resource class
-    * **qrm** - Create a new Quarkus resource method
     * **qtrc** - Create a new Quarkus test resource class
-    * **qntrc** - Create a new Quarkus native test resource class
-    * snippets for MicroProfile annotations.
+    * **qitrc** - Create a new Quarkus integration test resource class
+    * **qntrc** - Create a new Quarkus native test resource class (only works in older versions of Quarkus, since this testing method has been deprecated)
+    * All the [snippets provided by vscode-microprofile](https://github.com/redhat-developer/vscode-microprofile#microprofile-java-features)
 
 ## Requirements
 
