@@ -1,5 +1,63 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.12.0 (1 December, 2022)
+
+### Enhancements
+
+ * Provide HTML support for Qute HTML templates. See [#483](https://github.com/redhat-developer/vscode-quarkus/issues/483).
+ * Add new snippet for `@QuarkusIntegrationTest`. See [quarkus-ls#754](https://github.com/redhat-developer/quarkus-ls/issues/754).
+ * Generic support for Java data model in Qute templates. See [quarkus-ls#503](https://github.com/redhat-developer/quarkus-ls/issues/503).
+ * Syntax coloration for operator of `#case`. See [#537](https://github.com/redhat-developer/vscode-quarkus/issues/537).
+ * Show documentation on hover of operator for `#case`, `#is`. See [quarkus-ls#716](https://github.com/redhat-developer/quarkus-ls/issues/716).
+ * Clickable inlay hint for Java type in Qute templates. See [#533](https://github.com/redhat-developer/vscode-quarkus/pull/533).
+ * Validation, completion & definition support for enum in `#switch` section. See [quarkus-ls#689](https://github.com/redhat-developer/quarkus-ls/issues/689), [#690](https://github.com/redhat-developer/quarkus-ls/issues/690), [quarkus-ls#691](https://github.com/redhat-developer/quarkus-ls/issues/691).
+  * Display property expression evaluation as inlay hint. See [vscode-microprofile#108](https://github.com/redhat-developer/vscode-microprofile/pull/108).
+ * Added Qute code actions for similar text suggestions. See [quarkus-ls#602](https://github.com/redhat-developer/quarkus-ls/issues/602).
+ * Code actions to create Java field / getter method / template extension. See [quarkus-ls#536](https://github.com/redhat-developer/quarkus-ls/issues/536), [quarkus-ls#676](https://github.com/redhat-developer/quarkus-ls/issues/676), [quarkus-ls#677](https://github.com/redhat-developer/quarkus-ls/issues/677).
+ * Display Javadoc on hover for property/method . See [quarkus-ls#452](https://github.com/redhat-developer/quarkus-ls/issues/452).
+ * Diagnostics for mp-reactive-messaging `@Incoming`/`@Outgoing` annotation. See [eclipse/lsp4mp#58](https://github.com/eclipse/lsp4mp/issues/58).
+
+### Performance
+
+ * Use `resolve` for code action in Qute templates. See [quarkus-ls#604](https://github.com/redhat-developer/quarkus-ls/issues/604).
+ * Improve code action performance with `CodeAction#data` & `resolveCodeAction`. See [vscode-microprofile#124](https://github.com/redhat-developer/vscode-microprofile/pull/124), [eclipse/lsp4mp#171](https://github.com/eclipse/lsp4mp/issues/171).
+ * Activation trigger should be more selective. See [quarkus-ls#497](https://github.com/redhat-developer/vscode-quarkus/issues/497).
+ * Detect cyclical class hierarchy when calculating all fields and methods of an object. See [quarkus-ls#725](https://github.com/redhat-developer/quarkus-ls/issues/725).
+ * Fix cancel support with `CompletableFuture` compose. See [quarkus-ls#679](https://github.com/redhat-developer/quarkus-ls/pull/679).
+
+### Bug Fixes
+
+ * Duplicate template data when using type safe expressions. See [quarkus-ls#750](https://github.com/redhat-developer/quarkus-ls/issues/750).
+ * NPE when validating Qute template where a method is invoked. See [quarkus-ls#748](https://github.com/redhat-developer/quarkus-ls/issues/748).
+ * Qute parser does not parse operator parameters with '=' correctly. See [quarkus-ls#742](https://github.com/redhat-developer/quarkus-ls/issues/742).
+ * Indent snippet new line if LSP client doesn't support `InsertTextMode#AdjustIndentation`. See [quarkus-ls#727](https://github.com/redhat-developer/quarkus-ls/issues/727).
+ * Inlay hints fails when re-opening vscode on a qute template. See [#503](https://github.com/redhat-developer/vscode-quarkus/issues/503).
+ * Ignore synthetic methods in Qute templates. See [quarkus-ls#723](https://github.com/redhat-developer/quarkus-ls/issues/723).
+ * `ClassCastException` with code action and method part. See [quarkus-ls#717](https://github.com/redhat-developer/quarkus-ls/issues/717).
+ * `JavaFileTextDocumentService` doesn't gracefully handle lack of rename support. See [quarkus-ls#700](https://github.com/redhat-developer/quarkus-ls/issues/700).
+ * Do not give code actions for stale diagnostics. See [quarkus-ls#694](https://github.com/redhat-developer/quarkus-ls/pull/694).
+ * Update snippet activation based on API changes. See [#551](https://github.com/redhat-developer/vscode-quarkus/issues/551).
+ * `AbstractQuteTemplateLinkCollector` wrongly identifies template fields. See [quarkus-ls#683](https://github.com/redhat-developer/quarkus-ls/issues/683).
+ * Completion proposes invalid `{inject:*}` items. See [quarkus-ls#590](https://github.com/redhat-developer/quarkus-ls/issues/590).
+ * Java source code not validated upon start. See [eclipse/lsp4mp#301](https://github.com/eclipse/lsp4mp/issues/301).
+ * Improve handling of `@ConfigProperties` for validation. See [eclipse/lsp4mp#304](https://github.com/eclipse/lsp4mp/issues/304).
+ * Support for the `config_ordinal` property in `microprofile-config.properties`. See [eclipse/lsp4mp#289](https://github.com/eclipse/lsp4mp/issues/289).
+ * Property evaluation should support the environment variable default value notation. See [eclipse/lsp4mp#241](https://github.com/eclipse/lsp4mp/issues/241).
+ * Display property value when hovering over a key that isn't defined in the application. See [eclipse/lsp4mp#285](https://github.com/eclipse/lsp4mp/issues/285).
+ * REST client code lens only shows up for `GET` annotations. See [eclipse/lsp4mp#94](https://github.com/eclipse/lsp4mp/issues/94).
+ * JAXRS code lens URL should always appear above method declaration. See [eclipse/lsp4mp#194](https://github.com/eclipse/lsp4mp/issues/194).
+ * Support `microprofile-health` 3.0 and later. See [eclipse/lsp4mp#314](https://github.com/eclipse/lsp4mp/issues/314).
+ * `@ConfigProperties` validation should check the annotation's fully qualified name. See [eclipse/lsp4mp#304](https://github.com/eclipse/lsp4mp/issues/304).
+ * Fix typo in `mpirc` snippet. See [eclipse/lsp4mp#325](https://github.com/eclipse/lsp4mp/issues/325).
+ * Disable JVM logging by default to avoid language server failure. See [#548](https://github.com/redhat-developer/vscode-quarkus/issues/548).
+
+### Build
+
+ * Add support for pre-releases. See [#539](https://github.com/redhat-developer/vscode-quarkus/pull/539).
+ * Update node to 14 in CI and CD. See [#534](https://github.com/redhat-developer/vscode-quarkus/pull/534).
+ * Update vscode-redhat-telemetry to 0.5.2. See [#558](https://github.com/redhat-developer/vscode-quarkus/pull/558).
+ * Update Jenkinsfile to use Java 17. See [#538](https://github.com/redhat-developer/vscode-quarkus/pull/538).
+
 ## 1.11.0 (25 July, 2022)
 
 ### Enhancements
@@ -18,6 +76,7 @@
  * Display error when Quarkus application is built for Qute. See [#508](https://github.com/redhat-developer/vscode-quarkus/issues/508).
 
 ### Performance
+
  * Delay revalidation of Java files, Qute template files, and improve cancel checking. See [quarkus-ls#659](https://github.com/redhat-developer/quarkus-ls/pull/659), [quarkus-ls#666](https://github.com/redhat-developer/quarkus-ls/pull/666).
  * Improve memory and performance of Qute language server. See [quarkus-ls#654](https://github.com/redhat-developer/quarkus-ls/issues/654).
 
