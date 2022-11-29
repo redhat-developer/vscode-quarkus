@@ -91,6 +91,7 @@ For `Qute settings`, please see [here](docs/qute/README.md#settings)
 With your approval, vscode-quarkus extension collects anonymous [usage data](USAGE_DATA.md) and sends it to Red Hat servers to help improve our products and services.
 Read our [privacy statement](https://developers.redhat.com/article/tool-data-collection) to learn more.
 This extension respects the `redhat.telemetry.enabled` setting, which you can learn more about at https://github.com/redhat-developer/vscode-redhat-telemetry#how-to-disable-telemetry-reporting
+Note that this extension abides by Visual Studio Code's telemetry level: if `telemetry.telemetryLevel` is set to off, then no telemetry events will be sent to Red Hat, even if `redhat.telemetry.enabled` is set to true. If `telemetry.telemetryLevel` is set to `error` or `crash`, only events containing an error or errors property will be sent to Red Hat.
 
 ## Articles
 
