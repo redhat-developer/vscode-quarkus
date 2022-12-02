@@ -144,6 +144,9 @@ export async function getJavaExtensionAPI(): Promise<JavaExtensionAPI> {
   return Promise.resolve(api);
 }
 async function isQuarkusProject(): Promise<boolean> {
+  if (!workspace.workspaceFolders) {
+    return false;
+  }
   for (const ws of workspace.workspaceFolders) {
     const buildFileUris = await getFilePathsFromWorkspace(ws, "**/{pom.xml,build.gradle}");
     for (const uri of buildFileUris) {
