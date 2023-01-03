@@ -2,7 +2,7 @@
 
 [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/redhat.vscode-quarkus?style=for-the-badge&label=VS%20Marketplace&logo=visual-studio-code)](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-quarkus)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/redhat.vscode-quarkus?style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-quarkus)
-[![Build Status](https://img.shields.io/github/workflow/status/redhat-developer/vscode-quarkus/Tests/master?style=for-the-badge)](https://github.com/redhat-developer/vscode-quarkus/actions?query=branch%3Amaster)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/redhat-developer/vscode-quarkus/tests.yml?branch=master&style=for-the-badge&logo=github)](https://github.com/redhat-developer/vscode-quarkus/actions?query=branch%3Amaster)
 [![License](https://img.shields.io/github/license/redhat-developer/vscode-quarkus?style=for-the-badge)](https://github.com/redhat-developer/vscode-quarkus/blob/master/LICENSE)
 
 ## Description
