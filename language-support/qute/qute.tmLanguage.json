@@ -129,7 +129,7 @@
 			"name": "string.unquoted.cdata.qute"
 		},
     "section_start_default_tag": {
-      "begin": "({)(#)((each|else|eval|include|insert|set|let|with|switch|case|is|when)\\b)",
+      "begin": "({)(#)((each|else|eval|fragment|include|insert|set|let|with|switch|case|is|when)\\b)",
       "end": "(\\/)?((?<![\\\\])})",
       "beginCaptures": {
         "1": {
@@ -157,7 +157,7 @@
       ]
     },
     "section_end_default_tag": {
-      "begin": "({)(\\/)((each|else|else\\sif|eval|for|if|include|insert|set|let|with|switch|case|is|when)\\b)",
+      "begin": "({)(\\/)((each|else|else\\sif|eval|for|fragment|if|include|insert|set|let|with|switch|case|is|when)\\b)",
       "end": "((?<![\\\\])})",
       "beginCaptures": {
         "1": {
