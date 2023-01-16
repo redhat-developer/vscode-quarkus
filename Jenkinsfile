@@ -22,7 +22,8 @@ node('rhel8'){
     stage('Install requirements') {
         def nodeHome = tool 'nodejs-14.19.1'
         env.PATH="${env.PATH}:${nodeHome}/bin"
-        sh 'npm install -g typescript vsce'
+        sh 'npm install -g typescript'
+        sh 'npm install -g -f "@vscode/vsce"'
     }
 
     stage('Build') {
