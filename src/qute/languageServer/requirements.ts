@@ -6,10 +6,10 @@ import * as path from 'path';
 import { Uri, workspace } from 'vscode';
 
 import * as expandHomeDir from 'expand-home-dir';
-import * as findJavaHome from 'find-java-home';
+import { findRuntimes, IJavaRuntime, getSources } from 'jdk-utils';
 import { JavaExtensionAPI } from '../../extension';
 const isWindows = process.platform.indexOf('win') === 0;
-const JAVA_FILENAME = 'java' + (isWindows?'.exe': '');
+const JAVA_FILENAME = 'java' + (isWindows ? '.exe' : '');
 
 export interface RequirementsData {
     tooling_jre: string;
@@ -33,48 +33,49 @@ export async function resolveRequirements(api: JavaExtensionAPI): Promise<Requir
 
     const javaHome = await checkJavaRuntime();
     const javaVersion = await checkJavaVersion(javaHome);
-    return Promise.resolve({tooling_jre: javaHome, tooling_jre_version: javaVersion, java_home: javaHome, java_version: javaVersion});
+    return Promise.resolve({ tooling_jre: javaHome, tooling_jre_version: javaVersion, java_home: javaHome, java_version: javaVersion });
 }
 
-function checkJavaRuntime(): Promise<string> {
-    return new Promise((resolve, reject) => {
-        let source: string;
-        let javaHome: string|undefined = readJavaHomeConfig();
+async function checkJavaRuntime(): Promise<string> {
+    let source: string;
+    let javaHome: string | undefined = await readJavaHomeConfig();
 
-        if (javaHome) {
-            source = 'The java.home variable defined in VS Code settings';
-        } else {
-            javaHome = process.env['JDK_HOME'];
-            if (javaHome) {
-                source = 'The JDK_HOME environment variable';
-            } else {
-                javaHome = process.env['JAVA_HOME'];
-                source = 'The JAVA_HOME environment variable';
-            }
+    if (javaHome) {
+        source = 'The java.home variable defined in VS Code settings';
+        javaHome = expandHomeDir(javaHome);
+        if (!fs.existsSync(javaHome)) {
+            throw openJDKDownload(source + ' points to a missing folder');
+        } else if (!fs.existsSync(path.resolve(javaHome as string, 'bin', JAVA_FILENAME))) {
+            throw openJDKDownload(source + ' does not point to a Java runtime.');
         }
-
-        if (javaHome) {
-            javaHome = expandHomeDir(javaHome);
-            if (!fs.existsSync(javaHome)) {
-                openJDKDownload(reject, source+' points to a missing folder');
-            } else if (!fs.existsSync(path.resolve(javaHome as string, 'bin', JAVA_FILENAME))) {
-                openJDKDownload(reject, source+ ' does not point to a Java runtime.');
-            }
-            return resolve(javaHome);
-        }
-        // No settings, let's try to detect as last resort.
-        findJavaHome({ allowJre: true }, (err: any, home: any) => {
-            if (err) {
-                openJDKDownload(reject, 'Java runtime could not be located.');
-            }
-            else {
-                resolve(home);
-            }
-        });
-    });
+        return javaHome;
+    }
+    // No settings, let's try to detect as last resort.
+    const javaRuntimes = await findRuntimes({ withVersion: true, withTags: true });
+    if (javaRuntimes.length) {
+        sortJdksBySource(javaRuntimes);
+        javaHome = javaRuntimes[0].homedir;
+    } else {
+        throw openJDKDownload("Java runtime could not be located. Please download and install Java or use the binary server.");
+    }
+    return javaHome;
 }
 
-function readJavaHomeConfig(): string|undefined {
+function sortJdksBySource(jdks: IJavaRuntime[]) {
+    const rankedJdks = jdks as Array<IJavaRuntime & { rank: number }>;
+    const sources = ["JDK_HOME", "JAVA_HOME", "PATH"];
+    for (const [index, source] of sources.entries()) {
+        for (const jdk of rankedJdks) {
+            if (jdk.rank === undefined && getSources(jdk).includes(source)) {
+                jdk.rank = index;
+            }
+        }
+    }
+    rankedJdks.filter(jdk => jdk.rank === undefined).forEach(jdk => jdk.rank = sources.length);
+    rankedJdks.sort((a, b) => a.rank - b.rank);
+}
+
+function readJavaHomeConfig(): string | undefined {
     const config = workspace.getConfiguration();
     return config.get<string>('java.home');
 }
@@ -84,7 +85,7 @@ function checkJavaVersion(javaHome: string): Promise<number> {
         cp.execFile(javaHome + '/bin/java', ['-version'], {}, (error, stdout, stderr) => {
             const javaVersion = parseMajorVersion(stderr);
             if (javaVersion < 11) {
-                openJDKDownload(reject, `Java 11 or more recent is required to run 'Qute support'. Please download and install a recent JDK.`);
+                reject(openJDKDownload(`Java 11 or more recent is required to run 'Qute support'. Please download and install a recent JDK.`));
             } else {
                 resolve(javaVersion);
             }
@@ -114,15 +115,15 @@ export function parseMajorVersion(content: string): number {
     return javaVersion;
 }
 
-function openJDKDownload(reject: any, cause: string) {
+function openJDKDownload(cause: string): any {
     let jdkUrl = 'https://developers.redhat.com/products/openjdk/download/?sc_cid=701f2000000RWTnAAO';
     if (process.platform === 'darwin') {
         jdkUrl = 'http://www.oracle.com/technetwork/java/javase/downloads/index.html';
     }
-    reject({
+    return {
         message: cause,
         label: 'Get the Java Development Kit',
         openUrl: Uri.parse(jdkUrl),
         replaceClose: false
-    });
+    };
 }
