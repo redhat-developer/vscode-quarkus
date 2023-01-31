@@ -15,6 +15,7 @@
  */
 import * as path from 'path';
 import { commands, Disposable, ExtensionContext, extensions, Terminal, TextDocument, window, workspace } from 'vscode';
+import { LanguageClient } from 'vscode-languageclient/node';
 import { registerVSCodeClientCommands, registerVSCodeCommands } from './commands/registerCommands';
 import { QuarkusConfig, QuarkusPropertiesLanguageMismatch } from './QuarkusConfig';
 import { QuarkusContext } from './QuarkusContext';
@@ -30,6 +31,8 @@ import { createTerminateDebugListener } from './wizards/debugging/terminateProce
 
 // alias for vscode-java's ExtensionAPI
 export type JavaExtensionAPI = any;
+
+let quteLanguageClient: LanguageClient | null = null;
 
 export async function activate(context: ExtensionContext) {
 
@@ -53,7 +56,7 @@ export async function activate(context: ExtensionContext) {
   }
 }
 
-async function doActivate(context: ExtensionContext) {
+async function doActivate(context: ExtensionContext): Promise<void> {
   displayWelcomePageIfNeeded(context);
   commands.executeCommand('setContext', 'quarkusProjectExistsOrLightWeight', true);
 
@@ -84,17 +87,24 @@ async function doActivate(context: ExtensionContext) {
   registerVSCodeCommands(context);
   const api: JavaExtensionAPI = await getJavaExtensionAPI();
 
-  await connectToQuteLS(context, api).catch((error) => {
-    window.showErrorMessage(error.message, error.label).then((selection) => {
-      if (error.label && error.label === selection && error.openUrl) {
-        commands.executeCommand('vscode.open', error.openUrl);
-      }
-    });
-  });
+  try {
+    quteLanguageClient = await connectToQuteLS(context, api);
+  } catch (error) {
+    window
+      .showErrorMessage(error.message, error.label) //
+      .then((selection) => {
+        if (error.label && error.label === selection && error.openUrl) {
+          commands.executeCommand("vscode.open", error.openUrl);
+        }
+      });
+  }
 
 }
 
-export function deactivate() {
+export async function deactivate(): Promise<void> {
+  if (quteLanguageClient) {
+    await quteLanguageClient.stop();
+  }
 }
 
 function displayWelcomePageIfNeeded(context: ExtensionContext): void {

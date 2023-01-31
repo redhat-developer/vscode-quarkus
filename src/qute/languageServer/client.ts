@@ -1,15 +1,15 @@
-import { resolveRequirements } from './requirements';
-
+import { commands, ConfigurationTarget, ExtensionContext, window, workspace } from 'vscode';
 import { DidChangeConfigurationNotification, LanguageClientOptions } from 'vscode-languageclient';
 import { LanguageClient } from 'vscode-languageclient/node';
-import { ExtensionContext, commands, workspace, window, ConfigurationTarget } from 'vscode';
-import { prepareExecutable } from './quteServerStarter';
-import { registerQuteExecuteWorkspaceCommand, registerVSCodeQuteCommands, synchronizeQuteValidationButton } from '../commands/registerCommands';
-import { QuteClientCommandConstants } from '../commands/commandConstants';
-import { QuteSettings } from './settings';
 import { JavaExtensionAPI } from '../../extension';
+import { QuteClientCommandConstants } from '../commands/commandConstants';
+import { registerQuteExecuteWorkspaceCommand, registerVSCodeQuteCommands, synchronizeQuteValidationButton } from '../commands/registerCommands';
+import { prepareExecutable } from './quteServerStarter';
+import { resolveRequirements } from './requirements';
+import { QuteSettings } from './settings';
 
-export async function connectToQuteLS(context: ExtensionContext, api: JavaExtensionAPI) {
+
+export async function connectToQuteLS(context: ExtensionContext, api: JavaExtensionAPI): Promise<LanguageClient> {
   registerVSCodeQuteCommands(context);
   const requirements = await resolveRequirements(api);
 
@@ -36,7 +36,7 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
             ]
           }
         }
-      }
+      },
     },
     synchronize: {
       // preferences starting with these will trigger didChangeConfiguration
@@ -53,7 +53,7 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
           return result;
         }
       }
-    }
+    },
   };
 
   function bindQuteRequest(request: string) {
@@ -116,6 +116,7 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
   }
   await setQuteValidationEnabledContext();
   await synchronizeQuteValidationButton(window.activeTextEditor);
+  return quteLanguageClient;
 }
 
 /**
