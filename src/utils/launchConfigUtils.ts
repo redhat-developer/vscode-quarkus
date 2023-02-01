@@ -15,7 +15,7 @@
  */
 import * as path from 'path';
 import { DebugConfiguration, WorkspaceFolder, workspace, Task } from 'vscode';
-import { getTaskExecutionWorkingDir, getQuarkusDevTasks } from '../utils/tasksUtils';
+import { getTaskExecutionWorkingDir, getQuarkusDevTasks, shouldUpdateTaskCommand } from '../utils/tasksUtils';
 import { BuildSupport } from '../buildSupport/BuildSupport';
 import { FsUtils } from './fsUtils';
 
@@ -43,6 +43,12 @@ export async function getQuarkusDevDebugConfig(workspaceFolder: WorkspaceFolder,
     const potentialTasks: Task[] = tasks.filter((t: Task) => t.name === config.preLaunchTask);
     for (const task of potentialTasks) {
       const taskWorkingDir: string = getTaskExecutionWorkingDir(task);
+
+      // return undefined if wrapper no longer exists but is used launch command in tasks.json
+      if (await shouldUpdateTaskCommand(projectFolder, task, projectBuildSupport)) {
+        return undefined;
+      }
+
       // Case 1: When Quarkus project is in the current `workspaceFolder`
       if (taskWorkingDir === '${workspaceFolder}') {
         if (FsUtils.isSameDirectory(workspaceFolder.uri.fsPath, projectFolder)) {

@@ -86,15 +86,15 @@ export class LaunchConfigCreator {
 
   private async addLaunchConfig(): Promise<void> {
     const launchJson = workspace.getConfiguration('launch', this.workspaceFolder.uri);
-    const configurations: DebugConfiguration[] = launchJson.get<DebugConfiguration[]>('configurations');
-    configurations.push(await this.getLaunchConfig());
+    const relativePath: string = path.relative(this.workspaceFolder.uri.fsPath, this.projectFolder);
+    const launchConfigName: string = `Debug Quarkus application${(relativePath.length > 0 ? ` (${relativePath})` : '')}`;
+    const configurations: DebugConfiguration[] = launchJson.get<DebugConfiguration[]>('configurations')
+      .filter(task => task['name'] != launchConfigName);
+    configurations.push(await this.getLaunchConfig(launchConfigName));
     await launchJson.update('configurations', configurations, ConfigurationTarget.WorkspaceFolder);
   }
 
-  private async getLaunchConfig(): Promise<DebugConfiguration> {
-    const relativePath: string = path.relative(this.workspaceFolder.uri.fsPath, this.projectFolder);
-    const launchConfigName: string = `Debug Quarkus application${(relativePath.length > 0 ? ` (${relativePath})` : '')}`;
-
+  private async getLaunchConfig(launchConfigName: string): Promise<DebugConfiguration> {
     const launchConfig: DebugConfiguration =
       {
         preLaunchTask: this.quarkusBuildSupport.getQuarkusDevTaskName(this.workspaceFolder, this.projectFolder),

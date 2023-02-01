@@ -124,7 +124,7 @@ export class TaskCreator {
    */
   private async addTask(taskDefinition: TaskDefinition): Promise<void> {
     const tasksJson = workspace.getConfiguration('tasks', this.workspaceFolder.uri);
-    const tasks: TaskDefinition[] = tasksJson.get<TaskDefinition[]>('tasks');
+    const tasks: TaskDefinition[] = tasksJson.get<TaskDefinition[]>('tasks').filter(task => task['label'] != taskDefinition['label']);
     tasks.push(taskDefinition);
     await tasksJson.update('tasks', tasks, ConfigurationTarget.WorkspaceFolder);
   }
