@@ -17,6 +17,7 @@ import * as _ from 'lodash';
 
 import { tasks, ProcessExecution, ShellExecution, Task, TaskExecution, WorkspaceFolder, CustomExecution } from 'vscode';
 import { BuildSupport } from '../buildSupport/BuildSupport';
+import { getFilePathsFromFolder } from '../utils/workspaceUtils';
 
 export async function getQuarkusDevTaskNames(workspaceFolder: WorkspaceFolder, projectBuildSupport: BuildSupport) {
   const quarkusDevTaskDefinitions: Task[] = await getQuarkusDevTasks(workspaceFolder, projectBuildSupport);
@@ -76,11 +77,37 @@ function isQuarkusDevTask(task: Task, projectBuildSupport: BuildSupport): boolea
 
   const shellExecution: ShellExecution = execution as ShellExecution;
 
-  return shellExecution
-    && shellExecution.commandLine
-    && (shellExecution.commandLine.includes(projectBuildSupport.getDefaultExecutable())
-      || shellExecution.commandLine.includes(projectBuildSupport.getWrapper())
-      || shellExecution.commandLine.includes(projectBuildSupport.getWrapperWindows()));
+  return shellExecution?.commandLine?.includes(projectBuildSupport.getDefaultExecutable())
+    || shellExecution?.commandLine?.includes(projectBuildSupport.getWrapper())
+    || shellExecution?.commandLine?.includes(projectBuildSupport.getWrapperWindows());
+}
+
+export async function shouldUpdateTaskCommand(folderPath: string, task: Task, projectBuildSupport: BuildSupport): Promise<boolean> {
+
+  const execution: ProcessExecution | ShellExecution | CustomExecution = task.execution;
+
+  if (!execution || !(execution as ShellExecution)) {
+    return false;
+  }
+
+  const shellExecution: ShellExecution = execution as ShellExecution;
+
+  if (process.platform === 'win32') {
+    const wrapperExistsWindows = (await getFilePathsFromFolder(folderPath, projectBuildSupport.getWrapperWindows())).length > 0;
+    if (shellExecution?.commandLine?.includes(projectBuildSupport.getWrapperWindows())) {
+      // should update task command if the current command calls wrapper and wrapper does not exist
+      return !wrapperExistsWindows;
+    }
+    // should update task command if the current command does not use wrapper but wrapper exists
+    return wrapperExistsWindows;
+  } else {
+    // on linux:
+    const wrapperExistsUnix = (await getFilePathsFromFolder(folderPath, projectBuildSupport.getWrapper())).length > 0;
+    if (shellExecution?.commandLine?.includes(projectBuildSupport.getWrapper())) {
+      return !wrapperExistsUnix;
+    }
+    return wrapperExistsUnix;
+  }
 }
 
 function isTaskFromWorkspace(workspaceFolder: WorkspaceFolder, task: Task): boolean {
