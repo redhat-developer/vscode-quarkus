@@ -245,22 +245,32 @@ async function updateQuteLanguageId(context: ExtensionContext, document: TextDoc
   if (document.uri.scheme === 'git') {
     return;
   }
+
+  const fileExtension = path.extname(document.fileName);
+  const expectedLanguageId = LANGUAGE_MAP.get(fileExtension);
+  if (!expectedLanguageId) {
+    // the file is not an html, txt, yaml, or json file
+    return;
+  }
+  if (expectedLanguageId === document.languageId) {
+    // the document has the expected qute-* language id.
+    return;
+  }
+
   const propertiesLanguageMismatch: QuteTemplateLanguageMismatch = QuteSettings.getQuteTemplatesLanguageMismatch();
   // Check if the setting is set to ignore or if the language ID is already set to Qute
-  if (propertiesLanguageMismatch === QuteTemplateLanguageMismatch.ignore || document.languageId.startsWith('qute-')) {
+  if (propertiesLanguageMismatch === QuteTemplateLanguageMismatch.ignore) {
     // Do nothing
     return;
   }
+
   if (isInTemplates(document)) {
-    for (const extension of LANGUAGE_MAP.keys()) {
-      if (path.extname(document.fileName) === extension) {
-        const quteLanguageId = LANGUAGE_MAP.get(extension);
-        const fileName: string = path.basename(document.fileName);
-        tryToForceLanguageId(context, document, fileName, propertiesLanguageMismatch, quteLanguageId, onExtensionLoad, QuteSettings.QUTE_OVERRIDE_LANGUAGE_ID, QuteSettings.QUTE_TEMPLATES_LANGUAGE_MISMATCH);
-        break;
-      }
-    }
+    // The html, txt, yaml, json file is in src/main/resources/templates folder
+    // The document must be forced with qute-* language id
+    const fileName: string = path.basename(document.fileName);
+    await tryToForceLanguageId(context, document, fileName, propertiesLanguageMismatch, expectedLanguageId, onExtensionLoad, QuteSettings.QUTE_OVERRIDE_LANGUAGE_ID, QuteSettings.QUTE_TEMPLATES_LANGUAGE_MISMATCH);
   }
+
 }
 
 function isInTemplates(document: TextDocument): boolean {
