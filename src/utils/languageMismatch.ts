@@ -2,9 +2,9 @@ import { commands, ConfigurationTarget, ExtensionContext, languages, TextDocumen
 import { ProjectLabelInfo } from "../definitions/ProjectLabelInfo";
 
 export abstract class LanguageMismatch {
-  static ignore: string = "ignore";
-  static force: string = "force";
-  static prompt: string = "prompt";
+  static ignore = "ignore";
+  static force = "force";
+  static prompt = "prompt";
 
   static setLanguageMismatch(configName: string, value: string): Thenable<void> {
     return this.saveToConfig(configName, value);

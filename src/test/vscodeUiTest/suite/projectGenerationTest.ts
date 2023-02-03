@@ -252,7 +252,7 @@ describe('Project generation tests', function () {
     this.timeout(360000);
 
     const projectDestDir: string = path.join(tempDir, 'maven');
-    const projectFolderName: string = 'quarkus-maven';
+    const projectFolderName = 'quarkus-maven';
 
     fs.mkdirSync(projectDestDir);
 
@@ -290,7 +290,7 @@ describe('Project generation tests', function () {
     this.timeout(480000);
 
     const projectDestDir: string = path.join(tempDir, 'gradle');
-    const projectFolderName: string = 'quarkus-gradle';
+    const projectFolderName = 'quarkus-gradle';
 
     fs.mkdirSync(projectDestDir);
 
@@ -334,13 +334,13 @@ describe('Project generation tests', function () {
 
     const projectDestDir: string = path.join(tempDir, 'previous-values-extensions');
 
-    const buildTool: string = 'Gradle';
-    const groupId: string = 'testgroupid';
-    const artifactId: string = 'testartifactid';
-    const projectVersion: string = 'testprojectVersion';
-    const packageName: string = groupId;
-    const resourceName: string = 'testresourcename';
-    const shouldGenerateCode: string = "Include starter code";
+    const buildTool = 'Gradle';
+    const groupId = 'testgroupid';
+    const artifactId = 'testartifactid';
+    const projectVersion = 'testprojectVersion';
+    const packageName = groupId;
+    const resourceName = 'testresourcename';
+    const shouldGenerateCode = "Include starter code";
     const extensions: string[] = ['Camel Core', 'Eclipse Vert.x'];
 
     fs.mkdirSync(projectDestDir);
@@ -422,9 +422,9 @@ describe('Project generation tests', function () {
     await wizard.next();
 
     // groupId input validation
-    const groupIdError1: string = 'Invalid groupId: A valid groupId can only contain characters from A to z, numbers, and the following symbols: ._$';
-    const groupIdError2: string = 'Invalid groupId: A valid groupId must start with a character from A to z, or one of the following symbols: _$';
-    const groupIdError3: string = 'Invalid groupId: A valid groupId must end with a character from A to z, a number, or one of the following symbols: _$';
+    const groupIdError1 = 'Invalid groupId: A valid groupId can only contain characters from A to z, numbers, and the following symbols: ._$';
+    const groupIdError2 = 'Invalid groupId: A valid groupId must start with a character from A to z, or one of the following symbols: _$';
+    const groupIdError3 = 'Invalid groupId: A valid groupId must end with a character from A to z, a number, or one of the following symbols: _$';
     await assertValidation('groupId', wizard, [
       { text: 'org.acme' },
       { text: 'azaza' },
@@ -446,8 +446,8 @@ describe('Project generation tests', function () {
     await wizard.next();
 
     // artifactId input validation
-    const artifactIdError1: string = 'Invalid artifactId: A valid artifactId can only contain characters from a-z, numbers, and the following symbols: -._';
-    const artifactIdError2: string = 'Invalid artifactId: A valid artifactId must start with a character from a-z';
+    const artifactIdError1 = 'Invalid artifactId: A valid artifactId can only contain characters from a-z, numbers, and the following symbols: -._';
+    const artifactIdError2 = 'Invalid artifactId: A valid artifactId must start with a character from a-z';
     await assertValidation('artifactId', wizard, [
       { text: 'quarkus-getting-started' },
       { text: 'testing123-._' },
@@ -466,9 +466,9 @@ describe('Project generation tests', function () {
     await wizard.next();
 
     // package name input validation
-    const packageNameError1: string = 'Invalid package name: A valid package name can only contain characters from A to z, numbers, and the following symbols: ._$';
-    const packageNameError2: string = 'Invalid package name: A valid package name must start with a character from A to z, or one of the following symbols: _$';
-    const packageNameError3: string = 'Invalid package name: A valid package name must end with characters from A to z, a number, or the following symbols: _$';
+    const packageNameError1 = 'Invalid package name: A valid package name can only contain characters from A to z, numbers, and the following symbols: ._$';
+    const packageNameError2 = 'Invalid package name: A valid package name must start with a character from A to z, or one of the following symbols: _$';
+    const packageNameError3 = 'Invalid package name: A valid package name must end with characters from A to z, a number, or the following symbols: _$';
     await assertValidation('package name', wizard, [
       { text: 'org.acme' },
       { text: 'azaza' },
@@ -491,8 +491,8 @@ describe('Project generation tests', function () {
     await wizard.next();
 
     // resource name input validation
-    const resourceNameError1: string = 'Invalid resource name: A valid resource name can only contain characters from A to z, numbers, and underscores';
-    const resourceNameError2: string = 'Invalid resource name: A valid resource name must start with a character from A to z';
+    const resourceNameError1 = 'Invalid resource name: A valid resource name can only contain characters from A to z, numbers, and underscores';
+    const resourceNameError2 = 'Invalid resource name: A valid resource name must start with a character from A to z';
 
     await assertValidation('resource name', wizard, [
       { text: 'GreetingResource' },

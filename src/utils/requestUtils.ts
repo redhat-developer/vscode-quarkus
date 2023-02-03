@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-import * as request from 'request-promise';
-import * as p from 'path';
 import * as fs from 'fs';
-
-import { QuarkusConfig } from '../QuarkusConfig';
-import { ProjectGenState } from '../definitions/inputState';
-import { QExtension, APIExtension } from '../definitions/QExtension';
+import * as p from 'path';
+import * as request from 'request-promise';
 import { Readable } from 'stream';
-import { ZipFile, fromBuffer } from 'yauzl';
-import { convertToQExtension } from '../definitions/QExtension';
+import { fromBuffer, ZipFile } from 'yauzl';
+import { ProjectGenState } from '../definitions/inputState';
+import { APIExtension, convertToQExtension, QExtension } from '../definitions/QExtension';
+import { QuarkusConfig } from '../QuarkusConfig';
 import { CodeQuarkusFunctionality } from './codeQuarkusApiUtils';
+
 
 const HEADERS = {
   'Client-Name': 'vscode-quarkus',
@@ -32,7 +31,7 @@ const HEADERS = {
 };
 
 export async function getQExtensions(platform?: string): Promise<QExtension[]> {
-  const apiUrl: string = `${QuarkusConfig.getApiUrl()}/extensions${platform === undefined ? `` : `/stream/${platform}`}`;
+  const apiUrl = `${QuarkusConfig.getApiUrl()}/extensions${platform === undefined ? `` : `/stream/${platform}`}`;
   const extensions: string = await tryGetExtensionsJSON(apiUrl);
   const qExtensions: QExtension[] = JSON.parse(extensions).map((ext: APIExtension) => {
     return convertToQExtension(ext);
