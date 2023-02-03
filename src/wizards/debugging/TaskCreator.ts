@@ -111,7 +111,7 @@ export class TaskCreator {
   }
 
   private prependTasksJsonComment(): void {
-    let comment: string = `// See https://go.microsoft.com/fwlink/?LinkId=733558\n`;
+    let comment = `// See https://go.microsoft.com/fwlink/?LinkId=733558\n`;
     comment += `// for the documentation about the tasks.json format\n`;
     FsUtils.prependToFile(this.tasksJsonFile, comment);
   }

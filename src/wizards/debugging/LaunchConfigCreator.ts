@@ -15,7 +15,7 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
-import { ConfigurationChangeEvent, Disposable, DebugConfiguration, WorkspaceFolder, workspace, ConfigurationTarget } from 'vscode';
+import { ConfigurationChangeEvent, ConfigurationTarget, DebugConfiguration, Disposable, workspace, WorkspaceFolder } from 'vscode';
 import { BuildSupport } from '../../buildSupport/BuildSupport';
 import { FsUtils } from '../../utils/fsUtils';
 import { getQuarkusDevDebugConfig } from '../../utils/launchConfigUtils';
@@ -77,7 +77,7 @@ export class LaunchConfigCreator {
   }
 
   private prependLaunchJsonComment() {
-    let comment: string = `// A launch configuration that compiles the extension and then opens it inside a new window\n`;
+    let comment = `// A launch configuration that compiles the extension and then opens it inside a new window\n`;
     comment += `// Use IntelliSense to learn about possible attributes.\n`;
     comment += `// Hover to view descriptions of existing attributes.\n`;
     comment += `// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387\n`;
@@ -87,7 +87,7 @@ export class LaunchConfigCreator {
   private async addLaunchConfig(): Promise<void> {
     const launchJson = workspace.getConfiguration('launch', this.workspaceFolder.uri);
     const relativePath: string = path.relative(this.workspaceFolder.uri.fsPath, this.projectFolder);
-    const launchConfigName: string = `Debug Quarkus application${(relativePath.length > 0 ? ` (${relativePath})` : '')}`;
+    const launchConfigName = `Debug Quarkus application${(relativePath.length > 0 ? ` (${relativePath})` : '')}`;
     const configurations: DebugConfiguration[] = launchJson.get<DebugConfiguration[]>('configurations')
       .filter(task => task['name'] != launchConfigName);
     configurations.push(await this.getLaunchConfig(launchConfigName));

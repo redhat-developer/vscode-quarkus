@@ -5,7 +5,7 @@ import * as cp from "child_process";
 
 export async function executeCommand(command: string, args: string[], options: cp.SpawnOptions = { shell: true }): Promise<string> {
     return new Promise((resolve: (res: string) => void, reject: (e: Error) => void): void => {
-        let result: string = "";
+        let result = "";
         const childProc: cp.ChildProcess = cp.spawn(command, args, options);
         childProc.stdout.on("data", (data: string | Buffer) => {
             data = data.toString();

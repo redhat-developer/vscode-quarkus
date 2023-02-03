@@ -12,7 +12,7 @@ import { BuildToolName, INPUT_TITLE, VSCodeCommands } from '../../definitions/co
 import { ProjectGenState } from '../../definitions/inputState';
 import { QExtension } from '../../definitions/QExtension';
 import { QuarkusContext } from '../../QuarkusContext';
-import { CodeQuarkusFunctionality, PlatformVersionPickItem, getCodeQuarkusApiFunctionality, getDefaultFunctionality, getCodeQuarkusApiPlatforms } from '../../utils/codeQuarkusApiUtils';
+import { CodeQuarkusFunctionality, getCodeQuarkusApiFunctionality, getCodeQuarkusApiPlatforms, getDefaultFunctionality, PlatformVersionPickItem } from '../../utils/codeQuarkusApiUtils';
 import { MultiStepInput, QuickPickParameters } from '../../utils/multiStepUtils';
 import { downloadProject } from '../../utils/requestUtils';
 import { CMD_SUCCEED_VALUE, sendTelemetry } from '../../utils/telemetryUtils';
@@ -158,8 +158,8 @@ export async function generateProjectWizard(): Promise<any> {
   }
 
   async function inputGenerateSampleCode(input: MultiStepInput, state: Partial<ProjectGenState>) {
-    const YES: string = `Include ${apiCapabilities.supportsNoCodeParameter ? 'starter' : 'example'} code`;
-    const NO: string = `Do not include ${apiCapabilities.supportsNoCodeParameter ? 'starter' : 'example'} code`;
+    const YES = `Include ${apiCapabilities.supportsNoCodeParameter ? 'starter' : 'example'} code`;
+    const NO = `Do not include ${apiCapabilities.supportsNoCodeParameter ? 'starter' : 'example'} code`;
     const quickPickItems: QuickPickItem[] = [
       { label: YES, picked: true },
       { label: NO }
@@ -292,9 +292,9 @@ async function downloadAndSetupProject(state: ProjectGenState, codeQuarkusFuncti
 }
 
 async function openProject(uri: Uri): Promise<void> {
-  const NEW_WINDOW: string = 'Open in new window';
-  const CURRENT_WINDOW: string = 'Open in current window';
-  const ADD_TO_WORKSPACE: string = 'Add to current workspace';
+  const NEW_WINDOW = 'Open in new window';
+  const CURRENT_WINDOW = 'Open in current window';
+  const ADD_TO_WORKSPACE = 'Add to current workspace';
 
   if (workspace.workspaceFolders) {
     let input: string | undefined;

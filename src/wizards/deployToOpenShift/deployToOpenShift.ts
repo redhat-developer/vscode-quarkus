@@ -51,8 +51,8 @@ async function installOpenShiftConnectorIfNeeded(): Promise<any> {
  * @returns the OpenShift connector extension API
  */
 async function askToInstallOpenShiftConnector(): Promise<any> {
-  const YES: string = 'Yes';
-  const NO: string = 'No';
+  const YES = 'Yes';
+  const NO = 'No';
   const response: string = await window.showInformationMessage(`${OPENSHIFT_CONNECTOR} is needed to deploy to OpenShift. Install it now?`, YES, NO);
   if (response === YES) {
     try {

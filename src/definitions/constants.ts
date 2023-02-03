@@ -38,14 +38,14 @@ export const enum BuildToolName {
 }
 
 export const VSCODE_QUARKUS_EXTENSION_NAME = "redhat.vscode-quarkus";
-export const DEFAULT_API_URL: string = 'https://code.quarkus.io/api';
+export const DEFAULT_API_URL = 'https://code.quarkus.io/api';
 export const DEFAULT_BUILD_TOOL: BuildToolName = BuildToolName.Maven;
-export const DEFAULT_GROUP_ID: string = 'org.acme';
-export const DEFAULT_ARTIFACT_ID: string = 'quarkus-getting-started';
-export const DEFAULT_PROJECT_VERSION: string = '1.0.0-SNAPSHOT';
+export const DEFAULT_GROUP_ID = 'org.acme';
+export const DEFAULT_ARTIFACT_ID = 'quarkus-getting-started';
+export const DEFAULT_PROJECT_VERSION = '1.0.0-SNAPSHOT';
 export const DEFAULT_PACKAGE_NAME: string = DEFAULT_GROUP_ID;
-export const DEFAULT_RESOURCE_NAME: string = 'GreetingResource';
-export const INPUT_TITLE: string = 'Quarkus Tools';
+export const DEFAULT_RESOURCE_NAME = 'GreetingResource';
+export const INPUT_TITLE = 'Quarkus Tools';
 
 // Quarkus extension default groupId
-export const QUARKUS_GROUP_ID: string = 'io.quarkus';
+export const QUARKUS_GROUP_ID = 'io.quarkus';

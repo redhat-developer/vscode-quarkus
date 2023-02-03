@@ -23,12 +23,12 @@ import { By, InputBox, Key, QuickPickItem, WebDriver, WebElement, Workbench } fr
  */
 export class ProjectGenerationWizard extends InputBox {
 
-  private currStep: number = 1;
+  private currStep = 1;
 
   /**
    * The number of steps the wizard has
    */
-  private lastStep: number = 9;
+  private lastStep = 9;
 
   /**
    * Opens the project generation wizard
@@ -147,7 +147,7 @@ export class ProjectGenerationWizard extends InputBox {
 
     // TODO: Currently, the back button's class is hardcoded here.
     // After https://github.com/redhat-developer/vscode-extension-tester/issues/136 is fixed, remove the hardcoded class
-    const backButtonClass: string = 'codicon-quick-input-back';
+    const backButtonClass = 'codicon-quick-input-back';
     try {
       const backButton: WebElement = await enclosing.findElement(By.className(backButtonClass));
       return backButton;

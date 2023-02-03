@@ -26,7 +26,7 @@ import { ExtensionsPicker } from "../generateProject/ExtensionsPicker";
 import { getQuarkusProject } from "../getQuarkusProject";
 
 export async function addExtensionsWizard(): Promise<void> {
-  const currentStep: number = 1;
+  const currentStep = 1;
   const state: Partial<AddExtensionsState> = {
     totalSteps: 1
   };

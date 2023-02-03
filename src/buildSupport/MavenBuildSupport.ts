@@ -32,7 +32,7 @@ export class MavenBuildSupport extends BuildSupport {
   }
 
   public async getQuarkusAddExtensionsCommand(folderPath: string, extensionGAVs: string[], options?: TerminalCommandOptions): Promise<TerminalCommand> {
-    const addExtensions: string = `quarkus:add-extension -Dextensions="${extensionGAVs.join(',')}"`;
+    const addExtensions = `quarkus:add-extension -Dextensions="${extensionGAVs.join(',')}"`;
     const pomPath: string = options.buildFilePath ? `-f "${await formattedPathForTerminal(options.buildFilePath)}"` : '';
     const mvn: string = await this.getCommand(folderPath, options && options.buildFilePath, { windows: options && options.windows });
     const command: string = [mvn, addExtensions, pomPath].join(' ');
