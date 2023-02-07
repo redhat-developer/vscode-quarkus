@@ -28,6 +28,7 @@ import { initTelemetryService } from './utils/telemetryUtils';
 import { getFilePathsFromWorkspace } from './utils/workspaceUtils';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
+import { readFile } from 'fs-extra';
 
 // alias for vscode-java's ExtensionAPI
 export type JavaExtensionAPI = any;
@@ -157,14 +158,21 @@ async function isQuarkusProject(): Promise<boolean> {
   if (!workspace.workspaceFolders) {
     return false;
   }
-  for (const ws of workspace.workspaceFolders) {
+  return Promise.all(workspace.workspaceFolders.map(async ws => {
     const buildFileUris = await getFilePathsFromWorkspace(ws, "**/{pom.xml,build.gradle}");
-    for (const uri of buildFileUris) {
-      const doc = await workspace.openTextDocument(uri);
-      if (doc.getText().search("io.quarkus") > 0) {
-        return true;
-      }
-    }
-  }
-  return false;
+    const ret = await Promise.all(buildFileUris.map(uri => {
+      return readFile(uri.fsPath).then((doc) => {
+        return doc.includes("io.quarkus") ? Promise.reject() : Promise.resolve();
+      })
+    })).then(() => {
+      return false;
+    }).catch(() => {
+      return true;
+    });
+    return ret ? Promise.resolve() : Promise.reject();
+  })).then(() => {
+    return true;
+  }).catch(() => {
+    return false;
+  });
 }
