@@ -1,10 +1,10 @@
 import * as path from 'path';
 import { TextEncoder } from "util";
 import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selection, TextDocument, TextEditor, Uri, window, workspace, WorkspaceConfiguration } from "vscode";
-import { ConfigurationItem, Location } from "vscode-languageclient";
+import { ConfigurationItem, Location, TextEdit } from "vscode-languageclient";
 import { QuteSettings, QuteTemplateLanguageMismatch } from "../languageServer/settings";
 import { QuteClientCommandConstants, QuteJdtLsServerCommandConstants, QuteServerCommandConstants } from "./commandConstants";
-import { CancellationToken, ExecuteCommandParams, ExecuteCommandRequest } from "vscode-languageclient";
+import { CancellationToken, ExecuteCommandParams, ExecuteCommandRequest, TextDocumentIdentifier } from "vscode-languageclient";
 import { LanguageClient } from "vscode-languageclient/node";
 import { tryToForceLanguageId } from '../../utils/languageMismatch';
 
@@ -30,7 +30,8 @@ export function registerVSCodeQuteCommands(context: ExtensionContext) {
   });
 }
 
-export function registerQuteExecuteWorkspaceCommand(context: ExtensionContext, languageClient: LanguageClient) {
+export function registerQuteLSDependentCommands(context: ExtensionContext, languageClient: LanguageClient) {
+  registerRefactorCommands(context, languageClient);
   // Register client command to execute custom Qute Language Server command
   context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.EXECUTE_WORKSPACE_COMMAND, (command, ...rest) => {
     let token: CancellationToken;
@@ -357,4 +358,88 @@ enum ConfigurationItemEditType {
 interface TemplateValidationStatus {
   validationEnabled: boolean;
   excluded: string[];
+}
+
+interface SurroundWithResponse {
+  start: TextEdit;
+  end: TextEdit;
+}
+
+class SurroundWithKind {
+
+  static readonly section = 'section';
+  static readonly comments = 'comments';
+  static readonly cdata = 'cdata';
+
+}
+
+/**
+ * Register commands used for refactoring XML files
+ *
+ * @param context the extension context
+ */
+function registerRefactorCommands(context: ExtensionContext, languageClient: LanguageClient) {
+
+  // Surround with Section
+  context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.REFACTOR_SURROUND_WITH_SECTION, async () => {
+    await surroundWith(SurroundWithKind.section, languageClient);
+  }));
+
+  // Surround with Comments
+  context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.REFACTOR_SURROUND_WITH_COMMENTS, async () => {
+    await surroundWith(SurroundWithKind.comments, languageClient);
+  }));
+
+  // Surround with CDATA
+  context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.REFACTOR_SURROUND_WITH_CDATA, async () => {
+    await surroundWith(SurroundWithKind.cdata, languageClient);
+  }));
+
+}
+
+async function surroundWith(surroundWithType: SurroundWithKind, languageClient: LanguageClient) {
+  const activeEditor = window.activeTextEditor;
+  if (!activeEditor) {
+    return;
+  }
+  const selection = activeEditor.selections[0];
+  if (!selection) {
+    return;
+  }
+
+  const uri = window.activeTextEditor.document.uri;
+  const identifier = TextDocumentIdentifier.create(uri.toString());
+  const range = languageClient.code2ProtocolConverter.asRange(selection);
+  const supportsSnippet = false;
+
+  let result: SurroundWithResponse;
+  try {
+    result = await commands.executeCommand(QuteServerCommandConstants.REFACTOR_SURROUND_WITH, identifier, range, surroundWithType, supportsSnippet);
+  } catch (error) {
+    console.log(`Error while surround with : ${error}`);
+  }
+
+  if (!result) {
+    return;
+  }
+
+  const startTag = result.start.newText;
+  const endTag = result.end.newText;
+
+  // SnippetTextEdit is not supported, update start / end tag
+  const startPos = languageClient.protocol2CodeConverter.asPosition(result.start.range.start);
+  const endPos = languageClient.protocol2CodeConverter.asPosition(result.end.range.start);
+  activeEditor.edit((selectedText) => {
+    selectedText.insert(startPos, startTag);
+    selectedText.insert(endPos, endTag);
+  })
+
+  if (surroundWithType === SurroundWithKind.section) {
+    // Force the show of completion
+    const pos = languageClient.protocol2CodeConverter.asPosition(result.start.range.start);
+    const posAfterStartBracket = new Position(pos.line, pos.character + 2);
+    activeEditor.selections = [new Selection(posAfterStartBracket, posAfterStartBracket)];
+    commands.executeCommand("editor.action.triggerSuggest");
+  }
+
 }
