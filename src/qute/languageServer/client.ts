@@ -3,7 +3,7 @@ import { DidChangeConfigurationNotification, LanguageClientOptions } from 'vscod
 import { LanguageClient } from 'vscode-languageclient/node';
 import { JavaExtensionAPI } from '../../extension';
 import { QuteClientCommandConstants } from '../commands/commandConstants';
-import { registerQuteExecuteWorkspaceCommand, registerVSCodeQuteCommands, synchronizeQuteValidationButton } from '../commands/registerCommands';
+import { registerQuteLSDependentCommands, registerVSCodeQuteCommands, synchronizeQuteValidationButton } from '../commands/registerCommands';
 import { prepareExecutable } from './quteServerStarter';
 import { resolveRequirements } from './requirements';
 import { QuteSettings } from './settings';
@@ -74,6 +74,8 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
   const quteLanguageClient = new LanguageClient('qute', 'Qute Support', serverOptions, clientOptions);
   await quteLanguageClient.start();
 
+  commands.executeCommand('setContext', 'QuteLSReady', true);
+
   bindQuteRequest('qute/template/project');
   bindQuteRequest('qute/template/projectDataModel');
   bindQuteRequest('qute/template/userTags');
@@ -87,7 +89,7 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
   bindQuteRequest('qute/java/documentLink');
   bindQuteNotification('qute/dataModelChanged');
 
-  registerQuteExecuteWorkspaceCommand(context, quteLanguageClient);
+  registerQuteLSDependentCommands(context, quteLanguageClient);
   // Refresh the Qute context when editor tab has the focus
   context.subscriptions.push(
     window.onDidChangeActiveTextEditor(async editor => {

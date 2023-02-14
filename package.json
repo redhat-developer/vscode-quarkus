@@ -175,6 +175,18 @@
         "command": "qute.validation.enabled.toggle.on",
         "title": "Enable Qute Validation",
         "icon": "$(eye-closed)"
+      },
+      {
+        "command": "qute.refactor.surround.with.comments",
+        "title": "Qute: Surround with Comments"
+      },
+      {
+        "command": "qute.refactor.surround.with.cdata",
+        "title": "Qute: Surround with Unparsed Character Data"
+      },
+      {
+        "command": "qute.refactor.surround.with.section",
+        "title": "Qute: Surround with Section"
       }
     ],
     "configuration": {
@@ -339,6 +351,18 @@
         {
           "command": "qute.validation.enabled.toggle.on",
           "when": "false"
+        },
+        {
+          "command": "qute.refactor.surround.with.comments",
+          "when": "quarkusProjectExistsOrLightWeight && editorLangIdSupportsQute && QuteLSReady"
+        },
+        {
+          "command": "qute.refactor.surround.with.cdata",
+          "when": "quarkusProjectExistsOrLightWeight && editorLangIdSupportsQute && QuteLSReady"
+        },
+        {
+          "command": "qute.refactor.surround.with.section",
+          "when": "quarkusProjectExistsOrLightWeight && editorLangIdSupportsQute && QuteLSReady"
         }
       ],
       "editor/title": [

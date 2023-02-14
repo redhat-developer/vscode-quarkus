@@ -39,6 +39,15 @@ export namespace QuteClientCommandConstants {
   * Client command to execute an XML command on XML Language Server side.
   */
   export const EXECUTE_WORKSPACE_COMMAND = 'qute.workspace.executeCommand';
+
+  /**
+  * Command to wrap element.
+  */
+  export const REFACTOR_SURROUND_WITH_COMMENTS = 'qute.refactor.surround.with.comments';
+
+  export const REFACTOR_SURROUND_WITH_CDATA = 'qute.refactor.surround.with.cdata';
+
+  export const REFACTOR_SURROUND_WITH_SECTION = 'qute.refactor.surround.with.section';
 }
 
 /**
@@ -55,6 +64,11 @@ export namespace QuteServerCommandConstants {
    * Check if a Qute template is excluded from validation.
    */
   export const QUTE_VALIDATION_TEMPLATE_STATUS = 'qute.command.validation.template.status';
+
+  /**
+  * Command to surround with sections, comments
+  */
+  export const REFACTOR_SURROUND_WITH = "qute.refactor.surround.with";
 
 }
 

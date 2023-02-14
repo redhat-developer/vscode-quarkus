@@ -32,6 +32,9 @@ describe('VS Code extension tests', () => {
       `${VSCodeCommands.DEPLOY_TO_OPENSHIFT}${VSCodeCommands.SHORT_SUFFIX}`,
       QuteClientCommandConstants.QUTE_VALIDATION_ENABLED_TOGGLE_OFF,
       QuteClientCommandConstants.QUTE_VALIDATION_ENABLED_TOGGLE_ON,
+      QuteClientCommandConstants.REFACTOR_SURROUND_WITH_COMMENTS,
+      QuteClientCommandConstants.REFACTOR_SURROUND_WITH_CDATA,
+      QuteClientCommandConstants.REFACTOR_SURROUND_WITH_SECTION,
     ];
 
     expect(activationCommands).to.have.members(QUARKUS_ACTIVATION_COMMANDS);

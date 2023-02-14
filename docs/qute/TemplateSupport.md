@@ -117,3 +117,33 @@ Qute support displays the Java type of the parameter names as an inlay hint.
 ![Inlay Hints for Qute](images/QuteTemplateInlayHint.gif)
 
 All inlay hints can be turned off by disabling `qute.inlayHints.enabled` in settings. To remove inlay hints on section parameter types only, disable `qute.inlayHints.showSectionParameterType` in settings.
+
+## Surround with Commands (Wrap)
+
+This command provides the ability to select Qute content and surround it some content. To execute this command you can use the command palette (`Ctrl+Shift+P`) and type `Surround`.
+
+If you prefer using keyboard to process the command, you need to associate this command with a keybinding. See [Keyboard Shortcuts editor](https://code.visualstudio.com/docs/getstarted/keybindings#_keyboard-shortcuts-editor) for more informations.
+
+### Surround with Section
+
+Surrounds the selected content with a section and completion will be triggered. You can also do an empty section on the section you would like to surround and the correct section will selected.
+
+Here is an example use case with `#for` section:
+
+![Qute Surround with #for Section](images/QuteTemplateSurroundWithForSection.gif)
+
+Here is an another example use case with `#if` section:
+
+![Qute Surround with #if Section](images/QuteTemplateSurroundWithIfSection.gif)
+
+### Surround with Comments
+
+This command can also be used to comment out the selected content.
+
+![Qute Surround with Comments](images/QuteTemplateSurroundWithComments.gif)
+
+### Surround with Unparsed Character Data
+
+Similar to `Surround with Comments`, This command can also be used to indicate Unparsed Character Data.
+
+![Qute Surround with Unparsed Character Data](images/QuteTemplateSurroundWithCData.gif)
