@@ -57,8 +57,10 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
   };
 
   function bindQuteRequest(request: string) {
-    quteLanguageClient.onRequest(request, async (params: any) =>
-      <any>await commands.executeCommand("java.execute.workspaceCommand", request, params)
+    quteLanguageClient.onRequest(request, async (params: any) => {
+      await api.serverReady();
+      return commands.executeCommand("java.execute.workspaceCommand", request, params);
+    }
     );
   }
 
