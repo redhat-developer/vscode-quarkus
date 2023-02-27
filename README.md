@@ -18,6 +18,10 @@ by extending [Visual Studio Code extension for MicroProfile](https://github.com/
 
 ![](images/quteSupport.png)
 
+ * [Renarde support](docs/renarde/README.md) to make sure that the Quarkus, MicroProfile, and Qute features work properly when working with a [Renarde](https://quarkiverse.github.io/quarkiverse-docs/quarkus-renarde/dev/index.html) application.
+
+![](./docs/renarde/images/renarde-workspace-symbols.gif)
+
 ## Quarkus VS Code Commands
 The following commands are supported for both Maven and Gradle Quarkus projects:
 
