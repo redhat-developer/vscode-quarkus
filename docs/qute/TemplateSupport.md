@@ -94,6 +94,12 @@ A variable can be declared inside a Qute template (with parameter declaration, o
 
 ![Definition for Java data model](images/QuteTemplateDefinitionForObject.gif)
 
+## User tags support
+
+The [User tags](https://quarkus.io/guides/qute-reference#user_tags) are loaded from `src/main/resources/templates/tags`. The parameters and presence of `{nested-content}` in the user tag declared in the tag template is used to provide support for completion, definition, and validation in the Qute template:
+
+![User tags support](images/QuteUserTag.gif)
+
 ## Quarkus integration for Qute
 
 When the template is used in a Quarkus application and it is bound with a Java Template field or a method annotated with `@CheckedTemplate`, you can see the expected model as CodeLens:
