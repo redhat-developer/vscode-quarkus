@@ -488,7 +488,6 @@
     "ts-loader": "^9.4.2",
     "typescript": "^4.1.0",
     "vscode-extension-tester": "^5.5.2",
-    "vscode-extension-tester-native": "^3.0.0",
     "vscode-test": "^1.2.3",
     "webpack": "^5.76.0",
     "webpack-cli": "^4.9.1"
