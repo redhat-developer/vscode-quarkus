@@ -1,12 +1,13 @@
 import * as path from 'path';
 import { TextEncoder } from "util";
-import { commands, ConfigurationTarget, ExtensionContext, Position, Range, Selection, TextDocument, TextEditor, Uri, window, workspace, WorkspaceConfiguration } from "vscode";
-import { ConfigurationItem, Location, TextEdit } from "vscode-languageclient";
+import { commands, ExtensionContext, Position, Range, Selection, TextDocument, TextEditor, Uri, window, workspace } from "vscode";
+import { Location, TextEdit } from "vscode-languageclient";
 import { QuteSettings, QuteTemplateLanguageMismatch } from "../languageServer/settings";
 import { QuteClientCommandConstants, QuteJdtLsServerCommandConstants, QuteServerCommandConstants } from "./commandConstants";
 import { CancellationToken, ExecuteCommandParams, ExecuteCommandRequest, TextDocumentIdentifier } from "vscode-languageclient";
 import { LanguageClient } from "vscode-languageclient/node";
 import { tryToForceLanguageId } from '../../utils/languageMismatch';
+import { registerReferencesCommands, registerOpenUriCommand, registerConfigurationUpdateCommand, ConfigurationItemEditType, ConfigurationItemEdit } from '../../lsp-commands';
 
 /**
  * Register custom vscode command for Qute support.
@@ -14,10 +15,10 @@ import { tryToForceLanguageId } from '../../utils/languageMismatch';
  * @param context the extension context.
  */
 export function registerVSCodeQuteCommands(context: ExtensionContext) {
-  registerOpenUriCommand(context);
+  registerOpenUriCommandForQute(context);
   registerGenerateTemplateFileCommand(context);
   registerJavaDefinitionCommand(context);
-  registerConfigurationUpdateCommand(context);
+  registerConfigurationUpdateCommandForQute(context);
   registerQuteValidationToggleCommand(context);
   context.subscriptions.push(
     workspace.onDidOpenTextDocument((document) => {
@@ -32,6 +33,7 @@ export function registerVSCodeQuteCommands(context: ExtensionContext) {
 
 export function registerQuteLSDependentCommands(context: ExtensionContext, languageClient: LanguageClient) {
   registerRefactorCommands(context, languageClient);
+  registerReferencesForQute(context, languageClient);
   // Register client command to execute custom Qute Language Server command
   context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.EXECUTE_WORKSPACE_COMMAND, (command, ...rest) => {
     let token: CancellationToken;
@@ -58,10 +60,8 @@ export function registerQuteLSDependentCommands(context: ExtensionContext, langu
  *
  * @param context the extension context.
  */
-function registerOpenUriCommand(context: ExtensionContext) {
-  context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.OPEN_URI, async (uri?: string) => {
-    commands.executeCommand('vscode.open', Uri.parse(uri));
-  }));
+function registerOpenUriCommandForQute(context: ExtensionContext) {
+  registerOpenUriCommand(QuteClientCommandConstants.OPEN_URI, context);
 }
 
 /**
@@ -160,29 +160,8 @@ function registerQuteValidationToggleCommand(context: ExtensionContext) {
  *
  * @param context the extension context.
  */
-export function registerConfigurationUpdateCommand(context: ExtensionContext) {
-  context.subscriptions.push(commands.registerCommand(QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE, async (configItemEdit: ConfigurationItemEdit) => {
-    const section = configItemEdit.section;
-    const value = getSettingsValue(configItemEdit.value, configItemEdit.section, configItemEdit.editType);
-    const config = getConfiguration(configItemEdit.scopeUri);
-    switch (configItemEdit.editType) {
-      case ConfigurationItemEditType.Add:
-        addToPreferenceArray(config, section, value);
-        break;
-      case ConfigurationItemEditType.Delete: {
-        config.workspaceConfiguration.update(section, undefined, config.target);
-        break;
-      }
-      case ConfigurationItemEditType.Update: {
-        config.workspaceConfiguration.update(section, value, config.target);
-        break;
-      }
-      case ConfigurationItemEditType.Remove: {
-        removeFromPreferenceArray(config, section, value);
-        break;
-      }
-    }
-  }));
+export function registerConfigurationUpdateCommandForQute(context: ExtensionContext) {
+  registerConfigurationUpdateCommand(QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE, getSettingsValue, context);
 }
 
 /**
@@ -286,78 +265,18 @@ function isInTemplates(document: TextDocument): boolean {
   return false;
 }
 
-interface IConfiguration {
-  workspaceConfiguration: WorkspaceConfiguration;
-  target: ConfigurationTarget;
-}
-
-function getConfiguration(scopeUri: string): IConfiguration {
-  if (scopeUri) {
-    const workspaceFolder = workspace.getWorkspaceFolder(Uri.parse(scopeUri));
-    if (workspaceFolder) {
-      return {
-        workspaceConfiguration: workspace.getConfiguration(undefined, workspaceFolder),
-        target: ConfigurationTarget.WorkspaceFolder
-      };
-    }
-  }
-  return {
-    workspaceConfiguration: workspace.getConfiguration(),
-    target: ConfigurationTarget.Workspace
-  };
-}
-
-function addToPreferenceArray<T>(config: IConfiguration, key: string, value: T): void {
-  const workspaceConfiguration = config.workspaceConfiguration;
-  const configArray: T[] = workspaceConfiguration.get<T[]>(key, []);
-  if (Array.isArray(value)) {
-    value.forEach(item => {
-      if (!configArray.includes(item)) {
-        configArray.push(item);
-      }
-    });
-  } else {
-    if (configArray.includes(value)) {
-      return;
-    }
-    configArray.push(value);
-  }
-  workspaceConfiguration.update(key, configArray, config.target);
-}
-
-function removeFromPreferenceArray<T>(config: IConfiguration, key: string, value: T): void {
-  const workspaceConfiguration = config.workspaceConfiguration;
-  const configArray: T[] = workspaceConfiguration.get<T[]>(key, []);
-  if (Array.isArray(value)) {
-    value.forEach(item => {
-      if (configArray.includes(item)) {
-        configArray.splice(configArray.indexOf(item), 1);
-      }
-    });
-  } else {
-    if (!configArray.includes(value)) {
-      return;
-    }
-    configArray.splice(configArray.indexOf(value), 1);
-  }
-  workspaceConfiguration.update(key, configArray, config.target);
-}
-
-interface ConfigurationItemEdit extends ConfigurationItem {
-  value: any;
-  editType: ConfigurationItemEditType;
-}
-
-enum ConfigurationItemEditType {
-  Add = 0,
-  Delete = 1,
-  Update = 2,
-  Remove = 3
-}
-
 interface TemplateValidationStatus {
   validationEnabled: boolean;
   excluded: string[];
+}
+
+/**
+ * Register commands used for showing references in Qute template
+ *
+ * @param context the extension context
+ */
+function registerReferencesForQute(context: ExtensionContext, languageClient: LanguageClient) {
+  registerReferencesCommands(QuteClientCommandConstants.COMMAND_SHOW_REFERENCES, context, languageClient);
 }
 
 interface SurroundWithResponse {
@@ -374,7 +293,7 @@ class SurroundWithKind {
 }
 
 /**
- * Register commands used for refactoring XML files
+ * Register commands used for refactoring Qute files
  *
  * @param context the extension context
  */
