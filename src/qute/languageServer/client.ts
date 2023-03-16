@@ -32,7 +32,8 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
             valueSet: [
               QuteClientCommandConstants.OPEN_URI,
               QuteClientCommandConstants.JAVA_DEFINTION,
-              QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE
+              QuteClientCommandConstants.COMMAND_CONFIGURATION_UPDATE,
+              QuteClientCommandConstants.COMMAND_SHOW_REFERENCES
             ]
           }
         }

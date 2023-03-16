@@ -26,6 +26,11 @@ export namespace QuteClientCommandConstants {
   export const COMMAND_CONFIGURATION_UPDATE = 'qute.command.configuration.update';
 
   /**
+   * Client command to show Qute references
+   */
+  export const COMMAND_SHOW_REFERENCES = 'qute.command.show.references';
+
+  /**
    * Toggle on extension for Qute validation setting.
    */
   export const QUTE_VALIDATION_ENABLED_TOGGLE_ON = 'qute.validation.enabled.toggle.on';
@@ -36,7 +41,7 @@ export namespace QuteClientCommandConstants {
   export const QUTE_VALIDATION_ENABLED_TOGGLE_OFF = 'qute.validation.enabled.toggle.off';
 
   /**
-  * Client command to execute an XML command on XML Language Server side.
+  * Client command to execute a Qute command on Qute Language Server side.
   */
   export const EXECUTE_WORKSPACE_COMMAND = 'qute.workspace.executeCommand';
 
