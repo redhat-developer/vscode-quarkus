@@ -41,6 +41,7 @@
     "workspaceContains:**src/main/resources/META-INF/microprofile-config.properties",
     "workspaceContains:**/src/main/resources/application.yaml",
     "workspaceContains:**/src/main/resources/application.yml",
+    "workspaceContains:**/src/main/resources/templates",
     "onLanguage:microprofile-properties",
     "onLanguage:quarkus-properties",
     "onLanguage:java",
