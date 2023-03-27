@@ -1,5 +1,48 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.13.0 (4 April, 2023)
+
+### Enhancements
+
+ * Quick fixes to resolve unclosed sections in Qute templates. See [redhat-developer/quarkus-ls#821](https://github.com/redhat-developer/quarkus-ls/issues/821).
+ * Support for uri/uriabs Qute resolvers from Quarkus Renarde. See [redhat-developer/quarkus-ls#571](https://github.com/redhat-developer/quarkus-ls/issues/571).
+ * Workspace symbols and CodeLens for Renarde application REST endpoints. See [redhat-developer/quarkus-ls#777](https://github.com/redhat-developer/quarkus-ls/issues/777).
+ * CodeAction to insert expected `<input>` for Renarde `#form` section in Qute template. See [redhat-developer/quarkus-ls#778](https://github.com/redhat-developer/quarkus-ls/issues/778).
+ * Show validation errors for all Qute templates in a project (even unopened ones). See [redhat-developer/quarkus-ls#813](https://github.com/redhat-developer/quarkus-ls/issues/813).
+ * User tag snippets and completion in Qute templates account for the tag parameters. See [redhat-developer/quarkus-ls#784](https://github.com/redhat-developer/quarkus-ls/issues/784).
+ * Validatation and go to definition for user tag parameters in Qute templates. See [redhat-developer/quarkus-ls#788](https://github.com/redhat-developer/quarkus-ls/issues/788), [redhat-developer/quarkus-ls#789](https://github.com/redhat-developer/quarkus-ls/issues/789).
+ * CodeAction to insert required user tag parameters in Qute template. See [redhat-developer/quarkus-ls#797](https://github.com/redhat-developer/quarkus-ls/issues/797).
+ * Make Java file snippets context-aware. See [redhat-developer/quarkus-ls#782](https://github.com/redhat-developer/quarkus-ls/issues/782).
+ * Add support for Qute `#fragment` section. See [redhat-developer/quarkus-ls#768](https://github.com/redhat-developer/quarkus-ls/pull/768), [redhat-developer/quarkus-ls#769](https://github.com/redhat-developer/quarkus-ls/pull/769).
+ * When applying the Qute template quick fix to generate a missing class member, generate the member at the end of the class. See [redhat-developer/quarkus-ls#692](https://github.com/redhat-developer/quarkus-ls/pull/692).
+ * Support for validation, completion and document link for `#include` and `#insert` sections in Qute templates. See [#438](https://github.com/redhat-developeredhat-developer/quarkus-lsr/quarkus-ls/issues/438).
+ * "Show references" CodeLens for `#insert` section in Qute templates. See [#595](https://github.com/redhat-developer/vscode-quarkus/pull/595).
+ * Quarkus 3 support. See [redhat-developer/quarkus-ls#779](https://github.com/redhat-developer/quarkus-ls/issues/779).
+ * Support surround with section/comments command for Qute templates. See [#581](https://github.com/redhat-developer/vscode-quarkus/issues/581).
+ * Provide syntax coloration for #fragment. See [#570](https://github.com/redhat-developer/vscode-quarkus/pull/570).
+ * Migrate from `find-java-home` to `jdk-utils`. See [#569](https://github.com/redhat-developer/vscode-quarkus/issues/569).
+ * Move to vscode-languageclient 8.0.1 for Qute LS. See [#505](https://github.com/redhat-developer/vscode-quarkus/issues/505).
+
+### Bug Fixes
+
+ * Treat `CompletionStage` and `Uni` objects as their resolved type for validation and completion in Qute templates. See [redhat-developer/quarkus-ls#826](https://github.com/redhat-developer/quarkus-ls/issues/826).
+ * `{#if}` sections in Qute templates of the form `{#if !inject:beanName}{/if}` are marked as invalid. See [redhat-developer/quarkus-ls#828](https://github.com/redhat-developer/quarkus-ls/issues/828).
+ * Quick fix to generate a `@TemplateExtension` class from a Qute template might place the class in the wrong folder. See [redhat-developer/quarkus-ls#831](https://github.com/redhat-developer/quarkus-ls/issues/831).
+ * "Create project" fails when there are no folders and one java file open. See [#559](https://github.com/redhat-developer/vscode-quarkus/issues/559).
+ * Fix Quarkus debug configuration after maven wrapper is deleted. See [#572](https://github.com/redhat-developer/vscode-quarkus/issues/572).
+ * qute-ls remains running after vscode-quarkus is stopped. See [#576](https://github.com/redhat-developer/vscode-quarkus/issues/576).
+ * Prevent infinite loop when going to the definition of a user tag. See [#579](https://github.com/redhat-developer/vscode-quarkus/issues/579).
+ * Prevent popups by reading files without triggering `onDidOpenTextDocument`. See [#584](https://github.com/redhat-developer/vscode-quarkus/pull/584).
+ * Prevent errors while vscode-java is still starting. See [#586](https://github.com/redhat-developer/vscode-quarkus/issues/586).
+ * Incomplete `{#if}` section with operator may generate `ClassCastException`. See [redhat-developer/quarkus-ls#816](https://github.com/redhat-developer/quarkus-ls/issues/816).
+ * Use quarkus-ls's Qute parser for syntax validation in order to get consistent diagnostic positions and ranges. See [redhat-developer/quarkus-ls#812](https://github.com/redhat-developer/quarkus-ls/issues/812).
+ * Completion in Qute template should generate only start section when an empty end section is found. See [redhat-developer/quarkus-ls#805](https://github.com/redhat-developer/quarkus-ls/issues/805).
+ * Qute "Generate missing member" quick fix cannot generate new template extension when `TemplateExtensions` and `TemplateExtensions0` exist. See [redhat-developer/quarkus-ls#712](https://github.com/redhat-developer/quarkus-ls/issues/712).
+ * Prevent resolving code actions that run commands. See [#598](https://github.com/redhat-developer/vscode-quarkus/issues/598).
+
+### Build
+ * Use `vsce` from the `@vscode` namespace. See [#571](https://github.com/redhat-developer/vscode-quarkus/pull/571).
+
 ## 1.12.0 (1 December, 2022)
 
 ### Enhancements
