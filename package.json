@@ -490,11 +490,11 @@
     "vscode-extension-tester": "^4.2.5",
     "vscode-extension-tester-native": "^3.0.0",
     "vscode-test": "^1.2.3",
-    "webpack": "^5.28.0",
+    "webpack": "^5.76.0",
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
-    "@redhat-developer/vscode-redhat-telemetry": "^0.5.2",
+    "@redhat-developer/vscode-redhat-telemetry": "^0.6.1",
     "ejs": "^3.1.7",
     "expand-home-dir": "0.0.3",
     "find-up": "^4.1.0",

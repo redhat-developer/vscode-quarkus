@@ -1,4 +1,4 @@
-import { getRedHatService, TelemetryService } from "@redhat-developer/vscode-redhat-telemetry/lib";
+import { getRedHatService, TelemetryService } from "@redhat-developer/vscode-redhat-telemetry/";
 import { ExtensionContext } from "vscode";
 
 export const CMD_SUCCEED_VALUE = "succeeded";
