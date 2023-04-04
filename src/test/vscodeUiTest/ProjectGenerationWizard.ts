@@ -180,7 +180,7 @@ export class ProjectGenerationWizard extends InputBox {
       all.push(...toAdd);
       toAdd.forEach((info: QuickPickItemInfo) => idSet.add(info.id));
 
-      await this.sendKeys(..._.times(maxVisible, _.constant(Key.DOWN)));
+      await this.sendKeys(..._.times(maxVisible - 1, _.constant(Key.DOWN)));
       toAdd = await this.getVisibleQuickPickItemInfo();
     }
 
