@@ -8,7 +8,9 @@ node('rhel8'){
             sh 'mkdir quarkus-ls'
         }
         dir ('quarkus-ls') {
+            echo "Checking out quarkus-ls ${params.QUARKUS_LS_TAG}"
             git url: 'https://github.com/redhat-developer/quarkus-ls.git'
+            sh "git checkout ${params.QUARKUS_LS_TAG}"
         }
         def hasClientDir = fileExists 'vscode-quarkus'
         if (!hasClientDir) {
