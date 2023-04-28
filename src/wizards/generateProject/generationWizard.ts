@@ -286,7 +286,7 @@ async function downloadAndSetupProject(state: ProjectGenState, codeQuarkusFuncti
       status: CMD_SUCCEED_VALUE,
       buildTool: state.buildTool,
       shouldGenerateCode: state.shouldGenerateCode,
-      extensions: state.extensions.map(e => `${e.groupId}:${e.artifactId}`).join(',')
+      extensions: state.extensions.map(e => e.getGroupIdArtifactIdString())
     }).then(() => openProject(projectDir));
   });
 }

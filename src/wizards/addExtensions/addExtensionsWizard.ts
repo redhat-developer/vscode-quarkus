@@ -24,6 +24,8 @@ import { ITerminalOptions, terminalCommandRunner } from "../../terminal/terminal
 import { MultiStepInput } from "../../utils/multiStepUtils";
 import { ExtensionsPicker } from "../generateProject/ExtensionsPicker";
 import { getQuarkusProject } from "../getQuarkusProject";
+import { sendTelemetry } from "../../utils/telemetryUtils";
+import { VSCodeCommands } from "../../definitions/constants";
 
 export async function addExtensionsWizard(): Promise<void> {
   const currentStep = 1;
@@ -66,6 +68,9 @@ async function executeAddExtensionsCommand(state: AddExtensionsState): Promise<T
 
   terminalOptions = Object.assign({ name }, terminalOptions);
 
+  sendTelemetry(VSCodeCommands.ADD_EXTENSIONS, {
+    extensions: state.extensions.map(e => e.getGroupIdArtifactIdString()),
+  });
   return await terminalCommandRunner.runInTerminal(terminalCommand.command, terminalOptions);
 }
 

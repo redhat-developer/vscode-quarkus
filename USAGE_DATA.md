@@ -12,6 +12,7 @@ vscode-quarkus has opt-in telemetry collection, provided by [vscode-redhat-telem
    If the command fails, it also contains the error message, with any usernames and paths removed from the error message.
    The following commands emit these telemetry events:
     * "Quarkus: Add extensions to current project"
+       * The list of Quarkus extensions selected
     * "Quarkus: Debug current Quarkus project"
     * "Quarkus: Deploy current Quarkus project to OpenShift (odo)"
     * "Quarkus: Generate a Quarkus project"
