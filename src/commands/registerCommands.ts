@@ -36,7 +36,7 @@ export function registerVSCodeCommands(context: ExtensionContext): void {
   /**
    * Command for adding Quarkus extensions to current Quarkus Maven project
    */
-  registerCommandWithTelemetry(context, VSCodeCommands.ADD_EXTENSIONS, withStandardMode(addExtensionsWizard, "Adding extensions"));
+  context.subscriptions.push(commands.registerCommand(VSCodeCommands.ADD_EXTENSIONS, withStandardMode(addExtensionsWizard, "Adding extensions")));
 
   /**
    * Command for debugging current Quarkus Maven project
