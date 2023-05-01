@@ -99,6 +99,7 @@ Note that this extension abides by Visual Studio Code's telemetry level: if `tel
 
 ## Articles
 
+ * [New Features for Qute Templating Engine Support in Quarkus Tools for Visual Studio Code 1.13.0](https://quarkus.io/blog/vscode-quarkus-1.13.0-released/)
  * [Qute Templating Engine Support - Now Available for Quarkus Tools for Visual Studio Code](https://quarkus.io/blog/vscode-quarkus-1.10.0-qute/)
  * [Quarkus Tools for Visual Studio Code - 1.10.0 release](https://quarkus.io/blog/vscode-quarkus-1.10.0/)
  * [Quarkus Tools for Visual Studio Code - 1.4.0 release](https://quarkus.io/blog/vscode-quarkus-1.4.0/)
