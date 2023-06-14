@@ -1,5 +1,24 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.14.0 (15 June, 2023)
+
+### Enhancements
+
+ * Initialize support for Qute Type-safe Message Bundles. See [quarkus-ls#800](https://github.com/redhat-developer/quarkus-ls/issues/800).
+ * Improve completion performance in properties files (resolve support, and item defaults). See [eclipse/lsp4mp#389](https://github.com/eclipse/lsp4mp/issues/389).
+
+### Bug Fixes
+
+ * Improve information collected for selected extensions. See [#607](https://github.com/redhat-developer/vscode-quarkus/pull/607).
+ * Fix URI Renarde description. See [quarkus-ls#877](https://github.com/redhat-developer/quarkus-ls/pull/877).
+ * Missing required "title" property when starting Qute LS leads to NPE. See [quarkus-ls#865](https://github.com/redhat-developer/quarkus-ls/issues/865).
+ * `ClassCastException` seen in `textDocument/codelens`. See [quarkus-ls#859](https://github.com/redhat-developer/quarkus-ls/issues/859).
+ * `textDocument/inlayHint` fails when classpath is incorrect. See [quarkus-ls#858](https://github.com/redhat-developer/quarkus-ls/issues/858).
+ * Code action to insert missing parameters overwrites optional parameter. See [quarkus-ls#856](https://github.com/redhat-developer/quarkus-ls/issues/856).
+ * Quick fix to insert all missing attributes for user tag in Qute file adds a `nested-content` attribute. See [quarkus-ls#841](https://github.com/redhat-developer/quarkus-ls/issues/841).
+ * NPE during Qute validation when project is not available. See [quarkus-ls#886](https://github.com/redhat-developer/quarkus-ls/issues/886).
+ * Ignore `UndefinedObject` + `UndefinedNamespace` problem code action should appear only if LSP client can support update configuration. See [quarkus-ls#862](https://github.com/redhat-developer/quarkus-ls/pull/862).
+
 ## 1.13.0 (4 April, 2023)
 
 ### Enhancements
@@ -41,6 +60,7 @@
  * Prevent resolving code actions that run commands. See [#598](https://github.com/redhat-developer/vscode-quarkus/issues/598).
 
 ### Build
+
  * Use `vsce` from the `@vscode` namespace. See [#571](https://github.com/redhat-developer/vscode-quarkus/pull/571).
 
 ## 1.12.0 (1 December, 2022)
