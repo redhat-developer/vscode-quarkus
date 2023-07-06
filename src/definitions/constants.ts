@@ -21,7 +21,6 @@ export namespace VSCodeCommands {
   export const DEBUG_QUARKUS_PROJECT = 'quarkusTools.debugQuarkusProject';
   export const BUILD_BINARY = 'quarkusTools.buildBinary';
   export const QUARKUS_WELCOME = 'quarkusTools.welcome';
-  export const DEPLOY_TO_OPENSHIFT = 'quarkusTools.deployToOpenShift';
 
   export const SHORT_SUFFIX = '.short';
 }
