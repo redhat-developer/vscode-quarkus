@@ -7,7 +7,6 @@ import { WelcomeWebview } from "../webviews/WelcomeWebview";
 import { addExtensionsWizard } from "../wizards/addExtensions/addExtensionsWizard";
 import { buildBinary } from "../wizards/binary/buildBinary";
 import { startDebugging } from "../wizards/debugging/startDebugging";
-import { deployToOpenShift } from "../wizards/deployToOpenShift/deployToOpenShift";
 import { generateProjectWizard } from "../wizards/generateProject/generationWizard";
 
 const NOT_A_QUARKUS_PROJECT = new Error('No Quarkus projects were detected in this folder');
@@ -43,12 +42,6 @@ export function registerVSCodeCommands(context: ExtensionContext): void {
    */
   registerCommandWithTelemetry(context, VSCodeCommands.DEBUG_QUARKUS_PROJECT, withStandardMode(startDebugging, "Debugging the extension"));
   registerCommandWithTelemetry(context, VSCodeCommands.DEBUG_QUARKUS_PROJECT + VSCodeCommands.SHORT_SUFFIX, withStandardMode(startDebugging, "Debugging the extension"));
-
-  /**
-   * Command for deploying current Quarkus project to OpenShift with OpenShift Connector
-   */
-  registerCommandWithTelemetry(context, VSCodeCommands.DEPLOY_TO_OPENSHIFT, withStandardMode(deployToOpenShift, "Deploying to OpenShift"));
-  registerCommandWithTelemetry(context, VSCodeCommands.DEPLOY_TO_OPENSHIFT + VSCodeCommands.SHORT_SUFFIX, withStandardMode(deployToOpenShift, "Deploying to OpenShift"));
 
   /**
    * Command for building a binary

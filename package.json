@@ -159,15 +159,6 @@
         "title": "Quarkus: Welcome"
       },
       {
-        "command": "quarkusTools.deployToOpenShift",
-        "title": "Quarkus: Deploy current Quarkus project to OpenShift (odo)"
-      },
-      {
-        "command": "quarkusTools.deployToOpenShift.short",
-        "title": "Deploy to OpenShift",
-        "icon": "icons/openshift.png"
-      },
-      {
         "command": "qute.validation.enabled.toggle.off",
         "title": "Disable Qute Validation",
         "icon": "$(eye-watch)"
@@ -342,10 +333,6 @@
           "when": "quarkusProjectExistsOrLightWeight"
         },
         {
-          "command": "quarkusTools.deployToOpenShift",
-          "when": "quarkusProjectExistsOrLightWeight"
-        },
-        {
           "command": "qute.validation.enabled.toggle.off",
           "when": "false"
         },
@@ -368,11 +355,6 @@
       ],
       "editor/title": [
         {
-          "command": "quarkusTools.deployToOpenShift.short",
-          "when": "quarkusProjectExistsOrLightWeight && resourceExtname == .java",
-          "group": "navigation@10"
-        },
-        {
           "command": "qute.validation.enabled.toggle.off",
           "when": "quarkusProjectExistsOrLightWeight && editorLangIdSupportsQute && editorQuteValidationEnabled",
           "group": "navigation@9"
@@ -387,13 +369,6 @@
         {
           "command": "quarkusTools.debugQuarkusProject.short",
           "when": "quarkusProjectExistsOrLightWeight && resourceExtname == .java",
-          "group": "quarkus@1"
-        }
-      ],
-      "view/title": [
-        {
-          "command": "quarkusTools.deployToOpenShift.short",
-          "when": "quarkusProjectExistsOrLightWeight",
           "group": "quarkus@1"
         }
       ]
@@ -493,6 +468,7 @@
     "webpack-cli": "^4.9.1"
   },
   "dependencies": {
+    "@redhat-developer/vscode-extension-proposals": "^0.0.21",
     "@redhat-developer/vscode-redhat-telemetry": "^0.6.1",
     "ejs": "^3.1.7",
     "expand-home-dir": "0.0.3",

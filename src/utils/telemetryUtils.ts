@@ -7,13 +7,14 @@ const CMD_FAIL_VALUE = "failed";
 let telemetryService: TelemetryService;
 let isTelemetryInit = false;
 
-export async function initTelemetryService(context: ExtensionContext): Promise<void> {
+export async function initTelemetryService(context: ExtensionContext): Promise<TelemetryService> {
   if (isTelemetryInit) {
     throw new Error('Telemetry already initialized');
   }
   telemetryService = await (await getRedHatService(context)).getTelemetryService();
   telemetryService.sendStartupEvent();
   isTelemetryInit = true;
+  return telemetryService;
 }
 
 /**
@@ -66,7 +67,7 @@ async function sendCommandTelemetry(commandName: string, succeeded: boolean, msg
  * @throws if the telemetry service has not been initialized yet
  * @returns when the telemetry event has been sent
  */
- export async function sendTelemetry(commandName: string, data: any): Promise<void> {
+export async function sendTelemetry(commandName: string, data: any): Promise<void> {
   if (!isTelemetryInit) {
     throw new Error('Telemetry has not been initialized yet');
   }

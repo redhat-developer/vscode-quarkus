@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import { readFile } from 'fs-extra';
 import * as path from 'path';
 import { commands, Disposable, ExtensionContext, extensions, Terminal, TextDocument, window, workspace } from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/node';
@@ -23,12 +24,12 @@ import quarkusProjectListener from './QuarkusProjectListener';
 import { connectToQuteLS } from './qute/languageServer/client';
 import { terminalCommandRunner } from './terminal/terminalCommandRunner';
 import { tryToForceLanguageId } from './utils/languageMismatch';
+import { initRecommendationService } from './utils/recommendationUtils';
 import { JAVA_EXTENSION_ID } from './utils/requestStandardMode';
 import { initTelemetryService } from './utils/telemetryUtils';
 import { getFilePathsFromWorkspace } from './utils/workspaceUtils';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
-import { readFile } from 'fs-extra';
 
 // alias for vscode-java's ExtensionAPI
 export type JavaExtensionAPI = any;
@@ -37,7 +38,8 @@ let quteLanguageClient: LanguageClient | null = null;
 
 export async function activate(context: ExtensionContext) {
 
-  await initTelemetryService(context);
+  const telemetryService = await initTelemetryService(context);
+  initRecommendationService(context, telemetryService);
 
   QuarkusContext.setContext(context);
 

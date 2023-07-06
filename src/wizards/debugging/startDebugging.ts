@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { debug, DebugConfiguration, Uri, window, workspace, WorkspaceFolder } from 'vscode';
+import { debug, DebugConfiguration, Uri, workspace, WorkspaceFolder } from 'vscode';
 import { BuildSupport } from '../../buildSupport/BuildSupport';
 import { ProjectLabelInfo } from '../../definitions/ProjectLabelInfo';
 import { getQuarkusDevDebugConfig } from '../../utils/launchConfigUtils';
+import { recommendOpenShiftToolkit } from '../../utils/recommendationUtils';
 import { getQuarkusProject } from '../getQuarkusProject';
 import { DebugConfigCreator } from './DebugConfigCreator';
-import { QuarkusContext } from '../../QuarkusContext';
 
 /**
  * Start debugging a Quarkus project
@@ -31,9 +31,7 @@ import { QuarkusContext } from '../../QuarkusContext';
  */
 export async function startDebugging(): Promise<void> {
 
-  if (!hasShownDeployToOpenShiftPopUp()) {
-    showDeployToOpenShiftPopUp();
-  }
+  recommendOpenShiftToolkit();
 
   const projectToDebug: ProjectLabelInfo = (await getQuarkusProject());
   const workspaceFolder: WorkspaceFolder | undefined = workspace.getWorkspaceFolder(Uri.file(projectToDebug.uri));
@@ -52,17 +50,4 @@ export async function startDebugging(): Promise<void> {
   }
 
   await debug.startDebugging(workspaceFolder, debugConfig);
-}
-
-const DEPLOY_TO_OPENSHIFT_ADVERTISEMENT_MEMENTO = 'deployToOpenshift.advertisementShown';
-
-function hasShownDeployToOpenShiftPopUp(): boolean {
-  return QuarkusContext.getExtensionContext().globalState.get(DEPLOY_TO_OPENSHIFT_ADVERTISEMENT_MEMENTO, false);
-}
-
-function showDeployToOpenShiftPopUp(): void {
-  const DEPLOY_TO_OPENSHIFT_ADVERTISEMENT = 'You can deploy to OpenShift right from VS Code using ' + //
-      '"Quarkus: Deploy Current project to OpenShift (odo)" from the command palette';
-  window.showInformationMessage(DEPLOY_TO_OPENSHIFT_ADVERTISEMENT);
-  QuarkusContext.getExtensionContext().globalState.update(DEPLOY_TO_OPENSHIFT_ADVERTISEMENT_MEMENTO, 'true');
 }
