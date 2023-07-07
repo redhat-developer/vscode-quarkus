@@ -1,7 +1,9 @@
+import { TelemetryEvent } from '@redhat-developer/vscode-redhat-telemetry/lib';
 import { commands, ConfigurationTarget, ExtensionContext, window, workspace } from 'vscode';
 import { DidChangeConfigurationNotification, LanguageClientOptions } from 'vscode-languageclient';
 import { LanguageClient } from 'vscode-languageclient/node';
 import { JavaExtensionAPI } from '../../extension';
+import { sendTelemetry } from '../../utils/telemetryUtils';
 import { QuteClientCommandConstants } from '../commands/commandConstants';
 import { registerQuteLSDependentCommands, registerVSCodeQuteCommands, synchronizeQuteValidationButton } from '../commands/registerCommands';
 import { prepareExecutable } from './quteServerStarter';
@@ -119,6 +121,9 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
       }
     }
   }
+  quteLanguageClient.onTelemetry(async (e: TelemetryEvent) => {
+    sendTelemetry(e.name, e.properties);
+  });
   await setQuteValidationEnabledContext();
   await synchronizeQuteValidationButton(window.activeTextEditor);
   return quteLanguageClient;

@@ -23,6 +23,7 @@ vscode-quarkus has opt-in telemetry collection, provided by [vscode-redhat-telem
     * "Quarkus: Build executable"
  * vscode-quarkus emits telemetry when a recommendation to install a 3rd party extension is proposed.
    The telemetry contains the extension name and the choice made.
+ * vscode-quarkus emits telemetry to indicate whether a Qute template file has been opened.
 
 ## How to opt in or out
 
