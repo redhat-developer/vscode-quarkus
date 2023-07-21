@@ -112,12 +112,24 @@ CodeLens are clickable to jump to the proper Java type, method or field.
 
 ## Inlay Hint for Qute
 
+All inlay hints can be turned off by disabling `qute.inlayHints.enabled` in settings.
+
+### Show Section parameter type
+
 Qute support displays the Java type of the parameter names as an inlay hint.
 
-![Inlay Hints for Qute](images/QuteTemplateInlayHint.gif)
+![Show Section parameter type](images/QuteTemplateInlayHint_ShowSectionParameterType.gif)
 
-All inlay hints can be turned off by disabling `qute.inlayHints.enabled` in settings. To remove inlay hints on section parameter types only, disable `qute.inlayHints.showSectionParameterType` in settings.
+To remove inlay hints on section parameter types only, disable `qute.inlayHints.showSectionParameterType` in settings.
 
+### Show Section parameter default value
+
+Qute support displays the default value of the parameter names as an inlay hint when user tag defines a default value (ex: `{#let name?="main.css"}`)
+
+![Show Section parameter default value](images/QuteTemplateInlayHint_ShowSectionParameterDefaultValue.gif)
+
+To remove inlay hints on section parameter default value only, disable `qute.inlayHints.showSectionParameterDefaultValue` in settings.
+ 
 ## Surround with Commands (Wrap)
 
 This command provides the ability to select Qute content and surround it some content. To execute this command you can use the command palette (`Ctrl+Shift+P`) and type `Surround`.
