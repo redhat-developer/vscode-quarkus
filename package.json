@@ -277,6 +277,11 @@
           "default": true,
           "markdownDescription": "Show section parameter type. Default is `true`."
         },
+        "qute.inlayHint.showSectionParameterDefaultValue": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Show section parameter default value. Default is `true`."
+        },
         "qute.native.enabled": {
           "type": "boolean",
           "default": false,
