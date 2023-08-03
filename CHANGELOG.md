@@ -1,5 +1,31 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.15.0 (8 August, 2023)
+
+### Enhancements
+
+ * Handle `telemetry/event` coming from the Qute language server. See [#621](https://github.com/redhat-developer/vscode-quarkus/pull/621).
+ * Support `completionList/itemDefaults` for Qute parameter declaration. See [quarkus-ls#900](https://github.com/redhat-developer/quarkus-ls/issues/900).
+
+### Bug Fixes
+
+ * Support `?` in parameter `let` section. See [#619](https://github.com/redhat-developer/vscode-quarkus/pull/619), [quarkus-ls#904](https://github.com/redhat-developer/quarkus-ls/issues/904), and [quarkus-ls#906](https://github.com/redhat-developer/quarkus-ls/issues/906).
+ * Support Qute optional end tags for sections. See [quarkus-ls#879](https://github.com/redhat-developer/quarkus-ls/issues/879).
+ * Deploy to OpenShift fails with 'command `openshift.component.deployRootWorkspaceFolder` not found'. See [#605](https://github.com/redhat-developer/vscode-quarkus/issues/605).
+ * Don't report error when `javaType` is null. See [quarkus-ls#908](https://github.com/redhat-developer/quarkus-ls/issues/908).
+ * Fix NPE with Qute resolve completion when data is not filled. See [quarkus-ls#903](https://github.com/redhat-developer/quarkus-ls/pull/903).
+ * Detected path in plugin are not following renarde paths spec. See [quarkus-ls#892](https://github.com/redhat-developer/quarkus-ls/issues/892).
+ * `{name. ?: "Qute"} ` doesn't report a validation error. See [quarkus-ls#884](https://github.com/redhat-developer/quarkus-ls/issues/884).
+
+### Build
+
+ * Bump word-wrap from `1.2.3` to `1.2.4`. See [#618](https://github.com/redhat-developer/vscode-quarkus/pull/618).
+ * Bump semver from `5.7.1` to `5.7.2`. See [#616](https://github.com/redhat-developer/vscode-quarkus/pull/616).
+
+### Documentation
+
+ * Add usage data for extension recommendation telemetry collection. See [#617](https://github.com/redhat-developer/vscode-quarkus/pull/617).
+
 ## 1.14.0 (15 June, 2023)
 
 ### Enhancements
