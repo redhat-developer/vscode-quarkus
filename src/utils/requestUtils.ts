@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
+import axios from 'axios';
 import * as fs from 'fs';
 import * as p from 'path';
-import * as request from 'request-promise';
 import { Readable } from 'stream';
 import { fromBuffer, ZipFile } from 'yauzl';
 import { ProjectGenState } from '../definitions/inputState';
 import { APIExtension, convertToQExtension, QExtension } from '../definitions/QExtension';
 import { QuarkusConfig } from '../QuarkusConfig';
 import { CodeQuarkusFunctionality } from './codeQuarkusApiUtils';
-
 
 const HEADERS = {
   'Client-Name': 'vscode-quarkus',
@@ -32,22 +31,21 @@ const HEADERS = {
 
 export async function getQExtensions(platform?: string): Promise<QExtension[]> {
   const apiUrl = `${QuarkusConfig.getApiUrl()}/extensions${platform === undefined ? `` : `/stream/${platform}`}`;
-  const extensions: string = await tryGetExtensionsJSON(apiUrl);
-  const qExtensions: QExtension[] = JSON.parse(extensions).map((ext: APIExtension) => {
+  const extensions: APIExtension[] = await tryGetExtensionsJSON(apiUrl);
+  const qExtensions: QExtension[] = extensions.map((ext: APIExtension) => {
     return convertToQExtension(ext);
   });
   const noDuplicates: QExtension[] = removeDuplicateArtifactIds(qExtensions);
   return noDuplicates.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-async function tryGetExtensionsJSON(apiUrl: string): Promise<string> {
-  const requestOptions: request.OptionsWithUri = {
-    uri: `${apiUrl}`,
-    headers: HEADERS,
-    timeout: 30000
-  };
+async function tryGetExtensionsJSON(apiUrl: string): Promise<APIExtension[]> {
   try {
-    return await request(requestOptions);
+    const response = await axios.get(apiUrl, {
+      headers: HEADERS,
+      timeout: 30_000,
+    });
+    return response.data;
   } catch (err) {
     throw `Unable to reach ${apiUrl}`;
   }
@@ -87,13 +85,12 @@ export async function downloadProject(state: ProjectGenState, codeQuarkusFunctio
 }
 
 async function tryGetProjectBuffer(projectUrl: string): Promise<Buffer> {
-  const requestOptions: request.OptionsWithUri = {
-    uri: projectUrl,
-    headers: HEADERS,
-    encoding: null
-  };
   try {
-    return await request(requestOptions) as Buffer;
+    const response = await axios.get(projectUrl, {
+      headers: HEADERS,
+      responseType: 'arraybuffer',
+    });
+    return response.data as Buffer;
   } catch (err) {
     throw 'Unable to download Quarkus project.';
   }
