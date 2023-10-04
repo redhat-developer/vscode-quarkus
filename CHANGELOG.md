@@ -1,5 +1,19 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.16.0 (5 October, 2023)
+
+### Enhancements
+
+ * Qute support for multi module project. See [quarkus-ls#930](https://github.com/redhat-developer/quarkus-ls/issues/930).
+
+### Bug Fixes
+
+ * Fix `java.lang.StackOverflowError` while editing Quarkus extension. See [quarkus-ls#924](https://github.com/redhat-developer/quarkus-ls/issues/924).
+
+### Build
+
+ * Remove dependency on `request`. See [#624](https://github.com/redhat-developer/vscode-quarkus/issues/624).
+
 ## 1.15.0 (8 August, 2023)
 
 ### Enhancements
