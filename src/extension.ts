@@ -30,6 +30,8 @@ import { initTelemetryService } from './utils/telemetryUtils';
 import { getFilePathsFromWorkspace } from './utils/workspaceUtils';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
+import { QBookSerializer } from './qute/quteNotebook/qBookSerializer';
+import { QBookController } from './qute/quteNotebook/qBookController';
 
 // alias for vscode-java's ExtensionAPI
 export type JavaExtensionAPI = any;
@@ -102,6 +104,7 @@ async function doActivate(context: ExtensionContext): Promise<void> {
       });
   }
 
+  registerQuteNotebook(context);
 }
 
 export async function deactivate(): Promise<void> {
@@ -177,4 +180,13 @@ async function isQuarkusProject(): Promise<boolean> {
   }).catch(() => {
     return false;
   });
+}
+
+function registerQuteNotebook(context: ExtensionContext) {
+  context.subscriptions.push(
+    workspace.registerNotebookSerializer(
+      'qbook', new QBookSerializer(), { transientOutputs: true }
+    ),
+    new QBookController()
+  );
 }
