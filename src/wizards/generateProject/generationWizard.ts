@@ -12,7 +12,7 @@ import { BuildToolName, INPUT_TITLE, VSCodeCommands } from '../../definitions/co
 import { ProjectGenState } from '../../definitions/inputState';
 import { QExtension } from '../../definitions/QExtension';
 import { QuarkusContext } from '../../QuarkusContext';
-import { CodeQuarkusFunctionality, getCodeQuarkusApiFunctionality, getCodeQuarkusApiPlatforms, getDefaultFunctionality, PlatformVersionPickItem } from '../../utils/codeQuarkusApiUtils';
+import { RecommendedQuickPickItem, CodeQuarkusFunctionality, fetchCodeQuarkusApiPlatforms, getCodeQuarkusApiFunctionality, getCodeQuarkusApiPlatforms, getDefaultFunctionality, getJavaVersions, PlatformVersionPickItem } from '../../utils/codeQuarkusApiUtils';
 import { MultiStepInput, QuickPickParameters } from '../../utils/multiStepUtils';
 import { downloadProject } from '../../utils/requestUtils';
 import { CMD_SUCCEED_VALUE, sendTelemetry } from '../../utils/telemetryUtils';
@@ -33,11 +33,14 @@ export async function generateProjectWizard(): Promise<any> {
     apiCapabilities = getDefaultFunctionality();
   }
 
+  const platformData = fetchCodeQuarkusApiPlatforms();
+
   const state: Partial<ProjectGenState> = {
-    totalSteps: 8 + (apiCapabilities.supportsNoCodeParameter || apiCapabilities.supportsNoExamplesParameter ? 1 : 0)
+    totalSteps: 9 + (apiCapabilities.supportsNoCodeParameter || apiCapabilities.supportsNoExamplesParameter ? 1 : 0)
   };
 
   async function collectInputs(state: Partial<ProjectGenState>) {
+
     await MultiStepInput.run(input => inputBuildTool(input, state));
   }
 
@@ -72,7 +75,7 @@ export async function generateProjectWizard(): Promise<any> {
 
   async function inputPlatformVersion(input: MultiStepInput, state: Partial<ProjectGenState>) {
 
-    const quickPickItems: PlatformVersionPickItem[] = await getCodeQuarkusApiPlatforms();
+    const quickPickItems: PlatformVersionPickItem[] = getCodeQuarkusApiPlatforms(await platformData);
 
     // Sort by recommended and version number in case of tie in the quick pick list
     quickPickItems.sort((x: PlatformVersionPickItem, y: PlatformVersionPickItem) => {
@@ -89,6 +92,41 @@ export async function generateProjectWizard(): Promise<any> {
     })).label;
     state.platformVersion = (quickPickItems.filter(platformInfo => platformInfo["label"] === platformVersionOption))[0]["key"];
 
+    return (input: MultiStepInput) => inputJavaVersion(input, state);
+  }
+
+  async function inputJavaVersion(input:MultiStepInput, state: Partial<ProjectGenState>) {
+    const quickPickItems = getJavaVersions(await platformData, state.platformVersion);
+    //sort Java versions by descending versions
+    quickPickItems.sort((x: RecommendedQuickPickItem, y: RecommendedQuickPickItem) => {
+      return (x.key === y.key)? 0 : (x.key > y.key)? -1 : 1;
+    });
+
+    let activeItem : RecommendedQuickPickItem;
+    if (state.javaVersion) {
+      //check the java version that was previously selected is still available here
+      //e.g. java 11 not available in latest quarkus version
+      const candidates = quickPickItems.filter(version => version.key === state.javaVersion);
+      if (candidates.length > 0) {
+        activeItem = candidates[0];
+      }
+    }
+    //No java version selected or selected java version is not available anymore,
+    //fallback to recommended version
+    if (!activeItem) {
+      activeItem = quickPickItems.filter(version => version.recommended)[0];
+    }
+
+    const selectedJava = (await input.showQuickPick({
+      title: INPUT_TITLE,
+      step: input.getStepNumber(),
+      totalSteps: state.totalSteps,
+      placeholder: 'Pick Java version',
+      items: quickPickItems,
+      activeItem: activeItem
+    })).label;
+
+    state.javaVersion = quickPickItems.filter(version => version.label === selectedJava)[0].key;
     return (input: MultiStepInput) => inputGroupId(input, state);
   }
 
@@ -257,6 +295,7 @@ function saveDefaults(state: ProjectGenState): void {
 
   QuarkusContext.setDefaults({
     buildTool: state.buildTool,
+    javaVersion: state.javaVersion,
     groupId: state.groupId,
     artifactId: state.artifactId,
     projectVersion: state.projectVersion,
@@ -286,6 +325,7 @@ async function downloadAndSetupProject(state: ProjectGenState, codeQuarkusFuncti
       status: CMD_SUCCEED_VALUE,
       buildTool: state.buildTool,
       shouldGenerateCode: state.shouldGenerateCode,
+      javaVersion: state.javaVersion,
       extensions: state.extensions.map(e => e.getGroupIdArtifactIdString())
     }).then(() => openProject(projectDir));
   });

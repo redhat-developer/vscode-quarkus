@@ -36,6 +36,7 @@ export interface ProjectGenState extends State {
   packageName: string;
   resourceName: string;
   targetDir: Uri;
+  javaVersion:string;
 }
 
 export interface AddExtensionsState extends State {

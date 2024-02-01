@@ -73,6 +73,7 @@ export async function downloadProject(state: ProjectGenState, codeQuarkusFunctio
   const qProjectUrl: string = `${apiUrl}/download?` +
     `b=${state.buildTool.toUpperCase()}&` +
     `S=${state.platformVersion}&` +
+    `j=${state.javaVersion}&` +
     `g=${state.groupId}&` +
     `a=${state.artifactId}&` +
     `v=${state.projectVersion}&` +

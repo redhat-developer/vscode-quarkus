@@ -84,6 +84,7 @@ export namespace QuarkusContext {
 
 interface Defaults {
   buildTool: string;
+  javaVersion: string;
   groupId: string;
   artifactId: string;
   projectVersion: string;
