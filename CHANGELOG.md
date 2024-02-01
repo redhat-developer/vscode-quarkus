@@ -8,7 +8,12 @@
 
 ### Bug Fixes
 
- * Fix application.properties completion. See [#638](https://github.com/redhat-developer/vscode-quarkus/issues/638).
+ * Fixed application.properties completion. See [#638](https://github.com/redhat-developer/vscode-quarkus/issues/638).
+ * Fixed Javadoc for Qute completion. See [quarkus-ls#949](https://github.com/redhat-developer/quarkus-ls/pull/949)
+
+### Build
+
+ * Require Node.js 18. See [#626](https://github.com/redhat-developer/vscode-quarkus/issues/626), [#643](https://github.com/redhat-developer/vscode-quarkus/issues/643).
 
 ## 1.16.0 (5 October, 2023)
 
