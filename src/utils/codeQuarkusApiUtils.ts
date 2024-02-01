@@ -37,14 +37,17 @@ export interface CodeQuarkusFunctionality {
   supportsNoCodeParameter: boolean;
 }
 
+export interface RecommendedQuickPickItem extends QuickPickItem {
+  label: string;
+  key: string;
+  recommended: boolean;
+}
+
 /**
  * Represents the the response object from the `/streams` endpoint from the Code Quarkus API
  */
- export interface PlatformVersionPickItem extends QuickPickItem {
-  label: string;
-  key: string;
+ export interface PlatformVersionPickItem extends RecommendedQuickPickItem {
   quarkusCoreVersion: string;
-  recommended: boolean;
 }
 
 /**
@@ -82,15 +85,14 @@ export function getDefaultFunctionality() {
   } as CodeQuarkusFunctionality;
 }
 
+
 /**
  * Returns the available platform(s) for a Quarkus project from Code Quarkus API
  *
  * @returns the available platform(s) for a Quarkus project from Code Quarkus API
  */
- export async function getCodeQuarkusApiPlatforms() {
-    const platformApiRes = await fetch((QuarkusConfig.getApiUrl() + '/streams'));
-    const availablePlatformsParsed = <Array<object>> yaml.load(platformApiRes);
-    const availablePlatforms = availablePlatformsParsed.map(platform => {
+ export function getCodeQuarkusApiPlatforms(platforms: Array<object>): PlatformVersionPickItem[] {
+    const availablePlatforms = platforms.map(platform => {
       const version = `${platform["key"].split(":")[1]}${(platform["recommended"] ? ` (recommended)` : ``)}`;
       const cast: PlatformVersionPickItem = {
         label: version,
@@ -102,6 +104,30 @@ export function getDefaultFunctionality() {
     });
     return availablePlatforms;
   }
+
+  /**
+   * Extract the java versions for a given platform key
+   */
+  export function getJavaVersions(platforms: Array<object>, key:string):RecommendedQuickPickItem[] {
+    const javaCompatibility = platforms.filter(platform => platform["key"] === key)[0]["javaCompatibility"];
+    const javaVersions = javaCompatibility["versions"].map((version: string) => {
+      const recommended = version === javaCompatibility["recommended"];
+      const cast: RecommendedQuickPickItem = {
+        label: (recommended)?`${version} (recommended)`:`${version}`,
+        key: `${version}`,
+        recommended: recommended
+      };
+      return cast;
+    });
+    return javaVersions;
+  }
+
+  export async function fetchCodeQuarkusApiPlatforms(): Promise<Array<object>> {
+    const platformApiRes = await fetch((QuarkusConfig.getApiUrl() + '/streams'));
+    const availablePlatformsParsed = <Array<object>> yaml.load(platformApiRes);
+    return availablePlatformsParsed;
+  }
+
 
 /**
  * Returns the GET response body if the code is 200 and rejects otherwise

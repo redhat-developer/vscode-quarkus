@@ -1,5 +1,15 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## 1.17.0 (1 February, 2024)
+
+### Enhancements
+
+ * Add Java version selection in new project wizard. See [#641](https://github.com/redhat-developer/vscode-quarkus/pull/641).
+
+### Bug Fixes
+
+ * Fix application.properties completion. See [#638](https://github.com/redhat-developer/vscode-quarkus/issues/638).
+
 ## 1.16.0 (5 October, 2023)
 
 ### Enhancements

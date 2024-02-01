@@ -86,6 +86,11 @@ describe('Project generation tests', function () {
     expect(quickPickPlatform.label).to.have.string('(recommended)');
     await wizard.next();
 
+    const javaVersion = await wizard.getNthQuickPickItemInfo(0);
+    //expects the java version label to be a number maybe followed by `(recommended)`
+    expect(javaVersion.label).to.match(/^\d+(\.\d+)*(\.\d+)?( \(recommended\))?$/);
+    await wizard.next();
+
     const groupId = await wizard.getText();
     expect(groupId).equals('org.acme');
     await wizard.next();
@@ -135,64 +140,70 @@ describe('Project generation tests', function () {
   it('should have correct step values', async function () {
     this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('1/10');
     expect(await wizard.getBackButton()).to.not.be.ok;
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('2/10');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('3/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('3/10');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('4/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('4/10');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('5/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('5/10');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('6/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('6/10');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('7/9');
-    await wizard.focusQuickPick(0);
+    expect(await wizard.getInputBoxTitle()).to.have.string('7/10');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('8/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('8/10');
+    await wizard.focusQuickPick(0);//starter code
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('9/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('9/10');
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('10/10');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('8/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('9/10');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('7/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('8/10');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('6/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('7/10');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('5/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('6/10');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('4/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('5/10');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('3/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('4/10');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('3/10');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('2/10');
+    await wizard.prev();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('1/10');
     expect(await wizard.getBackButton()).to.not.be.ok;
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('2/10');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('1/10');
     expect(await wizard.getBackButton()).to.not.be.ok;
 
     await wizard.cancel();
@@ -206,40 +217,43 @@ describe('Project generation tests', function () {
    it('should have correct step value when starter code skipped', async function () {
     this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('1/10');
     expect(await wizard.getBackButton()).to.not.be.ok;
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('2/10');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('3/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('3/10');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('4/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('4/10');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('5/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('5/10');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('6/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('6/10');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('7/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('7/10');
+    await wizard.next();
+
+    expect(await wizard.getInputBoxTitle()).to.have.string('8/10');
     await wizard.focusQuickPick(1);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('8/8');
+    expect(await wizard.getInputBoxTitle()).to.have.string('9/9');
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('7/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('8/10');
     await wizard.focusQuickPick(0);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('8/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('9/10');
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('9/9');
+    expect(await wizard.getInputBoxTitle()).to.have.string('10/10');
 
     await wizard.cancel();
    });
@@ -376,6 +390,9 @@ describe('Project generation tests', function () {
     expect(await wizard.getNthQuickPickItemLabel(0)).contains("(recommended)");
     await wizard.next();
 
+    //Skip past Java version selection
+    await wizard.next();
+
     const actualGroupId = await wizard.getText();
     expect(actualGroupId).equals(groupId);
     await wizard.next();
@@ -418,6 +435,7 @@ describe('Project generation tests', function () {
   it('should have correct input validation messages', async function () {
     this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
+    await wizard.next();
     await wizard.next();
     await wizard.next();
 
@@ -517,6 +535,7 @@ describe('Project generation tests', function () {
   it('should display extensions without duplicates', async function () {
     this.timeout(120000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
+    await wizard.next();
     await wizard.next();
     await wizard.next();
     await wizard.next();

@@ -28,7 +28,7 @@ export class ProjectGenerationWizard extends InputBox {
   /**
    * The number of steps the wizard has
    */
-  private lastStep = 9;
+  private lastStep = 10;
 
   /**
    * Opens the project generation wizard
@@ -48,6 +48,7 @@ export class ProjectGenerationWizard extends InputBox {
   public static async generateProject(driver: WebDriver, options: {
     buildTool?: string,
     platformVersion?: string,
+    javaVersion?: string,
     groupId?: string,
     artifactId?: string,
     projectVersion?: string,
@@ -61,6 +62,8 @@ export class ProjectGenerationWizard extends InputBox {
       if (options.buildTool) await wizard.setText(options.buildTool);
       await wizard.next();
       if (options.platformVersion) await wizard.setText(options.platformVersion);
+      await wizard.next();
+      if (options.javaVersion) await wizard.setText(options.javaVersion);
       await wizard.next();
       if (options.groupId) await wizard.setText(options.groupId);
       await wizard.next();
