@@ -483,7 +483,7 @@
     "jdk-utils": "^0.4.3",
     "js-yaml": "^4.0.0",
     "lodash": "^4.17.21",
-    "vscode-languageclient": "^8.0.2",
+    "vscode-languageclient": "^9.0.1",
     "vscode-languageserver-protocol": "^3.17.2",
     "which": "^2.0.2",
     "yauzl": "^2.10.0"
