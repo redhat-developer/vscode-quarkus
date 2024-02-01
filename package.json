@@ -418,7 +418,6 @@
     ]
   },
   "scripts": {
-    "preinstall": "npx npm-force-resolutions",
     "vscode:prepublish": "webpack --mode production",
     "compile": "webpack --mode none",
     "watch": "webpack --mode development --watch",
@@ -432,7 +431,7 @@
     "build-qute-server": "./node_modules/.bin/gulp buildQuteServer",
     "build-qute-ext": "./node_modules/.bin/gulp buildQuteExtension",
     "test-ui": "rm -rf out && npm run test-compile && npm run test-ui-run",
-    "test-ui-run": "extest setup-and-run 'out/test/vscodeUiTest/suite/*.js' -u -e 'out/test/vscodeUiTest/extensions' -o src/test/vscodeUiTest/settings.json",
+    "test-ui-run": "extest setup-and-run 'out/test/vscodeUiTest/suite/*.js' -u -e 'out/test/vscodeUiTest/extensions' -o src/test/vscodeUiTest/settings.json -c max",
     "test-all": "npm test && npm run test-ui-run"
   },
   "resolutions": {
@@ -446,7 +445,7 @@
     "@types/js-yaml": "^4.0.0",
     "@types/lodash": "^4.14.149",
     "@types/mocha": "^5.2.6",
-    "@types/node": "^10.14.16",
+    "@types/node": "18.15",
     "@types/request": "^2.48.3",
     "@types/request-promise": "^4.1.44",
     "@types/semver": "^6.2.0",
@@ -468,7 +467,7 @@
     "pom-parser": "^1.2.0",
     "ts-loader": "^9.4.2",
     "typescript": "^4.1.0",
-    "vscode-extension-tester": "^5.5.2",
+    "vscode-extension-tester": "^7.0.0",
     "vscode-test": "^1.2.3",
     "webpack": "^5.76.0",
     "webpack-cli": "^4.9.1"
