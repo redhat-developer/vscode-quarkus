@@ -3,7 +3,7 @@ import * as path from 'path';
 import { workspace } from 'vscode';
 import { Executable, ExecutableOptions } from 'vscode-languageclient/node';
 import { RequirementsData } from './requirements';
-import * as glob from 'glob';
+import { glob } from 'glob';
 
 const DEBUG = startedInDebugMode();
 const DEBUG_PORT = 1074;
