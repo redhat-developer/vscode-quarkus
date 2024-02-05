@@ -1,6 +1,6 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
-## 1.17.0 (1 February, 2024)
+## 1.17.0 (5 February, 2024)
 
 ### Enhancements
 
