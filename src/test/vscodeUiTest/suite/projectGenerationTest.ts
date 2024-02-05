@@ -18,7 +18,7 @@ import * as fs from 'fs-extra';
 import * as g2js from 'gradle-to-js/lib/parser';
 import * as _ from 'lodash';
 import * as path from 'path';
-import * as pomParser from 'pom-parser';
+import { XMLParser } from "fast-xml-parser";
 import { env } from 'process';
 import { By, InputBox, Key, VSBrowser, WebDriver, WebElement, Workbench } from 'vscode-extension-tester';
 import { ProjectGenerationWizard, QuickPickItemInfo } from '../ProjectGenerationWizard';
@@ -283,12 +283,12 @@ describe('Project generation tests', function () {
     const pomDependencies: any[] = (await pomToJson(pathToPom)).project.dependencies.dependency;
 
     expect(
-      _.some(pomDependencies, { groupid: 'org.apache.camel.quarkus', artifactid: 'camel-quarkus-core' }),
+      _.some(pomDependencies, { groupId: 'org.apache.camel.quarkus', artifactId: 'camel-quarkus-core' }),
       'The Camel Core extension does not exist in the downloaded Maven-based Quarkus project'
     ).to.be.true;
 
     expect(
-      _.some(pomDependencies, { groupid: 'io.quarkus', artifactid: 'quarkus-vertx' }),
+      _.some(pomDependencies, { groupId: 'io.quarkus', artifactId: 'quarkus-vertx' }),
       'The Eclipse Vert.x extension does not exist in the downloaded Maven-based Quarkus project'
     ).to.be.true;
 
@@ -565,15 +565,13 @@ async function wizardExists(): Promise<boolean> {
   }
 }
 
-function pomToJson(pathToPom: string): Promise<any> {
-  return new Promise((res, rej) => {
-    pomParser.parse({ filePath: pathToPom }, (err, response) => {
-      if (err) {
-        rej(err);
-      }
-      res(response.pomObject);
-    });
+async function pomToJson(pathToPom: string): Promise<any> {
+  const pom = await fs.readFile(pathToPom);
+  const parser = new XMLParser({
+    ignoreDeclaration: true,
+    ignorePiTags: true,
   });
+  return parser.parse(pom);
 }
 
 function buildGradleToJson(pathToBuildGradle: string): Promise<any> {
