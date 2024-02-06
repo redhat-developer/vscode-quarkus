@@ -460,7 +460,7 @@
     "vscode-extension-tester": "^7.0.0",
     "vscode-test": "^1.2.3",
     "webpack": "^5.76.0",
-    "webpack-cli": "^4.9.1"
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "@redhat-developer/vscode-extension-proposals": "^0.0.22",
