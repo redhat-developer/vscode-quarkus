@@ -435,7 +435,7 @@
     "@types/chai-fs": "^2.0.2",
     "@types/ejs": "^3.0.5",
     "@types/fs-extra": "^7.0.0",
-    "@types/js-yaml": "^4.0.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.14.149",
     "@types/mocha": "^5.2.6",
     "@types/node": "18.15",
