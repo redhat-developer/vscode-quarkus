@@ -432,7 +432,7 @@
   },
   "devDependencies": {
     "@types/chai": "^4.2.3",
-    "@types/chai-fs": "^2.0.2",
+    "@types/chai-fs": "^2.0.4",
     "@types/ejs": "^3.0.5",
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4.0.9",
