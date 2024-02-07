@@ -433,7 +433,7 @@
   "devDependencies": {
     "@types/chai": "^4.2.3",
     "@types/chai-fs": "^2.0.4",
-    "@types/ejs": "^3.0.5",
+    "@types/ejs": "^3.1.5",
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4.0.9",
     "@types/lodash": "^4.14.202",
@@ -465,7 +465,7 @@
   "dependencies": {
     "@redhat-developer/vscode-extension-proposals": "^0.0.22",
     "@redhat-developer/vscode-redhat-telemetry": "^0.7.1",
-    "ejs": "^3.1.7",
+    "ejs": "^3.1.9",
     "expand-home-dir": "0.0.3",
     "find-up": "^4.1.0",
     "fs-extra": "^11.2.0",
