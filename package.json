@@ -466,6 +466,7 @@
     "@types/vscode": "^1.82.0",
     "@types/which": "^3.0.4",
     "@types/yauzl": "^2.10.3",
+    "@vscode/test-electron": "^2.5.2",
     "chai": "^4.5.0",
     "chai-fs": "^2.0.0",
     "eslint": "^9.26.0",
@@ -479,7 +480,6 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.0",
     "vscode-extension-tester": "^8.11.0",
-    "vscode-test": "^1.2.3",
     "webpack": "^5.99.8",
     "webpack-cli": "^6.0.1"
   },
