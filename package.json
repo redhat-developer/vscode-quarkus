@@ -441,6 +441,7 @@
     "@types/yauzl": "^2.10.3",
     "@typescript-eslint/eslint-plugin": "^7.6.0",
     "@typescript-eslint/parser": "^7.6.0",
+    "@vscode/test-electron": "^2.3.9",
     "axios": "^1.6.7",
     "chai": "^4.2.0",
     "chai-fs": "^2.0.0",
@@ -454,7 +455,6 @@
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.5",
     "vscode-extension-tester": "^7.2.0",
-    "vscode-test": "^1.2.3",
     "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4"
   },
