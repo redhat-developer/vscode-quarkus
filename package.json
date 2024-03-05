@@ -457,7 +457,7 @@
     "mocha": "^10.2.0",
     "ts-loader": "^9.4.2",
     "typescript": "^5.3.3",
-    "vscode-extension-tester": "^7.0.0",
+    "vscode-extension-tester": "^7.2.0",
     "vscode-test": "^1.2.3",
     "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4"
