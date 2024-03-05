@@ -459,7 +459,7 @@
     "typescript": "^5.3.3",
     "vscode-extension-tester": "^7.0.0",
     "vscode-test": "^1.2.3",
-    "webpack": "^5.76.0",
+    "webpack": "^5.90.3",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
