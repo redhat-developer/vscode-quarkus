@@ -454,7 +454,7 @@
     "gulp": "^4.0.2",
     "gulp-rename": "^1.4.0",
     "minimist": ">=1.2.6",
-    "mocha": "^10.2.0",
+    "mocha": "^10.3.0",
     "ts-loader": "^9.4.2",
     "typescript": "^5.3.3",
     "vscode-extension-tester": "^7.2.0",
