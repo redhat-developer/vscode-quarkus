@@ -439,7 +439,7 @@
     "@types/lodash": "^4.14.202",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.19",
-    "@types/vscode": "^1.82.0",
+    "@types/vscode": "^1.87.0",
     "@types/which": "^3.0.3",
     "@types/yauzl": "^2.10.3",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
