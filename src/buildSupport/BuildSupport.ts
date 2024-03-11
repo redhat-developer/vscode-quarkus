@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import * as findUp from 'find-up';
+import { findUp, findUpStop } from 'find-up';
 import * as path from 'path';
 import { Uri, WorkspaceFolder } from 'vscode';
 import { FsUtils } from '../utils/fsUtils';
@@ -180,7 +180,7 @@ export abstract class BuildSupport {
     const wrapperFileName: string = ((options && options.windows) || process.platform === 'win32') ? this.buildSupportData.wrapperWindows : this.buildSupportData.wrapper;
 
     return await findUp(dir => {
-      return (!FsUtils.isSameDirectory(folderPath, dir) && !FsUtils.isSubDirectory(folderPath, dir)) ? findUp.stop : wrapperFileName;
+      return (!FsUtils.isSameDirectory(folderPath, dir) && !FsUtils.isSubDirectory(folderPath, dir)) ? findUpStop : wrapperFileName;
     }, findUpOptions);
   }
 
