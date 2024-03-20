@@ -456,7 +456,7 @@
     "minimist": ">=1.2.6",
     "mocha": "^10.3.0",
     "ts-loader": "^9.4.2",
-    "typescript": "^5.3.3",
+    "typescript": "^5.4.2",
     "vscode-extension-tester": "^7.2.0",
     "vscode-test": "^1.2.3",
     "webpack": "^5.90.3",
