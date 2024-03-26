@@ -116,13 +116,15 @@ For information on getting started, refer to the [CONTRIBUTING instructions](CON
 
 CI builds can be installed manually by following these instructions:
 
-  1) Download the latest development VSIX archive [from here](https://download.jboss.org/jbosstools/vscode/snapshots/vscode-quarkus/?C=M;O=D). `(vscode-quarkus-XXX.vsix)`
+  1) Download the latest development VSIX archive of [from here](https://download.jboss.org/jbosstools/vscode/snapshots/vscode-microprofile/?C=M;O=D).
+  
+  2) Download the latest development VSIX archive [from here](https://download.jboss.org/jbosstools/vscode/snapshots/vscode-quarkus/?C=M;O=D). `(vscode-quarkus-XXX.vsix)`
 
-  2) Click `View/Command Palette`
+  3) Click `View/Command Palette`
 
-  3) Type 'VSIX'
+  4) Type 'VSIX'
 
-  4) Select 'Install from VSIX...' and choose the `.vsix` file.
+  5) Select 'Install from VSIX...' and choose the `.vsix` file.
 
 ## Feedback
 
