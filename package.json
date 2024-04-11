@@ -427,9 +427,6 @@
     "test-ui-run": "extest setup-and-run 'out/test/vscodeUiTest/suite/*.js' -u -e 'out/test/vscodeUiTest/extensions' -o src/test/vscodeUiTest/settings.json -c max",
     "test-all": "npm test && npm run test-ui-run"
   },
-  "resolutions": {
-    "minimist": "1.2.6"
-  },
   "devDependencies": {
     "@types/chai": "^4.2.3",
     "@types/chai-fs": "^2.0.5",
@@ -453,7 +450,6 @@
     "gradle-to-js": "^2.0.0",
     "gulp": "^4.0.2",
     "gulp-rename": "^2.0.0",
-    "minimist": ">=1.2.6",
     "mocha": "^10.4.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.4.5",
