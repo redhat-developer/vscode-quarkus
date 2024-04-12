@@ -33,10 +33,6 @@ gulp.task('buildServer', (done) => {
   gulp.src(quarkusServerExtDir + '/target/' + quarkusServerExt + '-!(*sources).jar')
     .pipe(rename(quarkusServerExt + '.jar'))
     .pipe(gulp.dest('./server'));
-  // copy over any dependencies not provided by mp-ls
-  // dependencies are copied into /target/lib by the maven-dependency-plugin
-  gulp.src(quarkusServerExtDir + '/target/lib/*.jar')
-    .pipe(gulp.dest('./server'));
   done();
 });
 
