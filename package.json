@@ -128,50 +128,61 @@
     "commands": [
       {
         "command": "quarkusTools.createProject",
-        "title": "Quarkus: Generate a Quarkus project"
+        "title": "Generate a Quarkus project",
+        "category": "Quarkus"
       },
       {
         "command": "quarkusTools.addExtension",
-        "title": "Quarkus: Add extensions to current project"
+        "title": "Add extensions to current project",
+        "category": "Quarkus"
       },
       {
         "command": "quarkusTools.debugQuarkusProject",
-        "title": "Quarkus: Debug current Quarkus project"
+        "title": "Debug current Quarkus project",
+        "category": "Quarkus"
       },
       {
         "command": "quarkusTools.debugQuarkusProject.short",
         "title": "Debug Quarkus",
-        "icon": "$(debug-alt-small)"
+        "icon": "$(debug-alt-small)",
+        "category": "Quarkus"
       },
       {
         "command": "quarkusTools.buildBinary",
-        "title": "Quarkus: Build executable"
+        "title": "Build executable",
+        "category": "Quarkus"
       },
       {
         "command": "quarkusTools.welcome",
-        "title": "Quarkus: Welcome"
+        "title": "Welcome",
+        "category": "Quarkus"
       },
       {
         "command": "qute.validation.enabled.toggle.off",
         "title": "Disable Qute Validation",
-        "icon": "$(eye-watch)"
+        "icon": "$(eye-watch)",
+        "category": "Qute"
       },
       {
         "command": "qute.validation.enabled.toggle.on",
         "title": "Enable Qute Validation",
-        "icon": "$(eye-closed)"
+        "icon": "$(eye-closed)",
+        "category": "Qute"
       },
       {
         "command": "qute.refactor.surround.with.comments",
-        "title": "Qute: Surround with Comments"
+        "title": "Surround with Comments",
+        "category": "Qute"
       },
       {
         "command": "qute.refactor.surround.with.cdata",
-        "title": "Qute: Surround with Unparsed Character Data"
+        "title": "Surround with Unparsed Character Data",
+        "category": "Qute"
       },
       {
         "command": "qute.refactor.surround.with.section",
-        "title": "Qute: Surround with Section"
+        "title": "Surround with Section",
+        "category": "Qute"
       }
     ],
     "configuration": {
