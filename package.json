@@ -342,6 +342,10 @@
           "when": "quarkusProjectExistsOrLightWeight"
         },
         {
+          "command": "quarkusTools.debugQuarkusProject.short",
+          "when": "false"
+        },
+        {
           "command": "qute.validation.enabled.toggle.off",
           "when": "false"
         },
