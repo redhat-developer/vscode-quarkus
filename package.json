@@ -456,7 +456,7 @@
     "@types/yauzl": "^2.10.3",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
-    "axios": "^1.6.7",
+    "axios": "^1.7.2",
     "chai": "^4.2.0",
     "chai-fs": "^2.0.0",
     "eslint": "^8.57.0",
