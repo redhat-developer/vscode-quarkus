@@ -448,7 +448,7 @@
     "@types/ejs": "^3.1.5",
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4.0.9",
-    "@types/lodash": "^4.17.5",
+    "@types/lodash": "^4.17.6",
     "@types/mocha": "^10.0.7",
     "@types/node": "18.19",
     "@types/vscode": "^1.82.0",
