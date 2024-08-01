@@ -32,7 +32,7 @@ export function createTerminateDebugListener(): Disposable {
     try {
       checkHasPreLaunchTask(debugSession);
       quarkusDevTaskExe = await getPreLaunchTaskExecution(debugSession);
-    } catch (message) {
+    } catch (_message) {
       // debugger for a non Quarkus project has terminated
       // don't display an error message
       return;

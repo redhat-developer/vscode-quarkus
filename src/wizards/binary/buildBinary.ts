@@ -20,7 +20,7 @@ import { BuildSupport } from "../../buildSupport/BuildSupport";
 import { ProjectLabelInfo } from "../../definitions/ProjectLabelInfo";
 import { TaskCreator } from "../debugging/TaskCreator";
 import { getQuarkusProject } from "../getQuarkusProject";
-import which = require("which");
+import * as which from "which";
 
 const NATIVE_IMAGE_DOCS_URI: Uri = Uri.parse('https://quarkus.io/guides/building-native-image');
 
@@ -93,7 +93,7 @@ function pathFromEnvHasNativeImage(envVarValue: string | undefined): boolean {
 async function hasNativeImageOnPath(): Promise<boolean> {
   try {
     return !! await which('native-image');
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
 }

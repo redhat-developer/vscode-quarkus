@@ -46,7 +46,7 @@ async function tryGetExtensionsJSON(apiUrl: string): Promise<APIExtension[]> {
       timeout: 30_000,
     });
     return response.data;
-  } catch (err) {
+  } catch (_err) {
     throw `Unable to reach ${apiUrl}`;
   }
 }
@@ -92,7 +92,7 @@ async function tryGetProjectBuffer(projectUrl: string): Promise<Buffer> {
       responseType: 'arraybuffer',
     });
     return response.data as Buffer;
-  } catch (err) {
+  } catch (_err) {
     throw 'Unable to download Quarkus project.';
   }
 }

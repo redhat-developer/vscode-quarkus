@@ -560,7 +560,7 @@ async function wizardExists(): Promise<boolean> {
     const enclosing: WebElement = input.getEnclosingElement();
     const title: WebElement = await enclosing.findElement(By.className('quick-input-title'));
     return (await title.getText()).includes('Quarkus Tools');
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
 }
