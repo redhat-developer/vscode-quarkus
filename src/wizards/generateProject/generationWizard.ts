@@ -29,7 +29,7 @@ export async function generateProjectWizard(): Promise<any> {
   let apiCapabilities: CodeQuarkusFunctionality;
   try {
     apiCapabilities = await getCodeQuarkusApiFunctionality();
-  } catch (e) {
+  } catch (_e) {
     apiCapabilities = getDefaultFunctionality();
   }
 

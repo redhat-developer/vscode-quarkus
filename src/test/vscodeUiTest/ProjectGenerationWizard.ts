@@ -154,7 +154,7 @@ export class ProjectGenerationWizard extends InputBox {
     try {
       const backButton: WebElement = await enclosing.findElement(By.className(backButtonClass));
       return backButton;
-    } catch (e) {
+    } catch (_e) {
       return undefined;
     }
   }
@@ -259,13 +259,13 @@ export class ProjectGenerationWizard extends InputBox {
 
     try {
       result.detail = await this.getStringFromChildElementByClassName(quickPickItem, 'quick-input-list-label-meta');
-    } catch (e) {
+    } catch (_e) {
       // there is no vscode.QuickPickItem.detail for this quick pick item
     }
 
     try {
       result.description = await this.getStringFromChildElementByClassName(quickPickItem, 'label-description');
-    } catch (e) {
+    } catch (_e) {
       // there is no vscode.QuickPickItem.description for this quick pick item
     }
     return result;

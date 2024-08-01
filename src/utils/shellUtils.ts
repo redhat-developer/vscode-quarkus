@@ -92,7 +92,7 @@ function toDefaultWslPath(p: string): string {
 async function toWslPath(path: string): Promise<string> {
   try {
       return (await executeCommand("wsl", ["wslpath", "-u", `"${path.replace(/\\/g, "/")}"`])).trim();
-  } catch (error) {
+  } catch (_error) {
     return toDefaultWslPath(path);
   }
 }
