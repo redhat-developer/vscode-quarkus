@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import axios from 'axios';
 import * as fs from 'fs';
 import * as p from 'path';
 import { Readable } from 'stream';
@@ -41,12 +40,15 @@ export async function getQExtensions(platform?: string): Promise<QExtension[]> {
 
 async function tryGetExtensionsJSON(apiUrl: string): Promise<APIExtension[]> {
   try {
-    const response = await axios.get(apiUrl, {
+    const abortController = new AbortController();
+    const timeout = setTimeout(() => { abortController.abort(); }, 30_000);
+    const response = await fetch(apiUrl, {
       headers: HEADERS,
-      timeout: 30_000,
+      signal: abortController.signal
     });
-    return response.data;
-  } catch (_err) {
+    clearTimeout(timeout);
+    return (await response.json()) as APIExtension[];
+  } catch {
     throw `Unable to reach ${apiUrl}`;
   }
 }
@@ -87,12 +89,11 @@ export async function downloadProject(state: ProjectGenState, codeQuarkusFunctio
 
 async function tryGetProjectBuffer(projectUrl: string): Promise<Buffer> {
   try {
-    const response = await axios.get(projectUrl, {
+    const response = await fetch(projectUrl, {
       headers: HEADERS,
-      responseType: 'arraybuffer',
     });
-    return response.data as Buffer;
-  } catch (_err) {
+    return Buffer.from(await response.arrayBuffer());
+  } catch {
     throw 'Unable to download Quarkus project.';
   }
 }
