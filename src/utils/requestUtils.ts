@@ -30,7 +30,7 @@ const HEADERS = {
 };
 
 export async function getQExtensions(platform?: string): Promise<QExtension[]> {
-  const apiUrl = `${QuarkusConfig.getApiUrl()}/extensions${platform === undefined ? `` : `/stream/${platform}`}`;
+  const apiUrl = `${QuarkusConfig.getApiUrl()}/extensions${platform === undefined ? `` : `/stream/${platform}`}?platformOnly=false`;
   const extensions: APIExtension[] = await tryGetExtensionsJSON(apiUrl);
   const qExtensions: QExtension[] = extensions.map((ext: APIExtension) => {
     return convertToQExtension(ext);
