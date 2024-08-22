@@ -116,7 +116,7 @@ function displayWelcomePageIfNeeded(context: ExtensionContext): void {
   }
 }
 
-const APP_PROPERTIES_PATTERN = /^application(?:-[A-Za-z]+)\.properties$/;
+const APP_PROPERTIES_PATTERN = /^application(?:-[A-Za-z]+)?\.properties$/;
 
 /**
  * Update if required the language ID to 'quarkus-properties' if needed.
