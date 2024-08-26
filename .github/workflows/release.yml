@@ -1,4 +1,4 @@
-name: release
+name: Build & Release VS Code Quarkus
 
 on:
   schedule:
@@ -156,3 +156,21 @@ jobs:
         if: ${{ github.event_name == 'schedule' || inputs.publishToOVSX == 'true' || inputs.publishPreRelease == 'true' }}
         run: |
           ovsx publish -p ${{ secrets.OVSX_MARKETPLACE_TOKEN }}  --packagePath vscode-quarkus/vscode-quarkus-*-${GITHUB_RUN_NUMBER}.vsix
+  post-release-job:
+    if: ${{ inputs.publishToMarketPlace == 'true' && inputs.publishToOVSX == 'true' }}
+    runs-on: ubuntu-latest
+    needs: release-job
+    steps:
+      - name: Check Out VS Code Quarkus
+        uses: actions/checkout@v4
+      - name: Set Up NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Upversion for Development
+        run: |
+          tag=`npm version --no-git-tag-version patch`
+          git config --global user.email "vscode-quarkus-bot@users.noreply.github.com"
+          git config --global user.name "vscode-quarkus-bot"
+          git commit -am "Upversion to ${tag#v}"
+          git push origin
