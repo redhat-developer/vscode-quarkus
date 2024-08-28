@@ -1,6 +1,13 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
-## [0.18.0](https://github.com/redhat-developer/vscode-quarkus/milestone/20?closed=1) (August 26, 2024)
+## [1.18.1](https://github.com/redhat-developer/vscode-quarkus/milestone/21?closed=1) (August 29, 2024)
+
+### Bug Fixes
+
+- Qute - incorrect behavior for nested template records. See [quarkus-ls#987](https://github.com/redhat-developer/quarkus-ls/issues/987).
+- Version 18 release duplicate key issue. See [#822](https://github.com/redhat-developer/vscode-quarkus/issues/822).
+
+## [1.18.0](https://github.com/redhat-developer/vscode-quarkus/milestone/20?closed=1) (August 26, 2024)
 
 ### Enhancements
 
