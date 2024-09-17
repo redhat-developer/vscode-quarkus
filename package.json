@@ -458,7 +458,7 @@
     "@typescript-eslint/parser": "^8.6.0",
     "chai": "^4.5.0",
     "chai-fs": "^2.0.0",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-webpack-plugin": "^4.1.0",
     "fast-xml-parser": "^4.3.6",
     "gradle-to-js": "^2.0.1",
