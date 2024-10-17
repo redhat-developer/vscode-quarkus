@@ -117,6 +117,16 @@
           "qute.txt"
         ],
         "configuration": "./language-support/qute/language-configuration.json"
+      },
+      {
+        "id": "qute-md",
+        "aliases": [
+          "Qute MarkDown"
+        ],
+        "extensions": [
+          "qute.md"
+        ],
+        "configuration": "./language-support/qute/language-configuration.json"
       }
     ],
     "htmlLanguageParticipants": [
