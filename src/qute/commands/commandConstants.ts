@@ -92,4 +92,6 @@ export namespace QuteJdtLsServerCommandConstants {
    */
   export const JAVA_DEFINTION = 'qute/template/javaDefinition';
 
+  export const IS_IN_TEMPLATE_COMMAND_ID = 'qute/template/isInTemplate';
+
 }
