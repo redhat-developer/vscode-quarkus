@@ -5,7 +5,7 @@ import { LanguageClient } from 'vscode-languageclient/node';
 import { JavaExtensionAPI } from '../../extension';
 import { sendTelemetry } from '../../utils/telemetryUtils';
 import { QuteClientCommandConstants } from '../commands/commandConstants';
-import { registerQuteLSDependentCommands, registerVSCodeQuteCommands, synchronizeQuteValidationButton } from '../commands/registerCommands';
+import { registerQuteLSDependentCommands, registerUpdateQuteLanguageIdCommand, registerVSCodeQuteCommands, synchronizeQuteValidationButton } from '../commands/registerCommands';
 import { prepareExecutable } from './quteServerStarter';
 import { resolveRequirements } from './requirements';
 import { QuteSettings } from './settings';
@@ -21,6 +21,7 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
       { scheme: 'file', language: 'qute-json' },
       { scheme: 'file', language: 'qute-yaml' },
       { scheme: 'file', language: 'qute-txt' },
+      { scheme: 'file', language: 'qute-md' },
       { scheme: 'untitled', language: 'qute-html' },
       { scheme: 'vscode-notebook-cell', language: 'qute-html' },
       { scheme: 'file', language: 'java' }
@@ -91,6 +92,9 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
   bindQuteRequest('qute/java/diagnostics');
   bindQuteRequest('qute/java/documentLink');
   bindQuteNotification('qute/dataModelChanged');
+
+  // Update the language id to Qute if needed when editors are opened
+  registerUpdateQuteLanguageIdCommand(context, quteLanguageClient);
 
   registerQuteLSDependentCommands(context, quteLanguageClient);
   // Refresh the Qute context when editor tab has the focus
