@@ -244,7 +244,7 @@ async function updateQuteLanguageId(context: ExtensionContext, document: TextDoc
     return;
   }
 
-  if (isInTemplates(document)) {
+  if (await isInTemplates(document)) {
     // The html, txt, yaml, json file is in src/main/resources/templates folder
     // The document must be forced with qute-* language id
     const fileName: string = path.basename(document.fileName);
@@ -253,7 +253,7 @@ async function updateQuteLanguageId(context: ExtensionContext, document: TextDoc
 
 }
 
-function isInTemplates(document: TextDocument): boolean {
+async function isInTemplates(document: TextDocument): Promise<boolean> {
   if (document.fileName.includes(`resources${path.sep}templates${path.sep}`)) {
     // HTML, etc file is included in src/main/resources/templates
     return true;
@@ -262,7 +262,9 @@ function isInTemplates(document: TextDocument): boolean {
     // HTML, etc file is included in a JAR in templates JAR entry
     return true;
   }
-  return false;
+  // consume JDT LS 'qute/template/isInTemplate' command
+  const params = { templateFileUri: document.uri.toString() };
+  return await commands.executeCommand("java.execute.workspaceCommand", QuteJdtLsServerCommandConstants.IS_IN_TEMPLATE_COMMAND_ID, params);
 }
 
 interface TemplateValidationStatus {
