@@ -21,6 +21,7 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
       { scheme: 'file', language: 'qute-json' },
       { scheme: 'file', language: 'qute-yaml' },
       { scheme: 'file', language: 'qute-txt' },
+      { scheme: 'file', language: 'qute-md' },
       { scheme: 'untitled', language: 'qute-html' },
       { scheme: 'vscode-notebook-cell', language: 'qute-html' },
       { scheme: 'file', language: 'java' }
