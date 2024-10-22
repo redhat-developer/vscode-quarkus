@@ -1,5 +1,35 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## [1.19.0](https://github.com/redhat-developer/vscode-quarkus/milestone/22?closed=1) (October 22, 2024)
+
+### Enhancements
+
+- `quarkus.rest.path` support. See [quarkus-ls#1003](https://github.com/redhat-developer/quarkus-ls/pull/1003).
+- Completion on available Ollama models support for `quarkus.langchain4j.ollama.chat-model.model-id` property value. See [quarkus-ls#985](https://github.com/redhat-developer/quarkus-ls/pull/985).
+
+### Bug Fixes
+
+- Fix Message: Request qute/java/documentLink failed with message: Cannot invoke "org.eclipse.jdt.core.dom.ITypeBinding.getQualifiedName()" . See [#839](https://github.com/redhat-developer/vscode-quarkus/issues/839).
+- Fix false-positive error when string parameter contains a comma. See [quarkus-ls#1011](https://github.com/redhat-developer/quarkus-ls/issues/1011).
+- Support for Vert.x Integration. See [quarkus-ls#1009](https://github.com/redhat-developer/quarkus-ls/issues/1009).
+- TemplateExtension match any support. See [quarkus-ls#1008](https://github.com/redhat-developer/quarkus-ls/pull/1008).
+- Fix false positive error with param name and user tag. See [quarkus-ls#1007](https://github.com/redhat-developer/quarkus-ls/pull/1007).
+- Fix add languageId filter for options similar to microprofile. See [quarkus-ls#999](https://github.com/redhat-developer/quarkus-ls/pull/999).
+- Fix Message: Request qute/java/documentLink failed with message: Cannot invoke "org.eclipse.jdt.core.dom.ITypeBinding.getQualifiedName()". See [quarkus-ls#996](https://github.com/redhat-developer/quarkus-ls/pull/996).
+- Fix NPE with {# and Qute inlay hint. See [quarkus-ls#991](https://github.com/redhat-developer/quarkus-ls/issues/991).
+- Codelens for REST endpoints should resolve variable references. See [lsp4mp#467](https://github.com/eclipse/lsp4mp/pull/467).
+- Check that document is not out of date when getText is consumed. See [lsp4mp#466](https://github.com/eclipse/lsp4mp/pull/466).
+- Prevent duplicate properties when generating them. See [lsp4mp#465](https://github.com/eclipse/lsp4mp/pull/465).
+- Split register completion options for Java / Properties. See [lsp4mp#464](https://github.com/eclipse/lsp4mp/pull/464).
+- Prevent error on empty name symbol. See [lsp4mp#462](https://github.com/eclipse/lsp4mp/pull/462).
+
+### Build
+
+- Cannot publish to OpenVSX due to out of date NodeJS. See [#857](https://github.com/redhat-developer/vscode-microprofile/issues/857).
+- Bump webpack from 5.94.0 to 5.95.0. See [#846](https://github.com/redhat-developer/vscode-quarkus/pull/846).
+- Bump @types/node from 18.19.49 to 18.19.51. See [#845](https://github.com/redhat-developer/vscode-quarkus/pull/845).
+- Bump @redhat-developer/vscode-redhat-telemetry from 0.8.1 to 0.9.0. See [#844](https://github.com/redhat-developer/vscode-quarkus/pull/844).
+
 ## [1.18.1](https://github.com/redhat-developer/vscode-quarkus/milestone/21?closed=1) (August 29, 2024)
 
 ### Bug Fixes
