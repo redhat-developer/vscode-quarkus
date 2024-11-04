@@ -486,6 +486,6 @@
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver-protocol": "^3.17.2",
     "which": "^5.0.0",
-    "yauzl": "^3.1.3"
+    "yauzl": "^3.2.0"
   }
 }
