@@ -466,7 +466,7 @@
     "gulp-rename": "^2.0.0",
     "mocha": "^10.8.2",
     "ts-loader": "^9.5.1",
-    "typescript": "^5.6.3",
+    "typescript": "^5.7.2",
     "vscode-extension-tester": "^8.10.0",
     "vscode-test": "^1.2.3",
     "webpack": "^5.95.0",
