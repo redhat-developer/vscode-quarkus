@@ -48,6 +48,7 @@ const config = {
   },
   plugins: [
     new ESLintWebpackPlugin({
+      configType: 'flat',
       extensions: [".ts", ".js"],
     }),
   ],
