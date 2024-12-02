@@ -1,5 +1,26 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## [1.20.0](https://github.com/redhat-developer/vscode-quarkus/milestone/23?closed=1) (December 3, 2024)
+
+### Enhancements
+
+- Support for global namespace. See [quarkus-ls#1025](https://github.com/redhat-developer/quarkus-ls/pull/1025).
+- Support for multiple Qute template root. See [#861](https://github.com/redhat-developer/vscode-quarkus/pull/861).
+- Data model template matcher support. See [quarkus-ls#1021](https://github.com/redhat-developer/quarkus-ls/pull/1021).
+- Add completion support for `quarkus.langchain4j.ollama.embedding-model.model-id`. See [quarkus-ls#1014](https://github.com/redhat-developer/quarkus-ls/issues/1014).
+- Roq DataMapping support. See [quarkus-ls#1017](https://github.com/redhat-developer/quarkus-ls/pull/1017).
+
+### Bug Fixes
+
+- Escape sequence \{ in Qute is not supported. See [#897](https://github.com/redhat-developer/quarkus-ls/issues/897).
+- False-positive error with section name which contains underscore. See [#1028](https://github.com/redhat-developer/quarkus-ls/pull/1028).
+- False-positive error with section name which contains number. See [#1022](https://github.com/redhat-developer/quarkus-ls/pull/1022).
+- False-positive error on let-defined variable. See [#993](https://github.com/redhat-developer/quarkus-ls/issues/993).
+- Fix the qute.jdt tests. See [#1019](https://github.com/redhat-developer/quarkus-ls/pull/1019).
+- Support TemplateExtension matchNames. See [#1013](https://github.com/redhat-developer/quarkus-ls/issues/1013).
+- Qute validation fails on `{config:property}` if property contains is a string. See [#933](https://github.com/redhat-developer/quarkus-ls/issues/933).
+- Cannot publish to OpenVSX due to out of date NodeJS. See [vscode-microprofile#303](https://github.com/redhat-developer/vscode-microprofile/issues/303).
+
 ## [1.19.0](https://github.com/redhat-developer/vscode-quarkus/milestone/22?closed=1) (October 22, 2024)
 
 ### Enhancements
