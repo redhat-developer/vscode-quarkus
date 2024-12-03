@@ -463,7 +463,7 @@
     "gradle-to-js": "^2.0.1",
     "gulp": "^5.0.0",
     "gulp-rename": "^2.0.0",
-    "mocha": "^10.8.2",
+    "mocha": "^11.0.1",
     "ts-loader": "^9.5.1",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.16.0",
