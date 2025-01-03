@@ -83,7 +83,7 @@ jobs:
       - name: Set Up Java
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'adopt'
       - name: Check Out VS Code Quarkus
         uses: actions/checkout@v4
