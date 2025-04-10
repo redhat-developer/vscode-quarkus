@@ -1,5 +1,13 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## [1.20.1](https://github.com/redhat-developer/vscode-quarkus/milestone/24?closed=1) (April 10, 2025)
+
+### Bug Fixes
+- Use progress monitor when finding types in project, in order to resolve nested types. See [quarkus-ls#1037](https://github.com/redhat-developer/quarkus-ls/pull/1037).
+- Update snakeyaml to 2.4. See [quarkus-ls#1044](https://github.com/redhat-developer/quarkus-ls/pull/1044).
+- Bump undici from 6.20.1 to 6.21.1. See [#939](https://github.com/redhat-developer/vscode-quarkus/pull/939).
+- Bump tar-fs. See [#987](https://github.com/redhat-developer/vscode-quarkus/pull/987).
+
 ## [1.20.0](https://github.com/redhat-developer/vscode-quarkus/milestone/23?closed=1) (December 3, 2024)
 
 ### Enhancements
