@@ -2,7 +2,7 @@
   "name": "vscode-quarkus",
   "displayName": "Quarkus",
   "description": "Quarkus Tools for Visual Studio Code",
-  "version": "1.20.2",
+  "version": "1.21.0",
   "icon": "icons/logo.png",
   "author": "Red Hat",
   "publisher": "redhat",
