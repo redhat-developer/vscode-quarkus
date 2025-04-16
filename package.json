@@ -328,6 +328,17 @@
           "default": "warning",
           "markdownDescription": "Validation severity for undefined namespace in Qute template files.",
           "scope": "resource"
+        },
+        "qute.validation.undefinedSectionTag.severity": {
+          "type": "string",
+          "enum": [
+            "ignore",
+            "warning",
+            "error"
+          ],
+          "default": "warning",
+          "markdownDescription": "Validation severity for undefined section tag in Qute template files.",
+          "scope": "resource"
         }
       }
     },
