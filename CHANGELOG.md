@@ -1,5 +1,17 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## [1.21.0](https://github.com/redhat-developer/vscode-quarkus/milestone/25?closed=1) (April 17, 2025)
+
+### Enhancements
+- Warning instead of error (configurable) for unknown sections in Qute files. See [quarkus-ls#1042](https://github.com/redhat-developer/quarkus-ls/issues/1042).
+- Support for Integer operators in Qute files. See [#974](https://github.com/redhat-developer/vscode-quarkus/issues/974).
+
+### Performance
+- Improve the Java data model cache in the Qute language server so that cache evictions are less frequent. See [quarkus-ls#444](https://github.com/redhat-developer/quarkus-ls/issues/444).
+
+### Bug Fixes
+- Guard against index out of bounds exception for Optional returning method of ConfigMapped type. See [quarkus-ls#1050](https://github.com/redhat-developer/quarkus-ls/pull/1050).
+
 ## [1.20.1](https://github.com/redhat-developer/vscode-quarkus/milestone/24?closed=1) (April 10, 2025)
 
 ### Bug Fixes
