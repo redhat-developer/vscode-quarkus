@@ -3,7 +3,7 @@ updates:
 - package-ecosystem: npm
   directory: "/"
   schedule:
-    internal: "cron"
+    interval: "cron"
     cronjob: 0 0 8 * * 2,4 *
   open-pull-requests-limit: 10
   groups:
