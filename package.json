@@ -480,7 +480,7 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.0",
     "vscode-extension-tester": "^8.11.0",
-    "webpack": "^5.99.8",
+    "webpack": "^5.99.9",
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
