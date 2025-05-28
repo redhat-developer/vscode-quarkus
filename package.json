@@ -478,7 +478,7 @@
     "mocha": "^11.4.0",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.32.1",
+    "typescript-eslint": "^8.33.0",
     "vscode-extension-tester": "^8.11.0",
     "webpack": "^5.99.8",
     "webpack-cli": "^6.0.1"
