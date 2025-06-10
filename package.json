@@ -470,7 +470,7 @@
     "chai": "^4.5.0",
     "chai-fs": "^2.0.0",
     "eslint": "^9.28.0",
-    "eslint-webpack-plugin": "^5.0.1",
+    "eslint-webpack-plugin": "^5.0.2",
     "fast-xml-parser": "^5.2.5",
     "gradle-to-js": "^2.0.1",
     "gulp": "^5.0.1",
