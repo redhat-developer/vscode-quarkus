@@ -474,7 +474,7 @@
     "fast-xml-parser": "^5.2.5",
     "gradle-to-js": "^2.0.1",
     "gulp": "^5.0.1",
-    "gulp-rename": "^2.0.0",
+    "gulp-rename": "^2.1.0",
     "mocha": "^11.7.1",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",
