@@ -454,7 +454,7 @@
     "test-all": "npm test && npm run test-ui-run"
   },
   "devDependencies": {
-    "@eslint/js": "^9.31.0",
+    "@eslint/js": "^9.32.0",
     "@types/chai": "^4.3.20",
     "@types/chai-fs": "^2.0.5",
     "@types/ejs": "^3.1.5",
@@ -469,7 +469,7 @@
     "@vscode/test-electron": "^2.5.2",
     "chai": "^4.5.0",
     "chai-fs": "^2.0.0",
-    "eslint": "^9.31.0",
+    "eslint": "^9.32.0",
     "eslint-webpack-plugin": "^5.0.2",
     "fast-xml-parser": "^5.2.5",
     "gradle-to-js": "^2.0.1",
