@@ -15,7 +15,7 @@
  */
 import { readFile } from 'fs-extra';
 import * as path from 'path';
-import { commands, Disposable, ExtensionContext, extensions, Terminal, TextDocument, window, workspace } from 'vscode';
+import { commands, Disposable, ExtensionContext, extensions, Terminal, TextDocument, window, workspace, debug } from 'vscode';
 import { LanguageClient } from 'vscode-languageclient/node';
 import { registerVSCodeClientCommands, registerVSCodeCommands } from './commands/registerCommands';
 import { QuarkusConfig, QuarkusPropertiesLanguageMismatch } from './QuarkusConfig';
@@ -30,6 +30,7 @@ import { initTelemetryService } from './utils/telemetryUtils';
 import { getFilePathsFromWorkspace } from './utils/workspaceUtils';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
+import { QuteDebugAdapterFactory } from './qute/debugAdapter/quteDebugAdapterFactory';
 
 // alias for vscode-java's ExtensionAPI
 export type JavaExtensionAPI = any;
@@ -57,6 +58,12 @@ export async function activate(context: ExtensionContext) {
   } else {
     doActivate(context);
   }
+
+  // Register the Qute Debugger
+  const quteDebugFactory = new QuteDebugAdapterFactory();
+  context.subscriptions.push(
+    debug.registerDebugAdapterDescriptorFactory('qute', quteDebugFactory)
+  );
 }
 
 async function doActivate(context: ExtensionContext): Promise<void> {
@@ -101,7 +108,6 @@ async function doActivate(context: ExtensionContext): Promise<void> {
         }
       });
   }
-
 }
 
 export async function deactivate(): Promise<void> {

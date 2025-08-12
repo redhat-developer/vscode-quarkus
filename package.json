@@ -185,6 +185,43 @@
         "category": "Qute"
       }
     ],
+    "breakpoints": [
+      {
+        "language": "qute-html"
+      },
+      {
+        "language": "qute-json"
+      },
+      {
+        "language": "qute-yaml"
+      },
+      {
+        "language": "qute-txt"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "qute",
+        "label": "Qute Debugger",
+        "languages": [
+          "qute-html",
+          "qute-json",
+          "qute-yaml",
+          "qute-txt"
+        ],
+        "configurationAttributes": {
+          "attach": {
+            "required": ["port"],
+            "properties": {
+              "port": {
+                "type": "number",
+                "description": "TCP port of the Qute DAP server"
+              }
+            }
+          }
+        }
+      }
+    ],
     "configuration": {
       "title": "Quarkus Tools",
       "properties": {
