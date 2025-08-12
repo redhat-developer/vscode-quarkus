@@ -2,7 +2,7 @@
   "name": "vscode-quarkus",
   "displayName": "Quarkus",
   "description": "Quarkus Tools for Visual Studio Code",
-  "version": "1.21.1",
+  "version": "1.21.2",
   "icon": "icons/logo.png",
   "author": "Red Hat",
   "publisher": "redhat",
@@ -211,7 +211,9 @@
         ],
         "configurationAttributes": {
           "attach": {
-            "required": ["port"],
+            "required": [
+              "port"
+            ],
             "properties": {
               "port": {
                 "type": "number",
