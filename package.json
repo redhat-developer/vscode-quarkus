@@ -517,7 +517,7 @@
     "mocha": "^11.7.1",
     "ts-loader": "^9.5.2",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.39.1",
+    "typescript-eslint": "^8.40.0",
     "vscode-extension-tester": "^8.17.0",
     "webpack": "^5.100.2",
     "webpack-cli": "^6.0.1"
