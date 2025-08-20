@@ -494,7 +494,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
-    "@types/chai": "^4.3.20",
+    "@types/chai": "^5.2.2",
     "@types/chai-fs": "^2.0.5",
     "@types/ejs": "^3.1.5",
     "@types/fs-extra": "^11.0.4",
@@ -506,7 +506,7 @@
     "@types/which": "^3.0.4",
     "@types/yauzl": "^2.10.3",
     "@vscode/test-electron": "^2.5.2",
-    "chai": "^4.5.0",
+    "chai": "^5.3.1",
     "chai-fs": "^2.0.0",
     "eslint": "^9.33.0",
     "eslint-webpack-plugin": "^5.0.2",
