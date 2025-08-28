@@ -79,6 +79,9 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
 
   commands.executeCommand('setContext', 'QuteLSReady', true);
 
+  bindQuteRequest('qute/template/projects');
+  bindQuteNotification('qute/template/project/added');
+  bindQuteNotification('qute/template/project/removed');
   bindQuteRequest('qute/template/project');
   bindQuteRequest('qute/template/projectDataModel');
   bindQuteRequest('qute/template/userTags');
