@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { expect, use } from 'chai';
 import * as fs from 'fs-extra';
 import * as g2js from 'gradle-to-js/lib/parser';
 import * as _ from 'lodash';
@@ -22,8 +21,7 @@ import { XMLParser } from "fast-xml-parser";
 import { env } from 'process';
 import { By, InputBox, Key, VSBrowser, WebDriver, WebElement, Workbench } from 'vscode-extension-tester';
 import { ProjectGenerationWizard, QuickPickItemInfo } from '../ProjectGenerationWizard';
-
-use(require('chai-fs')); // eslint-disable-line
+import * as assert from 'assert/strict';
 
 /**
  * This file contains tests for the project generation wizard
@@ -66,7 +64,7 @@ describe('Project generation tests', function () {
   it('should open project generation wizard', async function () {
     this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
-    expect(await wizardExists(), 'wizard did not open').to.be.true;
+    assert.ok(await wizardExists(), 'wizard did not open');
     await wizard.cancel();
   });
 
@@ -78,33 +76,33 @@ describe('Project generation tests', function () {
     this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
 
-    expect(await wizard.getNthQuickPickItemLabel(0), 'default should be Maven').equals('Maven');
+    assert.equal(await wizard.getNthQuickPickItemLabel(0), 'Maven', 'default should be Maven');
     await wizard.next();
 
     await wizard.sendKeys(Key.DOWN, Key.UP);
     const quickPickPlatform: QuickPickItemInfo = await wizard.getNthQuickPickItemInfo(0);
-    expect(quickPickPlatform.label).to.have.string('(recommended)');
+    assert.match(quickPickPlatform.label, /\(recommended\)/);
     await wizard.next();
 
     const javaVersion = await wizard.getNthQuickPickItemInfo(0);
     //expects the java version label to be a number maybe followed by `(recommended)`
-    expect(javaVersion.label).to.match(/^\d+(\.\d+)*(\.\d+)?( \(recommended\))?$/);
+    assert.match(javaVersion.label, /^\d+(\.\d+)*(\.\d+)?( \(recommended\))?$/);
     await wizard.next();
 
     const groupId = await wizard.getText();
-    expect(groupId).equals('org.acme');
+    assert.equal(groupId, 'org.acme');
     await wizard.next();
 
     const artifactId = await wizard.getText();
-    expect(artifactId).equals('quarkus-getting-started');
+    assert.equal(artifactId, 'quarkus-getting-started');
     await wizard.next();
 
     const projectVersion = await wizard.getText();
-    expect(projectVersion).equals('1.0.0-SNAPSHOT');
+    assert.equal(projectVersion, '1.0.0-SNAPSHOT');
     await wizard.next();
 
     const packageName = await wizard.getText();
-    expect(packageName).equals('org.acme');
+    assert.equal(packageName, 'org.acme');
     await wizard.next();
 
     await wizard.getNthQuickPickItemInfo(0);
@@ -113,23 +111,23 @@ describe('Project generation tests', function () {
     await wizard.next();
 
     const resourceName = await wizard.getText();
-    expect(resourceName).equals('GreetingResource');
+    assert.equal(resourceName, 'GreetingResource');
     await wizard.next();
 
     await wizard.focusQuickPick(0);
-    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('0 extensions selected');
+    assert.match(await wizard.getNthQuickPickItemLabel(0), /0 extensions selected/);
     await wizard.focusQuickPick(2);
     await wizard.confirm();
-    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('1 extension selected');
+    assert.match(await wizard.getNthQuickPickItemLabel(0), /1 extension selected/);
     await wizard.focusQuickPick(3);
     await wizard.confirm();
-    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('2 extensions selected');
+    assert.match(await wizard.getNthQuickPickItemLabel(0), /2 extensions selected/);
     await wizard.focusQuickPick(1);
     await wizard.confirm();
-    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('1 extension selected');
+    assert.match(await wizard.getNthQuickPickItemLabel(0), /1 extension selected/);
     await wizard.focusQuickPick(1);
     await wizard.confirm();
-    expect(await wizard.getNthQuickPickItemLabel(0)).to.have.string('0 extensions selected');
+    assert.match(await wizard.getNthQuickPickItemLabel(0), /0 extensions selected/);
     await wizard.cancel();
   });
 
@@ -140,71 +138,71 @@ describe('Project generation tests', function () {
   it('should have correct step values', async function () {
     this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/10');
-    expect(await wizard.getBackButton()).to.not.be.ok;
+    assert.match(await wizard.getInputBoxTitle(), /1\/10/);
+    assert.equal(await wizard.getBackButton(), undefined);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/10');
+    assert.match(await wizard.getInputBoxTitle(), /2\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('3/10');
+    assert.match(await wizard.getInputBoxTitle(), /3\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('4/10');
+    assert.match(await wizard.getInputBoxTitle(), /4\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('5/10');
+    assert.match(await wizard.getInputBoxTitle(), /5\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('6/10');
+    assert.match(await wizard.getInputBoxTitle(), /6\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('7/10');
+    assert.match(await wizard.getInputBoxTitle(), /7\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('8/10');
+    assert.match(await wizard.getInputBoxTitle(), /8\/10/);
     await wizard.focusQuickPick(0);//starter code
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('9/10');
+    assert.match(await wizard.getInputBoxTitle(), /9\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('10/10');
+    assert.match(await wizard.getInputBoxTitle(), /10\/10/);
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('9/10');
+    assert.match(await wizard.getInputBoxTitle(), /9\/10/);
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('8/10');
+    assert.match(await wizard.getInputBoxTitle(), /8\/10/);
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('7/10');
+    assert.match(await wizard.getInputBoxTitle(), /7\/10/);
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('6/10');
+    assert.match(await wizard.getInputBoxTitle(), /6\/10/);
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('5/10');
+    assert.match(await wizard.getInputBoxTitle(), /5\/10/);
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('4/10');
+    assert.match(await wizard.getInputBoxTitle(), /4\/10/);
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('3/10');
+    assert.match(await wizard.getInputBoxTitle(), /3\/10/);
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/10');
+    assert.match(await wizard.getInputBoxTitle(), /2\/10/);
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/10');
-    expect(await wizard.getBackButton()).to.not.be.ok;
+    assert.match(await wizard.getInputBoxTitle(), /1\/10/);
+    assert.equal(await wizard.getBackButton(), undefined);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/10');
+    assert.match(await wizard.getInputBoxTitle(), /2\/10/);
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/10');
-    expect(await wizard.getBackButton()).to.not.be.ok;
+    assert.match(await wizard.getInputBoxTitle(), /1\/10/);
+    assert.equal(await wizard.getBackButton(), undefined);
 
     await wizard.cancel();
   });
@@ -217,43 +215,43 @@ describe('Project generation tests', function () {
    it('should have correct step value when starter code skipped', async function () {
     this.timeout(60000);
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
-    expect(await wizard.getInputBoxTitle()).to.have.string('1/10');
-    expect(await wizard.getBackButton()).to.not.be.ok;
+    assert.match(await wizard.getInputBoxTitle(), /1\/10/);
+    assert.equal(await wizard.getBackButton(), undefined);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('2/10');
+    assert.match(await wizard.getInputBoxTitle(), /2\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('3/10');
+    assert.match(await wizard.getInputBoxTitle(), /3\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('4/10');
+    assert.match(await wizard.getInputBoxTitle(), /4\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('5/10');
+    assert.match(await wizard.getInputBoxTitle(), /5\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('6/10');
+    assert.match(await wizard.getInputBoxTitle(), /6\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('7/10');
+    assert.match(await wizard.getInputBoxTitle(), /7\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('8/10');
+    assert.match(await wizard.getInputBoxTitle(), /8\/10/);
     await wizard.focusQuickPick(1);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('9/9');
+    assert.match(await wizard.getInputBoxTitle(), /9\/9/);
     await wizard.prev();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('8/10');
+    assert.match(await wizard.getInputBoxTitle(), /8\/10/);
     await wizard.focusQuickPick(0);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('9/10');
+    assert.match(await wizard.getInputBoxTitle(), /9\/10/);
     await wizard.next();
 
-    expect(await wizard.getInputBoxTitle()).to.have.string('10/10');
+    assert.match(await wizard.getInputBoxTitle(), /10\/10/);
 
     await wizard.cancel();
    });
@@ -270,27 +268,29 @@ describe('Project generation tests', function () {
 
     fs.mkdirSync(projectDestDir);
 
-    expect(await ProjectGenerationWizard.generateProject(driver, {
+    assert.ok(await ProjectGenerationWizard.generateProject(driver, {
       buildTool: 'Maven',
       artifactId: projectFolderName,
       extensions: ['Camel Core', 'Eclipse Vert.x'],
       dest: projectDestDir
-    })).to.be.true;
+    }));
 
-    expect(path.join(projectDestDir, projectFolderName)).to.be.a.directory().and.include.contents(['pom.xml']);
+    const finalFolderName = path.join(projectDestDir, projectFolderName)
+    assert.ok((await fs.stat(finalFolderName)).isDirectory());
+    assert.ok((await fs.stat(path.join(finalFolderName, 'pom.xml'))).isFile());
 
     const pathToPom: string = path.join(projectDestDir, projectFolderName, 'pom.xml');
     const pomDependencies: any[] = (await pomToJson(pathToPom)).project.dependencies.dependency;
 
-    expect(
+    assert.ok(
       _.some(pomDependencies, { groupId: 'org.apache.camel.quarkus', artifactId: 'camel-quarkus-core' }),
       'The Camel Core extension does not exist in the downloaded Maven-based Quarkus project'
-    ).to.be.true;
+    );
 
-    expect(
+    assert.ok(
       _.some(pomDependencies, { groupId: 'io.quarkus', artifactId: 'quarkus-vertx' }),
       'The Eclipse Vert.x extension does not exist in the downloaded Maven-based Quarkus project'
-    ).to.be.true;
+    );
 
     await (new Workbench).executeCommand('Close Workspace');
     return new Promise(res => setTimeout(res, 5000));
@@ -315,20 +315,22 @@ describe('Project generation tests', function () {
       dest: projectDestDir
     });
 
-    expect(path.join(projectDestDir, projectFolderName)).to.be.a.directory().and.include.contents(['build.gradle']);
+    const finalFolderName = path.join(projectDestDir, projectFolderName)
+    assert.ok((await fs.stat(finalFolderName)).isDirectory());
+    assert.ok((await fs.stat(path.join(finalFolderName, 'build.gradle'))).isFile());
 
     const pathToBuildGradle: string = path.join(projectDestDir, projectFolderName, 'build.gradle');
     const dependencies: any[] = (await buildGradleToJson(pathToBuildGradle)).dependencies;
 
-    expect(
+    assert.ok(
       _.some(dependencies, { name: '\'org.apache.camel.quarkus:camel-quarkus-core\'' }),
       'The Camel Core extension does not exist in the downloaded Gradle-based Quarkus project'
-    ).to.be.true;
+    );
 
-    expect(
+    assert.ok(
       _.some(dependencies, { name: '\'io.quarkus:quarkus-vertx\'' }),
       'The Eclipse Vert.x extension does not exist in the downloaded Gradle-based Quarkus project'
-    ).to.be.true;
+    );
 
     await (new Workbench()).executeCommand('Close Workspace');
     return new Promise(res => setTimeout(res, 6000));
@@ -384,45 +386,45 @@ describe('Project generation tests', function () {
 
     const wizard: ProjectGenerationWizard = await ProjectGenerationWizard.openWizard(driver);
 
-    expect(await wizard.getNthQuickPickItemLabel(0)).equals(buildTool);
+    assert.equal(await wizard.getNthQuickPickItemLabel(0), buildTool);
     await wizard.next();
 
-    expect(await wizard.getNthQuickPickItemLabel(0)).contains("(recommended)");
+    assert.match(await wizard.getNthQuickPickItemLabel(0), /\(recommended\)/);
     await wizard.next();
 
     //Skip past Java version selection
     await wizard.next();
 
     const actualGroupId = await wizard.getText();
-    expect(actualGroupId).equals(groupId);
+    assert.equal(actualGroupId, groupId);
     await wizard.next();
 
     const actualArtifactId = await wizard.getText();
-    expect(actualArtifactId).equals(artifactId);
+    assert.equal(actualArtifactId, artifactId);
     await wizard.next();
 
     const actualProjectVersion = await wizard.getText();
-    expect(actualProjectVersion).equals(projectVersion);
+    assert.equal(actualProjectVersion, projectVersion);
     await wizard.next();
 
     const actualPackageName = await wizard.getText();
-    expect(actualPackageName).equals(packageName);
+    assert.equal(actualPackageName, packageName);
     await wizard.next();
 
     const actualShouldGenerateCode = await wizard.getNthQuickPickItemLabel(0);
-    expect(actualShouldGenerateCode).equals(shouldGenerateCode);
+    assert.equal(actualShouldGenerateCode, shouldGenerateCode);
     await wizard.focusQuickPick(0);
     await wizard.next();
 
     const actualResourceName = await wizard.getText();
-    expect(actualResourceName).equals(resourceName);
+    assert.equal(actualResourceName, resourceName);
     await wizard.next();
 
     await wizard.sendKeys(Key.DOWN, Key.DOWN, Key.UP);
     const quickPickItemText: QuickPickItemInfo = await wizard.getNthQuickPickItemInfo(0);
-    expect(quickPickItemText.label).to.have.string('Last used');
-    expect(quickPickItemText.detail).to.have.string('Camel Core');
-    expect(quickPickItemText.detail).to.have.string('Eclipse Vert.x');
+    assert.match(quickPickItemText.label, /Last used/);
+    assert.match(quickPickItemText.detail, /Camel Core/);
+    assert.match(quickPickItemText.detail, /Eclipse Vert\.x/);
 
     await wizard.cancel();
     return new Promise(res => setTimeout(res, 6000));
@@ -549,7 +551,7 @@ describe('Project generation tests', function () {
     const allQuickPickInfo: QuickPickItemInfo[] = await wizard.getAllQuickPickInfo();
     const allLabels: string[] = allQuickPickInfo.map((info) => info.label);
     const uniqueLabels = new Set(allLabels);
-    expect(allLabels.length).to.equal(uniqueLabels.size);
+    assert.equal(allLabels.length, uniqueLabels.size);
     await wizard.cancel();
   });
 });
@@ -592,10 +594,10 @@ async function assertValidation(type: string, input: InputBox, expectedResults: 
     const expectedResult: ExpectedValidation = expectedResults[i];
     await input.setText(expectedResult.text);
     if (expectedResult.errorMessage) {
-      expect(await input.hasError(), `Validation for ${type} at index ${i}, with text ${expectedResult.text} should be true`).to.be.true;
-      expect(await input.getMessage(), `Validation for ${type} at index ${i}, with error message: "${expectedResult.errorMessage}" is incorrect`).to.equal(expectedResult.errorMessage);
+      assert.ok(await input.hasError(), `Validation for ${type} at index ${i}, with text ${expectedResult.text} should be true`);
+      assert.equal(await input.getMessage(), expectedResult.errorMessage, `Validation for ${type} at index ${i}, expectedResult.errorMessage, with error message: "${expectedResult.errorMessage}" is incorrect`);
     } else {
-      expect(await input.hasError(), `Validation for ${type} at index ${i}, with text ${expectedResult.text} should be false`).to.be.false;
+      assert.equal(await input.hasError(), false, `Validation for ${type} at index ${i}, with text ${expectedResult.text} should be false`);
     }
   }
 }

@@ -541,8 +541,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/chai": "^4.3.20",
-    "@types/chai-fs": "^2.0.5",
     "@types/ejs": "^3.1.5",
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4.0.9",
@@ -553,8 +551,6 @@
     "@types/which": "^3.0.4",
     "@types/yauzl": "^2.10.3",
     "@vscode/test-electron": "^2.5.2",
-    "chai": "^4.5.0",
-    "chai-fs": "^2.0.0",
     "eslint": "^10.8.0",
     "eslint-webpack-plugin": "^6.0.0",
     "fast-xml-parser": "^5.5.9",
