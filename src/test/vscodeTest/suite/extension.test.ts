@@ -1,10 +1,10 @@
-import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import * as vscode from 'vscode';
+import * as assert from 'assert/strict';
 
 describe('VS Code extension tests', () => {
 
   it('should be present', () => {
-    expect(vscode.extensions.getExtension('redhat.vscode-quarkus')).to.be.ok;
+    assert.ok(vscode.extensions.getExtension('redhat.vscode-quarkus'));
   });
 });
