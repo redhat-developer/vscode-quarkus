@@ -515,7 +515,7 @@
     "gulp": "^5.0.1",
     "gulp-rename": "^2.1.0",
     "mocha": "^11.7.2",
-    "ts-loader": "^9.5.2",
+    "ts-loader": "^9.5.4",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.40.0",
     "vscode-extension-tester": "^8.17.0",
