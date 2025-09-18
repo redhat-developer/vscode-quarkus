@@ -391,6 +391,17 @@
           "default": "warning",
           "markdownDescription": "Validation severity for undefined section tag in Qute template files.",
           "scope": "resource"
+        },
+        "qute.trace.debug": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "markdownDescription": "Traces the communication between VS Code and the Qute debugger server in the Output view (Qute Debug). Default is `off`.",
+          "scope": "window"
         }
       }
     },

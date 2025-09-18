@@ -31,6 +31,7 @@ import { getFilePathsFromWorkspace } from './utils/workspaceUtils';
 import { WelcomeWebview } from './webviews/WelcomeWebview';
 import { createTerminateDebugListener } from './wizards/debugging/terminateProcess';
 import { QuteDebugAdapterFactory } from './qute/debugAdapter/quteDebugAdapterFactory';
+import { QuteDebugAdapterTrackerFactory } from './qute/debugAdapter/quteDebugAdapterTrackerFactory';
 
 // alias for vscode-java's ExtensionAPI
 export type JavaExtensionAPI = any;
@@ -61,8 +62,12 @@ export async function activate(context: ExtensionContext) {
 
   // Register the Qute Debugger
   const quteDebugFactory = new QuteDebugAdapterFactory();
+  const quteDebugTrackerFactory = new QuteDebugAdapterTrackerFactory();
   context.subscriptions.push(
     debug.registerDebugAdapterDescriptorFactory('qute', quteDebugFactory)
+  );
+  context.subscriptions.push(
+    debug.registerDebugAdapterTrackerFactory('qute', quteDebugTrackerFactory)
   );
 }
 
