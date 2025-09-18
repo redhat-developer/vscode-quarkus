@@ -221,7 +221,19 @@
               }
             }
           }
-        }
+        },
+         "configurationSnippets": [
+          {
+            "label": "Qute: Debug Qute templates",
+            "description": "Debug Qute templates from Quarkus Application",
+            "body": {
+              "name": "Debug Qute templates",
+              "type": "qute",
+              "request": "attach",
+              "port": 4971
+            }
+          }
+         ]
       }
     ],
     "configuration": {
