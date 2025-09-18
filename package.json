@@ -41,7 +41,8 @@
     "workspaceContains:**/src/main/resources/application.yml",
     "workspaceContains:**/src/main/resources/templates",
     "onLanguage:microprofile-properties",
-    "onLanguage:java"
+    "onLanguage:java",
+    "onDebugResolve:qute"
   ],
   "main": "./dist/extension",
   "extensionDependencies": [
