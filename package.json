@@ -548,7 +548,7 @@
   },
   "dependencies": {
     "@redhat-developer/vscode-extension-proposals": "^0.0.23",
-    "@redhat-developer/vscode-redhat-telemetry": "^0.9.2",
+    "@redhat-developer/vscode-redhat-telemetry": "^0.10.0",
     "ejs": "^3.1.10",
     "expand-home-dir": "0.0.3",
     "find-up": "^8.0.0",
