@@ -157,6 +157,7 @@
 
  * Handle `telemetry/event` coming from the Qute language server. See [#621](https://github.com/redhat-developer/vscode-quarkus/pull/621).
  * Support `completionList/itemDefaults` for Qute parameter declaration. See [quarkus-ls#900](https://github.com/redhat-developer/quarkus-ls/issues/900).
+ * Remove 'Deploy to Openshift' command and suggest to use the VS Code OpenShift Toolkit See [commit](https://github.com/redhat-developer/vscode-quarkus/commit/bbf67bc9c5869306860feee03a3cbdec0b7c0607)
 
 ### Bug Fixes
 

@@ -14,7 +14,6 @@ vscode-quarkus has opt-in telemetry collection, provided by [vscode-redhat-telem
     * "Quarkus: Add extensions to current project"
        * The list of Quarkus extensions selected
     * "Quarkus: Debug current Quarkus project"
-    * "Quarkus: Deploy current Quarkus project to OpenShift (odo)"
     * "Quarkus: Generate a Quarkus project"
        * The project type (eg. Maven, Gradle, etc.)
        * Whether sample code is to be included
