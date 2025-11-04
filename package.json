@@ -534,7 +534,7 @@
     "chai-fs": "^2.0.0",
     "eslint": "^9.37.0",
     "eslint-webpack-plugin": "^5.0.2",
-    "fast-xml-parser": "^5.3.0",
+    "fast-xml-parser": "^5.3.1",
     "gradle-to-js": "^2.0.1",
     "gulp": "^5.0.1",
     "gulp-rename": "^2.1.0",
