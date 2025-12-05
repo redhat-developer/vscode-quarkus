@@ -1,5 +1,25 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## [1.22.0](https://github.com/redhat-developer/vscode-quarkus/milestone/26?closed=1) (December 8, 2025)
+
+### Enhancements
+
+ * Smart iterable Qute completion support. See [#1076](https://github.com/redhat-developer/quarkus-ls/pull/1076).
+ * Integrate Qute Debugger (for debugging Qute templates). See [#1096](https://github.com/redhat-developer/vscode-quarkus/issues/1096).
+ * Activate vscode-quarkus when the Qute debugger is launched. See [#1125](https://github.com/redhat-developer/vscode-quarkus/pull/1125).
+ * Provide a snippet to easily configure the Qute debugger. See [#1123](https://github.com/redhat-developer/vscode-quarkus/pull/1123).
+ * Add a view to provide trace level logging of the Qute debugger. See [#1126](https://github.com/redhat-developer/vscode-quarkus/pull/1126).
+
+### Bug Fixes
+
+ * 'quarkus.log.level' is no longer marked as an unrecognized in `application.properties`. See [quarkus-ls#1068](https://github.com/redhat-developer/quarkus-ls/pull/1068).
+ * Do not generate a property for `<clinit>`. See [#1019](https://github.com/redhat-developer/vscode-quarkus/issues/1019).
+ * Some valid properties in `application.properties` were being marked as unknown; this has been fixed. See [#820](https://github.com/redhat-developer/vscode-quarkus/issues/820), [#734](https://github.com/redhat-developer/vscode-quarkus/issues/734).
+ * Recognise some mapped properties that weren't recognised before. See [#872](https://github.com/redhat-developer/vscode-quarkus/issues/872).
+ * Fix a "too many open files" crash caused by user tag support. See [quarkus-ls#1062](https://github.com/redhat-developer/quarkus-ls/issues/1062).
+ * Fix validation of the default value of a `java.util.Duration` configuration property. See [#631](https://github.com/redhat-developer/vscode-quarkus/issues/631).
+ * Fix validation of the default value of an enum configuration property. See [#612](https://github.com/redhat-developer/vscode-quarkus/issues/612).
+
 ## [1.21.0](https://github.com/redhat-developer/vscode-quarkus/milestone/25?closed=1) (April 17, 2025)
 
 ### Enhancements
