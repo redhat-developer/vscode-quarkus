@@ -2,7 +2,7 @@
   "name": "vscode-quarkus",
   "displayName": "Quarkus",
   "description": "Quarkus Tools for Visual Studio Code",
-  "version": "1.22.0",
+  "version": "1.22.1",
   "icon": "icons/logo.png",
   "author": "Red Hat",
   "publisher": "redhat",
@@ -223,7 +223,7 @@
             }
           }
         },
-         "configurationSnippets": [
+        "configurationSnippets": [
           {
             "label": "Qute: Debug Qute templates",
             "description": "Debug Qute templates from Quarkus Application",
@@ -234,7 +234,7 @@
               "port": 4971
             }
           }
-         ]
+        ]
       }
     ],
     "configuration": {
