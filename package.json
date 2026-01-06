@@ -338,6 +338,11 @@
           "default": true,
           "markdownDescription": "Show section parameter default value. Default is `true`."
         },
+        "qute.inlayHint.showMessages": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Show messages. Default is `true`."
+        },
         "qute.native.enabled": {
           "type": "boolean",
           "default": false,
