@@ -16,6 +16,7 @@
  * `qute.inlayHint.enabled`: Enable/disable Inlay Hint. Default is `true`.
  * `qute.inlayHint.showSectionParameterType`: Show section parameter type. Default is `true`.
  * `qute.inlayHint.showMethodParameterType`: Show method parameter type. Default is `true`.
+ * `qute.inlayHint.showMessages`: Show messages. Default is `true`.
  * `qute.validation.enabled`: Enable/disable all Qute validation. Default is `false`.
  * `qute.validation.excluded`: Disable Qute validation for the given file name patterns.
 
