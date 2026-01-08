@@ -5,6 +5,28 @@ interface ResponsePromise {
     timerStart: number;
 }
 
+interface JavaSourceLocationArguments {
+    javaElementUri: string;
+    typeName?: string;
+    method?: string;
+    annotation?: string;
+}
+
+interface JavaSourceLocationEventArguments {
+    id: string;
+    args: JavaSourceLocationArguments;
+}
+
+interface JavaSourceLocationEventResponse {
+    id: string;
+    response: JavaSourceLocationResponse;
+}
+
+interface JavaSourceLocationResponse {
+    javaFileUri?: string;
+    startLine?: number;
+}
+
 enum Trace {
     Off, Messages, Verbose
 }
@@ -55,6 +77,29 @@ export class QuteDebugAdapterTrackerFactory implements vscode.DebugAdapterTracke
                 if (message.type === 'response') {
                     handleResponse(message);
                 } else if (message.type === 'event') {
+                    if (message.event === 'qute/onResolveJavaSource') {
+                        // Collect startLine of the declared annotation 
+                        // which hosts Qute template
+                        // ex : @TemplateContents(value="Hello {name}!")
+                        //      record Hello(String name) 
+                        const args: JavaSourceLocationEventArguments = message.body;
+                        resolveJavaSourceForTemplate(args.args)
+                            .then((javaResponse: JavaSourceLocationResponse | null) => {
+                                const eventResponse: JavaSourceLocationEventResponse = {
+                                    id: args.id,
+                                    response: javaResponse
+                                };
+                                // The start line has been collected, notify the Qute debugger 
+                                // with this start line.
+                                session.customRequest('qute/onJavaSourceResolved', eventResponse);
+                            }).catch(err => {
+                                console.error("Failed to resolve Java source", err);
+                                session.customRequest('qute/onJavaSourceResolved', {
+                                    id: args.id,
+                                    response: null
+                                });
+                            });
+                    }
                     traceReceivedNotification(message);
                 }
             },
@@ -71,6 +116,19 @@ export class QuteDebugAdapterTrackerFactory implements vscode.DebugAdapterTracke
                 outputChannel!.info(`Exited with code=${code} signal=${signal}`);
             }
         };
+    }
+}
+
+async function resolveJavaSourceForTemplate(args: JavaSourceLocationArguments): Promise<JavaSourceLocationResponse | null> {
+    try {
+        // Appel JDT LS pour récupérer la source Java
+        const result = await vscode.commands.executeCommand<JavaSourceLocationResponse>(
+            'java.execute.workspaceCommand', 'qute/debug/resolveJavaSource', args
+        );
+        return result ?? null;
+    } catch (err) {
+        console.error("Failed to resolve Java source via JDT LS", err);
+        return null;
     }
 }
 
@@ -106,9 +164,9 @@ function traceReceivedNotification(message: any): void {
 
     let data: string | undefined = undefined;
     if (trace === Trace.Verbose) {
-        data =  message.body
-        ? `Params: ${stringifyTrace(message.body)}`
-        : 'No parameters provided.';
+        data = message.body
+            ? `Params: ${stringifyTrace(message.body)}`
+            : 'No parameters provided.';
     }
     showTrace(`Received notification '${message.event}'.`, data);
 }
@@ -172,7 +230,7 @@ function stringifyTrace(params: any): string | undefined {
 }
 
 function showTrace(message: string, data?: any | undefined): void {
-    outputChannel!.trace(getLogMessage(message, data));
+    outputChannel!.info(getLogMessage(message, data));
 }
 
 function showError(message: string): void {
