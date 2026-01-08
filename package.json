@@ -208,7 +208,8 @@
           "qute-html",
           "qute-json",
           "qute-yaml",
-          "qute-txt"
+          "qute-txt",
+          "java"
         ],
         "configurationAttributes": {
           "attach": {
