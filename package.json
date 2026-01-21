@@ -562,7 +562,7 @@
     "glob": "^10.5.0",
     "jdk-utils": "^0.6.0",
     "js-yaml": "^4.1.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver-protocol": "^3.17.2",
     "which": "^6.0.0",
