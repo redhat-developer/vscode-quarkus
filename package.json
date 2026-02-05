@@ -39,7 +39,8 @@
     "workspaceContains:**src/main/resources/META-INF/microprofile-config.properties",
     "workspaceContains:**/src/main/resources/application.yaml",
     "workspaceContains:**/src/main/resources/application.yml",
-    "workspaceContains:**/src/main/resources/templates",
+    "workspaceContains:**/templates",
+    "workspaceContains:templates",
     "onLanguage:microprofile-properties",
     "onLanguage:java",
     "onDebugResolve:qute"
