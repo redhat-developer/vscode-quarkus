@@ -6,6 +6,11 @@
 export namespace QuteClientCommandConstants {
 
   /**
+   * Client command to trigger completion of the current offset
+   */
+  export const COMMAND_EDITOR_ACTION_TRIGGET_SUGGEST = 'editor.action.triggerSuggest';
+
+  /**
    * Client command to open Qute template by file Uri.
    */
   export const OPEN_URI = 'qute.command.open.uri';
