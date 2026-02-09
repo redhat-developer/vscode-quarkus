@@ -2,6 +2,9 @@
   "name": "Qute",
   "patterns": [
     {
+      "include": "#front-matter"
+    },
+    {
       "include": "#comment"
     },
     {
@@ -18,6 +21,26 @@
     }
   ],
   "repository": {
+    "front-matter": {
+      "begin": "\\A(---)",
+      "end": "^(---|\\.\\.\\.)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.front-matter.qute"
+        }
+      },
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.definition.front-matter.qute"
+        }
+      },
+      "contentName": "meta.embedded.block.yaml",
+      "patterns": [
+        {
+          "include": "source.yaml"
+        }
+      ]
+    },
     "templates": {
       "patterns": [
         {
