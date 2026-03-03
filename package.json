@@ -537,7 +537,7 @@
     "@types/which": "^3.0.4",
     "@types/yauzl": "^2.10.3",
     "@vscode/test-electron": "^2.5.2",
-    "chai": "^4.5.0",
+    "chai": "^6.2.2",
     "chai-fs": "^2.0.0",
     "eslint": "^9.39.2",
     "eslint-webpack-plugin": "^5.0.2",
