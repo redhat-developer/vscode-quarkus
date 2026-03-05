@@ -15,15 +15,17 @@ export async function connectToQuteLS(context: ExtensionContext, api: JavaExtens
   registerVSCodeQuteCommands(context);
   const requirements = await resolveRequirements(api);
 
-  const clientOptions: LanguageClientOptions = {
+const QUTE_LANGUAGES = ['qute-html', 'qute-json', 'qute-yaml', 'qute-txt'];
+
+const clientOptions: LanguageClientOptions = {
     documentSelector: [
-      { scheme: 'file', language: 'qute-html' },
-      { scheme: 'file', language: 'qute-json' },
-      { scheme: 'file', language: 'qute-yaml' },
-      { scheme: 'file', language: 'qute-txt' },
-      { scheme: 'untitled', language: 'qute-html' },
-      { scheme: 'vscode-notebook-cell', language: 'qute-html' },
-      { scheme: 'file', language: 'java' }
+        ...QUTE_LANGUAGES.flatMap(language => [
+            { scheme: 'file', language },
+            { scheme: 'jdt', language },
+            { scheme: 'untitled', language },
+            { scheme: 'vscode-notebook-cell', language },
+        ]),
+        { scheme: 'file', language: 'java' }
     ],
     // wrap with key 'settings' so it can be handled same a DidChangeConfiguration
     initializationOptions: {
