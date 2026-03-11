@@ -105,7 +105,7 @@ jobs:
       - name: Test vscode-quarkus
         run: |
           pushd vscode-quarkus
-          echo "xvfb-run --auto-servernum npm run test --silent
+          echo "xvfb-run --auto-servernum npm run test --silent"
         continue-on-error: true
       - name: Prepare Pre-Release
         if: ${{ github.event_name == 'schedule' || inputs.publishPreRelease == 'true' }}
