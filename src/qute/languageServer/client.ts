@@ -46,7 +46,7 @@ const clientOptions: LanguageClientOptions = {
     },
     synchronize: {
       // preferences starting with these will trigger didChangeConfiguration
-      configurationSection: ['qute']
+      configurationSection: ['qute', '[qute]', 'editor.tabSize', 'editor.insertSpaces']
     },
     middleware: {
       workspace: {
@@ -187,7 +187,10 @@ function getQuteSettings(): any {
 
 function toJSONObject(configQute: unknown): any {
   const x = JSON.stringify(configQute); // configQute is not a JSON type
-  return JSON.parse(x);
+  const config = JSON.parse(x);
+  config['format']['tabSize'] =  workspace.getConfiguration('editor').get('tabSize', 4);
+  config['format']['insertSpaces'] =  workspace.getConfiguration('editor').get('insertSpaces', true);
+  return config;
 }
 
 function hasShownQuteValidationPopUp(context: ExtensionContext): boolean {

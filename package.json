@@ -399,6 +399,22 @@
           "markdownDescription": "Validation severity for undefined section tag in Qute template files.",
           "scope": "resource"
         },
+        "qute.format.splitSectionParameters": {
+          "type": "string",
+          "enum": [
+            "preserve",
+            "splitNewLine",
+            "alignWithFirstParam"
+          ],
+          "default": "preserve",
+          "markdownDescription": "Split multiple section parameters each onto a new line or align parameters to the first. Default is `preserve`. Indicate level of indentation with `#qute.format.splitSectionParametersIndentSize#`.",
+          "scope": "window"
+        },
+        "qute.format.splitSectionParametersIndentSize": {
+          "type": "number",
+          "default": 2,
+          "markdownDescription": "How many levels to indent the section parameters by when `#qute.format.splitSectionParameters#` is `true`. Default value is `2`."
+        },
         "qute.trace.debug": {
           "type": "string",
           "enum": [
