@@ -46,7 +46,7 @@ export async function activate(context: ExtensionContext) {
   QuarkusContext.setContext(context);
 
   registerVSCodeClientCommands(context);
-  // Check if activation occured due to a 'java' language document
+  // Check if activation occurred due to a 'java' language document
   const onLanguageJavaWasActivated = workspace.textDocuments.some(doc => doc.languageId === 'java');
   if (onLanguageJavaWasActivated) {
     /* Consider duplicating activationEvents above to avoid re-checking when
