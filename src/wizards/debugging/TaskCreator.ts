@@ -150,7 +150,7 @@ export class TaskCreator {
     }
 
     if (!FsUtils.isSameDirectory(this.workspaceFolder.uri.fsPath, this.projectFolder)) {
-      taskDefinition.options = { cwd: path.relative(this.workspaceFolder.uri.fsPath, this.projectFolder) };
+      taskDefinition.options = { cwd: path.join("${workspaceFolder}", path.relative(this.workspaceFolder.uri.fsPath, this.projectFolder)) };
     }
 
     return taskDefinition;
