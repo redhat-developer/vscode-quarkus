@@ -94,7 +94,7 @@ async function registerCommandWithTelemetry(context: ExtensionContext, commandNa
  */
 function withStandardMode(commandAction: () => Promise<any>, commandDescription: string): () => Promise<void> {
   return async () => {
-    let isStandardMode = false;
+    let isStandardMode;
     try {
       isStandardMode = await requestStandardMode(commandDescription);
     } catch {
@@ -103,7 +103,7 @@ function withStandardMode(commandAction: () => Promise<any>, commandDescription:
     if (!isStandardMode) {
       return;
     }
-    let projectLabelInfo: ProjectLabelInfo[] = null;
+    let projectLabelInfo: ProjectLabelInfo[];
     try {
       projectLabelInfo = await ProjectLabelInfo.getWorkspaceProjectLabelInfo();
     } catch {
