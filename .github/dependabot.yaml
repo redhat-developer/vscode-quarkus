@@ -6,6 +6,11 @@ updates:
     interval: "cron"
     cronjob: 0 8 * * 2,4
   open-pull-requests-limit: 10
+  allow:
+  - dependency-name: "@types/node"
+    update-types:
+      - "version-update:semver-minor"
+      - "version-update:semver-patch"
   groups:
     typescript-eslint:
       patterns:
