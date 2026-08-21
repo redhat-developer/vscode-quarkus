@@ -1,5 +1,20 @@
 # Quarkus Tools for Visual Studio Code Changelog
 
+## [1.24.0](https://github.com/redhat-developer/vscode-quarkus/milestone/28?closed=1) (August 24, 2026)
+
+### Enhancements
+ * Qute semantic tokens support. See [quarkus-ls#1167](https://github.com/redhat-developer/quarkus-ls/pull/1167).
+ * Retrigger Qute completion when `=` is typed. See [quarkus-ls#1165](https://github.com/redhat-developer/quarkus-ls/pull/1165).
+ * Support for Qute alternative syntax expression. See [quarkus-ls#1163](https://github.com/redhat-developer/quarkus-ls/pull/1163).
+
+### Bug Fixes
+ * Update lsp4j to 1.0.0 to solve incompatibility problem with vscode-java (jdtls). See [quarkus-ls#1171](https://github.com/redhat-developer/quarkus-ls/issues/1171).
+ * Roq Data file should return io.vertx.core.json.JsonObject as Java type. See [quarkus-ls#1166](https://github.com/redhat-developer/quarkus-ls/pull/1166).
+
+### Build
+ * Upgrade to Node 22. See [#1288](https://github.com/redhat-developer/vscode-quarkus/issues/1288).
+ * Remove chai. See [#1112](https://github.com/redhat-developer/vscode-quarkus/pull/1112).
+
 ## [1.23.0](https://github.com/redhat-developer/vscode-quarkus/milestone/27?closed=1) (April 27, 2026)
 
 ### Enhancements
