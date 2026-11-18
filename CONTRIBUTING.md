@@ -34,7 +34,7 @@ for functionalities like listening
 to Java classpath changes and generating config setting metadata for
 the `application.properties` file.
 The reason why
-[vscode-java](https://github.com/redhat-developer/vscode-jav)
+[vscode-java](https://github.com/redhat-developer/vscode-java)
 is required for vscode-quarkus to work, is because vscode-java
 starts the [jdt.ls](https://github.com/eclipse/eclipse.jdt.ls)
 language server, which is required to run the MicroProfile jdt.ls extension.
@@ -103,7 +103,7 @@ that collects MicroProfile and Quarkus properties for the given Java project.
 
 This manager is extensible by the
 `org.eclipse.lsp4mp.jdt.core.propertiesProviders`
-[extension point](https://github.com/eclipse/lsp4mp/blobl/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/plugin.xml#L5):
+[extension point](https://github.com/eclipse-lsp4mp/lsp4mp/blob/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/plugin.xml#L5):
 
  * [org.eclipse.lsp4mp.jdt.core](https://github.com/eclipse/lsp4mp/tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/plugin.xml#L49-L52) defines properties provider for MicroProfile.
 * [com.redhat.microprofile.jdt.quarkus](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus/plugin.xml#L5-L10) defines properties provider for Quarkus.
@@ -112,11 +112,11 @@ Here are some providers and the annotation(s) they scan for:
 
 | Class | Annotations |
 |-------|-------------|
-| [MicroProfileConfigPropertyProvider](https://github.com/eclipse/lsp4mp//tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/core/providers/MicroProfileConfigPropertyProvider.java) | org.eclipse.microprofile.config.inject.ConfigProperty |
-| [MicroProfileRegisterRestClientProvider](https://github.com/eclipse/lsp4mp//tree/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/com/redhat/microprofile/jdt/internal/core/providers/MicroProfileRegisterRestClientProvider.java) | org.eclipse.microprofile.rest.client.inject.RegisterRestClient |
-| [QuarkusConfigPropertiesProvider](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/providers/QuarkusConfigPropertiesProvider.java) | io.quarkus.arc.config.ConfigProperties |
-| [QuarkusConfigRootProvider](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/providers/QuarkusConfigRootProvider.java) | io.quarkus.runtime.annotations.ConfigRoot |
-| [QuarkusKubernetesProvider](https://github.com/redhat-developer/quarkus-ls/tree/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/providers/QuarkusKubernetesProvider.java) | io.dekorate.kubernetes.annotation.KubernetesApplication<br>io.dekorate.openshift.annotation.OpenshiftApplication<br>io.dekorate.s2i.annotation.S2iBuild<br>io.dekorate.docker.annotation.DockerBuild |
+| [MicroProfileConfigPropertyProvider](https://github.com/eclipse-lsp4mp/lsp4mp/blob/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/org/eclipse/lsp4mp/jdt/internal/config/properties/MicroProfileConfigPropertyProvider.java) | org.eclipse.microprofile.config.inject.ConfigProperty |
+| [MicroProfileRegisterRestClientProvider](https://github.com/eclipse-lsp4mp/lsp4mp/blob/master/microprofile.jdt/org.eclipse.lsp4mp.jdt.core/src/main/java/org/eclipse/lsp4mp/jdt/internal/restclient/properties/MicroProfileRegisterRestClientProvider.java) | org.eclipse.microprofile.rest.client.inject.RegisterRestClient |
+| [QuarkusConfigPropertiesProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/core/properties/QuarkusConfigPropertiesProvider.java) | io.quarkus.arc.config.ConfigProperties |
+| [QuarkusConfigRootProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/core/properties/QuarkusConfigRootProvider.java) | io.quarkus.runtime.annotations.ConfigRoot |
+| [QuarkusKubernetesProvider](https://github.com/redhat-developer/quarkus-ls/blob/master/quarkus.jdt.ext/com.redhat.microprofile.jdt.quarkus/src/main/java/com/redhat/microprofile/jdt/internal/quarkus/kubernetes/properties/QuarkusKubernetesProvider.java) | io.dekorate.kubernetes.annotation.KubernetesApplication<br>io.dekorate.openshift.annotation.OpenshiftApplication<br>io.dekorate.s2i.annotation.S2iBuild<br>io.dekorate.docker.annotation.DockerBuild |
 
 
 ### Searching for properties in JARs not in the user's Quarkus project's classpath
