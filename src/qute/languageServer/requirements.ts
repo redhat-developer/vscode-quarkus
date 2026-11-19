@@ -84,8 +84,8 @@ function checkJavaVersion(javaHome: string): Promise<number> {
     return new Promise((resolve, reject) => {
         cp.execFile(javaHome + '/bin/java', ['-version'], {}, (error, stdout, stderr) => {
             const javaVersion = parseMajorVersion(stderr);
-            if (javaVersion < 11) {
-                reject(openJDKDownload(`Java 11 or more recent is required to run 'Qute support'. Please download and install a recent JDK.`));
+            if (javaVersion < 25) {
+                reject(openJDKDownload(`Java 25 or more recent is required to run 'Qute support'. Please download and install a recent JDK.`));
             } else {
                 resolve(javaVersion);
             }
